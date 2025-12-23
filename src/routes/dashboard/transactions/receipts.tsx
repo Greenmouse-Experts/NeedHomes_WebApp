@@ -151,14 +151,14 @@ function ReceiptsPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Receipts">
       {/* Stats Cards */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Receipts</h2>
+      <div className="mb-4 md:mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">Receipts</h2>
           <DropdownMenu
             trigger={
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
                 This Week
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
               </Button>
             }
           >
@@ -169,19 +169,19 @@ function ReceiptsPage() {
           </DropdownMenu>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {/* Card 1 - All Orders */}
-          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">All Orders</h3>
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-blue-600" />
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 md:p-6 hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">All Orders</h3>
+              <div className="p-1.5 md:p-2 bg-blue-100 rounded-lg">
+                <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
               </div>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900">45</span>
-                <div className="flex items-center gap-2 text-sm">
+                <span className="text-xl md:text-2xl font-bold text-gray-900">45</span>
+                <div className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm">
                   <span className="text-gray-500">Pending:</span>
                   <span className="font-semibold text-orange-600">5</span>
                 </div>
@@ -269,10 +269,10 @@ function ReceiptsPage() {
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-              <div className="relative flex-1 lg:flex-initial lg:w-64">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 mb-4 md:mb-6">
+          <div className="flex flex-col gap-3 md:gap-4">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
+              <div className="relative flex-1 min-w-[200px] md:flex-initial md:w-64">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   placeholder="Search"
@@ -281,19 +281,19 @@ function ReceiptsPage() {
                   className="pl-10 text-sm"
                 />
               </div>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Filter className="w-4 h-4" />
-                Filter
+              <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Filter</span>
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Calendar className="w-4 h-4" />
-                Filter
+              <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Filter</span>
               </Button>
               <DropdownMenu
                 trigger={
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
                     Bulk Action
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   </Button>
                 }
               >
@@ -307,58 +307,58 @@ function ReceiptsPage() {
 
         {/* Table */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+          <div className="overflow-x-auto max-h-[500px] md:max-h-[600px] overflow-y-auto">
             <Table>
               <TableHeader className="sticky top-0 bg-gray-50 z-10">
                 <TableRow className="bg-gray-50">
-                  <TableHead className="w-12">
+                  <TableHead className="w-10 md:w-12">
                     <input
                       type="checkbox"
                       checked={selectedRows.length === filteredReceipts.length && filteredReceipts.length > 0}
                       onChange={toggleAllSelection}
-                      className="w-4 h-4 text-[var(--color-orange)] border-gray-300 rounded focus:ring-[var(--color-orange)]"
+                      className="w-3.5 h-3.5 md:w-4 md:h-4 text-[var(--color-orange)] border-gray-300 rounded focus:ring-[var(--color-orange)]"
                     />
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Student Name
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden md:table-cell">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Order Date
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden lg:table-cell">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Property
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden xl:table-cell">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Tracking ID
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Order Total
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden lg:table-cell">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Action
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
-                  <TableHead className="font-semibold whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                       Status
-                      <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 cursor-pointer" />
+                      <ArrowUpDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 cursor-pointer" />
                     </div>
                   </TableHead>
                 </TableRow>
@@ -366,25 +366,31 @@ function ReceiptsPage() {
               <TableBody>
                 {filteredReceipts.map((receipt) => (
                   <TableRow key={receipt.id} className="hover:bg-gray-50">
-                    <TableCell className="whitespace-nowrap">
+                    <TableCell className="whitespace-nowrap py-2 md:py-3">
                       <input
                         type="checkbox"
                         checked={selectedRows.includes(receipt.id)}
                         onChange={() => toggleRowSelection(receipt.id)}
-                        className="w-4 h-4 text-[var(--color-orange)] border-gray-300 rounded focus:ring-[var(--color-orange)]"
+                        className="w-3.5 h-3.5 md:w-4 md:h-4 text-[var(--color-orange)] border-gray-300 rounded focus:ring-[var(--color-orange)]"
                       />
                     </TableCell>
-                    <TableCell className="font-medium text-gray-900 whitespace-nowrap">{receipt.studentName}</TableCell>
-                    <TableCell className="text-gray-600 whitespace-nowrap">{receipt.orderDate}</TableCell>
-                    <TableCell className="text-gray-600 whitespace-nowrap">{receipt.property}</TableCell>
-                    <TableCell className="text-gray-600 font-mono text-sm whitespace-nowrap">{receipt.trackingId}</TableCell>
-                    <TableCell className="font-semibold text-gray-900 whitespace-nowrap">{receipt.orderTotal}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <button className="px-3 py-1.5 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors whitespace-nowrap">
+                    <TableCell className="font-medium text-gray-900 whitespace-nowrap text-xs md:text-sm py-2 md:py-3">
+                      <div className="min-w-0">
+                        <div>{receipt.studentName}</div>
+                        <div className="text-xs text-gray-500 md:hidden mt-0.5">{receipt.orderDate}</div>
+                        <div className="text-xs text-gray-500 md:hidden">{receipt.property}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-600 whitespace-nowrap text-xs md:text-sm hidden md:table-cell">{receipt.orderDate}</TableCell>
+                    <TableCell className="text-gray-600 whitespace-nowrap text-xs md:text-sm hidden lg:table-cell">{receipt.property}</TableCell>
+                    <TableCell className="text-gray-600 font-mono text-xs md:text-sm whitespace-nowrap hidden xl:table-cell">{receipt.trackingId}</TableCell>
+                    <TableCell className="font-semibold text-gray-900 whitespace-nowrap text-xs md:text-sm py-2 md:py-3">{receipt.orderTotal}</TableCell>
+                    <TableCell className="whitespace-nowrap hidden lg:table-cell py-2 md:py-3">
+                      <button className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors whitespace-nowrap">
                         Cancel Order
                       </button>
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">{getStatusBadge(receipt.status)}</TableCell>
+                    <TableCell className="whitespace-nowrap py-2 md:py-3">{getStatusBadge(receipt.status)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

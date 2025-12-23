@@ -214,20 +214,20 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 p-3 lg:p-4 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-3">
+        <header className="bg-white border-b border-gray-200 p-2.5 md:p-3 lg:p-4 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+              className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg flex-shrink-0"
             >
-              <Menu className="w-5 h-5 text-gray-600" />
+              <Menu className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
             </button>
-            <div>
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-900">{title}</h1>
-              {subtitle && <p className="text-sm text-gray-600">{subtitle}</p>}
+            <div className="min-w-0">
+              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 truncate">{title}</h1>
+              {subtitle && <p className="text-xs md:text-sm text-gray-600 truncate">{subtitle}</p>}
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
             <div className="hidden lg:block relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
@@ -236,14 +236,14 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
               />
             </div>
             <div className="relative">
-              <Bell className="w-5 h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
-              <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-xs w-5 h-5 flex items-center justify-center p-0">
+              <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
+              <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0">
                 6
               </Badge>
             </div>
-            <Avatar>
+            <Avatar className="w-8 h-8 md:w-10 md:h-10">
               <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>AD</AvatarFallback>
+              <AvatarFallback className="text-xs">AD</AvatarFallback>
             </Avatar>
           </div>
         </header>

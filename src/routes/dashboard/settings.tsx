@@ -77,10 +77,10 @@ function SettingsPage() {
 
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Settings">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
         {/* Sidebar Navigation */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-3 md:p-4">
             <nav className="space-y-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon
@@ -106,17 +106,17 @@ function SettingsPage() {
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 md:p-6">
             {/* Personal Settings */}
             {activeTab === 'personal' && (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Personal Information</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">Personal Information</h2>
                 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                   {/* Profile Picture */}
-                  <div className="flex items-start gap-6 pb-6 border-b border-gray-200">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6 pb-4 md:pb-6 border-b border-gray-200">
                     <div className="flex-shrink-0">
-                      <div className="w-24 h-24 rounded-full ring-4 ring-gray-100 overflow-hidden">
+                      <div className="w-20 h-20 md:w-24 md:h-24 rounded-full ring-2 md:ring-4 ring-gray-100 overflow-hidden">
                         <img 
                           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces" 
                           alt="Profile"
@@ -158,7 +158,7 @@ function SettingsPage() {
                   </div>
 
                   {/* Form Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="fullName" className="text-sm font-semibold text-gray-700">
                         Full Name

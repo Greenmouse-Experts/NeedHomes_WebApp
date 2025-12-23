@@ -202,17 +202,17 @@ function PaymentsPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Payments">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Investment</h3>
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <DollarSign className="w-5 h-5 text-[var(--color-orange)]" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-4 md:mb-6">
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 md:p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
+            <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Investment</h3>
+            <div className="p-1.5 md:p-2 bg-orange-100 rounded-lg">
+              <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
             </div>
           </div>
           <div className="space-y-1">
-            <p className="text-2xl font-bold text-gray-900">₦ 1,002,432</p>
-            <p className="text-xs text-gray-500">This Month</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">₦ 1,002,432</p>
+            <p className="text-[10px] md:text-xs text-gray-500">This Month</p>
           </div>
         </div>
 
@@ -260,25 +260,25 @@ function PaymentsPage() {
       <div className="mb-6">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           {/* Tabs */}
-          <div className="border-b border-gray-200 px-6 pt-4">
-            <div className="flex gap-1">
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300">
+          <div className="border-b border-gray-200 px-3 md:px-6 pt-3 md:pt-4">
+            <div className="flex gap-1 overflow-x-auto">
+              <button className="px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-gray-700 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
                 All Transactions
               </button>
-              <button className="px-4 py-2 text-sm font-medium text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]">
+              <button className="px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-[var(--color-orange)] border-b-2 border-[var(--color-orange)] whitespace-nowrap">
                 Income
               </button>
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300">
+              <button className="px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-gray-700 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
                 Payouts
               </button>
             </div>
           </div>
 
           {/* Toolbar */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-              <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                <div className="relative flex-1 lg:flex-initial lg:w-64">
+          <div className="p-3 md:p-4 border-b border-gray-200">
+            <div className="flex flex-col gap-3 md:gap-4">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
+                <div className="relative flex-1 min-w-[200px] md:flex-initial md:w-64">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     placeholder="Search"
@@ -287,19 +287,19 @@ function PaymentsPage() {
                     className="pl-10 text-sm"
                   />
                 </div>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Filter className="w-4 h-4" />
-                  Filter
+                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                  <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">Filter</span>
                 </Button>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Calendar className="w-4 h-4" />
-                  Filter
+                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                  <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">Filter</span>
                 </Button>
                 <DropdownMenu
                   trigger={
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
                       Bulk Action
-                      <ChevronDown className="w-4 h-4" />
+                      <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                     </Button>
                   }
                 >
@@ -439,22 +439,23 @@ function PaymentsPage() {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Revenue Trend Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">Today Revenue Trend</h3>
+              <h3 className="text-base md:text-lg font-bold text-gray-900">Today Revenue Trend</h3>
               <div className="flex items-center gap-2 mt-1">
-                <TrendingUp className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-semibold text-green-600">24.6%</span>
+                <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600" />
+                <span className="text-xs md:text-sm font-semibold text-green-600">24.6%</span>
               </div>
             </div>
             <DropdownMenu
               trigger={
-                <Button variant="outline" size="sm" className="gap-2">
-                  Jan 2024 - Dec 2024
-                  <ChevronDown className="w-4 h-4" />
+                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                  <span className="hidden sm:inline">Jan 2024 - Dec 2024</span>
+                  <span className="sm:hidden">2024</span>
+                  <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </Button>
               }
             >
@@ -465,7 +466,7 @@ function PaymentsPage() {
           </div>
           
           {/* Chart */}
-          <div className="h-64">
+          <div className="h-48 md:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData}>
                 <defs>
@@ -534,14 +535,14 @@ function PaymentsPage() {
         </div>
 
         {/* Income Summary */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-gray-900">Income Summary</h3>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
+            <h3 className="text-base md:text-lg font-bold text-gray-900">Income Summary</h3>
             <DropdownMenu
               trigger={
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
                   Sort by
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </Button>
               }
             >
@@ -552,7 +553,7 @@ function PaymentsPage() {
           </div>
 
           {/* Pie Chart */}
-          <div className="h-48 mb-6">
+          <div className="h-40 md:h-48 mb-4 md:mb-6">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -582,33 +583,33 @@ function PaymentsPage() {
           </div>
 
           {/* Statistics */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Building2 className="w-5 h-5 text-blue-600" />
+          <div className="space-y-2 md:space-y-3">
+            <div className="flex items-center justify-between p-2.5 md:p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="p-1.5 md:p-2 bg-blue-100 rounded-lg">
+                  <Building2 className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Investment</span>
+                <span className="text-xs md:text-sm font-medium text-gray-700">Investment</span>
               </div>
-              <span className="text-lg font-bold text-blue-600">1,754</span>
+              <span className="text-base md:text-lg font-bold text-blue-600">1,754</span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-orange-100 rounded-lg">
-                  <Wallet className="w-5 h-5 text-[var(--color-orange)]" />
+            <div className="flex items-center justify-between p-2.5 md:p-3 bg-orange-50 rounded-lg">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="p-1.5 md:p-2 bg-orange-100 rounded-lg">
+                  <Wallet className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Partners</span>
+                <span className="text-xs md:text-sm font-medium text-gray-700">Partners</span>
               </div>
-              <span className="text-lg font-bold text-[var(--color-orange)]">873</span>
+              <span className="text-base md:text-lg font-bold text-[var(--color-orange)]">873</span>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-100 rounded-lg">
-                  <FileText className="w-5 h-5 text-gray-600" />
+            <div className="flex items-center justify-between p-2.5 md:p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="p-1.5 md:p-2 bg-gray-100 rounded-lg">
+                  <FileText className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Projects</span>
+                <span className="text-xs md:text-sm font-medium text-gray-700">Projects</span>
               </div>
-              <span className="text-lg font-bold text-gray-600">685</span>
+              <span className="text-base md:text-lg font-bold text-gray-600">685</span>
             </div>
           </div>
         </div>

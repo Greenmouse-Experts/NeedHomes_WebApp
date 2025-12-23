@@ -94,13 +94,13 @@ function AnnouncementsPage() {
 
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Announcements">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Announcements List */}
         <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-200 bg-gray-50">
+          <div className="p-4 md:p-6 border-b border-gray-200 bg-gray-50">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">Announcement</h2>
-              <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900">Announcement</h2>
+              <span className="text-xs md:text-sm text-gray-500 bg-white px-2 md:px-3 py-1 rounded-full border border-gray-200">
                 {announcements.length} Total
               </span>
             </div>
@@ -111,17 +111,17 @@ function AnnouncementsPage() {
               {announcements.map((announcement) => (
                 <div
                   key={announcement.id}
-                  className="p-5 hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-transparent transition-all duration-200 relative group cursor-pointer"
+                  className="p-3 md:p-5 hover:bg-gradient-to-r hover:from-orange-50/50 hover:to-transparent transition-all duration-200 relative group cursor-pointer"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 md:gap-4">
                     {/* Icon */}
                     <div className="flex-shrink-0">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-sm transition-transform group-hover:scale-110 ${
+                      <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-sm transition-transform group-hover:scale-110 ${
                         announcement.read 
                           ? 'bg-[var(--color-orange)]/10' 
                           : 'bg-[var(--color-orange)]'
                       }`}>
-                        <Bell className={`w-6 h-6 ${
+                        <Bell className={`w-5 h-5 md:w-6 md:h-6 ${
                           announcement.read 
                             ? 'text-[var(--color-orange)]' 
                             : 'text-white'
@@ -164,15 +164,15 @@ function AnnouncementsPage() {
         </div>
 
         {/* Send Notification Form */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-          <div className="mb-6 pb-4 border-b border-gray-200">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-[var(--color-orange)]/10 rounded-lg">
-                <Send className="w-5 h-5 text-[var(--color-orange)]" />
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 md:p-6">
+          <div className="mb-4 md:mb-6 pb-3 md:pb-4 border-b border-gray-200">
+            <div className="flex items-center gap-2 md:gap-3 mb-2">
+              <div className="p-1.5 md:p-2 bg-[var(--color-orange)]/10 rounded-lg">
+                <Send className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">SEND NOTIFICATION</h2>
+              <h2 className="text-lg md:text-xl font-bold text-gray-900">SEND NOTIFICATION</h2>
             </div>
-            <p className="text-sm text-gray-500 ml-11">Create and send announcements to users</p>
+            <p className="text-xs md:text-sm text-gray-500 ml-8 md:ml-11">Create and send announcements to users</p>
           </div>
 
           <form onSubmit={handleSendNotification} className="space-y-6">

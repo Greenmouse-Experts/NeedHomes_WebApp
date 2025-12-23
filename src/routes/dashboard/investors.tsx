@@ -117,11 +117,11 @@ function InvestorsPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Investors">
       {/* Toolbar */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 mb-4 md:mb-6">
+        <div className="flex flex-col gap-3 md:gap-4">
           {/* Search and Filters */}
-          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-            <div className="relative flex-1 lg:flex-initial lg:w-64">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
+            <div className="relative flex-1 min-w-[200px] md:flex-initial md:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search"
@@ -130,19 +130,19 @@ function InvestorsPage() {
                 className="pl-10 text-sm"
               />
             </div>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="w-4 h-4" />
-              Filter
+            <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+              <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Filter</span>
             </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Calendar className="w-4 h-4" />
-              Filter
+            <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+              <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Filter</span>
             </Button>
             <DropdownMenu
               trigger={
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
                   Action
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </Button>
               }
             >
@@ -153,19 +153,20 @@ function InvestorsPage() {
           </div>
 
           {/* View Toggle and Add Button */}
-          <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
+          <div className="flex items-center gap-2 w-full justify-between">
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <button className="p-2 hover:bg-gray-100 border-r border-gray-300">
-                <List className="w-4 h-4 text-gray-600" />
+              <button className="p-1.5 md:p-2 hover:bg-gray-100 border-r border-gray-300">
+                <List className="w-3.5 h-3.5 md:w-4 md:h-4 text-gray-600" />
               </button>
-              <button className="p-2 hover:bg-gray-100">
-                <Grid className="w-4 h-4 text-gray-600" />
+              <button className="p-1.5 md:p-2 hover:bg-gray-100">
+                <Grid className="w-3.5 h-3.5 md:w-4 md:h-4 text-gray-600" />
               </button>
             </div>
-            <Button variant="primary" size="sm" className="gap-2">
-              <Plus className="w-4 h-4" />
-              Add Investors
-              <ChevronDown className="w-4 h-4" />
+            <Button variant="primary" size="sm" className="gap-2 text-xs md:text-sm">
+              <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Add Investors</span>
+              <span className="sm:hidden">Add</span>
+              <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </Button>
           </div>
         </div>
@@ -177,37 +178,41 @@ function InvestorsPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="font-semibold">Profile</TableHead>
-                <TableHead className="font-semibold">Investors ID</TableHead>
-                <TableHead className="font-semibold">Phone Number</TableHead>
-                <TableHead className="font-semibold">Email Address</TableHead>
-                <TableHead className="font-semibold">Location</TableHead>
-                <TableHead className="font-semibold">Date Joined</TableHead>
-                <TableHead className="font-semibold w-10"></TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap">Profile</TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden md:table-cell">Investors ID</TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden lg:table-cell">Phone Number</TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden lg:table-cell">Email Address</TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden xl:table-cell">Location</TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm whitespace-nowrap hidden md:table-cell">Date Joined</TableHead>
+                <TableHead className="font-semibold text-xs md:text-sm w-10"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredInvestors.map((investor) => (
                 <TableRow key={investor.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar>
+                  <TableCell className="py-3">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Avatar className="w-8 h-8 md:w-10 md:h-10">
                         <AvatarImage src={investor.avatar} alt={investor.name} />
-                        <AvatarFallback>
+                        <AvatarFallback className="text-xs">
                           {investor.name
                             .split(' ')
                             .map((n) => n[0])
                             .join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="font-medium text-gray-900">{investor.name}</span>
+                      <div className="min-w-0">
+                        <div className="font-medium text-gray-900 text-xs md:text-sm truncate">{investor.name}</div>
+                        <div className="text-xs text-gray-500 md:hidden">{investor.id}</div>
+                        <div className="text-xs text-gray-500 md:hidden">{investor.phone}</div>
+                      </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-gray-600">{investor.id}</TableCell>
-                  <TableCell className="text-gray-600">{investor.phone}</TableCell>
-                  <TableCell className="text-gray-600">{investor.email}</TableCell>
-                  <TableCell className="text-gray-600">{investor.location}</TableCell>
-                  <TableCell className="text-gray-600">{investor.dateJoined}</TableCell>
+                  <TableCell className="text-gray-600 text-xs md:text-sm hidden md:table-cell">{investor.id}</TableCell>
+                  <TableCell className="text-gray-600 text-xs md:text-sm hidden lg:table-cell">{investor.phone}</TableCell>
+                  <TableCell className="text-gray-600 text-xs md:text-sm hidden lg:table-cell truncate max-w-[200px]">{investor.email}</TableCell>
+                  <TableCell className="text-gray-600 text-xs md:text-sm hidden xl:table-cell truncate max-w-[200px]">{investor.location}</TableCell>
+                  <TableCell className="text-gray-600 text-xs md:text-sm hidden md:table-cell">{investor.dateJoined}</TableCell>
                   <TableCell>
                     <DropdownMenu
                       trigger={

@@ -24,7 +24,7 @@ function DashboardIndexPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-4 md:mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
@@ -60,14 +60,14 @@ function DashboardIndexPage() {
       </div>
 
       {/* Welcome Banner */}
-      <Card className="mb-6 bg-gradient-to-r from-gray-800 to-[var(--color-orange)] text-white relative overflow-hidden">
-        <CardContent className="p-6">
+      <Card className="mb-4 md:mb-6 bg-gradient-to-r from-gray-800 to-[var(--color-orange)] text-white relative overflow-hidden">
+        <CardContent className="p-4 md:p-6">
           <div className="flex items-center gap-2 mb-2">
             <Calendar className="w-4 h-4" />
-            <span className="text-sm">July 14, 2025</span>
+            <span className="text-xs md:text-sm">July 14, 2025</span>
           </div>
-          <h2 className="text-2xl font-bold mb-1">Welcome, Admin 👋</h2>
-          <p className="text-gray-200">Have a great day!</p>
+          <h2 className="text-xl md:text-2xl font-bold mb-1">Welcome, Admin 👋</h2>
+          <p className="text-sm md:text-base text-gray-200">Have a great day!</p>
           <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
             <div className="absolute top-10 right-10 w-4 h-4 bg-white rounded-full"></div>
             <div className="absolute top-20 right-20 w-2 h-2 bg-white rounded-full"></div>
@@ -76,27 +76,28 @@ function DashboardIndexPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Revenue Chart */}
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <CardTitle>Today Revenue Trend</CardTitle>
+                <CardTitle className="text-base md:text-lg">Today Revenue Trend</CardTitle>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-2xl font-bold text-green-600">24.6%</span>
-                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  <span className="text-xl md:text-2xl font-bold text-green-600">24.6%</span>
+                  <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 border border-gray-300 rounded-lg px-3 py-2">
-                <Calendar className="w-4 h-4" />
-                <span>Jan 2024 - Dec 2024</span>
-                <ChevronDown className="w-4 h-4" />
+              <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600 border border-gray-300 rounded-lg px-2 md:px-3 py-1.5 md:py-2">
+                <Calendar className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Jan 2024 - Dec 2024</span>
+                <span className="sm:hidden">2024</span>
+                <ChevronDown className="w-3 h-3 md:w-4 md:h-4" />
               </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="h-64 flex items-end justify-between gap-2">
+          <CardContent className="p-4 md:p-6">
+            <div className="h-48 md:h-64 flex items-end justify-between gap-1 md:gap-2">
               {/* Simple bar chart representation */}
               {[40, 60, 45, 80, 65, 90, 75, 85, 70, 95, 88, 100].map((height, i) => (
                 <div
@@ -106,9 +107,9 @@ function DashboardIndexPage() {
                 ></div>
               ))}
             </div>
-            <div className="mt-4 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-[var(--color-orange)] rounded"></div>
+            <div className="mt-3 md:mt-4 text-xs md:text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="w-2 h-2 md:w-3 md:h-3 bg-[var(--color-orange)] rounded"></div>
                 <span>N125.2k 12.5%</span>
                 <span className="text-gray-400">NOV 1, 2023</span>
               </div>
@@ -118,43 +119,43 @@ function DashboardIndexPage() {
 
         {/* Wallet */}
         <Card>
-          <CardHeader>
+          <CardHeader className="p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <CardTitle>Wallet</CardTitle>
-              <select className="text-sm border border-gray-300 rounded px-2 py-1">
+              <CardTitle className="text-base md:text-lg">Wallet</CardTitle>
+              <select className="text-xs md:text-sm border border-gray-300 rounded px-2 py-1">
                 <option>Monthly</option>
               </select>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
             {/* Total Balance */}
             <Card className="bg-[var(--color-orange)] text-white">
-              <CardContent className="p-4">
+              <CardContent className="p-3 md:p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs opacity-90">TOTAL BALANCE</p>
-                    <p className="text-2xl font-bold">N 120,000</p>
+                    <p className="text-[10px] md:text-xs opacity-90">TOTAL BALANCE</p>
+                    <p className="text-xl md:text-2xl font-bold">N 120,000</p>
                   </div>
-                  <EyeIcon className="w-5 h-5" />
+                  <EyeIcon className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
               </CardContent>
             </Card>
 
             {/* Income/Expense */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+            <div className="space-y-2 md:space-y-3">
+              <div className="flex items-center justify-between p-2.5 md:p-3 bg-green-50 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  <span className="text-sm font-medium">INCOME</span>
+                  <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+                  <span className="text-xs md:text-sm font-medium">INCOME</span>
                 </div>
-                <span className="font-bold text-green-600">N 100,000</span>
+                <span className="text-sm md:text-base font-bold text-green-600">N 100,000</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+              <div className="flex items-center justify-between p-2.5 md:p-3 bg-red-50 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <ArrowUp className="w-5 h-5 text-red-600" />
-                  <span className="text-sm font-medium">EXPENSE</span>
+                  <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
+                  <span className="text-xs md:text-sm font-medium">EXPENSE</span>
                 </div>
-                <span className="font-bold text-red-600">N 20,000</span>
+                <span className="text-sm md:text-base font-bold text-red-600">N 20,000</span>
               </div>
             </div>
 
@@ -162,21 +163,21 @@ function DashboardIndexPage() {
 
             {/* Recent Transactions */}
             <div>
-              <h3 className="text-sm font-semibold mb-3">RECENT</h3>
+              <h3 className="text-xs md:text-sm font-semibold mb-2 md:mb-3">RECENT</h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <div>
-                      <p className="text-sm font-medium text-green-600">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs md:text-sm font-medium text-green-600 truncate">
                         + N 200,000
                       </p>
-                      <p className="text-xs text-gray-500">Incoming payment</p>
+                      <p className="text-[10px] md:text-xs text-gray-500 truncate">Incoming payment</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">12-02-25</p>
-                    <Badge className="bg-green-100 text-green-700 text-xs">
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <p className="text-[10px] md:text-xs text-gray-500">12-02-25</p>
+                    <Badge className="bg-green-100 text-green-700 text-[10px] md:text-xs">
                       Successful
                     </Badge>
                   </div>
