@@ -27,7 +27,7 @@ export const AvatarImage = forwardRef<HTMLImageElement, AvatarImageProps>(
     return (
       <img
         ref={ref}
-        className={cn('aspect-square h-full w-full', className)}
+        className={cn('h-full w-full object-cover', className)}
         {...props}
       />
     )

@@ -10,7 +10,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <select
         className={cn(
-          'flex w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-base',
+          'flex w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-base cursor-pointer',
           'focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent',
           'disabled:cursor-not-allowed disabled:opacity-50',
           'transition-all duration-200',
