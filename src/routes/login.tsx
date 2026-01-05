@@ -146,6 +146,13 @@ function LoginPage() {
               {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
+
+          {/* Link to admin login */}
+          <div className="mt-4 text-center">
+            <a href="/admin" className="text-sm text-gray-600 hover:text-[var(--color-orange)] transition-colors">
+              Admin? Sign in here
+            </a>
+          </div>
         </CardContent>
       </Card>
 
