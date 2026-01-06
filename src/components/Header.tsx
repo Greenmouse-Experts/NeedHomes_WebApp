@@ -59,12 +59,12 @@ export default function Header() {
   }, [mobileMenuOpen])
 
   return (
-    <div className="h-20 grid place-items-center bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
-      <nav className="container mx-auto flex justify-between px-4 md:px-0 items-center w-full">
+    <div className="h-16 grid place-items-center bg-[#1a1a2e] sticky top-0 z-50 relative">
+      <nav className="container mx-auto flex justify-between px-4 md:px-6 items-center w-full h-full">
         <Link to="/" className="text-xl font-bold flex items-center gap-3 hover:opacity-80 transition-opacity">
           <img 
             src="/logo.png" 
-            className="h-12 w-auto object-contain" 
+            className="h-10 w-auto object-contain brightness-0 invert" 
             alt="NeedHomes Logo"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -76,19 +76,23 @@ export default function Header() {
           <div className="hidden flex-col">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 border-2 border-[var(--color-orange)] rounded-t-lg"></div>
-              <span className="text-xl font-bold text-gray-900">NEEDHOMES</span>
+              <span className="text-xl font-bold text-white">NEEDHOMES</span>
             </div>
-            <span className="text-xs text-gray-600">PROPERTY INVESTMENT LTD</span>
+            <span className="text-xs text-gray-400">PROPERTY INVESTMENT LTD</span>
           </div>
         </Link>
-        <div className="hidden lg:flex items-center space-x-1">
-          {links.map((link) => (
+        <div className="hidden lg:flex items-center space-x-2 h-full">
+          {links.map((link, index) => (
             <Link
               to={link.path}
               key={link.name}
-              className="px-4 py-2 text-gray-700 hover:text-[var(--color-orange)] transition-colors flex items-center gap-1 font-medium"
+              className={`px-4 h-full flex items-center gap-1 font-medium text-sm transition-colors relative ${
+                index === 0 
+                  ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-purple-600' 
+                  : 'text-gray-300 hover:text-white'
+              }`}
             >
-              {link.name} <ChevronDown size={12} />
+              {link.name} <ChevronDown size={14} />
             </Link>
           ))}
         </div>
@@ -96,7 +100,7 @@ export default function Header() {
           <Button 
             variant="ghost" 
             size="sm" 
-            className="p-2"
+            className="p-2 text-white hover:text-gray-300"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -104,7 +108,7 @@ export default function Header() {
           
           {/* Mobile Menu Dropdown */}
           {mobileMenuOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+            <div className="absolute right-0 mt-2 w-64 bg-[#1a1a2e] rounded-lg shadow-xl border border-gray-700 py-2 z-50">
               {/* Navigation Links */}
               {links.map((link) => {
                 const Icon = link.icon
@@ -113,7 +117,7 @@ export default function Header() {
                     key={link.name}
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[var(--color-orange)] transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                   >
                     <Icon className="w-5 h-5" />
                     <span className="font-medium">{link.name}</span>
@@ -122,13 +126,13 @@ export default function Header() {
               })}
               
               {/* Divider */}
-              <div className="border-t border-gray-200 my-2"></div>
+              <div className="border-t border-gray-700 my-2"></div>
               
               {/* Auth Buttons */}
               <div className="px-4 py-2 space-y-2">
                 <Button
                   variant="outline"
-                  className="w-full justify-start gap-3"
+                  className="w-full justify-start gap-3 border-gray-600 text-white hover:bg-gray-800"
                   onClick={() => {
                     setMobileMenuOpen(false)
                     navigate({ to: '/login' })
@@ -152,15 +156,17 @@ export default function Header() {
             </div>
           )}
         </div>
-        <div className="space-x-2 hidden lg:flex">
+        <div className="space-x-3 hidden lg:flex items-center">
           <Button
             variant="outline"
+            className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
             onClick={() => navigate({ to: '/login' })}
           >
             Sign In
           </Button>
           <Button
             variant="primary"
+            className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
             onClick={() => navigate({ to: '/login' })}
           >
             Get Free Account
