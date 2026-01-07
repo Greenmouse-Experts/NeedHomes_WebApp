@@ -31,8 +31,8 @@ function HomePage() {
           <section>
             <CoTypes />
           </section>
-          <section className="md:py-22 py-4 bg-gray-100 px-4 md:px-0">
-            <div className="h-[420px] flex">
+          <section className="md:py-22 py-8 bg-gray-100 px-4 md:px-0">
+            <div className="h-[300px] sm:h-[400px] md:h-[420px] flex">
               <img
                 src="/how-it-works.png"
                 className="w-full flex-1 mx-auto object-contain"

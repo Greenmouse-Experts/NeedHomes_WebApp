@@ -1,11 +1,11 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
 import { Switch } from '@/components/ui/Switch'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useLogin } from '@/lib/api-client'
+import { Eye, EyeOff } from 'lucide-react'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -16,6 +16,7 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const loginMutation = useLogin()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,81 +32,60 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex flex-col items-center justify-center p-4 pt-24 relative overflow-hidden">
-      {/* Creative Background Elements */}
-      
-      {/* Large geometric shapes */}
-      <div className="absolute top-20 right-10 w-96 h-96 bg-[var(--color-orange)]/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-10 w-80 h-80 bg-[var(--color-orange)]/5 rounded-full blur-3xl"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-orange)]/3 rounded-full blur-3xl"></div>
-      
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `
-          linear-gradient(to right, var(--color-orange) 1px, transparent 1px),
-          linear-gradient(to bottom, var(--color-orange) 1px, transparent 1px)
-        `,
-        backgroundSize: '50px 50px'
-      }}></div>
-      
-      {/* Diagonal lines pattern */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 10px,
-          var(--color-orange) 10px,
-          var(--color-orange) 20px
-        )`
-      }}></div>
-      
-      {/* Floating shapes */}
-      <div className="absolute top-32 right-32 w-32 h-32 border-2 border-[var(--color-orange)]/20 rounded-lg rotate-45"></div>
-      <div className="absolute bottom-32 left-32 w-24 h-24 border-2 border-[var(--color-orange)]/20 rounded-full"></div>
-      <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-[var(--color-orange)]/10 rounded-lg rotate-12"></div>
-      
-      {/* Subtle dot pattern */}
-      <div className="absolute inset-0 opacity-[0.04]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, var(--color-orange) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }}></div>
-      </div>
-
-      {/* Logo above card */}
-      <div className="flex flex-col items-center mb-6 relative z-10">
-        <img 
-          src="/logo.png" 
-          alt="NeedHomes" 
-          className="h-20 mb-2 drop-shadow-lg" 
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
-            const fallback = target.nextElementSibling as HTMLElement;
-            if (fallback) fallback.style.display = 'flex';
-          }} 
-        />
-        <div className="hidden flex-col items-center">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 border-2 border-[var(--color-orange)] rounded-t-lg"></div>
-            <h1 className="text-xl font-bold text-gray-900">NEEDHOMES</h1>
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Left Side - Image */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="/assets/Rectangle 21299.png" 
+            alt="Property Investment" 
+            className="w-full h-full object-cover opacity-80"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+        </div>
+        
+        {/* Content Overlay */}
+        <div className="relative z-10 flex flex-col justify-end p-12 text-white w-full">
+          <div className="space-y-6">
+            <h2 className="text-4xl font-bold leading-tight">
+              Welcome Back to<br />Your Investment Journey
+            </h2>
+            <p className="text-lg text-gray-300 max-w-md">
+              Access your dashboard to track your property investments, view analytics, and manage your portfolio seamlessly.
+            </p>
           </div>
-          <p className="text-xs text-gray-600">PROPERTY MANAGEMENT</p>
         </div>
       </div>
 
-      {/* Login Card */}
-      <Card className="w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl border-0 relative z-10">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-black">Log In</CardTitle>
-          <CardDescription className="text-gray-500">
-            Enter your email and password to sign in
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Right Side - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-8 bg-[#3A3A4A] min-h-screen lg:min-h-0">
+        <div className="w-full max-w-md space-y-6 sm:space-y-8">
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex flex-col items-center mb-6">
+            <Link to="/" className="inline-block">
+              <img 
+                src="/need_homes_logo.png" 
+                alt="NeedHomes" 
+                className="h-12 sm:h-16 mb-2"
+              />
+            </Link>
+          </div>
+
+          {/* Form Header */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-3xl font-bold text-white mb-2">Log In</h1>
+            <p className="text-gray-300">Enter your email and password to sign in</p>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-white">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -113,49 +93,63 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-gray-300"
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
               />
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="border-gray-300"
-              />
+              <Label htmlFor="password" className="text-white">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20 pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
+
             <div className="flex items-center space-x-2">
               <Switch
                 id="remember"
                 checked={rememberMe}
                 onCheckedChange={setRememberMe}
               />
-              <Label htmlFor="remember" className="text-gray-600 cursor-pointer">
+              <Label htmlFor="remember" className="text-gray-300 cursor-pointer text-sm">
                 Remember me
               </Label>
             </div>
+
             <Button
               type="submit"
-              className="w-full bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white cursor-pointer"
+              className="w-full bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white text-lg py-6"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
 
-          {/* Link to admin login */}
-          <div className="mt-4 text-center">
-            <a href="/admin" className="text-sm text-gray-600 hover:text-[var(--color-orange)] transition-colors">
-              Admin? Sign in here
-            </a>
+          {/* Sign Up Link */}
+          <div className="text-center">
+            <p className="text-gray-300">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-[var(--color-orange)] hover:text-[var(--color-orange-light)] font-semibold transition-colors">
+                Sign Up
+              </Link>
+            </p>
           </div>
-        </CardContent>
-      </Card>
-
+        </div>
+      </div>
     </div>
   )
 }

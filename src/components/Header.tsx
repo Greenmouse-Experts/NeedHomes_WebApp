@@ -63,23 +63,10 @@ export default function Header() {
       <nav className="container mx-auto flex justify-between px-4 md:px-6 items-center w-full h-full">
         <Link to="/" className="text-xl font-bold flex items-center gap-3 hover:opacity-80 transition-opacity">
           <img 
-            src="/logo.png" 
-            className="h-10 w-auto object-contain brightness-0 invert" 
+            src="/need_homes_logo.png" 
+            className="h-10 w-auto object-contain" 
             alt="NeedHomes Logo"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              const fallback = target.nextElementSibling as HTMLElement;
-              if (fallback) fallback.style.display = 'flex';
-            }} 
           />
-          <div className="hidden flex-col">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 border-2 border-[var(--color-orange)] rounded-t-lg"></div>
-              <span className="text-xl font-bold text-white">NEEDHOMES</span>
-            </div>
-            <span className="text-xs text-gray-400">PROPERTY INVESTMENT LTD</span>
-          </div>
         </Link>
         <div className="hidden lg:flex items-center space-x-2 h-full">
           {links.map((link, index) => (
@@ -146,7 +133,7 @@ export default function Header() {
                   className="w-full justify-start gap-3"
                   onClick={() => {
                     setMobileMenuOpen(false)
-                    navigate({ to: '/login' })
+                    navigate({ to: '/signup' })
                   }}
                 >
                   <UserPlus className="w-4 h-4" />
@@ -167,7 +154,7 @@ export default function Header() {
           <Button
             variant="primary"
             className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
-            onClick={() => navigate({ to: '/login' })}
+            onClick={() => navigate({ to: '/signup' })}
           >
             Get Free Account
           </Button>
