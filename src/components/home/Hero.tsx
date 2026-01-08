@@ -12,9 +12,9 @@ export default function Hero() {
             to Property Ownership.
           </h1>
           <p className="md:text-xl text-md">
-            Own your dream home transparently, affordably from anywhere.
-            Co-develop verified projects or own fractional property shares and
-            track progress from your dashboard.
+           Build Wealth the smart way... co-develop and co-own trusted   Realestate investment Potfolio.....
+Track Rental income and  project milestone in real  time.....
+Access digital contracts,investors dashboard and verified properties.
           </p>
           <div className="lg:flex-row gap-2 flex flex-col mt-6 mb-6">
             <Button
