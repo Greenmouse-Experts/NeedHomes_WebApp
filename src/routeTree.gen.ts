@@ -22,6 +22,7 @@ import { Route as DashboardInvestorsRouteImport } from './routes/dashboard/inves
 import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/announcements'
 import { Route as DashboardTransactionsReceiptsRouteImport } from './routes/dashboard/transactions/receipts'
 import { Route as DashboardTransactionsPaymentsRouteImport } from './routes/dashboard/transactions/payments'
+import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -90,6 +91,12 @@ const DashboardTransactionsPaymentsRoute =
     path: '/transactions/payments',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardPropertiesListedRoute =
+  DashboardPropertiesListedRouteImport.update({
+    id: '/properties/listed',
+    path: '/properties/listed',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/partners': typeof DashboardPartnersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
 }
@@ -117,6 +125,7 @@ export interface FileRoutesByTo {
   '/dashboard/partners': typeof DashboardPartnersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
 }
@@ -133,6 +142,7 @@ export interface FileRoutesById {
   '/dashboard/partners': typeof DashboardPartnersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
 }
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/properties/listed'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/dashboard/properties/listed'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
   id:
@@ -179,6 +191,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/properties/listed'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
   fileRoutesById: FileRoutesById
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTransactionsPaymentsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/properties/listed': {
+      id: '/dashboard/properties/listed'
+      path: '/properties/listed'
+      fullPath: '/dashboard/properties/listed'
+      preLoaderRoute: typeof DashboardPropertiesListedRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
@@ -294,6 +314,7 @@ interface DashboardRouteChildren {
   DashboardPartnersRoute: typeof DashboardPartnersRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardPropertiesListedRoute: typeof DashboardPropertiesListedRoute
   DashboardTransactionsPaymentsRoute: typeof DashboardTransactionsPaymentsRoute
   DashboardTransactionsReceiptsRoute: typeof DashboardTransactionsReceiptsRoute
 }
@@ -304,6 +325,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardPartnersRoute: DashboardPartnersRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardPropertiesListedRoute: DashboardPropertiesListedRoute,
   DashboardTransactionsPaymentsRoute: DashboardTransactionsPaymentsRoute,
   DashboardTransactionsReceiptsRoute: DashboardTransactionsReceiptsRoute,
 }
