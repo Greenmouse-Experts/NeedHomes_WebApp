@@ -54,7 +54,7 @@ function AccountTypeSelection() {
             {/* Image Container */}
             <div className="relative h-56 sm:h-64 lg:h-72 overflow-hidden">
               <img 
-                src="/assets/Rectangle 21299(2).png"
+                src="/assets/Rectangle 21299(1).png"
                 alt="Investor"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
@@ -90,7 +90,7 @@ function AccountTypeSelection() {
             {/* Image Container */}
             <div className="relative h-56 sm:h-64 lg:h-72 overflow-hidden">
               <img 
-                src="/assets/Rectangle 21299(1).png"
+                src="/assets/Rectangle 21299(2).png"
                 alt="Partner Agent"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
