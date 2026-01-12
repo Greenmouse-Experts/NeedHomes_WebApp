@@ -13,9 +13,9 @@ export default function CoDev() {
       icon: '/construction-icon.svg',
     },
     {
-      title: 'Ownership & Returns',
+      title: 'Ownership',
       description:
-        'When completed, investors receive profit or rental income based on their ownership share.',
+        'When completed, investors receive full ownership of the property.',
       icon: '/ownership-icon.svg',
     },
   ] as const
@@ -31,10 +31,7 @@ export default function CoDev() {
         <div className="mx-auto max-w-3xl text-center space-y-2">
           <h2 className="text-3xl font-semibold">What is Co- Development?</h2>
           <p>
-            Co-development means partnering to bring a real estate project to
-            life.Instead of one company doing everything, Needhomes connects
-            investors to jointly fund and build a property — and then share in
-            the ownership and profit.
+            We bring multiple qualified home buyers or investors together to fund, build & own housing units collectively. Each subscriber contributes an agreed portion into the project during construction and receives full legal ownership upon completion.
           </p>
         </div>
       </div>

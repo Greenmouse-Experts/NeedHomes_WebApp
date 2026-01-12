@@ -75,7 +75,7 @@ export default function Header() {
               key={link.name}
               className={`px-4 h-full flex items-center gap-1 font-medium text-sm transition-colors relative ${
                 index === 0 
-                  ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-purple-600' 
+                  ? 'text-white' 
                   : 'text-gray-300 hover:text-white'
               }`}
             >

@@ -22,16 +22,16 @@ export default function GetOnDevices() {
         }}></div>
       </div>
       
-      <div className="contain mx-auto grid px-4 md:px-0 md:grid-cols-2 py-12 text-white text-center md:text-left relative z-10">
+      <div className="contain mx-auto grid px-0 md:px-0 md:grid-cols-2 py-12 text-white text-center md:text-left relative z-10">
         <FlexInfo>
-          <div className="mb-4">
+          <div className="mb-4 px-4 md:px-0">
             <img src="/logo_white.png" alt="NeedHomes" className="h-12 mb-4" onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.style.display = 'none';
             }} />
           </div>
-          <h2 className="text-4xl font-bold mb-4">Download Our Mobile App</h2>
-          <div className="space-x-4 gap-2 mx-auto md:mx-0 flex flex-col md:flex-row">
+          <h2 className="text-4xl font-bold mb-8 px-4 md:px-0">Download Our Mobile App</h2>
+          <div className="space-x-4 gap-2 mx-auto md:mx-0 flex flex-col md:flex-row px-4 md:px-0">
             <Button
               variant="outline"
               size="lg"
@@ -53,7 +53,7 @@ export default function GetOnDevices() {
         <FlexInfo>
           <form
             onSubmit={handleSubmit}
-            className="bg-gradient-to-br from-gray-800/95 to-gray-900/95 backdrop-blur-md text-white p-6 w-full max-w-[390px] md:w-[390px] md:ml-auto md:mr-0 mx-auto space-y-4 flex flex-col ring-2 ring-[var(--color-orange)] rounded-2xl shadow-2xl"
+            className="bg-gradient-to-br from-gray-800/95 to-gray-900/95 backdrop-blur-md text-white p-6 w-full max-w-[390px] md:w-[390px] md:ml-auto md:mr-0 mx-auto mt-8 md:mt-0 space-y-4 flex flex-col ring-2 ring-[var(--color-orange)] rounded-2xl shadow-2xl"
           >
             <div className="space-y-2">
               <h2 className="text-3xl font-black">NewsLetter</h2>

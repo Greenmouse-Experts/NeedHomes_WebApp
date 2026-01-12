@@ -4,19 +4,31 @@ import { Button } from "@/components/ui/Button";
 
 export default function Hero() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 pt-6">
       <Sectiongrid className="pt-12 lg:pt-0">
-        <FlexInfo className="leading-loose text-center lg:text-left">
+        <FlexInfo className="leading-loose text-left lg:text-left">
           <h1 className="md:text-5xl text-4xl font-bold">
             Your Smooth Journey <br className="" />
             to Property Ownership.
           </h1>
-          <p className="md:text-xl text-md">
-            Build Wealth the smart way... co-develop and co-own trusted
-            Realestate investment Potfolio..... Track Rental income and project
-            milestone in real time..... Access digital contracts,investors
-            dashboard and verified properties.
-          </p>
+          <ul className="md:text-base text-sm space-y-3 mt-6">
+            <li className="flex items-start gap-3">
+              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span>Build Wealth the smart way</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span>Co-develop and co-own trusted Real estate investment Portfolio</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span>Track Rental income and project milestone in real time</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span>Access digital contracts, investors dashboard and verified properties.</span>
+            </li>
+          </ul>
           <div className="lg:flex-row gap-2 flex flex-col mt-6 mb-6">
             <Button
               variant="accent"
