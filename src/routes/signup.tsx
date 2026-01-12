@@ -7,13 +7,19 @@ import { Eye, EyeOff } from 'lucide-react'
 
 export const Route = createFileRoute('/signup')({
   component: SignUpPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      type: (search.type as 'investor' | 'partner') || 'investor',
+    }
+  },
 })
 
 type UserType = 'investor' | 'partner'
 
 function SignUpPage() {
   const navigate = useNavigate()
-  const [userType, setUserType] = useState<UserType>('investor')
+  const { type } = Route.useSearch()
+  const [userType, setUserType] = useState<UserType>(type || 'investor')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
@@ -117,7 +123,7 @@ function SignUpPage() {
             <button
               type="button"
               onClick={() => setUserType('investor')}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all cursor-pointer ${
                 userType === 'investor'
                   ? 'bg-[var(--color-orange)] text-white shadow-lg'
                   : 'text-gray-300 hover:text-white'
@@ -128,7 +134,7 @@ function SignUpPage() {
             <button
               type="button"
               onClick={() => setUserType('partner')}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all cursor-pointer ${
                 userType === 'partner'
                   ? 'bg-[var(--color-orange)] text-white shadow-lg'
                   : 'text-gray-300 hover:text-white'

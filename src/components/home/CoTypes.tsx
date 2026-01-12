@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/Button'
+import { Link } from '@tanstack/react-router'
 
 export default function CoTypes() {
   const co_types = [
@@ -29,7 +30,9 @@ export default function CoTypes() {
           <div className="text-center space-y-4 mt-12 max-w-md mx-auto">
             <h2 className="text-white font-bold text-xl">{type.title}</h2>
             <p>{type.description}</p>
-            <Button variant="primary">Get Started</Button>
+            <Link to="/account-type">
+              <Button variant="primary">Get Started</Button>
+            </Link>
           </div>
           <img src={type.photo} className="mt-12 mx-4" alt={type.title} />
         </div>

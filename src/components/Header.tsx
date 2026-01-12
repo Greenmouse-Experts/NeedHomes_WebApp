@@ -133,7 +133,7 @@ export default function Header() {
                   className="w-full justify-start gap-3"
                   onClick={() => {
                     setMobileMenuOpen(false)
-                    navigate({ to: '/signup' })
+                    navigate({ to: '/account-type' })
                   }}
                 >
                   <UserPlus className="w-4 h-4" />
@@ -154,7 +154,7 @@ export default function Header() {
           <Button
             variant="primary"
             className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
-            onClick={() => navigate({ to: '/signup' })}
+            onClick={() => navigate({ to: '/account-type' })}
           >
             Get Free Account
           </Button>
