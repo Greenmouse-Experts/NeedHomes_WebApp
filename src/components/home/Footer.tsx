@@ -81,7 +81,7 @@ export default function Footer() {
       <footer className="contain mx-auto px-4 md:px-0 *:text-left">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="max-w-2xs space-y-3 text-white flex-1">
-            <img src="/logo_white.png" alt="NeedHomes" className="h-18" />
+            <img src="/need_homes_logo.png" alt="NeedHomes" className="h-18" />
             <div></div>
             <p>+234 700 0000 000</p>
             <p>sales@needhomes.ng</p>

@@ -3,13 +3,13 @@ export default function CoDev() {
     {
       title: 'Funding',
       description:
-        'IBF License Nr. 27-55/2023/3 provides assurance to investors that the platform is operating legally and in compliance with EU regulations.',
+        'Investors pool their funds, paying outright or in installments, to finance the project from start to finish.',
       icon: '/funding-icon.svg',
     },
     {
       title: 'Construction',
       description:
-        'The project is managed and monitored by Needhomes until completion.',
+        'Projects are professionally designed, managed, and monitored by Needhomes and its construction partners until completion.',
       icon: '/construction-icon.svg',
     },
     {

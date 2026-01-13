@@ -13,19 +13,19 @@ export default function Hero() {
           </h1>
           <ul className="md:text-base text-sm space-y-3 mt-6">
             <li className="flex items-start gap-3">
-              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span className="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">✓</span>
               <span>Build Wealth the smart way</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span className="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">✓</span>
               <span>Co-develop and co-own trusted Real estate investment Portfolio</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span className="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">✓</span>
               <span>Track Rental income and project milestone in real time</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <span className="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">✓</span>
               <span>Access digital contracts, investors dashboard and verified properties.</span>
             </li>
           </ul>
