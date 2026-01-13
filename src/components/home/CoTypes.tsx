@@ -4,14 +4,14 @@ import { Link } from '@tanstack/react-router'
 export default function CoTypes() {
   const co_types = [
     {
-      title: 'Co-Invest',
+      title: 'Co-Own',
       background: '#5853F6',
       photo: '/co_invest.png',
       description:
         'Build wealth through partnership—every investment brings you closer to long-term financial success.',
     },
     {
-      title: 'Co-Build',
+      title: 'Co-Develop',
       background: '#39383E',
       photo: '/co_build.png',
       description:

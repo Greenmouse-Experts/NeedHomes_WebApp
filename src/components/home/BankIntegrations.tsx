@@ -1,28 +1,26 @@
 export default function BankIntegrations() {
   const banks = [
-    { name: 'Access Bank', logo: '/banks/access.png' },
-    { name: 'Eco Bank', logo: '/banks/eco.png' },
+    { name: 'Stanbic', logo: '/banks/stanbic.png' },
     { name: 'Paystack', logo: '/banks/paystack.png' },
-    { name: 'UBA', logo: '/banks/uba.png' },
-    { name: 'Wema Bank', logo: '/banks/wema.png' },
+    { name: 'Alat', logo: '/banks/alat.png' },
   ]
 
   return (
     <div className="contain mx-auto py-22">
-      <h2 className="text-center mx-auto max-w-xl text-3xl font-black">
+      <h2 className="text-center mx-auto max-w-xl text-3xl font-semibold">
         Integrate with leading financial institution
       </h2>
-      <div className="h-20 contain mx-auto mt-12">
-        <div className="flex gap-8 justify-center items-center flex-wrap">
+      <div className="contain mx-auto mt-12 px-4 md:px-0">
+        <div className="flex gap-8 md:gap-16 justify-center items-center flex-wrap">
           {banks.map((bank, index) => (
             <div
               key={index}
-              className="flex items-center justify-center h-16 w-32"
+              className="flex items-center justify-center h-16 w-32 md:h-20 md:w-40"
             >
               <img
                 src={bank.logo}
                 alt={bank.name}
-                className="h-full w-full object-contain opacity-70 hover:opacity-100 transition-opacity"
+                className="h-full w-full object-contain hover:scale-105 transition-transform"
               />
             </div>
           ))}

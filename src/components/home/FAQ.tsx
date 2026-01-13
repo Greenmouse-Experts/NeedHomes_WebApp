@@ -109,7 +109,7 @@ export default function FAQ() {
                 </button>
                 {openIndex === idx && (
                   <div className="p-4 bg-gray-100 pl-4 border-t border-gray-200">
-                    <p className="whitespace-pre-line">A: {item.a}</p>
+                    <p className="whitespace-pre-line">{item.a}</p>
                   </div>
                 )}
               </div>
@@ -162,7 +162,7 @@ export default function FAQ() {
                     </button>
                     {modalOpenIndex === idx && (
                       <div className="p-4 bg-gray-50 border-t border-gray-200">
-                        <p className="whitespace-pre-line text-sm md:text-base text-gray-700">A: {item.a}</p>
+                        <p className="whitespace-pre-line text-sm md:text-base text-gray-700">{item.a}</p>
                       </div>
                     )}
                   </div>
