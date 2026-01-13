@@ -19,7 +19,7 @@ export default function FAQ() {
     },
     {
       q: 'Who can join Needhomes projects?',
-      a: '✅ First-time home buyers ✅ Real estate investors (local & diaspora) ✅ Individuals seeking long-term returns on real estate assets ✅ Anyone interested in affordable home ownership through structured payments',
+      a: '✅ First-time home buyers\n✅ Real estate investors (local & diaspora)\n✅ Individuals seeking long-term returns on real estate assets\n✅ Anyone interested in affordable home ownership through structured payments',
     },
     {
       q: 'What project types does Needhomes offer?',

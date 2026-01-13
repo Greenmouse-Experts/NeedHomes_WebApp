@@ -8,7 +8,7 @@ export default function Explore() {
       <SectionGrid>
         <FlexInfo className="">
           <div className="flex flex-1 md:justify-start justify-center">
-            <div className="md:size-[520px] size-80">
+            <div className="md:size-[600px] size-80">
               <img
                 src="/workings.png"
                 className="size-full object-contain"
