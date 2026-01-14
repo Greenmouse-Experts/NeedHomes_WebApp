@@ -20,9 +20,11 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settin
 import { Route as DashboardPartnersRouteImport } from './routes/dashboard/partners'
 import { Route as DashboardInvestorsRouteImport } from './routes/dashboard/investors'
 import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/announcements'
+import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
 import { Route as DashboardTransactionsReceiptsRouteImport } from './routes/dashboard/transactions/receipts'
 import { Route as DashboardTransactionsPaymentsRouteImport } from './routes/dashboard/transactions/payments'
 import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
+import { Route as DashboardInvestorsInvestorIdRouteImport } from './routes/dashboard/investors/$investorId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -79,6 +81,11 @@ const DashboardAnnouncementsRoute = DashboardAnnouncementsRouteImport.update({
   path: '/announcements',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardInvestorsRoute,
+} as any)
 const DashboardTransactionsReceiptsRoute =
   DashboardTransactionsReceiptsRouteImport.update({
     id: '/transactions/receipts',
@@ -97,6 +104,12 @@ const DashboardPropertiesListedRoute =
     path: '/properties/listed',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardInvestorsInvestorIdRoute =
+  DashboardInvestorsInvestorIdRouteImport.update({
+    id: '/$investorId',
+    path: '/$investorId',
+    getParentRoute: () => DashboardInvestorsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -106,13 +119,15 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
-  '/dashboard/investors': typeof DashboardInvestorsRoute
+  '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
+  '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -121,13 +136,14 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
-  '/dashboard/investors': typeof DashboardInvestorsRoute
   '/dashboard/partners': typeof DashboardPartnersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
+  '/dashboard/investors': typeof DashboardInvestorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -138,13 +154,15 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
-  '/dashboard/investors': typeof DashboardInvestorsRoute
+  '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
+  '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -160,9 +178,11 @@ export interface FileRouteTypes {
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/investors/$investorId'
     | '/dashboard/properties/listed'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
+    | '/dashboard/investors/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,13 +191,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard/announcements'
-    | '/dashboard/investors'
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/dashboard/investors/$investorId'
     | '/dashboard/properties/listed'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
+    | '/dashboard/investors'
   id:
     | '__root__'
     | '/'
@@ -191,9 +212,11 @@ export interface FileRouteTypes {
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/investors/$investorId'
     | '/dashboard/properties/listed'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
+    | '/dashboard/investors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -284,6 +307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAnnouncementsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/investors/': {
+      id: '/dashboard/investors/'
+      path: '/'
+      fullPath: '/dashboard/investors/'
+      preLoaderRoute: typeof DashboardInvestorsIndexRouteImport
+      parentRoute: typeof DashboardInvestorsRoute
+    }
     '/dashboard/transactions/receipts': {
       id: '/dashboard/transactions/receipts'
       path: '/transactions/receipts'
@@ -305,12 +335,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPropertiesListedRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/investors/$investorId': {
+      id: '/dashboard/investors/$investorId'
+      path: '/$investorId'
+      fullPath: '/dashboard/investors/$investorId'
+      preLoaderRoute: typeof DashboardInvestorsInvestorIdRouteImport
+      parentRoute: typeof DashboardInvestorsRoute
+    }
   }
 }
 
+interface DashboardInvestorsRouteChildren {
+  DashboardInvestorsInvestorIdRoute: typeof DashboardInvestorsInvestorIdRoute
+  DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
+}
+
+const DashboardInvestorsRouteChildren: DashboardInvestorsRouteChildren = {
+  DashboardInvestorsInvestorIdRoute: DashboardInvestorsInvestorIdRoute,
+  DashboardInvestorsIndexRoute: DashboardInvestorsIndexRoute,
+}
+
+const DashboardInvestorsRouteWithChildren =
+  DashboardInvestorsRoute._addFileChildren(DashboardInvestorsRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardAnnouncementsRoute: typeof DashboardAnnouncementsRoute
-  DashboardInvestorsRoute: typeof DashboardInvestorsRoute
+  DashboardInvestorsRoute: typeof DashboardInvestorsRouteWithChildren
   DashboardPartnersRoute: typeof DashboardPartnersRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -321,7 +371,7 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAnnouncementsRoute: DashboardAnnouncementsRoute,
-  DashboardInvestorsRoute: DashboardInvestorsRoute,
+  DashboardInvestorsRoute: DashboardInvestorsRouteWithChildren,
   DashboardPartnersRoute: DashboardPartnersRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,

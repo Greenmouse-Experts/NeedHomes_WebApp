@@ -27,6 +27,8 @@ export const DropdownMenu = ({ trigger, children, align = 'right', className, ..
     }
   }, [open])
 
+  const handleClose = () => setOpen(false)
+
   return (
     <div ref={dropdownRef} className="relative inline-block" {...props}>
       <div onClick={() => setOpen(!open)}>{trigger}</div>
@@ -37,6 +39,7 @@ export const DropdownMenu = ({ trigger, children, align = 'right', className, ..
             align === 'right' ? 'right-0' : 'left-0',
             className
           )}
+          onClick={handleClose}
         >
           {children}
         </div>
