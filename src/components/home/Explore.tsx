@@ -2,10 +2,10 @@ import { Button } from '@/components/ui/Button'
 
 export default function Explore() {
   return (
-    <div className="contain mx-auto py-2">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+    <div className="contain mx-auto px-4 md:px-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
         <div className="flex md:justify-start justify-center">
-          <div className="md:w-[600px] w-80">
+          <div className="md:w-[800px] w-full max-w-[500px]">
             <img
               src="/workings.png"
               className="w-full h-auto object-contain"
@@ -13,7 +13,7 @@ export default function Explore() {
             />
           </div>
         </div>
-        <div className="leading-loose space-y-6 text-center md:text-left px-4 md:px-0">
+        <div className="leading-loose space-y-6 text-center md:text-left">
           <h2 className="text-base md:text-base">
             At Needhomes, we redefine property ownership, using our PropTech
             platform to make owning real estate easier, more transparent, and

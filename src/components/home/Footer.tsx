@@ -78,12 +78,12 @@ const support_links = [
 export default function Footer() {
   return (
     <div className="pt-12 pb-2" style={{ background: '#39383E' }}>
-      <footer className="contain mx-auto px-4 md:px-0 *:text-left">
+      <footer className="contain mx-auto px-4 md:px-6 *:text-left">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="max-w-2xs space-y-3 text-white flex-1">
             <img src="/need_homes_logo.png" alt="NeedHomes" className="h-18" />
             <div></div>
-            <p>+234 700 0000 000</p>
+            <p>+234 702 500 5857</p>
             <p>sales@needhomes.ng</p>
           </div>
           <section className="grid flex-1 gap-4 md:grid-cols-[repeat(auto-fit,minmax(100px,1fr))]">

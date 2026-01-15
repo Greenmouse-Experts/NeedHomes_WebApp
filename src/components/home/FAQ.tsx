@@ -80,7 +80,7 @@ export default function FAQ() {
 
   return (
     <>
-      <div className="contain mx-auto py-22 bg-gray-100 px-4 md:px-0">
+      <div className="contain mx-auto py-22 bg-gray-100 px-4 md:px-6">
         <div className="grid md:grid-cols-2">
           <FlexInfo className="text-center md:text-left">
             <div className="w-full md:max-w-5/6 space-y-4">
@@ -175,7 +175,7 @@ export default function FAQ() {
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-sm text-gray-600">
                   <p className="font-semibold">Have More Questions?</p>
-                  <p>📩 support@needhomes.com.ng | 📞 +234 (XXX) XXX XXXX</p>
+                  <p>📩 support@needhomes.com.ng | 📞 +234 702 500 5857</p>
                 </div>
                 <Button 
                   variant="primary"

@@ -8,7 +8,7 @@ export default function SectionGrid(props: SectionGridProps) {
   return (
     <div
       className={
-        'contain mx-auto flex min-h-[520px] flex-col lg:flex-row ' +
+        'contain mx-auto px-4 md:px-6 flex min-h-[520px] flex-col lg:flex-row ' +
         (props.className || '')
       }
     >

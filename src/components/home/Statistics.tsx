@@ -19,7 +19,7 @@ export default function Statistics() {
   ] as const
 
   return (
-    <div className="contain mx-auto space-y-8 py-22 bg-gray-100 px-4 md:px-0">
+    <div className="contain mx-auto space-y-8 py-22 bg-gray-100 px-4 md:px-6">
       <h2 className="text-4xl text-center font-bold md:text-left">
         Our Statistics
       </h2>

@@ -20,7 +20,7 @@ export default function CoTypes() {
   ] as const
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,.7fr))] contain mx-auto gap-12 w-fit justify-center py-22">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,.7fr))] contain mx-auto px-4 md:px-6 gap-12 w-fit justify-center py-22">
       {co_types.map((type, index) => (
         <div
           key={index}

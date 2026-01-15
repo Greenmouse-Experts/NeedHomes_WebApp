@@ -6,11 +6,11 @@ export default function BankIntegrations() {
   ]
 
   return (
-    <div className="contain mx-auto py-22">
+    <div className="contain mx-auto py-22 px-4 md:px-6">
       <h2 className="text-center mx-auto max-w-xl text-3xl font-semibold">
         Integrate with leading financial institution
       </h2>
-      <div className="contain mx-auto mt-12 px-4 md:px-0">
+      <div className="mt-12">
         <div className="flex gap-8 md:gap-16 justify-center items-center flex-wrap">
           {banks.map((bank, index) => (
             <div

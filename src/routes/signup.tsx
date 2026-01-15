@@ -79,10 +79,6 @@ function SignUpPage() {
     navigate({ to: '/login' })
   }
 
-  const imageUrl = userType === 'investor' 
-    ? '/assets/Rectangle 21299(1).png'
-    : '/assets/Rectangle 21299(2).png'
-
   return (
     <div className="min-h-screen lg:h-screen flex flex-col lg:flex-row overflow-hidden">
       {/* Left Side - Image */}
@@ -90,8 +86,8 @@ function SignUpPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src={imageUrl}
-            alt={userType === 'investor' ? 'Become an Investor' : 'Corporate Account'} 
+            src="/assets/Rectangle 21299(1).png"
+            alt="Start Your Investment Journey Today" 
             className="w-full h-full object-cover opacity-80"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -105,14 +101,10 @@ function SignUpPage() {
         <div className="relative z-10 flex flex-col justify-end p-12 text-white w-full">
           <div className="space-y-6">
             <h2 className="text-4xl font-bold leading-tight">
-              {userType === 'investor' 
-                ? 'Start Your Investment Journey Today'
-                : 'Join Our Corporate Network'}
+              Start Your Investment Journey Today
             </h2>
             <p className="text-lg text-gray-300 max-w-md">
-              {userType === 'investor'
-                ? 'Create your account to access exclusive property investment opportunities and grow your portfolio.'
-                : 'Partner with us to connect property seekers with their dream homes and earn competitive commissions.'}
+              Create your account to access exclusive property investment opportunities and grow your portfolio.
             </p>
           </div>
         </div>
@@ -150,7 +142,7 @@ function SignUpPage() {
                   : 'text-gray-300 hover:text-white'
               }`}
             >
-              Investor
+              Individual
             </button>
             <button
               type="button"
@@ -427,7 +419,7 @@ function SignUpPage() {
 
             <Button
               type="submit"
-              className="w-full bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white text-base sm:text-lg py-5 sm:py-6 mt-4 sm:mt-6"
+              className="w-full bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white text-base sm:text-lg py-2.5 mt-4 sm:mt-6"
             >
               Done
             </Button>

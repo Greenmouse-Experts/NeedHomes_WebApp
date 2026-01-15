@@ -22,10 +22,10 @@ export default function GetOnDevices() {
         }}></div>
       </div>
       
-      <div className="contain mx-auto grid px-0 md:px-0 md:grid-cols-2 py-12 text-white text-center md:text-left relative z-10">
+      <div className="contain mx-auto grid px-4 md:px-6 md:grid-cols-2 py-12 text-white text-center md:text-left relative z-10">
         <FlexInfo>
-          <h2 className="text-4xl font-bold mb-8 px-4 md:px-0">Download our Mobile App</h2>
-          <div className="space-x-4 gap-2 mx-auto md:mx-0 flex flex-col md:flex-row px-4 md:px-0">
+          <h2 className="text-4xl font-bold mb-8">Download our Mobile App</h2>
+          <div className="space-x-4 gap-2 mx-auto md:mx-0 flex flex-col md:flex-row">
             <Button
               variant="outline"
               size="lg"

@@ -8,7 +8,11 @@ function AccountTypeSelection() {
   const navigate = useNavigate()
 
   const handleAccountTypeSelect = (type: 'investor' | 'partner') => {
-    navigate({ to: '/signup', search: { type } })
+    if (type === 'partner') {
+      navigate({ to: '/signup-partner' })
+    } else {
+      navigate({ to: '/signup', search: { type } })
+    }
   }
 
   return (
@@ -74,7 +78,8 @@ function AccountTypeSelection() {
                 Investor
               </h3>
               <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                Invest in properties and make profit
+                Build wealth effortlessly with strategic 
+real estate investments
               </p>
             </div>
 
@@ -110,7 +115,7 @@ function AccountTypeSelection() {
                 Partner Agent
               </h3>
               <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                Promote and Sell Properties from our platform
+                Become a partner Agent in wealth creation while earning recurring income
               </p>
             </div>
 

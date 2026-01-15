@@ -3,7 +3,7 @@ export default function CoDev() {
     {
       title: 'Funding',
       description:
-        'Investors pool their funds, paying outright or in installments, to finance the project from start to finish.',
+        'Pool of investors comes together to contribute agreed amount paying either outright or installment before and during construction.',
       icon: '/funding-icon.svg',
     },
     {
@@ -21,7 +21,7 @@ export default function CoDev() {
   ] as const
 
   return (
-    <div className="relative isolate flex flex-col min-h-[520px] px-4 md:px-0 pb-12 md:pb-0">
+    <div className="relative isolate flex flex-col min-h-[520px] px-4 md:px-6 pb-12 md:pb-0">
       <img
         src="/co_dev.png"
         alt="Co-Development"
@@ -31,7 +31,7 @@ export default function CoDev() {
         <div className="mx-auto max-w-3xl text-center space-y-2">
           <h2 className="text-3xl font-semibold">What is Co-Development?</h2>
           <p>
-            We bring multiple qualified home buyers or investors together to fund, build & own housing units collectively. Each subscriber contributes an agreed portion into the project during construction and receives full legal ownership upon completion.
+           We bring multiple qualified home buyers or investors together to fund, build & own housing units collectively. Each subscriber contributes an agreed portion into the project during construction and receives full legal ownership upon completion.
           </p>
         </div>
       </div>
