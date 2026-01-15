@@ -1,256 +1,228 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { ChevronLeft } from 'lucide-react'
+import { Search, Plus, Filter, Printer, MoreVertical } from 'lucide-react'
 
 export const Route = createFileRoute('/dashboard/properties/listed')({
-  component: ListedPropertyPage,
+  component: ListedPropertiesPage,
 })
 
-type Tab = 'basic' | 'media' | 'pricing' | 'specific'
+type FilterTab = 'all' | 'published' | 'unpublished'
 
-function ListedPropertyPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('specific')
-  const [formData, setFormData] = useState({
-    propertyValuation: '',
-    totalAvailableShares: '',
-    pricePerShare: '',
-    minimumPurchaseQuantity: '',
-    expectedRentalYield: '',
-    roiDistributionCycle: '',
-    exitWindow: '',
-    shareCertificateTemplate: '',
-    secondaryMarketplaceRules: '',
-    minimumHoldingPeriod: '',
-  })
+interface Property {
+  sku: string
+  property: string
+  image: string
+  package: string
+  location: string
+  status: 'Published' | 'Unpublished'
+}
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+// Mock data
+const mockProperties: Property[] = [
+  {
+    sku: 'LAG-CAT-001',
+    property: 'Semi Detached',
+    image: '/property-placeholder.jpg',
+    package: 'Outright Purchase',
+    location: 'Lagos',
+    status: 'Published',
+  },
+  {
+    sku: 'LAG-CAT-001',
+    property: 'Semi Detached',
+    image: '/property-placeholder.jpg',
+    package: 'Co-Develop',
+    location: 'Ogun',
+    status: 'Unpublished',
+  },
+  {
+    sku: 'LAG-CAT-001',
+    property: 'Semi Detached',
+    image: '/property-placeholder.jpg',
+    package: 'Outright Purchase',
+    location: 'Lagos',
+    status: 'Published',
+  },
+  {
+    sku: 'LAG-CAT-001',
+    property: 'Semi Detached',
+    image: '/property-placeholder.jpg',
+    package: 'Co-Develop',
+    location: 'Ogun',
+    status: 'Unpublished',
+  },
+]
+
+function ListedPropertiesPage() {
+  const navigate = useNavigate()
+  const [activeTab, setActiveTab] = useState<FilterTab>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleAddProperty = () => {
+    navigate({ to: '/dashboard/properties/new' })
   }
 
-  const tabs = [
-    { id: 'basic' as Tab, label: 'Basic Property Information' },
-    { id: 'media' as Tab, label: 'Media Uploads' },
-    { id: 'pricing' as Tab, label: 'Pricing & Access' },
-    { id: 'specific' as Tab, label: 'Specific Fields' },
-  ]
+  const filteredProperties = mockProperties.filter((property) => {
+    if (activeTab === 'published') return property.status === 'Published'
+    if (activeTab === 'unpublished') return property.status === 'Unpublished'
+    return true
+  })
 
   return (
     <DashboardLayout title="Manage Properties" subtitle="">
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        {/* Header */}
-        <div className="mb-6">
-          <button className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4">
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-medium">New Property</span>
-          </button>
-          
+      <div className="bg-white rounded-lg shadow-sm">
+        {/* Header Section */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold">Listed Properties</h2>
+            <Button
+              onClick={handleAddProperty}
+              className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add a New Properties
+            </Button>
+          </div>
+
+          {/* Filter Tabs */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                activeTab === 'all'
+                  ? 'bg-[var(--color-orange)] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              All Property
+            </button>
+            <button
+              onClick={() => setActiveTab('published')}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                activeTab === 'published'
+                  ? 'bg-[var(--color-orange)] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Publish Properties
+            </button>
+            <button
+              onClick={() => setActiveTab('unpublished')}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                activeTab === 'unpublished'
+                  ? 'bg-[var(--color-orange)] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Unpublished Properties
+            </button>
+          </div>
+        </div>
+
+        {/* Controls Bar */}
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
           <div className="flex items-center gap-2">
-            <Button variant="primary" size="sm">
-              Fractional Ownership
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Filter className="w-4 h-4" />
+              Filter
+            </Button>
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Printer className="w-4 h-4" />
+              Print
+            </Button>
+            <Button variant="outline" size="sm">
+              Action
             </Button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <div className="flex gap-4 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`pb-3 px-2 whitespace-nowrap font-medium text-sm transition-colors border-b-2 ${
-                  activeTab === tab.id
-                    ? 'border-[var(--color-orange)] text-[var(--color-orange)]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  SKU
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Property
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Image
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Package
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Location
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filteredProperties.map((property, index) => (
+                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 text-sm text-gray-900">{property.sku}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{property.property}</td>
+                  <td className="px-6 py-4">
+                    <div className="w-12 h-12 bg-gray-200 rounded overflow-hidden">
+                      <img
+                        src={property.image}
+                        alt={property.property}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48"%3E%3Crect fill="%23ddd" width="48" height="48"/%3E%3C/svg%3E'
+                        }}
+                      />
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{property.package}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{property.location}</td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                        property.status === 'Published'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-orange-100 text-orange-800'
+                      }`}
+                    >
+                      {property.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* Specific Fields Tab Content */}
-        {activeTab === 'specific' && (
-          <div>
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Fractional Ownership</h3>
-              <p className="text-gray-600 text-sm">
-                Fields for properties divided into investment shares.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Property Valuation */}
-              <div className="space-y-2">
-                <Label htmlFor="propertyValuation">Property Valuation</Label>
-                <Input
-                  id="propertyValuation"
-                  type="text"
-                  placeholder="Total Price"
-                  value={formData.propertyValuation}
-                  onChange={(e) => handleInputChange('propertyValuation', e.target.value)}
-                />
-              </div>
-
-              {/* Total Available Shares */}
-              <div className="space-y-2">
-                <Label htmlFor="totalAvailableShares">Total Available Shares</Label>
-                <Input
-                  id="totalAvailableShares"
-                  type="text"
-                  placeholder="Select"
-                  value={formData.totalAvailableShares}
-                  onChange={(e) => handleInputChange('totalAvailableShares', e.target.value)}
-                />
-              </div>
-
-              {/* Price per Share */}
-              <div className="space-y-2">
-                <Label htmlFor="pricePerShare">Price per Share</Label>
-                <select
-                  id="pricePerShare"
-                  value={formData.pricePerShare}
-                  onChange={(e) => handleInputChange('pricePerShare', e.target.value)}
-                  className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                >
-                  <option value="">Select</option>
-                  <option value="100">$100</option>
-                  <option value="500">$500</option>
-                  <option value="1000">$1000</option>
-                </select>
-              </div>
-
-              {/* Minimum Purchase Quantity */}
-              <div className="space-y-2">
-                <Label htmlFor="minimumPurchaseQuantity">Minimum Purchase Quantity</Label>
-                <select
-                  id="minimumPurchaseQuantity"
-                  value={formData.minimumPurchaseQuantity}
-                  onChange={(e) => handleInputChange('minimumPurchaseQuantity', e.target.value)}
-                  className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                >
-                  <option value="">Select</option>
-                  <option value="1">1 Share</option>
-                  <option value="5">5 Shares</option>
-                  <option value="10">10 Shares</option>
-                </select>
-              </div>
-
-              {/* Expected Rental Yield (%) */}
-              <div className="space-y-2">
-                <Label htmlFor="expectedRentalYield">Expected Rental Yield (%)</Label>
-                <select
-                  id="expectedRentalYield"
-                  value={formData.expectedRentalYield}
-                  onChange={(e) => handleInputChange('expectedRentalYield', e.target.value)}
-                  className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                >
-                  <option value="">Enter your City/Town</option>
-                  <option value="5">5%</option>
-                  <option value="10">10%</option>
-                  <option value="15">15%</option>
-                </select>
-              </div>
-
-              {/* ROI Distribution Cycle */}
-              <div className="space-y-2">
-                <Label htmlFor="roiDistributionCycle">ROI Distribution Cycle</Label>
-                <Input
-                  id="roiDistributionCycle"
-                  type="text"
-                  placeholder=""
-                  value={formData.roiDistributionCycle}
-                  onChange={(e) => handleInputChange('roiDistributionCycle', e.target.value)}
-                />
-              </div>
-
-              {/* Exit Window */}
-              <div className="space-y-2">
-                <Label htmlFor="exitWindow">Exit Window</Label>
-                <select
-                  id="exitWindow"
-                  value={formData.exitWindow}
-                  onChange={(e) => handleInputChange('exitWindow', e.target.value)}
-                  className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                >
-                  <option value="">Select</option>
-                  <option value="6months">6 Months</option>
-                  <option value="1year">1 Year</option>
-                  <option value="2years">2 Years</option>
-                </select>
-              </div>
-
-              {/* Share Certificate Template */}
-              <div className="space-y-2">
-                <Label htmlFor="shareCertificateTemplate">Share Certificate Template</Label>
-                <select
-                  id="shareCertificateTemplate"
-                  value={formData.shareCertificateTemplate}
-                  onChange={(e) => handleInputChange('shareCertificateTemplate', e.target.value)}
-                  className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                >
-                  <option value="">Promo</option>
-                  <option value="standard">Standard</option>
-                  <option value="premium">Premium</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Optional Fields */}
-            <div className="mt-8">
-              <h4 className="text-base font-semibold mb-4">Optional Fields</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Secondary Marketplace Rules */}
-                <div className="space-y-2">
-                  <Label htmlFor="secondaryMarketplaceRules">Secondary Marketplace Rules</Label>
-                  <select
-                    id="secondaryMarketplaceRules"
-                    value={formData.secondaryMarketplaceRules}
-                    onChange={(e) => handleInputChange('secondaryMarketplaceRules', e.target.value)}
-                    className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                  >
-                    <option value="">Select</option>
-                    <option value="flexible">Flexible</option>
-                    <option value="strict">Strict</option>
-                  </select>
-                </div>
-
-                {/* Minimum Holding Period */}
-                <div className="space-y-2">
-                  <Label htmlFor="minimumHoldingPeriod">Minimum Holding Period</Label>
-                  <select
-                    id="minimumHoldingPeriod"
-                    value={formData.minimumHoldingPeriod}
-                    onChange={(e) => handleInputChange('minimumHoldingPeriod', e.target.value)}
-                    className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                  >
-                    <option value="">6 month</option>
-                    <option value="3months">3 Months</option>
-                    <option value="6months">6 Months</option>
-                    <option value="1year">1 Year</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="mt-8 flex justify-end">
-              <Button variant="primary" size="lg" className="px-12">
-                Done
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Placeholder for other tabs */}
-        {activeTab !== 'specific' && (
-          <div className="text-center py-12 text-gray-500">
-            <p>{tabs.find(t => t.id === activeTab)?.label} content coming soon...</p>
+        {/* Empty State */}
+        {filteredProperties.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500">No properties found.</p>
           </div>
         )}
       </div>
