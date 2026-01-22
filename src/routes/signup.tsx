@@ -74,8 +74,11 @@ function SignUpPage() {
       }
       navigate({
         to: "/verify",
-        params: {
-          email: formData.email,
+        search: {
+          email:
+            userType === "investor"
+              ? formData.email
+              : corporateData.corporateEmail,
         },
       });
     },

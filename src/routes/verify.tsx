@@ -23,10 +23,11 @@ type VerifyFormData = {
 function RouteComponent() {
   const navigate = useNavigate();
   const { email } = Route.useSearch();
+  const decodedEmail = decodeURIComponent(email);
 
   const methods = useForm<VerifyFormData>({
     defaultValues: {
-      email: email,
+      email: decodedEmail,
     },
   });
   const { register, handleSubmit } = methods;
