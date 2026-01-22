@@ -51,6 +51,7 @@ function RouteComponent() {
 
   return (
     <div
+      id="nh"
       className="flex min-h-screen items-center justify-center bg-base-100 p-4"
       data-theme="nh-light"
     >
