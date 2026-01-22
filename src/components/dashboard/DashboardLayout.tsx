@@ -1,5 +1,5 @@
-import { Link, useLocation } from '@tanstack/react-router'
-import { useState } from 'react'
+import { Link, useLocation } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -18,54 +18,70 @@ import {
   X,
   Search,
   Bell,
-} from 'lucide-react'
-import { Input } from '@/components/ui/Input'
-import { Badge } from '@/components/ui/Badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
+} from "lucide-react";
+import { Input } from "@/components/ui/Input";
+import { Badge } from "@/components/ui/Badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 
 interface DashboardLayoutProps {
-  children: React.ReactNode
-  title: string
-  subtitle?: string
+  children: React.ReactNode;
+  title: string;
+  subtitle?: string;
 }
 
-export function DashboardLayout({ children, title, subtitle }: DashboardLayoutProps) {
-  const location = useLocation()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+export function DashboardLayout({
+  children,
+  title,
+  subtitle,
+}: DashboardLayoutProps) {
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({
     userManagement: true,
     propertyManagement: true,
     transaction: true,
-  })
+  });
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
-    }))
-  }
+    }));
+  };
 
   const isActive = (path: string) => {
-    return location.pathname === path
-  }
+    return location.pathname === path;
+  };
 
-  const NavLink = ({ to, children, icon: Icon, className = '' }: { to: string; children: React.ReactNode; icon?: React.ComponentType<{ className?: string }>; className?: string }) => {
-    const active = isActive(to)
+  const NavLink = ({
+    to,
+    children,
+    icon: Icon,
+    className = "",
+  }: {
+    to: string;
+    children: React.ReactNode;
+    icon?: React.ComponentType<{ className?: string }>;
+    className?: string;
+  }) => {
+    const active = isActive(to);
     return (
       <Link
         to={to}
         onClick={() => setSidebarOpen(false)}
         className={`flex items-center gap-2.5 p-2 rounded-lg transition-colors text-sm ${
           active
-            ? 'bg-[var(--color-orange)] text-white'
-            : 'hover:bg-gray-800 text-gray-400'
+            ? "bg-[var(--color-orange)] text-white"
+            : "hover:bg-gray-800 text-gray-400"
         } ${className}`}
       >
         {Icon && <Icon className="w-4 h-4" />}
         <span>{children}</span>
       </Link>
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
@@ -80,7 +96,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
       {/* Sidebar */}
       <aside
         className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         {/* Logo */}
@@ -91,10 +107,10 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
               alt="NeedHomes"
               className="h-8"
               onError={(e) => {
-                const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-                const fallback = target.nextElementSibling as HTMLElement
-                if (fallback) fallback.style.display = 'flex'
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) fallback.style.display = "flex";
               }}
             />
             <div className="hidden flex-col">
@@ -121,7 +137,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
           {/* User Management */}
           <div>
             <button
-              onClick={() => toggleSection('userManagement')}
+              onClick={() => toggleSection("userManagement")}
               className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
             >
               <span>USER MANAGEMENT</span>
@@ -146,7 +162,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
           {/* Property Management */}
           <div>
             <button
-              onClick={() => toggleSection('propertyManagement')}
+              onClick={() => toggleSection("propertyManagement")}
               className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
             >
               <span>PROPERTY MANAGEMENT</span>
@@ -177,7 +193,7 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
           {/* Transaction */}
           <div>
             <button
-              onClick={() => toggleSection('transaction')}
+              onClick={() => toggleSection("transaction")}
               className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
             >
               <span>TRANSACTION</span>
@@ -192,7 +208,10 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
                 <NavLink to="/dashboard/transactions/receipts" icon={Receipt}>
                   Receipt
                 </NavLink>
-                <NavLink to="/dashboard/transactions/payments" icon={CreditCard}>
+                <NavLink
+                  to="/dashboard/transactions/payments"
+                  icon={CreditCard}
+                >
                   Payments
                 </NavLink>
               </div>
@@ -223,8 +242,14 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
               <Menu className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
             </button>
             <div className="min-w-0">
-              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 truncate">{title}</h1>
-              {subtitle && <p className="text-xs md:text-sm text-gray-600 truncate">{subtitle}</p>}
+              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 truncate">
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="text-xs md:text-sm text-gray-600 truncate">
+                  {subtitle}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
@@ -254,6 +279,5 @@ export function DashboardLayout({ children, title, subtitle }: DashboardLayoutPr
         </main>
       </div>
     </div>
-  )
+  );
 }
-

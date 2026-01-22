@@ -8,10 +8,8 @@
   default: false;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: var(--background);
-  --color-base-200: oklch(
-    95% 0.051 180.801
-  ); /* No direct mapping, keeping original */
+  --color-base-100: var(--color-gray-100);
+  --color-base-200: oklch(95% 0.051 180.801);
   --color-base-300: oklch(
     91% 0.096 180.426
   ); /* No direct mapping, keeping original */

@@ -51,10 +51,10 @@ function RouteComponent() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-base-200 p-4"
+      className="flex min-h-screen items-center justify-center bg-base-100 p-4"
       data-theme="nh-light"
     >
-      <div className="card w-full max-w-md bg-base-100 shadow-xl">
+      <div className="card w-full max-w-md bg-base-100 shadow-xl ring ring-current/20">
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold">Verify Email</h2>
           <p className="text-sm text-gray-500">

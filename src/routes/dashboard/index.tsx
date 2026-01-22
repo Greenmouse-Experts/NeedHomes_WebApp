@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import {
   Users,
   Handshake,
@@ -10,20 +10,21 @@ import {
   ArrowUp,
   Eye as EyeIcon,
   ChevronDown,
-} from 'lucide-react'
-import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Separator } from '@/components/ui/Separator'
+} from "lucide-react";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Separator } from "@/components/ui/Separator";
 
-export const Route = createFileRoute('/dashboard/')({
+export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
-})
+});
 
 function DashboardIndexPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard">
       {/* Stats Cards */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-4 md:mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -58,7 +59,6 @@ function DashboardIndexPage() {
           </CardHeader>
         </Card>
       </div>
-
       {/* Welcome Banner */}
       <Card className="mb-4 md:mb-6 bg-gradient-to-r from-gray-800 to-[var(--color-orange)] text-white relative overflow-hidden">
         <CardContent className="p-4 md:p-6">
@@ -66,8 +66,12 @@ function DashboardIndexPage() {
             <Calendar className="w-4 h-4" />
             <span className="text-xs md:text-sm">July 14, 2025</span>
           </div>
-          <h2 className="text-xl md:text-2xl font-bold mb-1">Welcome, Admin 👋</h2>
-          <p className="text-sm md:text-base text-gray-200">Have a great day!</p>
+          <h2 className="text-xl md:text-2xl font-bold mb-1">
+            Welcome, Admin 👋
+          </h2>
+          <p className="text-sm md:text-base text-gray-200">
+            Have a great day!
+          </p>
           <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
             <div className="absolute top-10 right-10 w-4 h-4 bg-white rounded-full"></div>
             <div className="absolute top-20 right-20 w-2 h-2 bg-white rounded-full"></div>
@@ -75,16 +79,19 @@ function DashboardIndexPage() {
           </div>
         </CardContent>
       </Card>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Revenue Chart */}
         <Card className="lg:col-span-2">
           <CardHeader className="p-4 md:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <CardTitle className="text-base md:text-lg">Today Revenue Trend</CardTitle>
+                <CardTitle className="text-base md:text-lg">
+                  Today Revenue Trend
+                </CardTitle>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xl md:text-2xl font-bold text-green-600">24.6%</span>
+                  <span className="text-xl md:text-2xl font-bold text-green-600">
+                    24.6%
+                  </span>
                   <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                 </div>
               </div>
@@ -99,13 +106,15 @@ function DashboardIndexPage() {
           <CardContent className="p-4 md:p-6">
             <div className="h-48 md:h-64 flex items-end justify-between gap-1 md:gap-2">
               {/* Simple bar chart representation */}
-              {[40, 60, 45, 80, 65, 90, 75, 85, 70, 95, 88, 100].map((height, i) => (
-                <div
-                  key={i}
-                  className="flex-1 bg-gradient-to-t from-[var(--color-orange)] to-[var(--color-orange-light)] rounded-t"
-                  style={{ height: `${height}%` }}
-                ></div>
-              ))}
+              {[40, 60, 45, 80, 65, 90, 75, 85, 70, 95, 88, 100].map(
+                (height, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 bg-gradient-to-t from-[var(--color-orange)] to-[var(--color-orange-light)] rounded-t"
+                    style={{ height: `${height}%` }}
+                  ></div>
+                ),
+              )}
             </div>
             <div className="mt-3 md:mt-4 text-xs md:text-sm text-gray-600">
               <div className="flex flex-wrap items-center gap-2">
@@ -133,7 +142,9 @@ function DashboardIndexPage() {
               <CardContent className="p-3 md:p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] md:text-xs opacity-90">TOTAL BALANCE</p>
+                    <p className="text-[10px] md:text-xs opacity-90">
+                      TOTAL BALANCE
+                    </p>
                     <p className="text-xl md:text-2xl font-bold">N 120,000</p>
                   </div>
                   <EyeIcon className="w-4 h-4 md:w-5 md:h-5" />
@@ -148,14 +159,20 @@ function DashboardIndexPage() {
                   <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                   <span className="text-xs md:text-sm font-medium">INCOME</span>
                 </div>
-                <span className="text-sm md:text-base font-bold text-green-600">N 100,000</span>
+                <span className="text-sm md:text-base font-bold text-green-600">
+                  N 100,000
+                </span>
               </div>
               <div className="flex items-center justify-between p-2.5 md:p-3 bg-red-50 rounded-lg">
                 <div className="flex items-center gap-2">
                   <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
-                  <span className="text-xs md:text-sm font-medium">EXPENSE</span>
+                  <span className="text-xs md:text-sm font-medium">
+                    EXPENSE
+                  </span>
                 </div>
-                <span className="text-sm md:text-base font-bold text-red-600">N 20,000</span>
+                <span className="text-sm md:text-base font-bold text-red-600">
+                  N 20,000
+                </span>
               </div>
             </div>
 
@@ -163,7 +180,9 @@ function DashboardIndexPage() {
 
             {/* Recent Transactions */}
             <div>
-              <h3 className="text-xs md:text-sm font-semibold mb-2 md:mb-3">RECENT</h3>
+              <h3 className="text-xs md:text-sm font-semibold mb-2 md:mb-3">
+                RECENT
+              </h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
                   <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -172,11 +191,15 @@ function DashboardIndexPage() {
                       <p className="text-xs md:text-sm font-medium text-green-600 truncate">
                         + N 200,000
                       </p>
-                      <p className="text-[10px] md:text-xs text-gray-500 truncate">Incoming payment</p>
+                      <p className="text-[10px] md:text-xs text-gray-500 truncate">
+                        Incoming payment
+                      </p>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-2">
-                    <p className="text-[10px] md:text-xs text-gray-500">12-02-25</p>
+                    <p className="text-[10px] md:text-xs text-gray-500">
+                      12-02-25
+                    </p>
                     <Badge className="bg-green-100 text-green-700 text-[10px] md:text-xs">
                       Successful
                     </Badge>
@@ -188,5 +211,5 @@ function DashboardIndexPage() {
         </Card>
       </div>
     </DashboardLayout>
-  )
+  );
 }
