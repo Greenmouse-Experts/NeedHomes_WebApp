@@ -1,4 +1,7 @@
-/*@plugin "daisyui";*/
+@plugin "daisyui" {
+  /*root: "#my-app";*/
+  themes: false;
+}
 
 @plugin "daisyui/theme" {
   name: "nh-light";
@@ -15,7 +18,7 @@
   --color-base-content: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-content: var(--primary-foreground);
-  --color-secondary: var(--secondary);
+  --color-secondary: var(--color-orange);
   --color-secondary-content: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-content: var(--accent-foreground);

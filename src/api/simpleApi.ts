@@ -11,7 +11,7 @@ export interface ApiResponse<T = any> {
   path: string;
 }
 
-const new_url = "https://needhomes-backend-staging.onrender.com/";
+export const new_url = "https://needhomes-backend-staging.onrender.com/";
 const apiClient = axios.create({
   baseURL: new_url,
   withCredentials: true,
@@ -40,9 +40,8 @@ apiClient.interceptors.response.use(
         if (!user) {
           throw new Error("User not found in store.");
         }
-
         const { data } = await axios.post(`${new_url}auth/refresh`, {
-          userId: user.id,
+          refreshToken: user.refreshToken,
         });
 
         const newAccessToken = data.data.access_token;
@@ -50,11 +49,10 @@ apiClient.interceptors.response.use(
           throw new Error("New access token not received.");
         }
 
-        const newUser: USER & { access_token: string } = {
-          ...user,
-          access_token: newAccessToken,
-        };
-        set_user_value(newUser);
+        // const newUser: USER & { access_token: string } = {
+        //   ...user,
+        // };
+        set_user_value(data.data as any);
 
         // Update header and retry
         original.headers.Authorization = `Bearer ${newAccessToken}`;

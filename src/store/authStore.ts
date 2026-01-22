@@ -33,3 +33,19 @@ export const set_user_value = (user: AUTHRECORD) => {
   const store = getDefaultStore();
   store.set(user_atom, user);
 };
+
+let temp_user_atom = atomWithStorage<string | null>("temp_user", null);
+
+export const set_temp_user_value = (user: string) => {
+  const store = getDefaultStore();
+  store.set(temp_user_atom, user);
+};
+
+export const useTempUser = () => {
+  const [user, setUser] = useAtom(temp_user_atom);
+  return [user, setUser] as const;
+};
+export const clear_temp_user = () => {
+  const store = getDefaultStore();
+  store.set(temp_user_atom, null);
+};

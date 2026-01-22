@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as SignupPartnerRouteImport } from './routes/signup-partner'
 import { Route as SignupRouteImport } from './routes/signup'
@@ -41,6 +42,11 @@ import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/
 import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dashboard/partners/$partnerId/kyc'
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
 
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
   '/test': typeof TestRoute
+  '/verify': typeof VerifyRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
@@ -251,6 +258,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
   '/test': typeof TestRoute
+  '/verify': typeof VerifyRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/investors/properties': typeof InvestorsPropertiesRoute
@@ -280,6 +288,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
   '/test': typeof TestRoute
+  '/verify': typeof VerifyRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
@@ -315,6 +324,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/signup-partner'
     | '/test'
+    | '/verify'
     | '/dashboard/announcements'
     | '/dashboard/investors'
     | '/dashboard/partners'
@@ -347,6 +357,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/signup-partner'
     | '/test'
+    | '/verify'
     | '/dashboard/announcements'
     | '/dashboard/settings'
     | '/investors/properties'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/signup-partner'
     | '/test'
+    | '/verify'
     | '/dashboard/announcements'
     | '/dashboard/investors'
     | '/dashboard/partners'
@@ -409,12 +421,20 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SignupPartnerRoute: typeof SignupPartnerRoute
   TestRoute: typeof TestRoute
+  VerifyRoute: typeof VerifyRoute
   InvestorsPropertiesRoute: typeof InvestorsPropertiesRoute
   InvestorsIndexRoute: typeof InvestorsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test': {
       id: '/test'
       path: '/test'
@@ -754,6 +774,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SignupPartnerRoute: SignupPartnerRoute,
   TestRoute: TestRoute,
+  VerifyRoute: VerifyRoute,
   InvestorsPropertiesRoute: InvestorsPropertiesRoute,
   InvestorsIndexRoute: InvestorsIndexRoute,
 }

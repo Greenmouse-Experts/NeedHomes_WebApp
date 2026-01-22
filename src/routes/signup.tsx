@@ -6,7 +6,9 @@ import { Label } from "@/components/ui/Label";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import apiClient from "@/api/simpleApi"; // Assuming simpleApi.ts exports apiClient
+import apiClient, { type ApiResponse } from "@/api/simpleApi"; // Assuming simpleApi.ts exports apiClient
+import { set_temp_user_value } from "@/store/authStore";
+import type { AxiosError } from "axios";
 
 export const Route = createFileRoute("/signup")({
   component: SignUpPage,
@@ -61,10 +63,33 @@ function SignUpPage() {
     },
     onSuccess: (data) => {
       console.log("Signup successful:", data);
-      toast.success("Signup successful! Please log in.", { duration: 2000 });
-      navigate({ to: "/login" });
+      toast.success("Signup successful! Please verify your email.", {
+        duration: 2000,
+      });
+      // Set temp user email and navigate to verification page
+      if (userType === "investor") {
+        set_temp_user_value(formData.email);
+      } else {
+        set_temp_user_value(corporateData.corporateEmail);
+      }
+      navigate({
+        to: "/verify",
+        params: {
+          email: formData.email,
+        },
+      });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<ApiResponse>) => {
+      if (error.status == 409) {
+        toast.error("Email already exists", { duration: 1500 });
+        return navigate({
+          to: "/login",
+        });
+        // toast.error("check email for otp", { duration: 1500 });
+        // return navigate({
+        //   to: `/verify?email=${formData.email}`,
+        // });
+      }
       console.error("Signup error:", error);
       toast.error(
         error.response?.data?.message || "Signup failed. Please try again.",

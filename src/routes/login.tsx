@@ -6,10 +6,12 @@ import { Label } from "@/components/ui/Label";
 import { Switch } from "@/components/ui/Switch";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import apiClient, { new_url, type ApiResponse } from "@/api/simpleApi";
 import { type AUTHRECORD, set_user_value } from "@/store/authStore";
 import { toast } from "sonner";
 import type { USER } from "@/types";
+import axios, { AxiosError } from "axios";
+import { extract_message } from "@/helpers/apihelpers";
 
 // Extend the USER interface to include access_token as it's part of the login response
 
@@ -33,8 +35,8 @@ function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      const response = await apiClient.post<ApiResponse<LOGIN_RESPONSE>>(
-        "auth/login",
+      const response = await axios.post<ApiResponse<LOGIN_RESPONSE>>(
+        `${new_url}auth/login`,
         credentials,
       );
       return response.data;
@@ -50,7 +52,10 @@ function LoginPage() {
       toast.success("Login successful!", { duration: 1500 });
       navigate({ to: "/dashboard" });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<ApiResponse>) => {
+      if (error.status == 401) {
+        return toast.error(extract_message(error));
+      }
       console.error("Login failed:", error);
       toast.error(
         error.response?.data?.message ||
@@ -182,6 +187,22 @@ function LoginPage() {
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? "Signing in..." : "Sign in"}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-white/20 text-white hover:bg-white/10"
+              onClick={() => {
+                const encodedEmail = encodeURIComponent(email);
+                const encodedPass = encodeURIComponent(password);
+                navigate({
+                  to: `/verify`,
+                  search: { email: encodedEmail, pass: encodedPass } as any,
+                });
+              }}
+            >
+              Verify Account
             </Button>
           </form>
 
