@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import Header from "@/components/Header";
 const client = new QueryClient({
   defaultOptions: {
     queries: {
@@ -17,24 +18,31 @@ const client = new QueryClient({
   },
 });
 export const Route = createRootRoute({
-  component: () => (
-    <>
-      <QueryClientProvider client={client}>
-        <Toaster richColors position="top-right" />
-        <Outlet />
-      </QueryClientProvider>
+  component: () => {
+    const hideHeader =
+      location.pathname.startsWith("/dashboard") ||
+      location.pathname.startsWith("/investors");
+    return (
+      <>
+        <QueryClientProvider client={client}>
+          <Toaster richColors position="top-right" />
+          {/*<Head*/}
+          {!hideHeader && <Header />}
+          <Outlet />
+        </QueryClientProvider>
 
-      <TanStackDevtools
-        config={{
-          position: "bottom-right",
-        }}
-        plugins={[
-          {
-            name: "Tanstack Router",
-            render: <TanStackRouterDevtoolsPanel />,
-          },
-        ]}
-      />
-    </>
-  ),
+        <TanStackDevtools
+          config={{
+            position: "bottom-right",
+          }}
+          plugins={[
+            {
+              name: "Tanstack Router",
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+          ]}
+        />
+      </>
+    );
+  },
 });
