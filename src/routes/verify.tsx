@@ -64,7 +64,7 @@ function RouteComponent() {
   };
 
   const handleResendOtp = () => {
-    resendOtpMutate({ email: decodedEmail });
+    resendOtpMutate({ email: methods.getValues("email") });
   };
 
   return (
