@@ -23,14 +23,23 @@ export const Route = createFileRoute("/forgot-password/reset/")({
 });
 
 function RouteComponent() {
-  const { token } = Route.useSearch();
+  const { token, email } = Route.useSearch();
   const navigate = useNavigate();
 
-  if (!token) {
+  if (!token || !email) {
     return (
       <SimpleContainer>
         <div className="flex-1 grid place-items-center">
-          <div className="text-error text-lg">Invalid or missing token.</div>
+          <div className="text-error text-lg">
+            Invalid or missing token and/or email. Both are required.
+          </div>
+          <button
+            type="button"
+            className="btn btn-block btn-primary"
+            onClick={() => navigate({ to: "/forgot-password" })}
+          >
+            Go Back
+          </button>
         </div>
       </SimpleContainer>
     );
