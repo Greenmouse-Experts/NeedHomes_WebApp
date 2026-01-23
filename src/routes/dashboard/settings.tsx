@@ -1,59 +1,93 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { User, Lock, Headphones } from "lucide-react";
+import { User, CreditCard, FileText, Shield, Upload, Calendar } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
-
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
-import type { AUTHRECORD } from "@/store/authStore";
 
 export const Route = createFileRoute("/dashboard/settings")({
   component: SettingsPage,
 });
 
-type SettingsTab = "profile" | "password" | "support";
+type SettingsTab = "profile" | "bankDetails" | "kyc" | "security";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
-  const [authRecord, setAuthRecord] = useAuth(); // Destructure directly to get user and setAuthRecord
-  const user = authRecord?.user; // Extract the user object from AUTHRECORD
-  console.log(user);
+  const [authRecord, setAuthRecord] = useAuth();
+  const user = authRecord?.user;
+
+  const [profileData, setProfileData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+  });
+
+  const [bankData, setBankData] = useState({
+    accountNumber: "",
+    bankName: "",
+    accountName: "",
+    accountType: "",
+  });
+
+  const [kycData, setKycData] = useState({
+    idType: "",
+    frontUpload: null as File | null,
+    backUpload: null as File | null,
+    utilityBill: null as File | null,
+    address: "",
+  });
+
   const [passwordData, setPasswordData] = useState({
     newPassword: "",
     confirmPassword: "",
   });
 
-  const [profileData, setProfileData] = useState({
-    fullName: "",
-    email: "",
-    phoneNumber: "",
-    alternatePhone: "",
-    howDidYouHear: "",
-    country: "",
-  });
-
   useEffect(() => {
     if (user) {
       setProfileData({
-        fullName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
         email: user.email || "",
-        phoneNumber: "", // Assuming phone number is not directly in USER type, or needs to be fetched
-        alternatePhone: "", // Assuming alternate phone is not directly in USER type
-        howDidYouHear: "", // Assuming this is not directly in USER type
-        country: "", // Assuming country is not directly in USER type
+        phoneNumber: "",
+        dateOfBirth: "",
       });
     }
   }, [user]);
+
+  const handleProfileChange = (field: string, value: string) => {
+    setProfileData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleBankChange = (field: string, value: string) => {
+    setBankData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleKycChange = (field: string, value: string | File | null) => {
+    setKycData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handlePasswordChange = (field: string, value: string) => {
     setPasswordData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleProfileChange = (field: string, value: string) => {
-    setProfileData((prev) => ({ ...prev, [field]: value }));
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Profile update:", profileData);
+  };
+
+  const handleBankSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Bank details update:", bankData);
+  };
+
+  const handleKycSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("KYC update:", kycData);
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -63,116 +97,18 @@ function SettingsPage() {
       return;
     }
     console.log("Password update:", passwordData);
-    // Here you would typically call an API to update the password
-  };
-
-  const handleProfileSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Profile update:", profileData);
-    // Here you would typically call an API to update the profile
-    // If you want to update the local user state after a successful API call:
-    if (authRecord) {
-      const updatedUser = {
-        ...authRecord.user,
-        firstName: profileData.fullName.split(" ")[0],
-        lastName: profileData.fullName.split(" ")[1] || "",
-        email: profileData.email,
-      };
-      setAuthRecord({ ...authRecord, user: updatedUser });
-    }
   };
 
   const tabs = [
     { id: "profile" as SettingsTab, label: "Profile", icon: User },
-    { id: "password" as SettingsTab, label: "Password", icon: Lock },
-    { id: "support" as SettingsTab, label: "Support", icon: Headphones },
+    { id: "bankDetails" as SettingsTab, label: "Bank Details", icon: CreditCard },
+    { id: "kyc" as SettingsTab, label: "KYC", icon: FileText },
+    { id: "security" as SettingsTab, label: "Security", icon: Shield },
   ];
 
-  const renderPersonalInfoForm = () => (
-    <form onSubmit={handleProfileSubmit} className="max-w-3xl">
-      {/* Profile Picture */}
-      <div className="mb-6">
-        <Label className="mb-2">Profile Picture</Label>
-        <div className="flex items-center gap-4 mt-2">
-          <Avatar className="w-24 h-24 bg-gray-100">
-            <AvatarFallback className="text-2xl text-gray-400">
-              {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Full Name */}
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name</Label>
-          <Input
-            id="fullName"
-            value={profileData.fullName}
-            onChange={(e) => handleProfileChange("fullName", e.target.value)}
-            className="bg-gray-50"
-          />
-        </div>
-
-        {/* Email Address */}
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
-          <Input
-            id="email"
-            type="email"
-            value={profileData.email}
-            onChange={(e) => handleProfileChange("email", e.target.value)}
-            className="bg-gray-50"
-          />
-        </div>
-
-        {/* Phone Number */}
-        <div className="space-y-2">
-          <Label htmlFor="phoneNumber">Phone Number</Label>
-          <Input
-            id="phoneNumber"
-            value={profileData.phoneNumber}
-            onChange={(e) => handleProfileChange("phoneNumber", e.target.value)}
-            className="bg-gray-50"
-          />
-        </div>
-
-        {/* Alternate Phone Number */}
-        <div className="space-y-2">
-          <Label htmlFor="alternatePhone">Alternate Phone Number</Label>
-          <Input
-            id="alternatePhone"
-            value={profileData.alternatePhone}
-            onChange={(e) =>
-              handleProfileChange("alternatePhone", e.target.value)
-            }
-            className="bg-gray-50"
-          />
-        </div>
-      </div>
-
-      {/* How did you hear about us */}
-      <div className="space-y-2 mt-6">
-        <Label htmlFor="howDidYouHear">How did you hear about us?</Label>
-        <Input
-          id="howDidYouHear"
-          value={profileData.howDidYouHear}
-          onChange={(e) => handleProfileChange("howDidYouHear", e.target.value)}
-          className="bg-gray-50"
-        />
-      </div>
-
-      {/* Update Button */}
-      <div className="pt-6">
-        <Button type="submit" variant="primary" size="lg" className="px-12">
-          Update
-        </Button>
-      </div>
-    </form>
-  );
 
   return (
-    <DashboardLayout title="Super Admin Dashboard" subtitle="">
+    <DashboardLayout title="Settings" subtitle="">
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="flex flex-col md:flex-row">
           {/* Sidebar Navigation */}
@@ -181,28 +117,23 @@ function SettingsPage() {
               <h2 className="font-semibold text-lg">Settings</h2>
             </div>
             <nav className="p-2">
-              <div className="mb-2">
-                <p className="text-xs font-semibold text-gray-500 uppercase px-3 py-2">
-                  Personal
-                </p>
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
-                        activeTab === tab.id
-                          ? "bg-white text-gray-900 shadow-sm"
-                          : "text-gray-600 hover:bg-white/50"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span>{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm mb-1 ${
+                      activeTab === tab.id
+                        ? "bg-white text-gray-900 shadow-sm"
+                        : "text-gray-600 hover:bg-white/50"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
             </nav>
           </div>
 
@@ -212,40 +143,295 @@ function SettingsPage() {
             {activeTab === "profile" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-4">View Details</h3>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">PROFILE</h3>
                 </div>
 
-                {/* Personal Info Content */}
-                {renderPersonalInfoForm()}
+                <form onSubmit={handleProfileSubmit} className="max-w-2xl">
+                  {/* Profile Picture */}
+                  <div className="mb-6">
+                    <div className="flex items-center gap-4">
+                      <Avatar className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-cyan-500">
+                        <AvatarFallback className="text-2xl text-white bg-transparent">
+                          {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <Button type="button" variant="outline" size="sm">
+                        Change Picture
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* First Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input
+                        id="firstName"
+                        value={profileData.firstName}
+                        onChange={(e) => handleProfileChange("firstName", e.target.value)}
+                        placeholder="Lord"
+                      />
+                    </div>
+
+                    {/* Last Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        value={profileData.lastName}
+                        onChange={(e) => handleProfileChange("lastName", e.target.value)}
+                        placeholder="Xylarz"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2 mt-6">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => handleProfileChange("email", e.target.value)}
+                      placeholder="testmail@gmail.com"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {/* Phone Number */}
+                    <div className="space-y-2">
+                      <Label htmlFor="phoneNumber">Phone Number</Label>
+                      <div className="flex gap-2">
+                        <div className="w-16 flex items-center justify-center border border-gray-300 rounded-md">
+                          <span className="text-2xl">🇳🇬</span>
+                        </div>
+                        <Input
+                          id="phoneNumber"
+                          value={profileData.phoneNumber}
+                          onChange={(e) => handleProfileChange("phoneNumber", e.target.value)}
+                          placeholder="0700 000 0000"
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Date of Birth */}
+                    <div className="space-y-2">
+                      <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                      <div className="relative">
+                        <Input
+                          id="dateOfBirth"
+                          type="date"
+                          value={profileData.dateOfBirth}
+                          onChange={(e) => handleProfileChange("dateOfBirth", e.target.value)}
+                          placeholder="20/01/2028"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="pt-6">
+                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                      Save
+                    </Button>
+                  </div>
+                </form>
               </div>
             )}
 
-            {/* Password Tab */}
-            {activeTab === "password" && (
+            {/* Bank Details Tab */}
+            {activeTab === "bankDetails" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-1">
-                    CHANGE PASSWORD
-                  </h3>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Bank Details</h3>
                 </div>
 
-                <form
-                  onSubmit={handlePasswordSubmit}
-                  className="max-w-md space-y-6"
-                >
+                <form onSubmit={handleBankSubmit} className="max-w-2xl">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Account Number */}
+                    <div className="space-y-2">
+                      <Label htmlFor="accountNumber">Account Number</Label>
+                      <Input
+                        id="accountNumber"
+                        value={bankData.accountNumber}
+                        onChange={(e) => handleBankChange("accountNumber", e.target.value)}
+                        placeholder="Enter Acct Number"
+                      />
+                    </div>
+
+                    {/* Bank Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="bankName">Bank Name</Label>
+                      <select
+                        id="bankName"
+                        value={bankData.bankName}
+                        onChange={(e) => handleBankChange("bankName", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
+                      >
+                        <option value="">Select</option>
+                        <option value="access">Access Bank</option>
+                        <option value="gtb">GTBank</option>
+                        <option value="first">First Bank</option>
+                        <option value="zenith">Zenith Bank</option>
+                        <option value="uba">UBA</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {/* Account Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="accountName">Account Name</Label>
+                      <Input
+                        id="accountName"
+                        value={bankData.accountName}
+                        onChange={(e) => handleBankChange("accountName", e.target.value)}
+                        className="bg-red-50"
+                        disabled
+                      />
+                    </div>
+
+                    {/* Account Type */}
+                    <div className="space-y-2">
+                      <Label htmlFor="accountType">Account Type</Label>
+                      <select
+                        id="accountType"
+                        value={bankData.accountType}
+                        onChange={(e) => handleBankChange("accountType", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
+                      >
+                        <option value="">Select</option>
+                        <option value="savings">Savings</option>
+                        <option value="current">Current</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-6">
+                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                      Submit
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* KYC Tab */}
+            {activeTab === "kyc" && (
+              <div>
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">KYC</h3>
+                </div>
+
+                <form onSubmit={handleKycSubmit} className="max-w-2xl">
+                  {/* ID Type */}
+                  <div className="space-y-2 mb-6">
+                    <Label htmlFor="idType">ID Type</Label>
+                    <Input
+                      id="idType"
+                      value={kycData.idType}
+                      onChange={(e) => handleKycChange("idType", e.target.value)}
+                      placeholder="National ID"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    {/* Upload Front */}
+                    <div className="space-y-2">
+                      <Label>Upload Front</Label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
+                        <input
+                          type="file"
+                          onChange={(e) => handleKycChange("frontUpload", e.target.files?.[0] || null)}
+                          className="hidden"
+                          id="frontUpload"
+                          accept="image/*"
+                        />
+                        <label htmlFor="frontUpload" className="cursor-pointer">
+                          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm text-[var(--color-orange)]">View File Upload</p>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Upload Back */}
+                    <div className="space-y-2">
+                      <Label>Upload Back</Label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
+                        <input
+                          type="file"
+                          onChange={(e) => handleKycChange("backUpload", e.target.files?.[0] || null)}
+                          className="hidden"
+                          id="backUpload"
+                          accept="image/*"
+                        />
+                        <label htmlFor="backUpload" className="cursor-pointer">
+                          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm text-[var(--color-orange)]">View File Upload</p>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Utility Bill */}
+                  <div className="space-y-2 mb-6">
+                    <Label>Utility Bill (Proof of Address)</Label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
+                      <input
+                        type="file"
+                        onChange={(e) => handleKycChange("utilityBill", e.target.files?.[0] || null)}
+                        className="hidden"
+                        id="utilityBill"
+                        accept="image/*,application/pdf"
+                      />
+                      <label htmlFor="utilityBill" className="cursor-pointer">
+                        <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                        <p className="text-sm text-[var(--color-orange)]">View File Upload</p>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="space-y-2 mb-6">
+                    <Label htmlFor="address">Address</Label>
+                    <Input
+                      id="address"
+                      value={kycData.address}
+                      onChange={(e) => handleKycChange("address", e.target.value)}
+                      placeholder="Zone A 1 Egbi Ewaji St, Wuse, Abuja 900001, Federal Capital Territory, Nigeria"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-6">
+                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                      Submit
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* Security Tab */}
+            {activeTab === "security" && (
+              <div>
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Change Password</h3>
+                </div>
+
+                <form onSubmit={handlePasswordSubmit} className="max-w-2xl space-y-6">
                   {/* New Password */}
                   <div className="space-y-2">
                     <Label htmlFor="newPassword">New Password</Label>
                     <Input
                       id="newPassword"
                       type="password"
-                      placeholder="Enter new password"
+                      placeholder="SuperAdmin"
                       value={passwordData.newPassword}
-                      onChange={(e) =>
-                        handlePasswordChange("newPassword", e.target.value)
-                      }
+                      onChange={(e) => handlePasswordChange("newPassword", e.target.value)}
                       required
-                      className="bg-gray-50"
                     />
                   </div>
 
@@ -255,36 +441,20 @@ function SettingsPage() {
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder="Confirm new password"
+                      placeholder="SuperAdmin"
                       value={passwordData.confirmPassword}
-                      onChange={(e) =>
-                        handlePasswordChange("confirmPassword", e.target.value)
-                      }
+                      onChange={(e) => handlePasswordChange("confirmPassword", e.target.value)}
                       required
-                      className="bg-gray-50"
                     />
                   </div>
 
                   {/* Submit Button */}
                   <div className="pt-4">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="lg"
-                      className="px-12"
-                    >
+                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
                       Update
                     </Button>
                   </div>
                 </form>
-              </div>
-            )}
-
-            {/* Support Tab */}
-            {activeTab === "support" && (
-              <div className="text-center py-12 text-gray-500">
-                <Headphones className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <p>Support page coming soon...</p>
               </div>
             )}
           </div>
