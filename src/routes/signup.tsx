@@ -15,17 +15,17 @@ export const Route = createFileRoute("/signup")({
   component: SignUpPage,
   validateSearch: (search: Record<string, unknown>) => {
     return {
-      type: (search.type as "individual" | "investor") || "individual",
+      type: (search.type as "INVESTOR" | "CORPORATE") || "INVESTOR",
     };
   },
 });
 
-type UserType = "individual" | "investor";
+type UserType = "INVESTOR" | "CORPORATE";
 
 function SignUpPage() {
   const navigate = useNavigate();
   const { type } = Route.useSearch();
-  const [userType, setUserType] = useState<UserType>(type || "individual");
+  const [userType, setUserType] = useState<UserType>(type || "INVESTOR");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -59,41 +59,25 @@ function SignUpPage() {
   };
 
   const signupMutation = useMutation({
-    mutationFn: (data: any) => {
-      return apiClient.post("/auth/register?accountType=INDIVIDUAL", data);
+    mutationFn: (payload: { data: any; accountType: UserType }) => {
+      return apiClient.post(
+        `/auth/register?accountType=${payload.accountType}`,
+        payload.data,
+      );
     },
-    onSuccess: (data) => {
-      console.log("Signup successful:", data);
-      // toast.success("Signup successful! Please verify your email.", {
-      //   duration: 2000,
-      // });
-      // Set temp user email and navigate to verification page
-      if (userType === "investor") {
-        set_temp_user_value(formData.email);
-      } else {
-        set_temp_user_value(corporateData.corporateEmail);
-      }
+    onSuccess: (_, variables) => {
+      const email =
+        variables.accountType === "INVESTOR"
+          ? formData.email
+          : corporateData.corporateEmail;
+
+      set_temp_user_value(email);
       navigate({
         to: "/verify",
-        search: {
-          email:
-            userType === "investor"
-              ? formData.email
-              : corporateData.corporateEmail,
-        },
+        search: { email },
       });
     },
     onError: (error: AxiosError<ApiResponse>) => {
-      if (error.status == 409) {
-        // toast.error("Email already exists", { duration: 1500 });
-        // return navigate({
-        //   to: "/login",
-        // });
-        // toast.error("check email for otp", { duration: 1500 });
-        // return navigate({
-        //   to: `/verify?email=${formData.email}`,
-        // });
-      }
       console.error("Signup error:", error);
     },
   });
@@ -101,8 +85,7 @@ function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (userType === "investor") {
-      // Validate passwords match
+    if (userType === "INVESTOR") {
       if (formData.password !== formData.confirmPassword) {
         toast.error("Passwords do not match!", { duration: 1500 });
         return;
@@ -115,16 +98,20 @@ function SignUpPage() {
         phone: formData.phoneNumber,
         password: formData.password,
         referral_source: formData.hearAboutUs,
-        // accountType: "INDIVIDUAL",
-        // user_type: "investor", // Assuming this field is needed by the backend
       };
-      toast.promise(signupMutation.mutateAsync(investorPayload), {
-        loading: "signing up",
-        success: "success",
-        error: extract_message,
-      });
+
+      toast.promise(
+        signupMutation.mutateAsync({
+          data: investorPayload,
+          accountType: "INVESTOR",
+        }),
+        {
+          loading: "Signing up...",
+          success: "Registration successful!",
+          error: extract_message,
+        },
+      );
     } else {
-      // Validate passwords match for corporate
       if (corporateData.password !== corporateData.confirmPassword) {
         toast.error("Passwords do not match!", { duration: 1500 });
         return;
@@ -136,16 +123,26 @@ function SignUpPage() {
         phone: corporateData.phoneNumber,
         password: corporateData.password,
         referral_source: corporateData.hearAboutUs,
-        user_type: "partner", // Assuming this field is needed by the backend
       };
-      signupMutation.mutate(corporatePayload);
+
+      toast.promise(
+        signupMutation.mutateAsync({
+          data: corporatePayload,
+          accountType: "CORPORATE",
+        }),
+        {
+          loading: "Signing up...",
+          success: "Registration successful!",
+          error: extract_message,
+        },
+      );
     }
   };
 
   return (
     <div className="min-h-screen lg:h-screen flex flex-col lg:flex-row overflow-hidden">
       {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-gray-900 to-gray-800 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
@@ -157,7 +154,7 @@ function SignUpPage() {
               target.style.display = "none";
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent"></div>
         </div>
 
         {/* Content Overlay */}
@@ -203,10 +200,10 @@ function SignUpPage() {
             <div className="flex gap-2 p-1 bg-white/10 rounded-xl">
               <button
                 type="button"
-                onClick={() => setUserType("investor")}
+                onClick={() => setUserType("INVESTOR")}
                 className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userType === "investor"
-                    ? "bg-[var(--color-orange)] text-white shadow-lg"
+                  userType === "INVESTOR"
+                    ? "bg-brand-orange text-white shadow-lg"
                     : "text-gray-300 hover:text-white"
                 }`}
               >
@@ -214,10 +211,10 @@ function SignUpPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setUserType("partner")}
+                onClick={() => setUserType("CORPORATE")}
                 className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userType === "partner"
-                    ? "bg-[var(--color-orange)] text-white shadow-lg"
+                  userType === "CORPORATE"
+                    ? "bg-brand-orange text-white shadow-lg"
                     : "text-gray-300 hover:text-white"
                 }`}
               >
@@ -227,7 +224,7 @@ function SignUpPage() {
 
             {/* Signup Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {userType === "investor" ? (
+              {userType === "INVESTOR" ? (
                 <>
                   {/* Investor Form Fields */}
                   {/* Name Fields */}
@@ -377,7 +374,7 @@ function SignUpPage() {
                       onChange={(e) =>
                         handleInputChange("hearAboutUs", e.target.value)
                       }
-                      className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] focus:bg-white/20 transition-all duration-300"
+                      className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white/20 transition-all duration-300"
                     >
                       <option value="" className="bg-gray-800"></option>
                       <option value="social-media" className="bg-gray-800">
@@ -401,7 +398,7 @@ function SignUpPage() {
                       type="checkbox"
                       id="terms"
                       required
-                      className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-[var(--color-orange)] focus:ring-[var(--color-orange)]"
+                      className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-brand-orange focus:ring-brand-orange"
                     />
                     <label
                       htmlFor="terms"
@@ -565,7 +562,7 @@ function SignUpPage() {
                           e.target.value,
                         )
                       }
-                      className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] focus:bg-white/20 transition-all duration-300"
+                      className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white/20 transition-all duration-300"
                     >
                       <option value="" className="bg-gray-800"></option>
                       <option value="social-media" className="bg-gray-800">
@@ -589,7 +586,7 @@ function SignUpPage() {
                       type="checkbox"
                       id="corporateTerms"
                       required
-                      className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-[var(--color-orange)] focus:ring-[var(--color-orange)]"
+                      className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-brand-orange focus:ring-brand-orange"
                     />
                     <label
                       htmlFor="corporateTerms"
@@ -604,7 +601,7 @@ function SignUpPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white text-base sm:text-lg py-2.5 mt-4 sm:mt-6"
+                className="w-full bg-brand-orange hover:bg-brand-orange-dark text-white text-base sm:text-lg py-2.5 mt-4 sm:mt-6"
                 disabled={signupMutation.isPending}
               >
                 {signupMutation.isPending ? "Signing Up..." : "Done"}
@@ -617,7 +614,7 @@ function SignUpPage() {
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-[var(--color-orange)] hover:text-[var(--color-orange-light)] font-semibold transition-colors"
+                  className="text-brand-orange hover:text-brand-orange-light font-semibold transition-colors"
                 >
                   Log In
                 </Link>
