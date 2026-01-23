@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { useAuth } from '@/store/authStore'
+import { useEffect } from 'react'
 
 interface InvestorSidebarProps {
     activePage?: string
@@ -13,12 +14,54 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
     const [authRecord] = useAuth()
     const user = authRecord?.user
 
+    // Close sidebar when clicking outside on mobile
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement
+            if (isSidebarOpen && window.innerWidth < 768) {
+                if (!target.closest('aside') && !target.closest('button[aria-label="Toggle menu"]')) {
+                    setIsSidebarOpen(false)
+                }
+            }
+        }
+
+        if (isSidebarOpen) {
+            document.addEventListener('mousedown', handleClickOutside)
+            // Prevent body scroll when sidebar is open on mobile
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+            document.body.style.overflow = ''
+        }
+    }, [isSidebarOpen, setIsSidebarOpen])
+
+    // Close sidebar when route changes on mobile
+    const handleLinkClick = () => {
+        if (window.innerWidth < 768) {
+            setIsSidebarOpen(false)
+        }
+    }
+
     return (
         <>
+            {/* Mobile Overlay/Backdrop */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300"
+                    onClick={() => setIsSidebarOpen(false)}
+                    aria-hidden="true"
+                />
+            )}
+
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#2A2A2A] text-white rounded-lg"
+                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#2A2A2A] text-white rounded-lg shadow-lg hover:bg-[#3A3A3A] transition-colors"
+                aria-label="Toggle menu"
             >
                 {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -45,6 +88,7 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
                 <nav className="flex-1 overflow-y-auto p-3 space-y-1">
                     <Link
                         to="/investors"
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === 'dashboard'
                                 ? 'bg-[var(--color-orange)] text-white'
                                 : 'hover:bg-gray-800 text-gray-400'
@@ -58,6 +102,7 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
 
                     <Link
                         to="/investors/my-investments"
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === 'my-investments'
                                 ? 'bg-[var(--color-orange)] text-white'
                                 : 'hover:bg-gray-800 text-gray-400'
@@ -71,6 +116,7 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
 
                     <Link
                         to="/investors/properties"
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === 'properties'
                                 ? 'bg-[var(--color-orange)] text-white'
                                 : 'hover:bg-gray-800 text-gray-400'
@@ -105,6 +151,7 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
 
                     <Link
                         to="/investors/settings"
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === 'settings'
                                 ? 'bg-[var(--color-orange)] text-white'
                                 : 'hover:bg-gray-800 text-gray-400'
@@ -119,7 +166,7 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
                 </nav>
 
                 {/* Profile Card */}
-                <div className="p-6">
+                <div className="p-4 md:p-6 border-t border-gray-700">
                     <div className="bg-white rounded-xl p-4 text-center">
                         <Avatar className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 mx-auto mb-3">
                             <AvatarFallback className="text-xl text-white bg-transparent">
@@ -134,6 +181,7 @@ export function InvestorSidebar({ activePage, isSidebarOpen, setIsSidebarOpen }:
                         </p>
                         <Link
                             to="/investors/settings"
+                            onClick={handleLinkClick}
                             className="w-full bg-orange-500 text-white text-xs font-medium py-2 rounded-lg hover:bg-orange-600 transition-colors block"
                         >
                             Profile

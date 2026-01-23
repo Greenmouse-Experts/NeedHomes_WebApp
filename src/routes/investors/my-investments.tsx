@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Bell, CheckCircle2 } from 'lucide-react'
+import { Bell, CheckCircle2, Menu } from 'lucide-react'
 import { InvestorSidebar } from '@/components/investors/InvestorSidebar'
 import { useState } from 'react'
 import { useAuth } from '@/store/authStore'
@@ -70,58 +70,67 @@ function MyInvestmentsPage() {
       />
 
       {/* Main Content */}
-      <main className="ml-64 flex-1 p-8">
+      <main className="md:ml-64 flex-1 p-4 md:p-8 min-h-screen">
         {/* Header */}
-        <header className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Investor</h1>
+        <header className="flex items-center justify-between mb-6 md:mb-8">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Toggle menu"
+            >
+              <Menu className="w-6 h-6 text-gray-600" />
+            </button>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Investor</h1>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <Bell className="w-5 h-5 text-gray-600" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
             </button>
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
           </div>
         </header>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Monthly Analysis */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Monthly Analysis</h3>
-            <div className="flex items-end justify-between h-64 gap-2 md:gap-4">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4 md:mb-6">Monthly Analysis</h3>
+            <div className="flex items-end justify-between h-48 md:h-64 gap-1 md:gap-2 lg:gap-4 overflow-x-auto pb-2">
               {monthlyData.map((data) => (
-                <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="w-full flex items-end justify-center" style={{ height: '200px' }}>
+                <div key={data.month} className="flex-1 min-w-[24px] md:min-w-0 flex flex-col items-center gap-1 md:gap-2">
+                  <div className="w-full flex items-end justify-center" style={{ height: '180px' }}>
                     <div
                       className="w-full bg-gradient-to-t from-gray-600 to-gray-800 rounded-t-lg hover:from-[var(--color-orange)] hover:to-orange-600 transition-all duration-300 cursor-pointer"
                       style={{ height: `${(data.value / maxValue) * 100}%`, minHeight: '8px' }}
                       title={`${data.month}: N ${data.value.toLocaleString()}`}
                     ></div>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">{data.month}</span>
+                  <span className="text-xs text-gray-500 font-medium whitespace-nowrap">{data.month}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 flex items-center justify-between text-xs text-gray-400 px-2">
-              <span>N0M</span>
-              <span>N10M</span>
-              <span>N20M</span>
-              <span>N30M</span>
-              <span>N40M</span>
-              <span>N50M</span>
-              <span>N60M</span>
+            <div className="mt-4 flex items-center justify-between text-xs text-gray-400 px-2 overflow-x-auto">
+              <span className="whitespace-nowrap">N0M</span>
+              <span className="whitespace-nowrap hidden sm:inline">N10M</span>
+              <span className="whitespace-nowrap hidden md:inline">N20M</span>
+              <span className="whitespace-nowrap hidden lg:inline">N30M</span>
+              <span className="whitespace-nowrap hidden md:inline">N40M</span>
+              <span className="whitespace-nowrap hidden sm:inline">N50M</span>
+              <span className="whitespace-nowrap">N60M</span>
             </div>
           </div>
 
           {/* Investment Analysis and Transactions */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Investment Analysis */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Investment Analysis</h3>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4 md:mb-6">Investment Analysis</h3>
 
-              <div className="flex items-center justify-center mb-6">
-                <div className="relative w-64 h-64">
+              <div className="flex items-center justify-center mb-4 md:mb-6">
+                <div className="relative w-48 h-48 md:w-64 md:h-64">
                   <svg viewBox="0 0 200 200" className="w-full h-full transform -rotate-90">
                     <circle
                       cx="100"
@@ -159,38 +168,38 @@ function MyInvestmentsPage() {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2 md:space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#F97316]"></div>
-                    <span className="text-sm text-gray-600">Active (25%)</span>
+                    <span className="text-xs md:text-sm text-gray-600">Active (25%)</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-[#4B5563]"></div>
-                    <span className="text-sm text-gray-600">Inactive (75%)</span>
+                    <span className="text-xs md:text-sm text-gray-600">Inactive (75%)</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Transactions */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Transactions</h3>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4 md:mb-6">Transactions</h3>
 
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {transactions.map((transaction) => (
-                  <div key={transaction.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <div key={transaction.id} className="flex items-start gap-2 md:gap-3 p-2 md:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">{transaction.type}</p>
+                      <p className="text-xs md:text-sm font-medium text-gray-900 truncate">{transaction.type}</p>
                       <p className="text-xs text-gray-500 mt-1">{transaction.date}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-gray-900">{transaction.amount}</p>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-xs md:text-sm font-semibold text-gray-900 whitespace-nowrap">{transaction.amount}</p>
                       <p className="text-xs text-green-600 font-medium mt-1">{transaction.status}</p>
                     </div>
                   </div>
