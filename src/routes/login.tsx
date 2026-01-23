@@ -205,7 +205,7 @@ function LoginPage() {
               {loginMutation.isPending ? "Signing in..." : "Sign in"}
             </Button>
 
-            <Button
+            {/*<Button
               type="button"
               variant="outline"
               className="w-full border-white/20 text-white hover:bg-white/10"
@@ -219,7 +219,7 @@ function LoginPage() {
               }}
             >
               Verify Account
-            </Button>
+            </Button>*/}
           </form>
 
           {/* Sign Up Link */}
