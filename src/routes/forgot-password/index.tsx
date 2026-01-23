@@ -85,10 +85,37 @@ function RouteComponent() {
     );
   }
   if (query.isLoading) {
-    return <></>;
+    return (
+      <SimpleContainer>
+        <div className="flex-1 grid place-items-center">
+          <div className="text-center ring p-6 shadow rounded-xl fade">
+            <h1 className="text-4xl font-bold mb-4">Forgot Password</h1>
+            <p className="text-gray-600">Sending recovery email...</p>
+            <span className="loading loading-spinner loading-lg mt-4"></span>
+          </div>
+        </div>
+      </SimpleContainer>
+    );
   }
   if (query.isError) {
-    return <></>;
+    return (
+      <SimpleContainer>
+        <div className="flex-1 grid place-items-center">
+          <div className="text-center ring p-6 shadow rounded-xl fade">
+            <h1 className="text-4xl font-bold mb-4">Error</h1>
+            <p className="text-error">
+              {extract_message(query.error) || "An unexpected error occurred."}
+            </p>
+            <button
+              className="btn btn-primary mt-4"
+              onClick={() => nav({ to: "/forgot-password" })}
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </SimpleContainer>
+    );
   }
   const data = query.data;
   return (

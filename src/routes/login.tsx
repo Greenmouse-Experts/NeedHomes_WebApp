@@ -165,6 +165,15 @@ function LoginPage() {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+              <div className="text-right text-sm">
+                <Link
+                  to="/forgot-password"
+                  search={{ email: email ?? "" }}
+                  className="text-gray-300 hover:text-[var(--color-orange)] transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             <div className="flex items-center space-x-2">
