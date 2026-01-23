@@ -85,7 +85,7 @@ function SignUpPage() {
     },
     onError: (error: AxiosError<ApiResponse>) => {
       if (error.status == 409) {
-        toast.error("Email already exists", { duration: 1500 });
+        // toast.error("Email already exists", { duration: 1500 });
         // return navigate({
         //   to: "/login",
         // });
