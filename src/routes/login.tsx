@@ -50,7 +50,7 @@ function LoginPage() {
       set_user_value(newUser as any);
       // set_user_value(data.data);
       toast.success("Login successful!", { duration: 1500 });
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/investors" });
     },
     onError: (error: AxiosError<ApiResponse>) => {
       if (error.status == 401) {
