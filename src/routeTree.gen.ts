@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyPartnerRouteImport } from './routes/verify-partner'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as SignupPartnerRouteImport } from './routes/signup-partner'
@@ -47,6 +48,11 @@ import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/
 import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dashboard/partners/$partnerId/kyc'
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
 
+const VerifyPartnerRoute = VerifyPartnerRouteImport.update({
+  id: '/verify-partner',
+  path: '/verify-partner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
@@ -258,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/signup-partner': typeof SignupPartnerRoute
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
+  '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
@@ -296,6 +303,7 @@ export interface FileRoutesByTo {
   '/signup-partner': typeof SignupPartnerRoute
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
+  '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/investors/my-investments': typeof InvestorsMyInvestmentsRoute
@@ -331,6 +339,7 @@ export interface FileRoutesById {
   '/signup-partner': typeof SignupPartnerRoute
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
+  '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
@@ -372,6 +381,7 @@ export interface FileRouteTypes {
     | '/signup-partner'
     | '/test'
     | '/verify'
+    | '/verify-partner'
     | '/dashboard/announcements'
     | '/dashboard/investors'
     | '/dashboard/partners'
@@ -410,6 +420,7 @@ export interface FileRouteTypes {
     | '/signup-partner'
     | '/test'
     | '/verify'
+    | '/verify-partner'
     | '/dashboard/announcements'
     | '/dashboard/settings'
     | '/investors/my-investments'
@@ -444,6 +455,7 @@ export interface FileRouteTypes {
     | '/signup-partner'
     | '/test'
     | '/verify'
+    | '/verify-partner'
     | '/dashboard/announcements'
     | '/dashboard/investors'
     | '/dashboard/partners'
@@ -484,6 +496,7 @@ export interface RootRouteChildren {
   SignupPartnerRoute: typeof SignupPartnerRoute
   TestRoute: typeof TestRoute
   VerifyRoute: typeof VerifyRoute
+  VerifyPartnerRoute: typeof VerifyPartnerRoute
   InvestorsMyInvestmentsRoute: typeof InvestorsMyInvestmentsRoute
   InvestorsPropertiesRoute: typeof InvestorsPropertiesRouteWithChildren
   InvestorsSettingsRoute: typeof InvestorsSettingsRoute
@@ -494,6 +507,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-partner': {
+      id: '/verify-partner'
+      path: '/verify-partner'
+      fullPath: '/verify-partner'
+      preLoaderRoute: typeof VerifyPartnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify': {
       id: '/verify'
       path: '/verify'
@@ -887,6 +907,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupPartnerRoute: SignupPartnerRoute,
   TestRoute: TestRoute,
   VerifyRoute: VerifyRoute,
+  VerifyPartnerRoute: VerifyPartnerRoute,
   InvestorsMyInvestmentsRoute: InvestorsMyInvestmentsRoute,
   InvestorsPropertiesRoute: InvestorsPropertiesRouteWithChildren,
   InvestorsSettingsRoute: InvestorsSettingsRoute,

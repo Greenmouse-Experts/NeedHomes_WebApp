@@ -104,10 +104,12 @@ function RouteComponent() {
           <div className="text-center ring p-6 shadow rounded-xl fade">
             <h1 className="text-4xl font-bold mb-4">Error</h1>
             <p className="text-error">
-              {extract_message(query.error) || "An unexpected error occurred."}
+              {extract_message(query.error as any) ||
+                "An unexpected error occurred."}
             </p>
             <button
               className="btn btn-primary mt-4"
+              //@ts-ignore
               onClick={() => nav({ to: "/forgot-password" })}
             >
               Try Again
