@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import apiClient, { type ApiResponse } from "@/api/simpleApi"; // Assuming simpleApi.ts exports apiClient
 import { set_temp_user_value } from "@/store/authStore";
 import type { AxiosError } from "axios";
+import { extract_message } from "@/helpers/apihelpers";
 
 export const Route = createFileRoute("/signup")({
   component: SignUpPage,
@@ -63,9 +64,9 @@ function SignUpPage() {
     },
     onSuccess: (data) => {
       console.log("Signup successful:", data);
-      toast.success("Signup successful! Please verify your email.", {
-        duration: 2000,
-      });
+      // toast.success("Signup successful! Please verify your email.", {
+      //   duration: 2000,
+      // });
       // Set temp user email and navigate to verification page
       if (userType === "investor") {
         set_temp_user_value(formData.email);
@@ -94,10 +95,6 @@ function SignUpPage() {
         // });
       }
       console.error("Signup error:", error);
-      toast.error(
-        error.response?.data?.message || "Signup failed. Please try again.",
-        { duration: 3000 },
-      );
     },
   });
 
@@ -121,7 +118,11 @@ function SignUpPage() {
         // accountType: "INDIVIDUAL",
         // user_type: "investor", // Assuming this field is needed by the backend
       };
-      signupMutation.mutate(investorPayload);
+      toast.promise(signupMutation.mutateAsync(investorPayload), {
+        loading: "signing up",
+        success: "success",
+        error: extract_message,
+      });
     } else {
       // Validate passwords match for corporate
       if (corporateData.password !== corporateData.confirmPassword) {
