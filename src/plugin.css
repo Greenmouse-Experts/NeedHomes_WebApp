@@ -37,3 +37,7 @@
   --depth: 1;
   --noise: 1;
 }
+
+@utility fade {
+  @apply border-current/20 ring-current/20;
+}

@@ -46,8 +46,28 @@ function RouteComponent() {
     },
   });
 
+  const { mutate: resendOtpMutate, isPending: isResendingOtp } = useMutation({
+    mutationFn: async (payload: { email: string }) => {
+      const response = await apiClient.post(
+        "auth/password/verify-otp",
+        payload,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("OTP resent successfully! Check your email.");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to resend OTP");
+    },
+  });
+
   const onSubmit = (data: VerifyFormData) => {
     mutate(data);
+  };
+
+  const handleResendOtp = () => {
+    resendOtpMutate({ email: decodedEmail });
   };
 
   return (
@@ -84,13 +104,21 @@ function RouteComponent() {
                 })}
               />
 
-              <div className="card-actions mt-6">
+              <div className="card-actions mt-6 flex flex-col gap-2">
                 <button
                   type="submit"
                   className={`btn btn-primary w-full ${isPending ? "loading" : ""}`}
                   disabled={isPending}
                 >
                   {isPending ? "Verifying..." : "Verify Email"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  className={`btn btn-ghost w-full ${isResendingOtp ? "loading" : ""}`}
+                  disabled={isResendingOtp}
+                >
+                  {isResendingOtp ? "Resending..." : "Resend OTP"}
                 </button>
               </div>
             </form>
