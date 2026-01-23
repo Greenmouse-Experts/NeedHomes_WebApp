@@ -81,13 +81,13 @@ function SignUpPartnerPage() {
         <div className="min-h-full flex items-center justify-center p-4 sm:p-6 md:p-8">
           <div className="w-full max-w-md space-y-4 sm:space-y-6 py-6 sm:py-8">
           {/* Logo - Centered for both mobile and desktop */}
-          <div className="flex flex-col items-center mb-4">
+          {/* <div className="flex flex-col items-center mb-4">
             <img 
               src="/need_homes_logo.png" 
               alt="NEEDHOMES" 
               className="h-10 mb-4"
             />
-          </div>
+          </div> */}
 
           {/* Form Header */}
           <div className="text-center lg:text-left">
