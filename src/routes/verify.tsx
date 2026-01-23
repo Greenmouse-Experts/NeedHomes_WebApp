@@ -48,10 +48,7 @@ function RouteComponent() {
 
   const { mutate: resendOtpMutate, isPending: isResendingOtp } = useMutation({
     mutationFn: async (payload: { email: string }) => {
-      const response = await apiClient.post(
-        "auth/password/verify-otp",
-        payload,
-      );
+      const response = await apiClient.post("auth/resend-otp", payload);
       return response.data;
     },
     onSuccess: () => {
