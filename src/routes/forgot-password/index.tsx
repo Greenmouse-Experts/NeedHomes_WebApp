@@ -4,7 +4,7 @@ import { extract_message } from "@/helpers/apihelpers";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleContainer from "@/simpleComps/SimpleContainer";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -154,6 +154,7 @@ function RouteComponent() {
                 {...otp_form.register("otp")}
               />
               <button className="btn btn-primary btn-block my-4">Verify</button>
+              <ResetButton />
             </form>
           </FormProvider>
         </div>
@@ -161,3 +162,15 @@ function RouteComponent() {
     </SimpleContainer>
   );
 }
+
+const ResetButton = () => {
+  return (
+    <Link
+      to="/forgot-password"
+      search={{ email: "" }}
+      className="btn ring fade btn-block"
+    >
+      Wrong Email?
+    </Link>
+  );
+};
