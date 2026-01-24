@@ -25,7 +25,9 @@ type UserType = "INDIVIDUAL" | "CORPORATE";
 function SignUpPage() {
   const navigate = useNavigate();
   const { type } = Route.useSearch();
-  const [userType, setUserType] = useState<UserType>(type || "INDIVIDUAL");
+  const [userType, setUserType] = useState<UserType>(
+    type == "investor" && "INDIVIDUAL",
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -67,7 +69,7 @@ function SignUpPage() {
     },
     onSuccess: (_, variables) => {
       const email =
-        variables.accountType === "INVESTOR"
+        variables.accountType === "INDIVIDUAL"
           ? formData.email
           : corporateData.corporateEmail;
 
@@ -85,7 +87,7 @@ function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (userType === "INVESTOR") {
+    if (userType === "INDIVIDUAL") {
       if (formData.password !== formData.confirmPassword) {
         toast.error("Passwords do not match!", { duration: 1500 });
         return;
@@ -200,9 +202,9 @@ function SignUpPage() {
             <div className="flex gap-2 p-1 bg-white/10 rounded-xl">
               <button
                 type="button"
-                onClick={() => setUserType("INVESTOR")}
+                onClick={() => setUserType("INDIVIDUAL")}
                 className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userType === "INVESTOR"
+                  userType === "INDIVIDUAL"
                     ? "bg-brand-orange text-white shadow-lg"
                     : "text-gray-300 hover:text-white"
                 }`}
@@ -224,7 +226,7 @@ function SignUpPage() {
 
             {/* Signup Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {userType === "INVESTOR" ? (
+              {userType === "INDIVIDUAL" ? (
                 <>
                   {/* Investor Form Fields */}
                   {/* Name Fields */}
