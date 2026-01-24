@@ -18,7 +18,7 @@ export const Route = createFileRoute("/forgot-password/")({
 function RouteComponent() {
   const { email } = Route.useSearch();
 
-  const trimmed = email.trim();
+  const trimmed = email?.trim();
   const query = useQuery<ApiResponse>({
     queryKey: ["recover", trimmed],
     queryFn: async () => {
