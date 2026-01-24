@@ -85,7 +85,7 @@ function RouteComponent() {
               <SimpleInput
                 label="Email Address"
                 type="email"
-                placeholder="emperorferdy@gmail.com"
+                placeholder="example@gmail.com"
                 icon={<Mail size={18} className="opacity-70" />}
                 {...register("email", { required: "Email is required" })}
               />
