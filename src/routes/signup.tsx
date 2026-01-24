@@ -15,17 +15,17 @@ export const Route = createFileRoute("/signup")({
   component: SignUpPage,
   validateSearch: (search: Record<string, unknown>) => {
     return {
-      type: (search.type as "INVESTOR" | "CORPORATE") || "INVESTOR",
+      type: (search.type as "INDIVIDUAL" | "CORPORATE") || "INDIVIDUAL",
     };
   },
 });
 
-type UserType = "INVESTOR" | "CORPORATE";
+type UserType = "INDIVIDUAL" | "CORPORATE";
 
 function SignUpPage() {
   const navigate = useNavigate();
   const { type } = Route.useSearch();
-  const [userType, setUserType] = useState<UserType>(type || "INVESTOR");
+  const [userType, setUserType] = useState<UserType>(type || "INDIVIDUAL");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -103,7 +103,7 @@ function SignUpPage() {
       toast.promise(
         signupMutation.mutateAsync({
           data: investorPayload,
-          accountType: "INVESTOR",
+          accountType: "INDIVIDUAL",
         }),
         {
           loading: "Signing up...",
