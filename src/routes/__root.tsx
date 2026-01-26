@@ -1,4 +1,4 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRoute, useLocation } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -19,9 +19,10 @@ const client = new QueryClient({
 });
 export const Route = createRootRoute({
   component: () => {
+    const { url } = useLocation();
     const hideHeader =
-      location.pathname.startsWith("/dashboard") ||
-      location.pathname.startsWith("/investors");
+      url.pathname.startsWith("/dashboard") ||
+      url.pathname.startsWith("/investors");
     return (
       <>
         <QueryClientProvider client={client}>
