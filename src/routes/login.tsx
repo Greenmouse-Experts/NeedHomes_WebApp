@@ -48,9 +48,12 @@ function LoginPage() {
       } satisfies Partial<AUTHRECORD>;
 
       set_user_value(newUser as any);
-      // set_user_value(data.data);
       toast.success("Login successful!", { duration: 1500 });
-      navigate({ to: "/investors" });
+      // set_user_value(data.data);
+      if (newUser.user.accountType == "PARTNER") {
+        return navigate({ to: "/partners" });
+      }
+      return navigate({ to: "/investors" });
     },
     onError: (error: AxiosError<ApiResponse>) => {
       if (error.status == 401) {
