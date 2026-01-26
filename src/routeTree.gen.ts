@@ -21,6 +21,7 @@ import { Route as AccountTypeRouteImport } from './routes/account-type'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
+import { Route as PartnersIndexRouteImport } from './routes/partners/index'
 import { Route as InvestorsIndexRouteImport } from './routes/investors/index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
@@ -109,6 +110,11 @@ const IndexRoute = IndexRouteImport.update({
 const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
   id: '/recover-password/',
   path: '/recover-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersIndexRoute = PartnersIndexRouteImport.update({
+  id: '/partners/',
+  path: '/partners/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InvestorsIndexRoute = InvestorsIndexRouteImport.update({
@@ -295,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
+  '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRouteWithChildren
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
@@ -335,6 +342,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/investors': typeof InvestorsIndexRoute
+  '/partners': typeof PartnersIndexRoute
   '/recover-password': typeof RecoverPasswordIndexRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
@@ -376,6 +384,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
+  '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRouteWithChildren
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
@@ -421,6 +430,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/forgot-password/'
     | '/investors/'
+    | '/partners/'
     | '/recover-password/'
     | '/dashboard/investors/$investorId'
     | '/dashboard/partners/$partnerId'
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/forgot-password'
     | '/investors'
+    | '/partners'
     | '/recover-password'
     | '/dashboard/properties/listed'
     | '/dashboard/properties/new'
@@ -501,6 +512,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/forgot-password/'
     | '/investors/'
+    | '/partners/'
     | '/recover-password/'
     | '/dashboard/investors/$investorId'
     | '/dashboard/partners/$partnerId'
@@ -540,6 +552,7 @@ export interface RootRouteChildren {
   InvestorsSettingsRoute: typeof InvestorsSettingsRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   InvestorsIndexRoute: typeof InvestorsIndexRoute
+  PartnersIndexRoute: typeof PartnersIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
   PartnerRecoverForgotPasswordIndexRoute: typeof PartnerRecoverForgotPasswordIndexRoute
@@ -630,6 +643,13 @@ declare module '@tanstack/react-router' {
       path: '/recover-password'
       fullPath: '/recover-password/'
       preLoaderRoute: typeof RecoverPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners/': {
+      id: '/partners/'
+      path: '/partners'
+      fullPath: '/partners/'
+      preLoaderRoute: typeof PartnersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/investors/': {
@@ -975,6 +995,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvestorsSettingsRoute: InvestorsSettingsRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   InvestorsIndexRoute: InvestorsIndexRoute,
+  PartnersIndexRoute: PartnersIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,
   PartnerRecoverForgotPasswordIndexRoute:
