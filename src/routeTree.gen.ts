@@ -18,6 +18,7 @@ import { Route as OtpRouteImport } from './routes/otp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountTypeRouteImport } from './routes/account-type'
+import { Route as PartnersRouteRouteImport } from './routes/partners/route'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
@@ -25,6 +26,12 @@ import { Route as PartnersIndexRouteImport } from './routes/partners/index'
 import { Route as InvestorsIndexRouteImport } from './routes/investors/index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as PartnersTransactionsRouteImport } from './routes/partners/transactions'
+import { Route as PartnersSettingsRouteImport } from './routes/partners/settings'
+import { Route as PartnersPropertiesRouteImport } from './routes/partners/properties'
+import { Route as PartnersNotificationsRouteImport } from './routes/partners/notifications'
+import { Route as PartnersMyInvestmentsRouteImport } from './routes/partners/my-investments'
+import { Route as PartnersAnnouncementsRouteImport } from './routes/partners/announcements'
 import { Route as InvestorsSettingsRouteImport } from './routes/investors/settings'
 import { Route as InvestorsPropertiesRouteImport } from './routes/investors/properties'
 import { Route as InvestorsMyInvestmentsRouteImport } from './routes/investors/my-investments'
@@ -35,6 +42,7 @@ import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/a
 import { Route as ForgotPasswordResetIndexRouteImport } from './routes/forgot-password/reset/index'
 import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/partners/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
+import { Route as PartnersPropertiesPropertyIdRouteImport } from './routes/partners/properties/$propertyId'
 import { Route as InvestorsPropertiesPropertyIdRouteImport } from './routes/investors/properties/$propertyId'
 import { Route as DashboardTransactionsReceiptsRouteImport } from './routes/dashboard/transactions/receipts'
 import { Route as DashboardTransactionsPaymentsRouteImport } from './routes/dashboard/transactions/payments'
@@ -97,6 +105,11 @@ const AccountTypeRoute = AccountTypeRouteImport.update({
   path: '/account-type',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PartnersRouteRoute = PartnersRouteRouteImport.update({
+  id: '/partners',
+  path: '/partners',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -113,9 +126,9 @@ const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnersIndexRoute = PartnersIndexRouteImport.update({
-  id: '/partners/',
-  path: '/partners/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => PartnersRouteRoute,
 } as any)
 const InvestorsIndexRoute = InvestorsIndexRouteImport.update({
   id: '/investors/',
@@ -131,6 +144,36 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const PartnersTransactionsRoute = PartnersTransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => PartnersRouteRoute,
+} as any)
+const PartnersSettingsRoute = PartnersSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PartnersRouteRoute,
+} as any)
+const PartnersPropertiesRoute = PartnersPropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => PartnersRouteRoute,
+} as any)
+const PartnersNotificationsRoute = PartnersNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => PartnersRouteRoute,
+} as any)
+const PartnersMyInvestmentsRoute = PartnersMyInvestmentsRouteImport.update({
+  id: '/my-investments',
+  path: '/my-investments',
+  getParentRoute: () => PartnersRouteRoute,
+} as any)
+const PartnersAnnouncementsRoute = PartnersAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => PartnersRouteRoute,
 } as any)
 const InvestorsSettingsRoute = InvestorsSettingsRouteImport.update({
   id: '/investors/settings',
@@ -183,6 +226,12 @@ const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardInvestorsRoute,
 } as any)
+const PartnersPropertiesPropertyIdRoute =
+  PartnersPropertiesPropertyIdRouteImport.update({
+    id: '/$propertyId',
+    path: '/$propertyId',
+    getParentRoute: () => PartnersPropertiesRoute,
+  } as any)
 const InvestorsPropertiesPropertyIdRoute =
   InvestorsPropertiesPropertyIdRouteImport.update({
     id: '/$propertyId',
@@ -282,6 +331,7 @@ const PartnerRecoverForgotPasswordResetIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/partners': typeof PartnersRouteRouteWithChildren
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
@@ -298,6 +348,12 @@ export interface FileRoutesByFullPath {
   '/investors/my-investments': typeof InvestorsMyInvestmentsRoute
   '/investors/properties': typeof InvestorsPropertiesRouteWithChildren
   '/investors/settings': typeof InvestorsSettingsRoute
+  '/partners/announcements': typeof PartnersAnnouncementsRoute
+  '/partners/my-investments': typeof PartnersMyInvestmentsRoute
+  '/partners/notifications': typeof PartnersNotificationsRoute
+  '/partners/properties': typeof PartnersPropertiesRouteWithChildren
+  '/partners/settings': typeof PartnersSettingsRoute
+  '/partners/transactions': typeof PartnersTransactionsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
@@ -311,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRoute
+  '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
@@ -339,6 +396,12 @@ export interface FileRoutesByTo {
   '/investors/my-investments': typeof InvestorsMyInvestmentsRoute
   '/investors/properties': typeof InvestorsPropertiesRouteWithChildren
   '/investors/settings': typeof InvestorsSettingsRoute
+  '/partners/announcements': typeof PartnersAnnouncementsRoute
+  '/partners/my-investments': typeof PartnersMyInvestmentsRoute
+  '/partners/notifications': typeof PartnersNotificationsRoute
+  '/partners/properties': typeof PartnersPropertiesRouteWithChildren
+  '/partners/settings': typeof PartnersSettingsRoute
+  '/partners/transactions': typeof PartnersTransactionsRoute
   '/dashboard': typeof DashboardIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/investors': typeof InvestorsIndexRoute
@@ -349,6 +412,7 @@ export interface FileRoutesByTo {
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRoute
+  '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners': typeof DashboardPartnersIndexRoute
   '/forgot-password/reset': typeof ForgotPasswordResetIndexRoute
@@ -365,6 +429,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/partners': typeof PartnersRouteRouteWithChildren
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
@@ -381,6 +446,12 @@ export interface FileRoutesById {
   '/investors/my-investments': typeof InvestorsMyInvestmentsRoute
   '/investors/properties': typeof InvestorsPropertiesRouteWithChildren
   '/investors/settings': typeof InvestorsSettingsRoute
+  '/partners/announcements': typeof PartnersAnnouncementsRoute
+  '/partners/my-investments': typeof PartnersMyInvestmentsRoute
+  '/partners/notifications': typeof PartnersNotificationsRoute
+  '/partners/properties': typeof PartnersPropertiesRouteWithChildren
+  '/partners/settings': typeof PartnersSettingsRoute
+  '/partners/transactions': typeof PartnersTransactionsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
@@ -394,6 +465,7 @@ export interface FileRoutesById {
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRoute
+  '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
@@ -411,6 +483,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/partners'
     | '/account-type'
     | '/admin'
     | '/login'
@@ -427,6 +500,12 @@ export interface FileRouteTypes {
     | '/investors/my-investments'
     | '/investors/properties'
     | '/investors/settings'
+    | '/partners/announcements'
+    | '/partners/my-investments'
+    | '/partners/notifications'
+    | '/partners/properties'
+    | '/partners/settings'
+    | '/partners/transactions'
     | '/dashboard/'
     | '/forgot-password/'
     | '/investors/'
@@ -440,6 +519,7 @@ export interface FileRouteTypes {
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/properties/$propertyId'
+    | '/partners/properties/$propertyId'
     | '/dashboard/investors/'
     | '/dashboard/partners/'
     | '/forgot-password/reset/'
@@ -468,6 +548,12 @@ export interface FileRouteTypes {
     | '/investors/my-investments'
     | '/investors/properties'
     | '/investors/settings'
+    | '/partners/announcements'
+    | '/partners/my-investments'
+    | '/partners/notifications'
+    | '/partners/properties'
+    | '/partners/settings'
+    | '/partners/transactions'
     | '/dashboard'
     | '/forgot-password'
     | '/investors'
@@ -478,6 +564,7 @@ export interface FileRouteTypes {
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/properties/$propertyId'
+    | '/partners/properties/$propertyId'
     | '/dashboard/investors'
     | '/dashboard/partners'
     | '/forgot-password/reset'
@@ -493,6 +580,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/partners'
     | '/account-type'
     | '/admin'
     | '/login'
@@ -509,6 +597,12 @@ export interface FileRouteTypes {
     | '/investors/my-investments'
     | '/investors/properties'
     | '/investors/settings'
+    | '/partners/announcements'
+    | '/partners/my-investments'
+    | '/partners/notifications'
+    | '/partners/properties'
+    | '/partners/settings'
+    | '/partners/transactions'
     | '/dashboard/'
     | '/forgot-password/'
     | '/investors/'
@@ -522,6 +616,7 @@ export interface FileRouteTypes {
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/properties/$propertyId'
+    | '/partners/properties/$propertyId'
     | '/dashboard/investors/'
     | '/dashboard/partners/'
     | '/forgot-password/reset/'
@@ -538,6 +633,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  PartnersRouteRoute: typeof PartnersRouteRouteWithChildren
   AccountTypeRoute: typeof AccountTypeRoute
   AdminRoute: typeof AdminRoute
   LoginRoute: typeof LoginRoute
@@ -552,7 +648,6 @@ export interface RootRouteChildren {
   InvestorsSettingsRoute: typeof InvestorsSettingsRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   InvestorsIndexRoute: typeof InvestorsIndexRoute
-  PartnersIndexRoute: typeof PartnersIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
   PartnerRecoverForgotPasswordIndexRoute: typeof PartnerRecoverForgotPasswordIndexRoute
@@ -624,6 +719,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountTypeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/partners': {
+      id: '/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof PartnersRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -647,10 +749,10 @@ declare module '@tanstack/react-router' {
     }
     '/partners/': {
       id: '/partners/'
-      path: '/partners'
+      path: '/'
       fullPath: '/partners/'
       preLoaderRoute: typeof PartnersIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PartnersRouteRoute
     }
     '/investors/': {
       id: '/investors/'
@@ -672,6 +774,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/partners/transactions': {
+      id: '/partners/transactions'
+      path: '/transactions'
+      fullPath: '/partners/transactions'
+      preLoaderRoute: typeof PartnersTransactionsRouteImport
+      parentRoute: typeof PartnersRouteRoute
+    }
+    '/partners/settings': {
+      id: '/partners/settings'
+      path: '/settings'
+      fullPath: '/partners/settings'
+      preLoaderRoute: typeof PartnersSettingsRouteImport
+      parentRoute: typeof PartnersRouteRoute
+    }
+    '/partners/properties': {
+      id: '/partners/properties'
+      path: '/properties'
+      fullPath: '/partners/properties'
+      preLoaderRoute: typeof PartnersPropertiesRouteImport
+      parentRoute: typeof PartnersRouteRoute
+    }
+    '/partners/notifications': {
+      id: '/partners/notifications'
+      path: '/notifications'
+      fullPath: '/partners/notifications'
+      preLoaderRoute: typeof PartnersNotificationsRouteImport
+      parentRoute: typeof PartnersRouteRoute
+    }
+    '/partners/my-investments': {
+      id: '/partners/my-investments'
+      path: '/my-investments'
+      fullPath: '/partners/my-investments'
+      preLoaderRoute: typeof PartnersMyInvestmentsRouteImport
+      parentRoute: typeof PartnersRouteRoute
+    }
+    '/partners/announcements': {
+      id: '/partners/announcements'
+      path: '/announcements'
+      fullPath: '/partners/announcements'
+      preLoaderRoute: typeof PartnersAnnouncementsRouteImport
+      parentRoute: typeof PartnersRouteRoute
     }
     '/investors/settings': {
       id: '/investors/settings'
@@ -742,6 +886,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/investors/'
       preLoaderRoute: typeof DashboardInvestorsIndexRouteImport
       parentRoute: typeof DashboardInvestorsRoute
+    }
+    '/partners/properties/$propertyId': {
+      id: '/partners/properties/$propertyId'
+      path: '/$propertyId'
+      fullPath: '/partners/properties/$propertyId'
+      preLoaderRoute: typeof PartnersPropertiesPropertyIdRouteImport
+      parentRoute: typeof PartnersPropertiesRoute
     }
     '/investors/properties/$propertyId': {
       id: '/investors/properties/$propertyId'
@@ -967,6 +1118,41 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
 )
 
+interface PartnersPropertiesRouteChildren {
+  PartnersPropertiesPropertyIdRoute: typeof PartnersPropertiesPropertyIdRoute
+}
+
+const PartnersPropertiesRouteChildren: PartnersPropertiesRouteChildren = {
+  PartnersPropertiesPropertyIdRoute: PartnersPropertiesPropertyIdRoute,
+}
+
+const PartnersPropertiesRouteWithChildren =
+  PartnersPropertiesRoute._addFileChildren(PartnersPropertiesRouteChildren)
+
+interface PartnersRouteRouteChildren {
+  PartnersAnnouncementsRoute: typeof PartnersAnnouncementsRoute
+  PartnersMyInvestmentsRoute: typeof PartnersMyInvestmentsRoute
+  PartnersNotificationsRoute: typeof PartnersNotificationsRoute
+  PartnersPropertiesRoute: typeof PartnersPropertiesRouteWithChildren
+  PartnersSettingsRoute: typeof PartnersSettingsRoute
+  PartnersTransactionsRoute: typeof PartnersTransactionsRoute
+  PartnersIndexRoute: typeof PartnersIndexRoute
+}
+
+const PartnersRouteRouteChildren: PartnersRouteRouteChildren = {
+  PartnersAnnouncementsRoute: PartnersAnnouncementsRoute,
+  PartnersMyInvestmentsRoute: PartnersMyInvestmentsRoute,
+  PartnersNotificationsRoute: PartnersNotificationsRoute,
+  PartnersPropertiesRoute: PartnersPropertiesRouteWithChildren,
+  PartnersSettingsRoute: PartnersSettingsRoute,
+  PartnersTransactionsRoute: PartnersTransactionsRoute,
+  PartnersIndexRoute: PartnersIndexRoute,
+}
+
+const PartnersRouteRouteWithChildren = PartnersRouteRoute._addFileChildren(
+  PartnersRouteRouteChildren,
+)
+
 interface InvestorsPropertiesRouteChildren {
   InvestorsPropertiesPropertyIdRoute: typeof InvestorsPropertiesPropertyIdRoute
 }
@@ -981,6 +1167,7 @@ const InvestorsPropertiesRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  PartnersRouteRoute: PartnersRouteRouteWithChildren,
   AccountTypeRoute: AccountTypeRoute,
   AdminRoute: AdminRoute,
   LoginRoute: LoginRoute,
@@ -995,7 +1182,6 @@ const rootRouteChildren: RootRouteChildren = {
   InvestorsSettingsRoute: InvestorsSettingsRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   InvestorsIndexRoute: InvestorsIndexRoute,
-  PartnersIndexRoute: PartnersIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,
   PartnerRecoverForgotPasswordIndexRoute:

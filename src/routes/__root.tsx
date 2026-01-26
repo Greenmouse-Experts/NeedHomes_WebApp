@@ -22,7 +22,8 @@ export const Route = createRootRoute({
     const { url } = useLocation();
     const hideHeader =
       url.pathname.startsWith("/dashboard") ||
-      url.pathname.startsWith("/investors");
+      url.pathname.startsWith("/investors") ||
+      url.pathname.startsWith("/partners");
     return (
       <>
         <QueryClientProvider client={client}>

@@ -1,16 +1,23 @@
-import { createFileRoute } from '@tanstack/react-router'
-import Hero from '@/components/home/Hero'
-import Explore from '@/components/home/Explore'
-import Statistics from '@/components/home/Statistics'
-import CoDev from '@/components/home/CoDev'
-import Owners from '@/components/home/Owners'
-import CoTypes from '@/components/home/CoTypes'
-import BankIntegrations from '@/components/home/BankIntegrations'
-import FAQ from '@/components/home/FAQ'
-import GetOnDevices from '@/components/home/OnDevices'
-import Footer from '@/components/home/Footer'
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import Hero from "@/components/home/Hero";
+import Explore from "@/components/home/Explore";
+import Statistics from "@/components/home/Statistics";
+import CoDev from "@/components/home/CoDev";
+import Owners from "@/components/home/Owners";
+import CoTypes from "@/components/home/CoTypes";
+import BankIntegrations from "@/components/home/BankIntegrations";
+import FAQ from "@/components/home/FAQ";
+import GetOnDevices from "@/components/home/OnDevices";
+import Footer from "@/components/home/Footer";
 
-export const Route = createFileRoute('/')({ component: HomePage })
+export const Route = createFileRoute("/")({
+  component: HomePage,
+  loader: () => {
+    // redirect({
+    //   to: "/",
+    // });
+  },
+});
 
 function HomePage() {
   return (
@@ -53,5 +60,5 @@ function HomePage() {
       </div>
       <Footer />
     </>
-  )
+  );
 }
