@@ -16,7 +16,6 @@ interface Notification {
     date: string
     isRead: boolean
 }
-
 const mockNotifications: Notification[] = [
     {
         id: '1',

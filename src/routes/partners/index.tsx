@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, Bell } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
+import CalendarWidget from "@/components/CalendarWidget";
 
 export const Route = createFileRoute("/partners/")({
   component: PartnerDashboard,
@@ -101,29 +102,38 @@ function PartnerDashboard() {
       </header>
 
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg">
-        <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 opacity-20">
-          <svg viewBox="0 0 200 200" className="w-full h-full">
-            <path
-              fill="white"
-              d="M40,-65C50,-55,55,-40,58,-25C61,-10,62,5,58,18C54,31,45,42,35,50C25,58,14,63,0,63C-14,63,-28,58,-40,50C-52,42,-62,31,-65,18C-68,5,-64,-10,-58,-25C-52,-40,-44,-55,-32,-65C-20,-75,-10,-80,0,-80C10,-80,30,-75,40,-65Z"
-              transform="translate(100 100)"
-            />
-          </svg>
-        </div>
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 text-white/90 mb-2 md:mb-3">
-            <Calendar className="w-4 h-4" />
-            <span className="text-xs md:text-sm font-medium">
-              {getCurrentDate()}
-            </span>
+      {/* Welcome Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 h-full">
+          <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg h-full flex flex-col justify-center">
+            <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 opacity-20">
+              <svg viewBox="0 0 200 200" className="w-full h-full">
+                <path
+                  fill="white"
+                  d="M40,-65C50,-55,55,-40,58,-25C61,-10,62,5,58,18C54,31,45,42,35,50C25,58,14,63,0,63C-14,63,-28,58,-40,50C-52,42,-62,31,-65,18C-68,5,-64,-10,-58,-25C-52,-40,-44,-55,-32,-65C-20,-75,-10,-80,0,-80C10,-80,30,-75,40,-65Z"
+                  transform="translate(100 100)"
+                />
+              </svg>
+            </div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 text-white/90 mb-2 md:mb-3">
+                <Calendar className="w-4 h-4" />
+                <span className="text-xs md:text-sm font-medium">
+                  {getCurrentDate()}
+                </span>
+              </div>
+              <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">
+                Welcome, {user?.firstName?.trim() ?? "Partner"}
+              </h2>
+              <p className="text-sm md:text-base text-white/90">
+                Have a great day!
+              </p>
+            </div>
           </div>
-          <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">
-            Welcome, {user?.firstName?.trim() ?? "Partner"}
-          </h2>
-          <p className="text-sm md:text-base text-white/90">
-            Have a great day!
-          </p>
+        </div>
+
+        <div className="lg:col-span-1">
+          <CalendarWidget />
         </div>
       </div>
 
