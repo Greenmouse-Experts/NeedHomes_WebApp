@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { User, CreditCard, FileText, Shield, Upload, Calendar } from "lucide-react";
+import {
+  User,
+  CreditCard,
+  FileText,
+  Shield,
+  Upload,
+  Calendar,
+} from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -101,11 +108,14 @@ function SettingsPage() {
 
   const tabs = [
     { id: "profile" as SettingsTab, label: "Profile", icon: User },
-    { id: "bankDetails" as SettingsTab, label: "Bank Details", icon: CreditCard },
+    {
+      id: "bankDetails" as SettingsTab,
+      label: "Bank Details",
+      icon: CreditCard,
+    },
     { id: "kyc" as SettingsTab, label: "KYC", icon: FileText },
     { id: "security" as SettingsTab, label: "Security", icon: Shield },
   ];
-
 
   return (
     <DashboardLayout title="Settings" subtitle="">
@@ -143,7 +153,9 @@ function SettingsPage() {
             {activeTab === "profile" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">PROFILE</h3>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+                    PROFILE
+                  </h3>
                 </div>
 
                 <form onSubmit={handleProfileSubmit} className="max-w-2xl">
@@ -152,7 +164,9 @@ function SettingsPage() {
                     <div className="flex items-center gap-4">
                       <Avatar className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-cyan-500">
                         <AvatarFallback className="text-2xl text-white bg-transparent">
-                          {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
+                          {user?.firstName
+                            ? user.firstName.charAt(0).toUpperCase()
+                            : "U"}
                         </AvatarFallback>
                       </Avatar>
                       <Button type="button" variant="outline" size="sm">
@@ -168,7 +182,9 @@ function SettingsPage() {
                       <Input
                         id="firstName"
                         value={profileData.firstName}
-                        onChange={(e) => handleProfileChange("firstName", e.target.value)}
+                        onChange={(e) =>
+                          handleProfileChange("firstName", e.target.value)
+                        }
                         placeholder="Lord"
                       />
                     </div>
@@ -179,7 +195,9 @@ function SettingsPage() {
                       <Input
                         id="lastName"
                         value={profileData.lastName}
-                        onChange={(e) => handleProfileChange("lastName", e.target.value)}
+                        onChange={(e) =>
+                          handleProfileChange("lastName", e.target.value)
+                        }
                         placeholder="Xylarz"
                       />
                     </div>
@@ -192,7 +210,9 @@ function SettingsPage() {
                       id="email"
                       type="email"
                       value={profileData.email}
-                      onChange={(e) => handleProfileChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleProfileChange("email", e.target.value)
+                      }
                       placeholder="testmail@gmail.com"
                     />
                   </div>
@@ -208,7 +228,9 @@ function SettingsPage() {
                         <Input
                           id="phoneNumber"
                           value={profileData.phoneNumber}
-                          onChange={(e) => handleProfileChange("phoneNumber", e.target.value)}
+                          onChange={(e) =>
+                            handleProfileChange("phoneNumber", e.target.value)
+                          }
                           placeholder="0700 000 0000"
                           className="flex-1"
                         />
@@ -223,7 +245,9 @@ function SettingsPage() {
                           id="dateOfBirth"
                           type="date"
                           value={profileData.dateOfBirth}
-                          onChange={(e) => handleProfileChange("dateOfBirth", e.target.value)}
+                          onChange={(e) =>
+                            handleProfileChange("dateOfBirth", e.target.value)
+                          }
                           placeholder="20/01/2028"
                         />
                       </div>
@@ -232,7 +256,10 @@ function SettingsPage() {
 
                   {/* Save Button */}
                   <div className="pt-6">
-                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                    <Button
+                      type="submit"
+                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12"
+                    >
                       Save
                     </Button>
                   </div>
@@ -244,7 +271,9 @@ function SettingsPage() {
             {activeTab === "bankDetails" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Bank Details</h3>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+                    Bank Details
+                  </h3>
                 </div>
 
                 <form onSubmit={handleBankSubmit} className="max-w-2xl">
@@ -255,7 +284,9 @@ function SettingsPage() {
                       <Input
                         id="accountNumber"
                         value={bankData.accountNumber}
-                        onChange={(e) => handleBankChange("accountNumber", e.target.value)}
+                        onChange={(e) =>
+                          handleBankChange("accountNumber", e.target.value)
+                        }
                         placeholder="Enter Acct Number"
                       />
                     </div>
@@ -266,7 +297,9 @@ function SettingsPage() {
                       <select
                         id="bankName"
                         value={bankData.bankName}
-                        onChange={(e) => handleBankChange("bankName", e.target.value)}
+                        onChange={(e) =>
+                          handleBankChange("bankName", e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
                       >
                         <option value="">Select</option>
@@ -286,7 +319,9 @@ function SettingsPage() {
                       <Input
                         id="accountName"
                         value={bankData.accountName}
-                        onChange={(e) => handleBankChange("accountName", e.target.value)}
+                        onChange={(e) =>
+                          handleBankChange("accountName", e.target.value)
+                        }
                         className="bg-red-50"
                         disabled
                       />
@@ -298,7 +333,9 @@ function SettingsPage() {
                       <select
                         id="accountType"
                         value={bankData.accountType}
-                        onChange={(e) => handleBankChange("accountType", e.target.value)}
+                        onChange={(e) =>
+                          handleBankChange("accountType", e.target.value)
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
                       >
                         <option value="">Select</option>
@@ -310,7 +347,10 @@ function SettingsPage() {
 
                   {/* Submit Button */}
                   <div className="pt-6">
-                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                    <Button
+                      type="submit"
+                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12"
+                    >
                       Submit
                     </Button>
                   </div>
@@ -322,7 +362,9 @@ function SettingsPage() {
             {activeTab === "kyc" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">KYC</h3>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+                    KYC
+                  </h3>
                 </div>
 
                 <form onSubmit={handleKycSubmit} className="max-w-2xl">
@@ -332,7 +374,9 @@ function SettingsPage() {
                     <Input
                       id="idType"
                       value={kycData.idType}
-                      onChange={(e) => handleKycChange("idType", e.target.value)}
+                      onChange={(e) =>
+                        handleKycChange("idType", e.target.value)
+                      }
                       placeholder="National ID"
                     />
                   </div>
@@ -344,14 +388,21 @@ function SettingsPage() {
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
                         <input
                           type="file"
-                          onChange={(e) => handleKycChange("frontUpload", e.target.files?.[0] || null)}
+                          onChange={(e) =>
+                            handleKycChange(
+                              "frontUpload",
+                              e.target.files?.[0] || null,
+                            )
+                          }
                           className="hidden"
                           id="frontUpload"
                           accept="image/*"
                         />
                         <label htmlFor="frontUpload" className="cursor-pointer">
                           <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm text-[var(--color-orange)]">View File Upload</p>
+                          <p className="text-sm text-[var(--color-orange)]">
+                            View File Upload
+                          </p>
                         </label>
                       </div>
                     </div>
@@ -362,14 +413,21 @@ function SettingsPage() {
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
                         <input
                           type="file"
-                          onChange={(e) => handleKycChange("backUpload", e.target.files?.[0] || null)}
+                          onChange={(e) =>
+                            handleKycChange(
+                              "backUpload",
+                              e.target.files?.[0] || null,
+                            )
+                          }
                           className="hidden"
                           id="backUpload"
                           accept="image/*"
                         />
                         <label htmlFor="backUpload" className="cursor-pointer">
                           <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm text-[var(--color-orange)]">View File Upload</p>
+                          <p className="text-sm text-[var(--color-orange)]">
+                            View File Upload
+                          </p>
                         </label>
                       </div>
                     </div>
@@ -381,14 +439,21 @@ function SettingsPage() {
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
                       <input
                         type="file"
-                        onChange={(e) => handleKycChange("utilityBill", e.target.files?.[0] || null)}
+                        onChange={(e) =>
+                          handleKycChange(
+                            "utilityBill",
+                            e.target.files?.[0] || null,
+                          )
+                        }
                         className="hidden"
                         id="utilityBill"
                         accept="image/*,application/pdf"
                       />
                       <label htmlFor="utilityBill" className="cursor-pointer">
                         <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-sm text-[var(--color-orange)]">View File Upload</p>
+                        <p className="text-sm text-[var(--color-orange)]">
+                          View File Upload
+                        </p>
                       </label>
                     </div>
                   </div>
@@ -399,14 +464,19 @@ function SettingsPage() {
                     <Input
                       id="address"
                       value={kycData.address}
-                      onChange={(e) => handleKycChange("address", e.target.value)}
+                      onChange={(e) =>
+                        handleKycChange("address", e.target.value)
+                      }
                       placeholder="Zone A 1 Egbi Ewaji St, Wuse, Abuja 900001, Federal Capital Territory, Nigeria"
                     />
                   </div>
 
                   {/* Submit Button */}
                   <div className="pt-6">
-                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                    <Button
+                      type="submit"
+                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12"
+                    >
                       Submit
                     </Button>
                   </div>
@@ -418,10 +488,15 @@ function SettingsPage() {
             {activeTab === "security" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Change Password</h3>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+                    Change Password
+                  </h3>
                 </div>
 
-                <form onSubmit={handlePasswordSubmit} className="max-w-2xl space-y-6">
+                <form
+                  onSubmit={handlePasswordSubmit}
+                  className="max-w-2xl space-y-6"
+                >
                   {/* New Password */}
                   <div className="space-y-2">
                     <Label htmlFor="newPassword">New Password</Label>
@@ -430,7 +505,9 @@ function SettingsPage() {
                       type="password"
                       placeholder="SuperAdmin"
                       value={passwordData.newPassword}
-                      onChange={(e) => handlePasswordChange("newPassword", e.target.value)}
+                      onChange={(e) =>
+                        handlePasswordChange("newPassword", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -443,14 +520,19 @@ function SettingsPage() {
                       type="password"
                       placeholder="SuperAdmin"
                       value={passwordData.confirmPassword}
-                      onChange={(e) => handlePasswordChange("confirmPassword", e.target.value)}
+                      onChange={(e) =>
+                        handlePasswordChange("confirmPassword", e.target.value)
+                      }
                       required
                     />
                   </div>
 
                   {/* Submit Button */}
                   <div className="pt-4">
-                    <Button type="submit" className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12">
+                    <Button
+                      type="submit"
+                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12"
+                    >
                       Update
                     </Button>
                   </div>
