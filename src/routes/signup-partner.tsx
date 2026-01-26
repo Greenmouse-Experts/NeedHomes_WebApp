@@ -18,7 +18,9 @@ const signupSchema = z
     email: z.string().email("Invalid email address"),
     phone: z
       .string()
-      .regex(/^\d{10,15}$/, "Phone number must be between 10 and 15 digits"),
+      .regex(/^\d+$/, "Phone number must contain only digits")
+      .min(10, "Phone number must be at least 10 digits")
+      .max(15, "Phone number must be at most 15 digits"),
     partnerType: z.string().min(1, "Please select a partner type"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
@@ -223,7 +225,7 @@ function SignUpPartnerPage() {
                     Property Developer
                   </option>
                   <option value="AGENCY" className="bg-gray-800">
-                    Broker
+                    Agency
                   </option>
                   <option value="OTHER" className="bg-gray-800">
                     Other

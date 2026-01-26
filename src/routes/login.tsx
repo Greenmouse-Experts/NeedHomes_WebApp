@@ -175,7 +175,7 @@ function LoginPage() {
               <div className="text-right text-sm">
                 <Link
                   to="/forgot-password"
-                  search={{ email: email ?? "" }}
+                  search={{ email: "" }}
                   className="text-gray-300 hover:text-[var(--color-orange)] transition-colors"
                 >
                   Forgot password?
