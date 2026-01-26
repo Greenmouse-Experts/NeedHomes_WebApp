@@ -1,5 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
@@ -7,6 +10,25 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import apiClient from "@/api/simpleApi";
+
+const signupSchema = z
+  .object({
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    email: z.string().email("Invalid email address"),
+    phone: z
+      .string()
+      .regex(/^\d{10,15}$/, "Phone number must be between 10 and 15 digits"),
+    partnerType: z.string().min(1, "Please select a partner type"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 export const Route = createFileRoute("/signup-partner")({
   component: SignUpPartnerPage,
@@ -17,23 +39,28 @@ function SignUpPartnerPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Partner form state
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    partnerType: "",
-    password: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      partnerType: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  const emailValue = watch("email");
 
   const signupMutation = useMutation({
-    mutationFn: async (payload: any) => {
+    mutationFn: async (payload: Omit<SignupFormValues, "confirmPassword">) => {
       const response = await apiClient.post("partners/register", payload);
       return response.data;
     },
@@ -41,7 +68,7 @@ function SignUpPartnerPage() {
       toast.success("Account created successfully!");
       navigate({
         to: "/verify-partner",
-        search: { email: formData.email },
+        search: { email: emailValue },
       });
     },
     onError: (error: any) => {
@@ -51,22 +78,15 @@ function SignUpPartnerPage() {
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-
-    const { confirmPassword, ...payload } = formData;
+  const onSubmit = (data: SignupFormValues) => {
+    const { confirmPassword, ...payload } = data;
     signupMutation.mutate(payload);
   };
 
   return (
     <div className="min-h-screen lg:h-screen flex flex-col lg:flex-row overflow-hidden">
       {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-gray-900 to-gray-800 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
@@ -78,7 +98,7 @@ function SignUpPartnerPage() {
               target.style.display = "none";
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent"></div>
         </div>
 
         {/* Content Overlay */}
@@ -110,7 +130,7 @@ function SignUpPartnerPage() {
             </div>
 
             {/* Signup Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Name Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
@@ -121,13 +141,14 @@ function SignUpPartnerPage() {
                     id="firstName"
                     type="text"
                     placeholder="Chidiebere"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      handleInputChange("firstName", e.target.value)
-                    }
-                    required
+                    {...register("firstName")}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                   />
+                  {errors.firstName && (
+                    <p className="text-red-400 text-xs">
+                      {errors.firstName.message}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName" className="text-white">
@@ -137,13 +158,14 @@ function SignUpPartnerPage() {
                     id="lastName"
                     type="text"
                     placeholder="Chidiebere-Igwe"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      handleInputChange("lastName", e.target.value)
-                    }
-                    required
+                    {...register("lastName")}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                   />
+                  {errors.lastName && (
+                    <p className="text-red-400 text-xs">
+                      {errors.lastName.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -156,11 +178,12 @@ function SignUpPartnerPage() {
                   id="email"
                   type="email"
                   placeholder="tyler.igwe@gmail.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  required
+                  {...register("email")}
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                 />
+                {errors.email && (
+                  <p className="text-red-400 text-xs">{errors.email.message}</p>
+                )}
               </div>
 
               {/* Phone Number */}
@@ -172,11 +195,12 @@ function SignUpPartnerPage() {
                   id="phone"
                   type="tel"
                   placeholder="0920120922"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
-                  required
+                  {...register("phone")}
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                 />
+                {errors.phone && (
+                  <p className="text-red-400 text-xs">{errors.phone.message}</p>
+                )}
               </div>
 
               {/* Partners Type */}
@@ -186,12 +210,8 @@ function SignUpPartnerPage() {
                 </Label>
                 <select
                   id="partnerType"
-                  value={formData.partnerType}
-                  onChange={(e) =>
-                    handleInputChange("partnerType", e.target.value)
-                  }
-                  required
-                  className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] focus:bg-white/20 transition-all duration-300"
+                  {...register("partnerType")}
+                  className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white/20 transition-all duration-300"
                 >
                   <option value="" className="bg-gray-800">
                     Select
@@ -202,13 +222,18 @@ function SignUpPartnerPage() {
                   <option value="PROPERTY_DEVELOPER" className="bg-gray-800">
                     Property Developer
                   </option>
-                  <option value="BROKER" className="bg-gray-800">
+                  <option value="AGENCY" className="bg-gray-800">
                     Broker
                   </option>
                   <option value="OTHER" className="bg-gray-800">
                     Other
                   </option>
                 </select>
+                {errors.partnerType && (
+                  <p className="text-red-400 text-xs">
+                    {errors.partnerType.message}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -221,11 +246,7 @@ function SignUpPartnerPage() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) =>
-                      handleInputChange("password", e.target.value)
-                    }
-                    required
+                    {...register("password")}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20 pr-12"
                   />
                   <button
@@ -236,6 +257,11 @@ function SignUpPartnerPage() {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-red-400 text-xs">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               {/* Confirm Password */}
@@ -248,11 +274,7 @@ function SignUpPartnerPage() {
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                      handleInputChange("confirmPassword", e.target.value)
-                    }
-                    required
+                    {...register("confirmPassword")}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20 pr-12"
                   />
                   <button
@@ -267,6 +289,11 @@ function SignUpPartnerPage() {
                     )}
                   </button>
                 </div>
+                {errors.confirmPassword && (
+                  <p className="text-red-400 text-xs">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
 
               {/* Terms checkbox */}
@@ -275,7 +302,7 @@ function SignUpPartnerPage() {
                   type="checkbox"
                   id="terms"
                   required
-                  className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-[var(--color-orange)] focus:ring-[var(--color-orange)]"
+                  className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-brand-orange focus:ring-brand-orange"
                 />
                 <label
                   htmlFor="terms"
@@ -289,7 +316,7 @@ function SignUpPartnerPage() {
               <Button
                 type="submit"
                 disabled={signupMutation.isPending}
-                className="w-full bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white text-base sm:text-lg py-2.5 mt-4 sm:mt-6"
+                className="w-full bg-brand-orange hover:bg-brand-orange-dark text-white text-base sm:text-lg py-2.5 mt-4 sm:mt-6"
               >
                 {signupMutation.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -305,7 +332,7 @@ function SignUpPartnerPage() {
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-[var(--color-orange)] hover:text-[var(--color-orange-light)] font-semibold transition-colors"
+                  className="text-brand-orange hover:text-brand-orange-light font-semibold transition-colors"
                 >
                   Log In
                 </Link>
