@@ -57,7 +57,7 @@ function LoginPage() {
         return toast.error(extract_message(error));
       }
       if (error.status == 403) {
-        toast.error("Email not verified!", { duration: 2000 });
+        toast.error(extract_message, { duration: 2000 });
         return navigate({
           to: "/verify",
           search: { email: email },
