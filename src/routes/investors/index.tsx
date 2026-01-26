@@ -140,7 +140,7 @@ function InvestorDashboard() {
                 </span>
               </div>
               <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">
-                Welcome, Lord {user?.firstName?.trim() ?? "User"}
+                Welcome, {user?.firstName?.trim() ?? "User"}
               </h2>
               <p className="text-sm md:text-base text-white/90">
                 Have a great day!

@@ -185,7 +185,7 @@ function SettingsPage() {
                         onChange={(e) =>
                           handleProfileChange("firstName", e.target.value)
                         }
-                        placeholder="Lord"
+                        placeholder="firstName"
                       />
                     </div>
 

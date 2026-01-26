@@ -228,7 +228,7 @@ function SettingsPage() {
                           onChange={(e) =>
                             handleProfileChange("firstName", e.target.value)
                           }
-                          placeholder="Lord"
+                          placeholder="firstName"
                           className="text-sm md:text-base"
                         />
                       </div>
