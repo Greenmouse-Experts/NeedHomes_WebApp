@@ -76,15 +76,14 @@ function RouteComponent() {
       <div className="card w-full max-w-md bg-base-100 shadow-xl ring ring-current/20">
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold">Verify Email</h2>
-          <p className="text-sm text-gray-500">
-            Please enter your email and the OTP sent to you.
-          </p>
+          <p className="text-sm text-gray-500">Please the OTP sent to you.</p>
 
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
               <SimpleInput
                 label="Email Address"
                 type="email"
+                disabled
                 placeholder="example@gmail.com"
                 icon={<Mail size={18} className="opacity-70" />}
                 {...register("email", { required: "Email is required" })}

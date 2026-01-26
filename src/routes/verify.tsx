@@ -77,7 +77,7 @@ function RouteComponent() {
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold">Verify Email</h2>
           <p className="text-sm text-gray-500">
-            Please enter your email and the OTP sent to you.
+            Please enter the OTP sent to you.
           </p>
 
           <FormProvider {...methods}>
@@ -85,6 +85,7 @@ function RouteComponent() {
               <SimpleInput
                 label="Email Address"
                 type="email"
+                disabled
                 placeholder="example@gmail.com"
                 icon={<Mail size={18} className="opacity-70" />}
                 {...register("email", { required: "Email is required" })}
