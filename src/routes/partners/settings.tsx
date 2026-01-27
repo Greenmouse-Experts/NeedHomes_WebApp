@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/Label";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
 import type { USER } from "@/types";
+import KYCForm from "@/components/KYCForm";
 
 export const Route = createFileRoute("/partners/settings")({
   component: SettingsPage,
@@ -150,10 +151,11 @@ function SettingsPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 md:gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm mb-1 whitespace-nowrap ${activeTab === tab.id
+                    className={`flex items-center gap-2 md:gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm mb-1 whitespace-nowrap ${
+                      activeTab === tab.id
                         ? "bg-white text-gray-900 shadow-sm"
                         : "text-gray-600 hover:bg-white/50"
-                      }`}
+                    }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />
                     <span>{tab.label}</span>
@@ -403,151 +405,7 @@ function SettingsPage() {
             )}
 
             {/* KYC Tab */}
-            {activeTab === "kyc" && (
-              <div>
-                <div className="mb-4 md:mb-6">
-                  <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
-                    KYC
-                  </h3>
-                </div>
-
-                <form onSubmit={handleKycSubmit} className="max-w-2xl">
-                  {/* ID Type */}
-                  <div className="space-y-2 mb-4 md:mb-6">
-                    <Label htmlFor="idType" className="text-sm">
-                      ID Type
-                    </Label>
-                    <select
-                      id="idType"
-                      value={kycData.idType}
-                      onChange={(e) =>
-                        handleKycChange("idType", e.target.value)
-                      }
-                      className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-3 md:px-4 py-2 md:py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-[var(--color-orange)] transition-all duration-300"
-                    >
-                      <option value="">Select ID Type</option>
-                      <option value="national-id">National ID</option>
-                      <option value="drivers-license">
-                        Driver's License
-                      </option>
-                      <option value="passport">International Passport</option>
-                      <option value="voters-card">Voter's Card</option>
-                    </select>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
-                    {/* Upload Front */}
-                    <div className="space-y-2">
-                      <Label className="text-sm">Upload Front</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
-                        <input
-                          type="file"
-                          onChange={(e) =>
-                            handleKycChange(
-                              "frontUpload",
-                              e.target.files?.[0] || null,
-                            )
-                          }
-                          className="hidden"
-                          id="frontUpload"
-                          accept="image/*"
-                        />
-                        <label
-                          htmlFor="frontUpload"
-                          className="cursor-pointer"
-                        >
-                          <Upload className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-xs md:text-sm text-[var(--color-orange)]">
-                            View File Upload
-                          </p>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Upload Back */}
-                    <div className="space-y-2">
-                      <Label className="text-sm">Upload Back</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
-                        <input
-                          type="file"
-                          onChange={(e) =>
-                            handleKycChange(
-                              "backUpload",
-                              e.target.files?.[0] || null,
-                            )
-                          }
-                          className="hidden"
-                          id="backUpload"
-                          accept="image/*"
-                        />
-                        <label
-                          htmlFor="backUpload"
-                          className="cursor-pointer"
-                        >
-                          <Upload className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-xs md:text-sm text-[var(--color-orange)]">
-                            View File Upload
-                          </p>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Utility Bill */}
-                  <div className="space-y-2 mb-4 md:mb-6">
-                    <Label className="text-sm">
-                      Utility Bill (Proof of Address)
-                    </Label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
-                      <input
-                        type="file"
-                        onChange={(e) =>
-                          handleKycChange(
-                            "utilityBill",
-                            e.target.files?.[0] || null,
-                          )
-                        }
-                        className="hidden"
-                        id="utilityBill"
-                        accept="image/*,application/pdf"
-                      />
-                      <label htmlFor="utilityBill" className="cursor-pointer">
-                        <Upload className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-xs md:text-sm text-[var(--color-orange)]">
-                          View File Upload
-                        </p>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div className="space-y-2 mb-4 md:mb-6">
-                    <Label htmlFor="address" className="text-sm">
-                      Address
-                    </Label>
-                    <Input
-                      id="address"
-                      value={kycData.address}
-                      onChange={(e) =>
-                        handleKycChange("address", e.target.value)
-                      }
-                      placeholder="Zone A 1 Egbi Ewaji St, Wuse, Abuja 900001, Federal Capital Territory, Nigeria"
-                      className="text-sm md:text-base"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-4 md:pt-6">
-                    <Button
-                      type="submit"
-                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
+            {activeTab === "kyc" && <KYCForm />}
 
             {/* Security Tab */}
             {activeTab === "security" && (
@@ -591,10 +449,7 @@ function SettingsPage() {
                       placeholder="SuperAdmin"
                       value={passwordData.confirmPassword}
                       onChange={(e) =>
-                        handlePasswordChange(
-                          "confirmPassword",
-                          e.target.value,
-                        )
+                        handlePasswordChange("confirmPassword", e.target.value)
                       }
                       required
                       className="text-sm md:text-base"
