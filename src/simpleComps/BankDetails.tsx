@@ -7,6 +7,7 @@ import ThemeProvider from "./ThemeProvider";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 interface Bank {
   id: number;
@@ -30,6 +31,7 @@ interface Bank {
 interface BankDetailsForm {
   accountNumber: string;
   bankCode: string;
+  accountName?: string; // Added for the resolved account name
 }
 
 interface AccountResolveResponse {
@@ -38,16 +40,27 @@ interface AccountResolveResponse {
   bank_id: number;
 }
 
+interface CurrentBankInfo {
+  id: string;
+  user_id: string;
+  account_number: string;
+  bank_code: string;
+  bank_name: string;
+  account_name: string;
+  country: string;
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
 export default function BankDetails() {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<BankDetailsForm>();
-  const accountNumber = watch("accountNumber");
-  const bankCode = watch("bankCode");
 
   const {
     data: bankList,
@@ -60,6 +73,24 @@ export default function BankDetails() {
       return resp.data;
     },
   });
+
+  const { data: currentBankInfo, isLoading: isLoadingCurrentBankInfo } =
+    useQuery<ApiResponse<CurrentBankInfo>>({
+      queryKey: ["current-bank-info"],
+      queryFn: async () => {
+        const resp = await apiClient.get("banks/me");
+        return resp.data;
+      },
+    });
+
+  // Populate form when current bank info is loaded
+  useEffect(() => {
+    if (currentBankInfo?.data) {
+      setValue("accountNumber", currentBankInfo.data.account_number);
+      setValue("bankCode", currentBankInfo.data.bank_code);
+      setValue("accountName", currentBankInfo.data.account_name);
+    }
+  }, [currentBankInfo, setValue]);
 
   const resolveBankMutation = useMutation<
     ApiResponse<AccountResolveResponse>,
@@ -77,8 +108,7 @@ export default function BankDetails() {
       toast.success("Account resolved successfully!", {
         description: `Account Name: ${data.data.account_name}`,
       });
-      // Optionally set the resolved account name to a disabled input
-      // setValue("accountName", data.data.account_name);
+      setValue("accountName", data.data.account_name);
     },
     onError: (error) => {
       toast.error("Failed to resolve account", {
@@ -95,6 +125,14 @@ export default function BankDetails() {
       error: (err) => `Failed to resolve: ${err.message}`,
     });
   };
+
+  if (isLoadingCurrentBankInfo) {
+    return (
+      <div className="p-4 text-sm text-gray-500">
+        Loading bank information...
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -155,8 +193,8 @@ export default function BankDetails() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
-            {/* Account Name - This can be uncommented and made disabled to show resolved name */}
-            {/* <div className="space-y-2">
+            {/* Account Name */}
+            <div className="space-y-2">
               <Label htmlFor="accountName" className="text-sm">
                 Account Name
               </Label>
@@ -164,26 +202,9 @@ export default function BankDetails() {
                 id="accountName"
                 className="bg-gray-100 text-sm md:text-base"
                 disabled
-                {...register("accountName")} // Register it even if disabled to hold value
+                {...register("accountName")}
               />
-            </div> */}
-
-            {/* Account Type */}
-            {/*<div className="space-y-2">
-              <Label htmlFor="accountType" className="text-sm">
-                Account Type
-              </Label>
-              <select
-                id="accountType"
-                value={bankData.accountType}
-                onChange={(e) => handleBankChange("accountType", e.target.value)}
-                className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent"
-              >
-                <option value="">Select</option>
-                <option value="savings">Savings</option>
-                <option value="current">Current</option>
-              </select>
-            </div>*/}
+            </div>
           </div>
 
           {/* Submit Button */}
@@ -195,7 +216,7 @@ export default function BankDetails() {
             >
               {resolveBankMutation.isPending
                 ? "Resolving..."
-                : "Resolve Bank Details"}
+                : "Update Bank Details"}
             </Button>
           </div>
         </form>

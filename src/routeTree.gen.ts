@@ -27,6 +27,7 @@ import { Route as PartnersIndexRouteImport } from './routes/partners/index'
 import { Route as InvestorsIndexRouteImport } from './routes/investors/index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as CoporateIndexRouteImport } from './routes/coporate/index'
 import { Route as PartnersTransactionsRouteImport } from './routes/partners/transactions'
 import { Route as PartnersSettingsRouteImport } from './routes/partners/settings'
 import { Route as PartnersPropertiesRouteImport } from './routes/partners/properties'
@@ -153,6 +154,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const CoporateIndexRoute = CoporateIndexRouteImport.update({
+  id: '/coporate/',
+  path: '/coporate/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PartnersTransactionsRoute = PartnersTransactionsRouteImport.update({
   id: '/transactions',
@@ -382,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/partners/properties': typeof PartnersPropertiesRouteWithChildren
   '/partners/settings': typeof PartnersSettingsRoute
   '/partners/transactions': typeof PartnersTransactionsRoute
+  '/coporate/': typeof CoporateIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
@@ -433,6 +440,7 @@ export interface FileRoutesByTo {
   '/partners/properties': typeof PartnersPropertiesRouteWithChildren
   '/partners/settings': typeof PartnersSettingsRoute
   '/partners/transactions': typeof PartnersTransactionsRoute
+  '/coporate': typeof CoporateIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/investors': typeof InvestorsIndexRoute
@@ -487,6 +495,7 @@ export interface FileRoutesById {
   '/partners/properties': typeof PartnersPropertiesRouteWithChildren
   '/partners/settings': typeof PartnersSettingsRoute
   '/partners/transactions': typeof PartnersTransactionsRoute
+  '/coporate/': typeof CoporateIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
@@ -545,6 +554,7 @@ export interface FileRouteTypes {
     | '/partners/properties'
     | '/partners/settings'
     | '/partners/transactions'
+    | '/coporate/'
     | '/dashboard/'
     | '/forgot-password/'
     | '/investors/'
@@ -596,6 +606,7 @@ export interface FileRouteTypes {
     | '/partners/properties'
     | '/partners/settings'
     | '/partners/transactions'
+    | '/coporate'
     | '/dashboard'
     | '/forgot-password'
     | '/investors'
@@ -649,6 +660,7 @@ export interface FileRouteTypes {
     | '/partners/properties'
     | '/partners/settings'
     | '/partners/transactions'
+    | '/coporate/'
     | '/dashboard/'
     | '/forgot-password/'
     | '/investors/'
@@ -690,6 +702,7 @@ export interface RootRouteChildren {
   TestRoute: typeof TestRoute
   VerifyRoute: typeof VerifyRoute
   VerifyPartnerRoute: typeof VerifyPartnerRoute
+  CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
@@ -824,6 +837,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/coporate/': {
+      id: '/coporate/'
+      path: '/coporate'
+      fullPath: '/coporate/'
+      preLoaderRoute: typeof CoporateIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/partners/transactions': {
       id: '/partners/transactions'
@@ -1273,6 +1293,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestRoute: TestRoute,
   VerifyRoute: VerifyRoute,
   VerifyPartnerRoute: VerifyPartnerRoute,
+  CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,

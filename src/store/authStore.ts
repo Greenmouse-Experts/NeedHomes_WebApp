@@ -2,6 +2,9 @@ import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai/react";
 import { getDefaultStore } from "jotai/vanilla";
 import type { USER } from "@/types";
+import apiClient from "@/api/simpleApi";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
 
 export interface AUTHRECORD {
   user: USER;
@@ -48,4 +51,22 @@ export const useTempUser = () => {
 export const clear_temp_user = () => {
   const store = getDefaultStore();
   store.set(temp_user_atom, null);
+};
+
+const auth_logout = async () => {
+  const session = get_user_value()?.sessionId;
+  let resp = await apiClient.delete("auth/" + session);
+  return resp.data;
+};
+
+export const logout = () => {
+  toast.promise(auth_logout, {
+    loading: "loading",
+    success: () => {
+      clear_user();
+      window.location.href = "/login";
+      return "success";
+    },
+    error: extract_message,
+  });
 };
