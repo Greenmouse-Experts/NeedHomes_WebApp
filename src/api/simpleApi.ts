@@ -20,8 +20,8 @@ const apiClient = axios.create({
 // Attach access token before each request
 apiClient.interceptors.request.use((config) => {
   const user = get_user_value();
-  if (user && "access_token" in user && typeof user.access_token === "string") {
-    config.headers.Authorization = `Bearer ${user.access_token}`;
+  if (user && user.accessToken) {
+    config.headers.Authorization = `Bearer ${user.accessToken}`;
   }
   return config;
 });
@@ -44,15 +44,12 @@ apiClient.interceptors.response.use(
           refreshToken: user.refreshToken,
         });
 
-        const newAccessToken = data.data.access_token;
+        const newAccessToken = data.data.accessToken;
         if (!newAccessToken) {
           throw new Error("New access token not received.");
         }
 
-        // const newUser: USER & { access_token: string } = {
-        //   ...user,
-        // };
-        set_user_value(data.data as any);
+        set_user_value({ ...user, accessToken: newAccessToken });
 
         // Update header and retry
         original.headers.Authorization = `Bearer ${newAccessToken}`;

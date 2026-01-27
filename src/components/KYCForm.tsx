@@ -84,10 +84,10 @@ export default function KYCForm() {
         .post(`kyc/submit?accountType=${accountType}`, data)
         .then((res) => res.data),
     onSuccess: (data) => {
-      toast.success(data.message || "KYC submitted successfully!");
+      // This success toast is now handled by toast.promise
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to submit KYC.");
+      // This error toast is now handled by toast.promise
     },
   });
 
@@ -100,28 +100,50 @@ export default function KYCForm() {
       utilityBill: null,
     };
 
+    const uploadPromises: Promise<any>[] = [];
+
     if (frontImage.image && typeof frontImage.image !== "string") {
-      const uploaded = await uploadImage(frontImage.image);
-      submitData.frontPage = uploaded.url;
+      uploadPromises.push(
+        uploadImage(frontImage.image).then((uploaded) => {
+          submitData.frontPage = uploaded.url;
+        }),
+      );
     } else if (typeof frontImage.image === "string") {
       submitData.frontPage = frontImage.image;
     }
 
     if (backImage.image && typeof backImage.image !== "string") {
-      const uploaded = await uploadImage(backImage.image);
-      submitData.backPage = uploaded.url;
+      uploadPromises.push(
+        uploadImage(backImage.image).then((uploaded) => {
+          submitData.backPage = uploaded.url;
+        }),
+      );
     } else if (typeof backImage.image === "string") {
       submitData.backPage = backImage.image;
     }
 
     if (utilityImage.image && typeof utilityImage.image !== "string") {
-      const uploaded = await uploadImage(utilityImage.image);
-      submitData.utilityBill = uploaded.url;
+      uploadPromises.push(
+        uploadImage(utilityImage.image).then((uploaded) => {
+          submitData.utilityBill = uploaded.url;
+        }),
+      );
     } else if (typeof utilityImage.image === "string") {
       submitData.utilityBill = utilityImage.image;
     }
 
-    kycMutation.mutate(submitData);
+    await toast.promise(Promise.all(uploadPromises), {
+      loading: "Uploading images...",
+      success: "Images uploaded successfully!",
+      error: "Failed to upload images.",
+    });
+
+    toast.promise(kycMutation.mutateAsync(submitData), {
+      loading: "Submitting KYC...",
+      success: (res) => res.message || "KYC submitted successfully!",
+      error: (err: any) =>
+        err.response?.data?.message || "Failed to submit KYC.",
+    });
   };
 
   if (isLoadingKyc) return <div>Loading KYC details...</div>;
@@ -129,7 +151,7 @@ export default function KYCForm() {
   return (
     <>
       <div>
-        <div className="mb-4 md:mb-6">
+        <div className="mb-4s md:mb-6">
           <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
             KYC
           </h3>

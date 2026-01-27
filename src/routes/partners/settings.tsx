@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
 import type { USER } from "@/types";
 import KYCForm from "@/components/KYCForm";
+import BankDetails from "@/simpleComps/BankDetails";
 
 export const Route = createFileRoute("/partners/settings")({
   component: SettingsPage,
@@ -306,102 +307,9 @@ function SettingsPage() {
 
             {/* Bank Details Tab */}
             {activeTab === "bankDetails" && (
-              <div>
-                <div className="mb-4 md:mb-6">
-                  <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
-                    Bank Details
-                  </h3>
-                </div>
-
-                <form onSubmit={handleBankSubmit} className="max-w-2xl">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {/* Account Number */}
-                    <div className="space-y-2">
-                      <Label htmlFor="accountNumber" className="text-sm">
-                        Account Number
-                      </Label>
-                      <Input
-                        id="accountNumber"
-                        value={bankData.accountNumber}
-                        onChange={(e) =>
-                          handleBankChange("accountNumber", e.target.value)
-                        }
-                        placeholder="Enter Acct Number"
-                        className="text-sm md:text-base"
-                      />
-                    </div>
-
-                    {/* Bank Name */}
-                    <div className="space-y-2">
-                      <Label htmlFor="bankName" className="text-sm">
-                        Bank Name
-                      </Label>
-                      <select
-                        id="bankName"
-                        value={bankData.bankName}
-                        onChange={(e) =>
-                          handleBankChange("bankName", e.target.value)
-                        }
-                        className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
-                      >
-                        <option value="">Select</option>
-                        <option value="access">Access Bank</option>
-                        <option value="gtb">GTBank</option>
-                        <option value="first">First Bank</option>
-                        <option value="zenith">Zenith Bank</option>
-                        <option value="uba">UBA</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
-                    {/* Account Name */}
-                    <div className="space-y-2">
-                      <Label htmlFor="accountName" className="text-sm">
-                        Account Name
-                      </Label>
-                      <Input
-                        id="accountName"
-                        value={bankData.accountName}
-                        onChange={(e) =>
-                          handleBankChange("accountName", e.target.value)
-                        }
-                        className="bg-red-50 text-sm md:text-base"
-                        disabled
-                      />
-                    </div>
-
-                    {/* Account Type */}
-                    <div className="space-y-2">
-                      <Label htmlFor="accountType" className="text-sm">
-                        Account Type
-                      </Label>
-                      <select
-                        id="accountType"
-                        value={bankData.accountType}
-                        onChange={(e) =>
-                          handleBankChange("accountType", e.target.value)
-                        }
-                        className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
-                      >
-                        <option value="">Select</option>
-                        <option value="savings">Savings</option>
-                        <option value="current">Current</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-4 md:pt-6">
-                    <Button
-                      type="submit"
-                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </form>
-              </div>
+              <>
+                <BankDetails />
+              </>
             )}
 
             {/* KYC Tab */}
