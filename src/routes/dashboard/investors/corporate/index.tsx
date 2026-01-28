@@ -20,7 +20,7 @@ import type { INVESTOR } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import PopUp, { type Actions } from "@/components/tables/pop-up";
 
-export const Route = createFileRoute("/dashboard/investors/coporate/")({
+export const Route = createFileRoute("/dashboard/investors/corporate/")({
   component: InvestorsPage,
 });
 

@@ -152,6 +152,9 @@ export function DashboardLayout({
                 <NavLink to="/dashboard/investors" icon={Users}>
                   Investors
                 </NavLink>
+                <NavLink to="/dashboard/investors/corporate" icon={Users}>
+                  Corporate (Investors)
+                </NavLink>
                 <NavLink to="/dashboard/partners" icon={Handshake}>
                   Partners
                 </NavLink>

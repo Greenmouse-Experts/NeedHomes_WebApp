@@ -59,7 +59,7 @@ import { Route as DashboardInvestorsInvestorIdRouteImport } from './routes/dashb
 import { Route as PartnerRecoverForgotPasswordIndexRouteImport } from './routes/partner/recover/forgot-password/index'
 import { Route as DashboardPropertiesPropertyIdIndexRouteImport } from './routes/dashboard/properties/$propertyId/index'
 import { Route as DashboardPartnersPartnerIdIndexRouteImport } from './routes/dashboard/partners/$partnerId/index'
-import { Route as DashboardInvestorsCoporateIndexRouteImport } from './routes/dashboard/investors/coporate/index'
+import { Route as DashboardInvestorsCorporateIndexRouteImport } from './routes/dashboard/investors/corporate/index'
 import { Route as DashboardInvestorsInvestorIdIndexRouteImport } from './routes/dashboard/investors/$investorId/index'
 import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/dashboard/properties/$propertyId/edit'
 import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dashboard/partners/$partnerId/kyc'
@@ -328,10 +328,10 @@ const DashboardPartnersPartnerIdIndexRoute =
     path: '/',
     getParentRoute: () => DashboardPartnersPartnerIdRoute,
   } as any)
-const DashboardInvestorsCoporateIndexRoute =
-  DashboardInvestorsCoporateIndexRouteImport.update({
-    id: '/coporate/',
-    path: '/coporate/',
+const DashboardInvestorsCorporateIndexRoute =
+  DashboardInvestorsCorporateIndexRouteImport.update({
+    id: '/corporate/',
+    path: '/corporate/',
     getParentRoute: () => DashboardInvestorsRoute,
   } as any)
 const DashboardInvestorsInvestorIdIndexRoute =
@@ -417,7 +417,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
-  '/dashboard/investors/coporate/': typeof DashboardInvestorsCoporateIndexRoute
+  '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
   '/dashboard/properties/$propertyId/': typeof DashboardPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
@@ -467,7 +467,7 @@ export interface FileRoutesByTo {
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdIndexRoute
-  '/dashboard/investors/coporate': typeof DashboardInvestorsCoporateIndexRoute
+  '/dashboard/investors/corporate': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdIndexRoute
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password': typeof PartnerRecoverForgotPasswordIndexRoute
@@ -526,7 +526,7 @@ export interface FileRoutesById {
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
-  '/dashboard/investors/coporate/': typeof DashboardInvestorsCoporateIndexRoute
+  '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
   '/dashboard/properties/$propertyId/': typeof DashboardPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
@@ -586,7 +586,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/investors/$investorId/'
-    | '/dashboard/investors/coporate/'
+    | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
     | '/dashboard/properties/$propertyId/'
     | '/partner/recover/forgot-password/'
@@ -636,7 +636,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/investors/$investorId'
-    | '/dashboard/investors/coporate'
+    | '/dashboard/investors/corporate'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/partner/recover/forgot-password'
@@ -694,7 +694,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/investors/$investorId/'
-    | '/dashboard/investors/coporate/'
+    | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
     | '/dashboard/properties/$propertyId/'
     | '/partner/recover/forgot-password/'
@@ -1075,11 +1075,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPartnersPartnerIdIndexRouteImport
       parentRoute: typeof DashboardPartnersPartnerIdRoute
     }
-    '/dashboard/investors/coporate/': {
-      id: '/dashboard/investors/coporate/'
-      path: '/coporate'
-      fullPath: '/dashboard/investors/coporate/'
-      preLoaderRoute: typeof DashboardInvestorsCoporateIndexRouteImport
+    '/dashboard/investors/corporate/': {
+      id: '/dashboard/investors/corporate/'
+      path: '/corporate'
+      fullPath: '/dashboard/investors/corporate/'
+      preLoaderRoute: typeof DashboardInvestorsCorporateIndexRouteImport
       parentRoute: typeof DashboardInvestorsRoute
     }
     '/dashboard/investors/$investorId/': {
@@ -1140,14 +1140,14 @@ const DashboardInvestorsInvestorIdRouteWithChildren =
 interface DashboardInvestorsRouteChildren {
   DashboardInvestorsInvestorIdRoute: typeof DashboardInvestorsInvestorIdRouteWithChildren
   DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
-  DashboardInvestorsCoporateIndexRoute: typeof DashboardInvestorsCoporateIndexRoute
+  DashboardInvestorsCorporateIndexRoute: typeof DashboardInvestorsCorporateIndexRoute
 }
 
 const DashboardInvestorsRouteChildren: DashboardInvestorsRouteChildren = {
   DashboardInvestorsInvestorIdRoute:
     DashboardInvestorsInvestorIdRouteWithChildren,
   DashboardInvestorsIndexRoute: DashboardInvestorsIndexRoute,
-  DashboardInvestorsCoporateIndexRoute: DashboardInvestorsCoporateIndexRoute,
+  DashboardInvestorsCorporateIndexRoute: DashboardInvestorsCorporateIndexRoute,
 }
 
 const DashboardInvestorsRouteWithChildren =
