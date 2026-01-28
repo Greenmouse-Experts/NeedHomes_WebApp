@@ -9,25 +9,25 @@ import {
   Trash2,
   List,
   Grid,
-  MoreVertical,
   Plus,
   ChevronDown,
   Phone,
   Mail,
+  MoreVertical,
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
-import type { INVESTOR } from "@/types"; // Assuming INVESTOR type can be reused or a new PARTNER type is defined
+import type { PARTNER } from "@/types";
+import CustomTable, { type columnType } from "@/components/tables/CustomTable";
+import type { Actions } from "@/components/tables/pop-up";
+import PartnerListCard from "./-components/PartnerListCard";
 
 export const Route = createFileRoute("/dashboard/partners/")({
   component: PartnersPage,
 });
-
-// Define a type for Partner, assuming it's similar to INVESTOR but with relevant fields
-type PARTNER = INVESTOR; // Or define a separate interface if structure differs significantly
 
 function PartnersPage() {
   const navigate = useNavigate();
@@ -37,9 +37,7 @@ function PartnersPage() {
   const { data, isLoading, error } = useQuery<ApiResponse<PARTNER[]>>({
     queryKey: ["partners"],
     queryFn: async () => {
-      const response = await apiClient.get(
-        "admin/users?accountType=PARTNER", // Changed accountType to PARTNER
-      );
+      const response = await apiClient.get("admin/users?accountType=PARTNER");
       return response.data;
     },
   });
@@ -55,6 +53,93 @@ function PartnersPage() {
       partner.id.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const columns: columnType<PARTNER>[] = [
+    {
+      key: "profile",
+      label: "Profile",
+      render: (_, item) => (
+        <div className="flex items-center gap-2 md:gap-3">
+          <Avatar className="w-8 h-8 md:w-10 md:h-10">
+            <AvatarImage className="object-cover" />
+            <AvatarFallback>
+              {item.firstName?.charAt(0)}
+              {item.lastName?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+        </div>
+      ),
+    },
+    {
+      key: "name",
+      label: "Name",
+      render: (_, item) => (
+        <div>
+          <div className="font-medium text-gray-900 text-xs md:text-sm">
+            {item.firstName} {item.lastName}
+          </div>
+          <div className="text-[10px] md:text-xs text-gray-500">Partner</div>
+          {item.phone && (
+            <div className="text-xs text-gray-600 md:hidden mt-1">
+              {item.phone}
+            </div>
+          )}
+          <div className="text-xs text-gray-600 md:hidden">{item.email}</div>
+        </div>
+      ),
+    },
+    {
+      key: "phone",
+      label: "Phone Number",
+      render: (_, item) =>
+        item.phone && (
+          <div className="flex items-center gap-2 md:gap-2.5">
+            <div className="p-1 md:p-1.5 bg-green-100 rounded-lg">
+              <Phone className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600" />
+            </div>
+            <span className="text-xs md:text-sm text-gray-700 font-medium">
+              {item.phone}
+            </span>
+          </div>
+        ),
+    },
+    {
+      key: "email",
+      label: "Email Address",
+      render: (_, item) => (
+        <div className="flex items-center gap-2 md:gap-2.5">
+          <div className="p-1 md:p-1.5 bg-blue-100 rounded-lg">
+            <Mail className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />
+          </div>
+          <span className="text-xs md:text-sm text-gray-700 font-medium truncate max-w-50">
+            {item.email}
+          </span>
+        </div>
+      ),
+    },
+  ];
+
+  const actions: Actions[] = [
+    {
+      key: "view-details",
+      label: "View Details",
+      action: (item: PARTNER, nav) =>
+        nav({
+          to: "/dashboard/partners/$partnerId",
+          params: { partnerId: item.id },
+        }),
+    },
+    {
+      key: "edit",
+      label: "Edit",
+      action: (item: PARTNER) => console.log("Edit", item.id),
+    },
+    {
+      key: "delete",
+      label: "Delete",
+      action: (item: PARTNER) => console.log("Delete", item.id),
+    },
+  ];
+
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Partners">
       {/* Toolbar */}
@@ -67,7 +152,7 @@ function PartnersPage() {
                 onClick={() => setViewMode("list")}
                 className={`p-1.5 md:p-2 transition-colors ${
                   viewMode === "list"
-                    ? "bg-[var(--color-orange)] text-white"
+                    ? "bg-brand-orange text-white"
                     : "hover:bg-gray-100 text-gray-600"
                 }`}
               >
@@ -77,7 +162,7 @@ function PartnersPage() {
                 onClick={() => setViewMode("grid")}
                 className={`p-1.5 md:p-2 transition-colors border-l border-gray-300 ${
                   viewMode === "grid"
-                    ? "bg-[var(--color-orange)] text-white"
+                    ? "bg-brand-orange text-white"
                     : "hover:bg-gray-100 text-gray-600"
                 }`}
               >
@@ -88,7 +173,7 @@ function PartnersPage() {
 
           {/* Search and Filters */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
-            <div className="relative flex-1 min-w-[200px] md:flex-initial md:w-64">
+            <div className="relative flex-1 min-w-50 md:flex-initial md:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search"
@@ -160,81 +245,9 @@ function PartnersPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
           {filteredPartners.length > 0 ? (
             filteredPartners.map((partner) => (
-              <div
-                key={partner.id}
-                className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-xl hover:border-[var(--color-orange)]/30 transition-all duration-300 relative group"
-              >
-                {/* Three Dots Menu */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <DropdownMenu
-                    trigger={
-                      <button className="p-1.5 hover:bg-gray-100 rounded-full transition-colors">
-                        <MoreVertical className="w-4 h-4 text-gray-500" />
-                      </button>
-                    }
-                  >
-                    <DropdownMenuItem
-                      onClick={() =>
-                        navigate({
-                          to: "/dashboard/partners/$partnerId",
-                          params: { partnerId: partner.id },
-                        })
-                      }
-                    >
-                      View Details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenu>
-                </div>
-
-                {/* Profile Picture */}
-                <div className="flex justify-center mb-4">
-                  <div className="relative">
-                    <Avatar className="w-24 h-24 ring-4 ring-gray-100 group-hover:ring-[var(--color-orange)]/20 transition-all duration-300">
-                      <AvatarImage
-                        src={partner.avatar}
-                        alt={`${partner.firstName} ${partner.lastName}`}
-                        className="object-cover"
-                      />
-                      <AvatarFallback>
-                        {partner.firstName?.charAt(0)}
-                        {partner.lastName?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                </div>
-
-                {/* Partner Name */}
-                <h3 className="text-center font-bold text-gray-900 mb-1 text-base">
-                  {partner.firstName} {partner.lastName}
-                </h3>
-                <p className="text-center text-xs text-gray-500 mb-4 font-medium">
-                  Partner
-                </p>
-
-                {/* Phone */}
-                {partner.phone && (
-                  <div className="flex items-center gap-2.5 mb-3 bg-gray-50 rounded-lg p-2.5 group-hover:bg-orange-50/50 transition-colors">
-                    <div className="p-1.5 bg-green-100 rounded-lg">
-                      <Phone className="w-4 h-4 text-green-600 flex-shrink-0" />
-                    </div>
-                    <span className="text-sm text-gray-700 truncate font-medium">
-                      {partner.phone}
-                    </span>
-                  </div>
-                )}
-
-                {/* Email */}
-                <div className="flex items-center gap-2.5 bg-gray-50 rounded-lg p-2.5 group-hover:bg-orange-50/50 transition-colors">
-                  <div className="p-1.5 bg-blue-100 rounded-lg">
-                    <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                  </div>
-                  <span className="text-sm text-gray-700 truncate font-medium">
-                    {partner.email}
-                  </span>
-                </div>
-              </div>
+              <>
+                <PartnerListCard item={partner} />
+              </>
             ))
           ) : (
             <div className="col-span-full text-center py-10 text-gray-500">
@@ -243,120 +256,11 @@ function PartnersPage() {
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Profile
-                  </th>
-                  <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider hidden md:table-cell">
-                    Phone Number
-                  </th>
-                  <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider hidden lg:table-cell">
-                    Email Address
-                  </th>
-                  <th className="px-3 md:px-4 py-2 md:py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-10"></th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredPartners.length > 0 ? (
-                  filteredPartners.map((partner) => (
-                    <tr key={partner.id} className="hover:bg-gray-50">
-                      <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2 md:gap-3">
-                          <Avatar className="w-8 h-8 md:w-10 md:h-10">
-                            <AvatarImage
-                              src={partner.avatar}
-                              alt={`${partner.firstName} ${partner.lastName}`}
-                              className="object-cover"
-                            />
-                            <AvatarFallback>
-                              {partner.firstName?.charAt(0)}
-                              {partner.lastName?.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </div>
-                      </td>
-                      <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap">
-                        <div>
-                          <div className="font-medium text-gray-900 text-xs md:text-sm">
-                            {partner.firstName} {partner.lastName}
-                          </div>
-                          <div className="text-[10px] md:text-xs text-gray-500">
-                            Partner
-                          </div>
-                          {partner.phone && (
-                            <div className="text-xs text-gray-600 md:hidden mt-1">
-                              {partner.phone}
-                            </div>
-                          )}
-                          <div className="text-xs text-gray-600 md:hidden">
-                            {partner.email}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap hidden md:table-cell">
-                        {partner.phone && (
-                          <div className="flex items-center gap-2 md:gap-2.5">
-                            <div className="p-1 md:p-1.5 bg-green-100 rounded-lg">
-                              <Phone className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600" />
-                            </div>
-                            <span className="text-xs md:text-sm text-gray-700 font-medium">
-                              {partner.phone}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap hidden lg:table-cell">
-                        <div className="flex items-center gap-2 md:gap-2.5">
-                          <div className="p-1 md:p-1.5 bg-blue-100 rounded-lg">
-                            <Mail className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />
-                          </div>
-                          <span className="text-xs md:text-sm text-gray-700 font-medium truncate max-w-[200px]">
-                            {partner.email}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap">
-                        <DropdownMenu
-                          trigger={
-                            <button className="p-1 hover:bg-gray-100 rounded">
-                              <MoreVertical className="w-4 h-4 text-gray-400" />
-                            </button>
-                          }
-                        >
-                          <DropdownMenuItem
-                            onClick={() =>
-                              navigate({
-                                to: "/dashboard/partners/$partnerId",
-                                params: { partnerId: partner.id },
-                              })
-                            }
-                          >
-                            View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
-                        </DropdownMenu>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="text-center py-10 text-gray-500">
-                      No partners found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <CustomTable
+          data={filteredPartners}
+          columns={columns}
+          actions={actions}
+        />
       )}
 
       {/* Empty State for filtered results */}

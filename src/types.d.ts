@@ -31,3 +31,17 @@ export interface INVESTOR {
   }[];
 }
 [];
+export interface PARTNER {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  accountType: "PARTNER";
+  account_status: "ACTIVE";
+  account_verification_status: "PENDING";
+  isEmailVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  roles: [];
+}
