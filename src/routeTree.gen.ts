@@ -16,8 +16,12 @@ import { Route as SignupPartnerRouteImport } from './routes/signup-partner'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as OtpRouteImport } from './routes/otp'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FaqsRouteImport } from './routes/faqs'
+import { Route as ContactUsRouteImport } from './routes/contact-us'
+import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountTypeRouteImport } from './routes/account-type'
+import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as PartnersRouteRouteImport } from './routes/partners/route'
 import { Route as InvestorsRouteRouteImport } from './routes/investors/route'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
@@ -101,6 +105,21 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaqsRoute = FaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactUsRoute = ContactUsRouteImport.update({
+  id: '/contact-us',
+  path: '/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -109,6 +128,11 @@ const AdminRoute = AdminRouteImport.update({
 const AccountTypeRoute = AccountTypeRouteImport.update({
   id: '/account-type',
   path: '/account-type',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutUsRoute = AboutUsRouteImport.update({
+  id: '/about-us',
+  path: '/about-us',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnersRouteRoute = PartnersRouteRouteImport.update({
@@ -370,8 +394,12 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/investors': typeof InvestorsRouteRouteWithChildren
   '/partners': typeof PartnersRouteRouteWithChildren
+  '/about-us': typeof AboutUsRoute
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
+  '/blogs': typeof BlogsRoute
+  '/contact-us': typeof ContactUsRoute
+  '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
@@ -425,8 +453,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
+  '/blogs': typeof BlogsRoute
+  '/contact-us': typeof ContactUsRoute
+  '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
@@ -479,8 +511,12 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/investors': typeof InvestorsRouteRouteWithChildren
   '/partners': typeof PartnersRouteRouteWithChildren
+  '/about-us': typeof AboutUsRoute
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
+  '/blogs': typeof BlogsRoute
+  '/contact-us': typeof ContactUsRoute
+  '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
@@ -539,8 +575,12 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/investors'
     | '/partners'
+    | '/about-us'
     | '/account-type'
     | '/admin'
+    | '/blogs'
+    | '/contact-us'
+    | '/faqs'
     | '/login'
     | '/otp'
     | '/signup'
@@ -594,8 +634,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about-us'
     | '/account-type'
     | '/admin'
+    | '/blogs'
+    | '/contact-us'
+    | '/faqs'
     | '/login'
     | '/otp'
     | '/signup'
@@ -647,8 +691,12 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/investors'
     | '/partners'
+    | '/about-us'
     | '/account-type'
     | '/admin'
+    | '/blogs'
+    | '/contact-us'
+    | '/faqs'
     | '/login'
     | '/otp'
     | '/signup'
@@ -706,8 +754,12 @@ export interface RootRouteChildren {
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   InvestorsRouteRoute: typeof InvestorsRouteRouteWithChildren
   PartnersRouteRoute: typeof PartnersRouteRouteWithChildren
+  AboutUsRoute: typeof AboutUsRoute
   AccountTypeRoute: typeof AccountTypeRoute
   AdminRoute: typeof AdminRoute
+  BlogsRoute: typeof BlogsRoute
+  ContactUsRoute: typeof ContactUsRoute
+  FaqsRoute: typeof FaqsRoute
   LoginRoute: typeof LoginRoute
   OtpRoute: typeof OtpRoute
   SignupRoute: typeof SignupRoute
@@ -774,6 +826,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/faqs': {
+      id: '/faqs'
+      path: '/faqs'
+      fullPath: '/faqs'
+      preLoaderRoute: typeof FaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-us': {
+      id: '/contact-us'
+      path: '/contact-us'
+      fullPath: '/contact-us'
+      preLoaderRoute: typeof ContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -786,6 +859,13 @@ declare module '@tanstack/react-router' {
       path: '/account-type'
       fullPath: '/account-type'
       preLoaderRoute: typeof AccountTypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about-us': {
+      id: '/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof AboutUsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partners': {
@@ -1306,8 +1386,12 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   InvestorsRouteRoute: InvestorsRouteRouteWithChildren,
   PartnersRouteRoute: PartnersRouteRouteWithChildren,
+  AboutUsRoute: AboutUsRoute,
   AccountTypeRoute: AccountTypeRoute,
   AdminRoute: AdminRoute,
+  BlogsRoute: BlogsRoute,
+  ContactUsRoute: ContactUsRoute,
+  FaqsRoute: FaqsRoute,
   LoginRoute: LoginRoute,
   OtpRoute: OtpRoute,
   SignupRoute: SignupRoute,
