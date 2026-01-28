@@ -53,6 +53,9 @@ function LoginPage() {
       if (newUser.user.accountType == "PARTNER") {
         return navigate({ to: "/partners" });
       }
+      // if (newUser.user.accountType == "") {
+      //   return navigate({ to: "/partners" });
+      // }
       return navigate({ to: "/investors" });
     },
     onError: (error: AxiosError<ApiResponse>) => {
