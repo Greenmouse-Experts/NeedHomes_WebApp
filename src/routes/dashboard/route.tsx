@@ -4,12 +4,15 @@ import { get_user_value } from "@/store/authStore";
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
   beforeLoad: () => {
-    // const user = get_user_value();
-    // if (!user) {
-    //   throw redirect({ to: "/login" });
-    // }
-    // if (user.user.accountType == "INVESTOR") {
-    //   throw redirect({ to: "/investors" });
+    const user = get_user_value();
+    if (!user) {
+      throw redirect({ to: "/login" });
+    }
+    const isAdmin = !!user.user.roles.find((item) => item == "ADMIN");
+    if (!isAdmin) {
+      throw redirect({ to: "/investors" });
+    }
+    // if (user.user.roles.some((item) => item != "ADMIN")) {
     // }
   },
 });

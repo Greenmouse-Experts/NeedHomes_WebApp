@@ -15,12 +15,15 @@ import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Separator } from "@/components/ui/Separator";
+import { useAuth } from "@/store/authStore";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
 });
 
 function DashboardIndexPage() {
+  const [user] = useAuth();
+
   return (
     <DashboardLayout title="Super Admin Dashboard">
       {/* Stats Cards */}
@@ -69,6 +72,7 @@ function DashboardIndexPage() {
           <h2 className="text-xl md:text-2xl font-bold mb-1">
             Welcome, Admin 👋
           </h2>
+          <>{JSON.stringify(user)}</>
           <p className="text-sm md:text-base text-gray-200">
             Have a great day!
           </p>

@@ -31,6 +31,7 @@ export interface INVESTOR {
   }[];
 }
 [];
+type roles = "USER" | "ADMIN";
 export interface PARTNER {
   id: string;
   firstName: string;
@@ -43,5 +44,5 @@ export interface PARTNER {
   isEmailVerified: boolean;
   createdAt: string;
   updatedAt: string;
-  roles: [];
+  roles: roles[];
 }
