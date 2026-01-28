@@ -175,13 +175,13 @@ function AdminLoginPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 p-3 bg-(--color-orange)/10 border border-(--color-orange)/30 rounded-lg">
+          {/*<div className="mb-4 p-3 bg-(--color-orange)/10 border border-(--color-orange)/30 rounded-lg">
             <p className="text-xs font-semibold text-brand-orange mb-1">
               Demo Credentials:
             </p>
             <p className="text-xs text-gray-700">Email: admin@needhomes.com</p>
             <p className="text-xs text-gray-700">Password: admin123</p>
-          </div>
+          </div>*/}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">

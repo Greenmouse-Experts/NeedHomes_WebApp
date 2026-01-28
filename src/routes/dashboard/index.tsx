@@ -72,7 +72,7 @@ function DashboardIndexPage() {
           <h2 className="text-xl md:text-2xl font-bold mb-1">
             Welcome, Admin 👋
           </h2>
-          <>{JSON.stringify(user)}</>
+          {/*<>{JSON.stringify(user)}</>*/}
           <p className="text-sm md:text-base text-gray-200">
             Have a great day!
           </p>
