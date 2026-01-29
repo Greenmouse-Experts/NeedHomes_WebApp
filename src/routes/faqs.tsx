@@ -108,7 +108,7 @@ function RouteComponent() {
               questions.
             </p>
 
-            <div className="max-w-2xl mx-auto relative group">
+            {/* <div className="max-w-2xl mx-auto relative group">
               <Search
                 className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-brand-orange transition-colors"
                 size={20}
@@ -119,7 +119,7 @@ function RouteComponent() {
                 className="w-full pl-14 pr-6 py-5 rounded-2xl border-2 border-border bg-card focus:border-brand-orange focus:ring-4 focus:ring-brand-orange/10 outline-none transition-all shadow-xl shadow-brand-orange/5"
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </div>
+            </div> */}
           </div>
         </section>
 
