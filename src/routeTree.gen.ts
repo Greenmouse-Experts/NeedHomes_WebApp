@@ -74,7 +74,9 @@ import { Route as DashboardPropertiesPropertyIdIndexRouteImport } from './routes
 import { Route as DashboardPartnersPartnerIdIndexRouteImport } from './routes/dashboard/partners/$partnerId/index'
 import { Route as DashboardInvestorsCorporateIndexRouteImport } from './routes/dashboard/investors/corporate/index'
 import { Route as DashboardInvestorsInvestorIdIndexRouteImport } from './routes/dashboard/investors/$investorId/index'
+import { Route as DashboardPropertiesNewSaveToOwnRouteImport } from './routes/dashboard/properties/new/save-to-own'
 import { Route as DashboardPropertiesNewOutrightRouteImport } from './routes/dashboard/properties/new/outright'
+import { Route as DashboardPropertiesNewLandBankingRouteImport } from './routes/dashboard/properties/new/land-banking'
 import { Route as DashboardPropertiesNewFractionalRouteImport } from './routes/dashboard/properties/new/fractional'
 import { Route as DashboardPropertiesNewCoDevelopmentRouteImport } from './routes/dashboard/properties/new/co-development'
 import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/dashboard/properties/$propertyId/edit'
@@ -425,10 +427,22 @@ const DashboardInvestorsInvestorIdIndexRoute =
     path: '/',
     getParentRoute: () => DashboardInvestorsInvestorIdRoute,
   } as any)
+const DashboardPropertiesNewSaveToOwnRoute =
+  DashboardPropertiesNewSaveToOwnRouteImport.update({
+    id: '/save-to-own',
+    path: '/save-to-own',
+    getParentRoute: () => DashboardPropertiesNewRouteRoute,
+  } as any)
 const DashboardPropertiesNewOutrightRoute =
   DashboardPropertiesNewOutrightRouteImport.update({
     id: '/outright',
     path: '/outright',
+    getParentRoute: () => DashboardPropertiesNewRouteRoute,
+  } as any)
+const DashboardPropertiesNewLandBankingRoute =
+  DashboardPropertiesNewLandBankingRouteImport.update({
+    id: '/land-banking',
+    path: '/land-banking',
     getParentRoute: () => DashboardPropertiesNewRouteRoute,
   } as any)
 const DashboardPropertiesNewFractionalRoute =
@@ -533,7 +547,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
   '/dashboard/properties/new/fractional': typeof DashboardPropertiesNewFractionalRoute
+  '/dashboard/properties/new/land-banking': typeof DashboardPropertiesNewLandBankingRoute
   '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
+  '/dashboard/properties/new/save-to-own': typeof DashboardPropertiesNewSaveToOwnRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
@@ -597,7 +613,9 @@ export interface FileRoutesByTo {
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
   '/dashboard/properties/new/fractional': typeof DashboardPropertiesNewFractionalRoute
+  '/dashboard/properties/new/land-banking': typeof DashboardPropertiesNewLandBankingRoute
   '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
+  '/dashboard/properties/new/save-to-own': typeof DashboardPropertiesNewSaveToOwnRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdIndexRoute
@@ -672,7 +690,9 @@ export interface FileRoutesById {
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
   '/dashboard/properties/new/fractional': typeof DashboardPropertiesNewFractionalRoute
+  '/dashboard/properties/new/land-banking': typeof DashboardPropertiesNewLandBankingRoute
   '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
+  '/dashboard/properties/new/save-to-own': typeof DashboardPropertiesNewSaveToOwnRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
@@ -748,7 +768,9 @@ export interface FileRouteTypes {
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
     | '/dashboard/properties/new/fractional'
+    | '/dashboard/properties/new/land-banking'
     | '/dashboard/properties/new/outright'
+    | '/dashboard/properties/new/save-to-own'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
@@ -812,7 +834,9 @@ export interface FileRouteTypes {
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
     | '/dashboard/properties/new/fractional'
+    | '/dashboard/properties/new/land-banking'
     | '/dashboard/properties/new/outright'
+    | '/dashboard/properties/new/save-to-own'
     | '/dashboard/investors/$investorId'
     | '/dashboard/investors/corporate'
     | '/dashboard/partners/$partnerId'
@@ -886,7 +910,9 @@ export interface FileRouteTypes {
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
     | '/dashboard/properties/new/fractional'
+    | '/dashboard/properties/new/land-banking'
     | '/dashboard/properties/new/outright'
+    | '/dashboard/properties/new/save-to-own'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
@@ -1385,11 +1411,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsInvestorIdIndexRouteImport
       parentRoute: typeof DashboardInvestorsInvestorIdRoute
     }
+    '/dashboard/properties/new/save-to-own': {
+      id: '/dashboard/properties/new/save-to-own'
+      path: '/save-to-own'
+      fullPath: '/dashboard/properties/new/save-to-own'
+      preLoaderRoute: typeof DashboardPropertiesNewSaveToOwnRouteImport
+      parentRoute: typeof DashboardPropertiesNewRouteRoute
+    }
     '/dashboard/properties/new/outright': {
       id: '/dashboard/properties/new/outright'
       path: '/outright'
       fullPath: '/dashboard/properties/new/outright'
       preLoaderRoute: typeof DashboardPropertiesNewOutrightRouteImport
+      parentRoute: typeof DashboardPropertiesNewRouteRoute
+    }
+    '/dashboard/properties/new/land-banking': {
+      id: '/dashboard/properties/new/land-banking'
+      path: '/land-banking'
+      fullPath: '/dashboard/properties/new/land-banking'
+      preLoaderRoute: typeof DashboardPropertiesNewLandBankingRouteImport
       parentRoute: typeof DashboardPropertiesNewRouteRoute
     }
     '/dashboard/properties/new/fractional': {
@@ -1516,7 +1556,9 @@ const DashboardPartnersRouteWithChildren =
 interface DashboardPropertiesNewRouteRouteChildren {
   DashboardPropertiesNewCoDevelopmentRoute: typeof DashboardPropertiesNewCoDevelopmentRoute
   DashboardPropertiesNewFractionalRoute: typeof DashboardPropertiesNewFractionalRoute
+  DashboardPropertiesNewLandBankingRoute: typeof DashboardPropertiesNewLandBankingRoute
   DashboardPropertiesNewOutrightRoute: typeof DashboardPropertiesNewOutrightRoute
+  DashboardPropertiesNewSaveToOwnRoute: typeof DashboardPropertiesNewSaveToOwnRoute
   DashboardPropertiesNewIndexRoute: typeof DashboardPropertiesNewIndexRoute
 }
 
@@ -1526,7 +1568,10 @@ const DashboardPropertiesNewRouteRouteChildren: DashboardPropertiesNewRouteRoute
       DashboardPropertiesNewCoDevelopmentRoute,
     DashboardPropertiesNewFractionalRoute:
       DashboardPropertiesNewFractionalRoute,
+    DashboardPropertiesNewLandBankingRoute:
+      DashboardPropertiesNewLandBankingRoute,
     DashboardPropertiesNewOutrightRoute: DashboardPropertiesNewOutrightRoute,
+    DashboardPropertiesNewSaveToOwnRoute: DashboardPropertiesNewSaveToOwnRoute,
     DashboardPropertiesNewIndexRoute: DashboardPropertiesNewIndexRoute,
   }
 

@@ -1,6 +1,13 @@
-import apiClient from "./simpleApi";
+import apiClient, { type ApiResponse } from "./simpleApi";
 
-export const uploadImage = async (image: File | Blob) => {
+export interface UPLOAD_IMAGE_RESPONSE extends ApiResponse<{
+  url: string;
+  publicId: string;
+}> {}
+
+export const uploadImage = async (
+  image: File | Blob,
+): Promise<UPLOAD_IMAGE_RESPONSE> => {
   const formData = new FormData();
   formData.append("file", image);
 
