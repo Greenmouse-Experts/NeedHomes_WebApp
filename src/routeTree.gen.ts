@@ -74,6 +74,7 @@ import { Route as DashboardPropertiesPropertyIdIndexRouteImport } from './routes
 import { Route as DashboardPartnersPartnerIdIndexRouteImport } from './routes/dashboard/partners/$partnerId/index'
 import { Route as DashboardInvestorsCorporateIndexRouteImport } from './routes/dashboard/investors/corporate/index'
 import { Route as DashboardInvestorsInvestorIdIndexRouteImport } from './routes/dashboard/investors/$investorId/index'
+import { Route as DashboardPropertiesNewOutrightRouteImport } from './routes/dashboard/properties/new/outright'
 import { Route as DashboardPropertiesNewFractionalRouteImport } from './routes/dashboard/properties/new/fractional'
 import { Route as DashboardPropertiesNewCoDevelopmentRouteImport } from './routes/dashboard/properties/new/co-development'
 import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/dashboard/properties/$propertyId/edit'
@@ -424,6 +425,12 @@ const DashboardInvestorsInvestorIdIndexRoute =
     path: '/',
     getParentRoute: () => DashboardInvestorsInvestorIdRoute,
   } as any)
+const DashboardPropertiesNewOutrightRoute =
+  DashboardPropertiesNewOutrightRouteImport.update({
+    id: '/outright',
+    path: '/outright',
+    getParentRoute: () => DashboardPropertiesNewRouteRoute,
+  } as any)
 const DashboardPropertiesNewFractionalRoute =
   DashboardPropertiesNewFractionalRouteImport.update({
     id: '/fractional',
@@ -526,6 +533,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
   '/dashboard/properties/new/fractional': typeof DashboardPropertiesNewFractionalRoute
+  '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
@@ -589,6 +597,7 @@ export interface FileRoutesByTo {
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
   '/dashboard/properties/new/fractional': typeof DashboardPropertiesNewFractionalRoute
+  '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdIndexRoute
@@ -663,6 +672,7 @@ export interface FileRoutesById {
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
   '/dashboard/properties/new/fractional': typeof DashboardPropertiesNewFractionalRoute
+  '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
@@ -738,6 +748,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
     | '/dashboard/properties/new/fractional'
+    | '/dashboard/properties/new/outright'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
@@ -801,6 +812,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
     | '/dashboard/properties/new/fractional'
+    | '/dashboard/properties/new/outright'
     | '/dashboard/investors/$investorId'
     | '/dashboard/investors/corporate'
     | '/dashboard/partners/$partnerId'
@@ -874,6 +886,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
     | '/dashboard/properties/new/fractional'
+    | '/dashboard/properties/new/outright'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
@@ -1372,6 +1385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsInvestorIdIndexRouteImport
       parentRoute: typeof DashboardInvestorsInvestorIdRoute
     }
+    '/dashboard/properties/new/outright': {
+      id: '/dashboard/properties/new/outright'
+      path: '/outright'
+      fullPath: '/dashboard/properties/new/outright'
+      preLoaderRoute: typeof DashboardPropertiesNewOutrightRouteImport
+      parentRoute: typeof DashboardPropertiesNewRouteRoute
+    }
     '/dashboard/properties/new/fractional': {
       id: '/dashboard/properties/new/fractional'
       path: '/fractional'
@@ -1496,6 +1516,7 @@ const DashboardPartnersRouteWithChildren =
 interface DashboardPropertiesNewRouteRouteChildren {
   DashboardPropertiesNewCoDevelopmentRoute: typeof DashboardPropertiesNewCoDevelopmentRoute
   DashboardPropertiesNewFractionalRoute: typeof DashboardPropertiesNewFractionalRoute
+  DashboardPropertiesNewOutrightRoute: typeof DashboardPropertiesNewOutrightRoute
   DashboardPropertiesNewIndexRoute: typeof DashboardPropertiesNewIndexRoute
 }
 
@@ -1505,6 +1526,7 @@ const DashboardPropertiesNewRouteRouteChildren: DashboardPropertiesNewRouteRoute
       DashboardPropertiesNewCoDevelopmentRoute,
     DashboardPropertiesNewFractionalRoute:
       DashboardPropertiesNewFractionalRoute,
+    DashboardPropertiesNewOutrightRoute: DashboardPropertiesNewOutrightRoute,
     DashboardPropertiesNewIndexRoute: DashboardPropertiesNewIndexRoute,
   }
 
