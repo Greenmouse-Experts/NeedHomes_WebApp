@@ -222,7 +222,27 @@ export function DashboardLayout({
               </div>
             )}
           </div>
-
+          {/*kyc*/}
+          <div>
+            <button
+              onClick={() => toggleSection("kyc")}
+              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
+            >
+              <span>KYC</span>
+              {expandedSections.transaction ? (
+                <ChevronDown className="w-3 h-3" />
+              ) : (
+                <ChevronRight className="w-3 h-3" />
+              )}
+            </button>
+            {expandedSections.transaction && (
+              <div className="ml-3 mt-1 space-y-0.5">
+                <NavLink to="/dashboard/verifications" icon={Receipt}>
+                  KYC
+                </NavLink>
+              </div>
+            )}
+          </div>
           {/* Announcement */}
           <NavLink to="/dashboard/announcements" icon={Megaphone}>
             ANNOUNCEMENT
