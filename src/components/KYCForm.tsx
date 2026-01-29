@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import SelectImage from "@/components/images/SelectImage";
 import { useSelectImage } from "@/helpers/images";
 import { uploadImage } from "@/api/imageApi";
+import { extract_message } from "@/helpers/apihelpers";
+import type { VERIFICATION_REQUEST } from "@/types";
 
 interface KycFormData {
   idType:
@@ -50,7 +52,12 @@ export default function KYCForm() {
   const utilityImage = useSelectImage();
 
   // Fetch existing KYC data
-  const { data: kycData, isLoading: isLoadingKyc } = useQuery({
+  const {
+    data: kycData,
+    isLoading: isLoadingKyc,
+    isError,
+    error,
+  } = useQuery<ApiResponse<{ bank: any; verification: VERIFICATION_REQUEST }>>({
     queryKey: ["kyc-status", accountType],
     queryFn: () => apiClient.get(`kyc`).then((res) => res.data),
     enabled: !!accountType,
@@ -58,22 +65,24 @@ export default function KYCForm() {
 
   // Populate form if data exists
   useEffect(() => {
-    if (kycData?.data) {
+    if (kycData?.data.verification) {
+      const verification = kycData.data.verification;
+      console.log(verification);
       reset({
-        idType: kycData.data.idType || "",
-        address: kycData.data.address || "",
-        frontPage: kycData.data.frontPage?.url || null,
-        backPage: kycData.data.backPage?.url || null,
-        utilityBill: kycData.data.utilityBill?.url || null,
+        idType: verification.idType || "",
+        address: verification.address || "",
+        frontPage: verification.frontPage || null,
+        backPage: verification.backPage || null,
+        utilityBill: verification.utilityBill || null,
       });
-      if (kycData.data.frontPage?.url) {
-        frontImage.setImage(kycData.data.frontPage.url);
+      if (verification.frontPage) {
+        frontImage.setPrev(verification.frontPage);
       }
-      if (kycData.data.backPage?.url) {
-        backImage.setImage(kycData.data.backPage.url);
+      if (verification.backPage) {
+        backImage.setPrev(verification.backPage);
       }
-      if (kycData.data.utilityBill?.url) {
-        utilityImage.setImage(kycData.data.utilityBill.url);
+      if (verification.utilityBill) {
+        utilityImage.setPrev(verification.utilityBill);
       }
     }
   }, [kycData, reset]);
@@ -84,10 +93,12 @@ export default function KYCForm() {
         .post(`kyc/submit?accountType=${accountType}`, data)
         .then((res) => res.data),
     onSuccess: (data) => {
-      // This success toast is now handled by toast.promise
+      toast.success(data.message || "KYC submitted successfully!");
     },
     onError: (error: any) => {
-      // This error toast is now handled by toast.promise
+      toast.error(
+        extract_message(error) || "Failed to submit KYC. Please try again.",
+      );
     },
   });
 
@@ -100,56 +111,67 @@ export default function KYCForm() {
       utilityBill: null,
     };
 
-    const uploadPromises: Promise<any>[] = [];
+    try {
+      // Upload images first
+      if (frontImage.image && typeof frontImage.image !== "string") {
+        const uploaded = await uploadImage(frontImage.image);
+        submitData.frontPage = uploaded.data.url;
+      } else if (typeof frontImage.image === "string") {
+        submitData.frontPage = frontImage.image;
+      }
 
-    if (frontImage.image && typeof frontImage.image !== "string") {
-      uploadPromises.push(
-        uploadImage(frontImage.image).then((uploaded) => {
-          submitData.frontPage = uploaded.url;
-        }),
-      );
-    } else if (typeof frontImage.image === "string") {
-      submitData.frontPage = frontImage.image;
+      if (backImage.image && typeof backImage.image !== "string") {
+        const uploaded = await uploadImage(backImage.image);
+        submitData.backPage = uploaded.data.url;
+      } else if (typeof backImage.image === "string") {
+        submitData.backPage = backImage.image;
+      }
+
+      if (utilityImage.image && typeof utilityImage.image !== "string") {
+        const uploaded = await uploadImage(utilityImage.image);
+        submitData.utilityBill = uploaded.data.url;
+      } else if (typeof utilityImage.image === "string") {
+        submitData.utilityBill = utilityImage.image;
+      }
+
+      // Submit KYC data
+      await toast.promise(kycMutation.mutateAsync(submitData), {
+        loading: "Submitting KYC...",
+        success: (res) => res.message || "KYC submitted successfully!",
+        error: (err: any) => extract_message(err) || "Failed to submit KYC.",
+      });
+    } catch (err) {
+      console.error("Error during KYC submission:", err);
+      toast.error("An error occurred while processing your request.");
     }
-
-    if (backImage.image && typeof backImage.image !== "string") {
-      uploadPromises.push(
-        uploadImage(backImage.image).then((uploaded) => {
-          submitData.backPage = uploaded.url;
-        }),
-      );
-    } else if (typeof backImage.image === "string") {
-      submitData.backPage = backImage.image;
-    }
-
-    if (utilityImage.image && typeof utilityImage.image !== "string") {
-      uploadPromises.push(
-        uploadImage(utilityImage.image).then((uploaded) => {
-          submitData.utilityBill = uploaded.url;
-        }),
-      );
-    } else if (typeof utilityImage.image === "string") {
-      submitData.utilityBill = utilityImage.image;
-    }
-
-    await toast.promise(Promise.all(uploadPromises), {
-      loading: "Uploading images...",
-      success: "Images uploaded successfully!",
-      error: "Failed to upload images.",
-    });
-
-    toast.promise(kycMutation.mutateAsync(submitData), {
-      loading: "Submitting KYC...",
-      success: (res) => res.message || "KYC submitted successfully!",
-      error: (err: any) =>
-        err.response?.data?.message || "Failed to submit KYC.",
-    });
   };
 
-  if (isLoadingKyc) return <div>Loading KYC details...</div>;
+  if (isLoadingKyc) {
+    return (
+      <div className="flex flex-col h-96 items-center justify-center space-y-4">
+        <div className="relative flex items-center justify-center">
+          <div className="h-12 w-12 animate-spin border-4 border-gray-300 border-t-brand-orange rounded-full"></div>
+        </div>
+        <p className="text-gray-500 animate-pulse font-medium">
+          Loading KYC details...
+        </p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-4 rounded-lg bg-red-50 border border-red-200 flex gap-3 text-red-700">
+        <p className="text-sm font-medium">
+          {extract_message(error) || "Failed to load KYC details."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
+      {kycData?.data.verificationType}
       <div>
         <div className="mb-4s md:mb-6">
           <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
