@@ -3,6 +3,7 @@ import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
+import { extract_message } from "@/helpers/apihelpers";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
 import type { VERIFICATION_REQUEST } from "@/types";
@@ -121,7 +122,7 @@ function RouteComponent() {
       return resp.data;
     },
     onSuccess: () => {
-      toast.success("Verification approved successfully");
+      // toast.success("Verification approved successfully");
       queryClient.invalidateQueries({ queryKey: ["verifications-admin"] });
     },
     onError: (error: any) => {
@@ -187,7 +188,11 @@ function RouteComponent() {
       key: "approve",
       label: "Approve KYC",
       action: (item) => {
-        approveMutation.mutate(item.id);
+        toast.promise(approveMutation.mutateAsync(item.id), {
+          loading: "Approving...",
+          success: "KYC approved successfully.",
+          error: (err) => extract_message(err as any) || "An error occurred.",
+        });
       },
     },
   ];

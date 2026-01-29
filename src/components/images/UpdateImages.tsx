@@ -1,12 +1,26 @@
-import { XCircle } from "lucide-react";
+import { Eye, XCircle, UploadCloud } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
+import Modal from "@/components/modals/DialogModal";
+import { useModal } from "@/store/modals";
 
 interface UpdateImagesProps {
   images: { url: string; path: string }[];
   setNew: (item: any) => any;
   setPrev: (item: any) => any;
 }
+
+const ImageViewer = ({ imageUrl }: { imageUrl: string }) => {
+  return (
+    <div className="flex justify-center items-center p-4">
+      <img
+        src={imageUrl}
+        alt="Preview"
+        className="max-w-full max-h-[70vh] object-contain rounded-lg"
+      />
+    </div>
+  );
+};
 
 export default function UpdateImages({
   images,
@@ -17,10 +31,19 @@ export default function UpdateImages({
   const [prevImages, setPrevImages] = useState<{ url: string; path: string }[]>(
     images || [],
   );
+  const {
+    ref: previewModalRef,
+    showModal: showPreviewModal,
+    closeModal: closePreviewModal,
+  } = useModal();
+  const [currentPreviewImage, setCurrentPreviewImage] = useState<string | null>(
+    null,
+  );
+
   useEffect(() => {
     setPrevImages(images);
-    // console.log("images", images);
   }, [images]);
+
   const [newImages, setNewImages] = useState<FileList | []>([]);
   useEffect(() => {
     if (newImages.length > 0) {
@@ -29,9 +52,6 @@ export default function UpdateImages({
       setNew([]); // Ensure setNew is called with an empty array if newImages becomes empty
     }
   }, [newImages, setNew]);
-  // useEffect(() => {
-  //   setPrev(prevImages); // Always call setPrev with the current prevImages
-  // }, [prevImages, setPrev]);
 
   const removeNewImage = (indexToRemove: number) => {
     if (newImages) {
@@ -47,8 +67,18 @@ export default function UpdateImages({
       setNewImages(dataTransfer.files); // Update state with new FileList
     }
   };
+
+  const handlePreviewClick = (imageUrl: string) => {
+    setCurrentPreviewImage(imageUrl);
+    showPreviewModal();
+  };
+
   return (
     <div className="space-y-4">
+      <Modal ref={previewModalRef} title="Image Preview">
+        {currentPreviewImage && <ImageViewer imageUrl={currentPreviewImage} />}
+      </Modal>
+
       <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
         <div className="h-40 flex flex-col justify-center items-center border-2 border-dashed border-base-300 rounded-lg p-4 hover:border-primary transition-colors duration-200">
           <input
@@ -68,20 +98,7 @@ export default function UpdateImages({
             htmlFor={id}
             className="flex flex-col items-center justify-center text-center cursor-pointer h-full w-full"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-base-content opacity-60"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
+            <UploadCloud className="h-12 w-12 text-base-content opacity-60" />
             <span className="mt-2 text-lg font-semibold text-base-content opacity-80">
               Upload Images
             </span>
@@ -98,21 +115,31 @@ export default function UpdateImages({
                 src={image.url}
                 alt={`Existing image ${index + 1}`}
               />
-              <button
-                type="button"
-                className="btn btn-circle btn-error btn-sm absolute -right-2 -top-2 m-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                onClick={() => {
-                  setPrevImages((prev) =>
-                    prev.filter((img) => img.path !== image.path),
-                  );
-                  setPrev((prev: any[]) =>
-                    prev.filter((img) => img.path !== image.path),
-                  ); // Update setPrev as well
-                }}
-                aria-label="Remove existing image"
-              >
-                <XCircle className="h-5 w-5" />
-              </button>
+              <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button
+                  type="button"
+                  className="btn btn-circle btn-info btn-sm"
+                  onClick={() => handlePreviewClick(image.url)}
+                  aria-label="Preview existing image"
+                >
+                  <Eye className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-circle btn-error btn-sm"
+                  onClick={() => {
+                    setPrevImages((prev) =>
+                      prev.filter((img) => img.path !== image.path),
+                    );
+                    setPrev((prev: any[]) =>
+                      prev.filter((img) => img.path !== image.path),
+                    ); // Update setPrev as well
+                  }}
+                  aria-label="Remove existing image"
+                >
+                  <XCircle className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           ))}
 
@@ -127,16 +154,26 @@ export default function UpdateImages({
                 src={URL.createObjectURL(image)}
                 alt={`New image ${index + 1}`}
               />
-              <button
-                type="button"
-                className="btn btn-circle btn-error btn-sm absolute -right-2 -top-2 m-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                onClick={() => {
-                  removeNewImage(index);
-                }}
-                aria-label="Remove new image"
-              >
-                <XCircle className="h-5 w-5" />
-              </button>
+              <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button
+                  type="button"
+                  className="btn btn-circle btn-info btn-sm"
+                  onClick={() => handlePreviewClick(URL.createObjectURL(image))}
+                  aria-label="Preview new image"
+                >
+                  <Eye className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-circle btn-error btn-sm"
+                  onClick={() => {
+                    removeNewImage(index);
+                  }}
+                  aria-label="Remove new image"
+                >
+                  <XCircle className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           ))}
       </div>
