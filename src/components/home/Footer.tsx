@@ -52,10 +52,10 @@ const resources_links: Links[] = [
     name: 'Blog',
     path: '/blog',
   },
-  {
-    name: 'News',
-    path: '/news',
-  },
+  // {
+  //   name: 'News',
+  //   path: '/news',
+  // },
   {
     name: 'Real Estate Insights',
     path: '/',
