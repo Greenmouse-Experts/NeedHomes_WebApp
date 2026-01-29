@@ -54,7 +54,9 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settin
 import { Route as DashboardPartnersRouteImport } from './routes/dashboard/partners'
 import { Route as DashboardInvestorsRouteImport } from './routes/dashboard/investors'
 import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/announcements'
+import { Route as DashboardVerificationsRouteRouteImport } from './routes/dashboard/verifications/route'
 import { Route as ForgotPasswordResetIndexRouteImport } from './routes/forgot-password/reset/index'
+import { Route as DashboardVerificationsIndexRouteImport } from './routes/dashboard/verifications/index'
 import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/partners/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
 import { Route as PartnersPropertiesPropertyIdRouteImport } from './routes/partners/properties/$propertyId'
@@ -301,11 +303,23 @@ const DashboardAnnouncementsRoute = DashboardAnnouncementsRouteImport.update({
   path: '/announcements',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardVerificationsRouteRoute =
+  DashboardVerificationsRouteRouteImport.update({
+    id: '/verifications',
+    path: '/verifications',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const ForgotPasswordResetIndexRoute =
   ForgotPasswordResetIndexRouteImport.update({
     id: '/forgot-password/reset/',
     path: '/forgot-password/reset/',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardVerificationsIndexRoute =
+  DashboardVerificationsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardVerificationsRouteRoute,
   } as any)
 const DashboardPartnersIndexRoute = DashboardPartnersIndexRouteImport.update({
   id: '/',
@@ -449,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
@@ -482,6 +497,7 @@ export interface FileRoutesByFullPath {
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
+  '/dashboard/verifications/': typeof DashboardVerificationsIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
@@ -542,6 +558,7 @@ export interface FileRoutesByTo {
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners': typeof DashboardPartnersIndexRoute
+  '/dashboard/verifications': typeof DashboardVerificationsIndexRoute
   '/forgot-password/reset': typeof ForgotPasswordResetIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
@@ -578,6 +595,7 @@ export interface FileRoutesById {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
@@ -611,6 +629,7 @@ export interface FileRoutesById {
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
+  '/dashboard/verifications/': typeof DashboardVerificationsIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
@@ -648,6 +667,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/verifications'
     | '/dashboard/announcements'
     | '/dashboard/investors'
     | '/dashboard/partners'
@@ -681,6 +701,7 @@ export interface FileRouteTypes {
     | '/partners/properties/$propertyId'
     | '/dashboard/investors/'
     | '/dashboard/partners/'
+    | '/dashboard/verifications/'
     | '/forgot-password/reset/'
     | '/dashboard/investors/$investorId/kyc'
     | '/dashboard/partners/$partnerId/kyc'
@@ -741,6 +762,7 @@ export interface FileRouteTypes {
     | '/partners/properties/$propertyId'
     | '/dashboard/investors'
     | '/dashboard/partners'
+    | '/dashboard/verifications'
     | '/forgot-password/reset'
     | '/dashboard/investors/$investorId/kyc'
     | '/dashboard/partners/$partnerId/kyc'
@@ -776,6 +798,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/verifications'
     | '/dashboard/announcements'
     | '/dashboard/investors'
     | '/dashboard/partners'
@@ -809,6 +832,7 @@ export interface FileRouteTypes {
     | '/partners/properties/$propertyId'
     | '/dashboard/investors/'
     | '/dashboard/partners/'
+    | '/dashboard/verifications/'
     | '/forgot-password/reset/'
     | '/dashboard/investors/$investorId/kyc'
     | '/dashboard/partners/$partnerId/kyc'
@@ -1170,12 +1194,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAnnouncementsRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/verifications': {
+      id: '/dashboard/verifications'
+      path: '/verifications'
+      fullPath: '/dashboard/verifications'
+      preLoaderRoute: typeof DashboardVerificationsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/forgot-password/reset/': {
       id: '/forgot-password/reset/'
       path: '/forgot-password/reset'
       fullPath: '/forgot-password/reset/'
       preLoaderRoute: typeof ForgotPasswordResetIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/verifications/': {
+      id: '/dashboard/verifications/'
+      path: '/'
+      fullPath: '/dashboard/verifications/'
+      preLoaderRoute: typeof DashboardVerificationsIndexRouteImport
+      parentRoute: typeof DashboardVerificationsRouteRoute
     }
     '/dashboard/partners/': {
       id: '/dashboard/partners/'
@@ -1320,6 +1358,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardVerificationsRouteRouteChildren {
+  DashboardVerificationsIndexRoute: typeof DashboardVerificationsIndexRoute
+}
+
+const DashboardVerificationsRouteRouteChildren: DashboardVerificationsRouteRouteChildren =
+  {
+    DashboardVerificationsIndexRoute: DashboardVerificationsIndexRoute,
+  }
+
+const DashboardVerificationsRouteRouteWithChildren =
+  DashboardVerificationsRouteRoute._addFileChildren(
+    DashboardVerificationsRouteRouteChildren,
+  )
+
 interface DashboardInvestorsInvestorIdRouteChildren {
   DashboardInvestorsInvestorIdKycRoute: typeof DashboardInvestorsInvestorIdKycRoute
   DashboardInvestorsInvestorIdIndexRoute: typeof DashboardInvestorsInvestorIdIndexRoute
@@ -1401,6 +1453,7 @@ const DashboardPropertiesPropertyIdRouteWithChildren =
   )
 
 interface DashboardRouteRouteChildren {
+  DashboardVerificationsRouteRoute: typeof DashboardVerificationsRouteRouteWithChildren
   DashboardAnnouncementsRoute: typeof DashboardAnnouncementsRoute
   DashboardInvestorsRoute: typeof DashboardInvestorsRouteWithChildren
   DashboardPartnersRoute: typeof DashboardPartnersRouteWithChildren
@@ -1414,6 +1467,8 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardVerificationsRouteRoute:
+    DashboardVerificationsRouteRouteWithChildren,
   DashboardAnnouncementsRoute: DashboardAnnouncementsRoute,
   DashboardInvestorsRoute: DashboardInvestorsRouteWithChildren,
   DashboardPartnersRoute: DashboardPartnersRouteWithChildren,

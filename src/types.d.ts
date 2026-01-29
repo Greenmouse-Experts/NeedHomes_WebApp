@@ -46,3 +46,58 @@ export interface PARTNER {
   updatedAt: string;
   roles: roles[];
 }
+
+export interface VERIFICATION_REQUEST {
+  id: string;
+  user_id: string;
+  idType: string;
+  frontPage: string | null;
+  companyName: string | null;
+  rcNumber: string | null;
+  cacDocument: string | null;
+  backPage: string | null;
+  authorizedId: string | null;
+  authorizedName: string | null;
+  utilityBill: string | null;
+  address: string;
+  verificationType: "INDIVIDUAL" | "CORPORATE";
+  submitedAt: string;
+  RejectionReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  user: {
+    id: string;
+    profilePicture: string | null;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    isEmailVerified: boolean;
+    accountType: string;
+    companyName: string | null;
+    account_status: string;
+    account_verification_status: string;
+    referral_source: string;
+    partnerType: string | null;
+    referralCode: string | null;
+    totalReferrals: number;
+    totalCommission: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+    bank_account: {
+      id: string;
+      user_id: string;
+      account_number: string;
+      bank_code: string;
+      bank_name: string;
+      account_name: string;
+      country: string;
+      currency: string;
+      createdAt: string;
+      updatedAt: string;
+      deletedAt: string | null;
+    } | null;
+  };
+}
