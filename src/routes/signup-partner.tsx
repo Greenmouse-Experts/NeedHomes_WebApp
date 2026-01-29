@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/Button";
@@ -10,6 +10,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import apiClient from "@/api/simpleApi";
+import { PhoneInput } from "@/components/CountryPhoneInput";
 
 const signupSchema = z
   .object({
@@ -45,6 +46,7 @@ function SignUpPartnerPage() {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -193,12 +195,17 @@ function SignUpPartnerPage() {
                 <Label htmlFor="phone" className="text-white">
                   Phone Number
                 </Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="0920120922"
-                  {...register("phone")}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
+                <Controller
+                  name="phone"
+                  control={control}
+                  defaultValue=""
+                  render={({ field: { onChange, value } }) => (
+                    <PhoneInput
+                      value={value}
+                      onPhoneChange={onChange}
+                      defaultCountry="US"
+                    />
+                  )}
                 />
                 {errors.phone && (
                   <p className="text-red-400 text-xs">{errors.phone.message}</p>
