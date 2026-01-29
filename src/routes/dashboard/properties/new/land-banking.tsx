@@ -6,6 +6,9 @@ import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import UpdateImages from "@/components/images/UpdateImages";
 import { useImages } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
@@ -31,7 +34,7 @@ function RouteComponent() {
   });
 
   const { images, setPrev, setNew } = useImages([]);
-
+  const nav = useNavigate();
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       const totalPrice =
@@ -48,10 +51,22 @@ function RouteComponent() {
       });
       return data;
     },
+    onSuccess: () => {
+      nav({
+        to: "/partners/properties",
+      });
+    },
   });
 
   const onSubmit = (data: any) => {
-    mutation.mutate(data);
+    toast.promise(mutation.mutateAsync(data), {
+      loading: "Submitting...",
+      success: extract_message,
+      error: (err) => {
+        console.log(err);
+        return extract_message(err) || "An error occurred.";
+      },
+    });
   };
 
   return (
