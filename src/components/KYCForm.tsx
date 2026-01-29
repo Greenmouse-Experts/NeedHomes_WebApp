@@ -12,6 +12,7 @@ import { useSelectImage } from "@/helpers/images";
 import { uploadImage } from "@/api/imageApi";
 import { extract_message } from "@/helpers/apihelpers";
 import type { VERIFICATION_REQUEST } from "@/types";
+import type { AxiosError } from "axios";
 
 interface KycFormData {
   idType:
@@ -47,9 +48,9 @@ export default function KYCForm() {
   });
 
   // Image selection hooks for preview and state management
-  const frontImage = useSelectImage();
-  const backImage = useSelectImage();
-  const utilityImage = useSelectImage();
+  const frontImage = useSelectImage(null);
+  const backImage = useSelectImage(null);
+  const utilityImage = useSelectImage(null);
 
   // Fetch existing KYC data
   const {
@@ -69,7 +70,7 @@ export default function KYCForm() {
       const verification = kycData.data.verification;
       console.log(verification);
       reset({
-        idType: verification.idType || "",
+        idType: (verification.idType as KycFormData["idType"]) || "",
         address: verification.address || "",
         frontPage: verification.frontPage || null,
         backPage: verification.backPage || null,
@@ -84,10 +85,18 @@ export default function KYCForm() {
       if (verification.utilityBill) {
         utilityImage.setPrev(verification.utilityBill);
       }
+    } else if (isError && (error as AxiosError)?.response?.status === 404) {
+      reset({
+        idType: "",
+        address: "",
+        frontPage: null,
+        backPage: null,
+        utilityBill: null,
+      });
     }
-  }, [kycData, reset]);
+  }, [kycData, reset, isError, error]);
 
-  const kycMutation = useMutation<ApiResponse<any>, Error, KycFormData>({
+  const kycMutation = useMutation<ApiResponse<any>, AxiosError, KycFormData>({
     mutationFn: (data) =>
       apiClient
         .post(`kyc/submit?accountType=${accountType}`, data)
@@ -95,7 +104,7 @@ export default function KYCForm() {
     onSuccess: (data) => {
       toast.success(data.message || "KYC submitted successfully!");
     },
-    onError: (error: any) => {
+    onError: (error) => {
       toast.error(
         extract_message(error) || "Failed to submit KYC. Please try again.",
       );
@@ -135,7 +144,7 @@ export default function KYCForm() {
       }
 
       // Submit KYC data
-      await toast.promise(kycMutation.mutateAsync(submitData), {
+      toast.promise(kycMutation.mutateAsync(submitData), {
         loading: "Submitting KYC...",
         success: (res) => res.message || "KYC submitted successfully!",
         error: (err: any) => extract_message(err) || "Failed to submit KYC.",
@@ -159,19 +168,16 @@ export default function KYCForm() {
     );
   }
 
-  if (isError) {
-    return (
-      <div className="p-4 rounded-lg bg-red-50 border border-red-200 flex gap-3 text-red-700">
-        <p className="text-sm font-medium">
-          {extract_message(error) || "Failed to load KYC details."}
-        </p>
-      </div>
-    );
-  }
-
   return (
     <>
-      {kycData?.data.verificationType}
+      {/*{isError && error.status == 404 && (
+        <>
+          <div className="" data-theme="nh-light info info-error">
+            D
+          </div>
+        </>
+      )}*/}
+      {/*{kycData?.data.verification}*/}
       <div>
         <div className="mb-4s md:mb-6">
           <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
