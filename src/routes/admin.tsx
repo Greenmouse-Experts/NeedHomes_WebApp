@@ -89,7 +89,7 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center p-4 pt-24 relative overflow-hidden">
+    <div className="min-h-[calc(100dvh-96px)] bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center p-4 pt-24 relative overflow-hidden">
       {/* Creative Background Elements - Dark theme */}
       <div className="absolute top-20 right-10 w-96 h-96 bg-(--color-orange)/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 left-10 w-80 h-80 bg-(--color-orange)/10 rounded-full blur-3xl"></div>
