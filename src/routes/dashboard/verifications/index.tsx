@@ -29,9 +29,25 @@ const KYCViewer = ({ data }: { data: VERIFICATION_REQUEST | null }) => {
           <p className="font-medium break-all">{data.user.email}</p>
         </div>
         <div>
+          <p className="text-xs text-gray-500">Verification Type</p>
+          <p className="font-medium">{data.verificationType}</p>
+        </div>
+        <div>
           <p className="text-xs text-gray-500">ID Type</p>
           <p className="font-medium">{data.idType}</p>
         </div>
+        {data.verificationType === "CORPORATE" && (
+          <>
+            <div>
+              <p className="text-xs text-gray-500">Company Name</p>
+              <p className="font-medium">{data.companyName || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">RC Number</p>
+              <p className="font-medium">{data.rcNumber || "N/A"}</p>
+            </div>
+          </>
+        )}
         <div>
           <p className="text-xs text-gray-500">Submitted At</p>
           <p className="font-medium">
@@ -39,14 +55,43 @@ const KYCViewer = ({ data }: { data: VERIFICATION_REQUEST | null }) => {
           </p>
         </div>
       </div>
-      <div className="mt-4">
-        <p className="text-xs text-gray-500 mb-2">ID Document Preview</p>
-        <div className="w-full h-48 sm:h-64 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 p-4 text-center">
-          <span className="text-gray-400 italic text-sm">
-            Document Image Placeholder (Dummy)
-          </span>
-        </div>
+
+      <div className="mt-4 space-y-4">
+        {data.frontPage && (
+          <div>
+            <p className="text-xs text-gray-500 mb-2">ID Front Page</p>
+            <img
+              src={data.frontPage}
+              alt="ID Front"
+              className="w-full h-auto max-h-64 object-contain rounded-lg border"
+            />
+          </div>
+        )}
+        {data.backPage && (
+          <div>
+            <p className="text-xs text-gray-500 mb-2">ID Back Page</p>
+            <img
+              src={data.backPage}
+              alt="ID Back"
+              className="w-full h-auto max-h-64 object-contain rounded-lg border"
+            />
+          </div>
+        )}
+        {data.cacDocument && (
+          <div>
+            <p className="text-xs text-gray-500 mb-2">CAC Document</p>
+            <a
+              href={data.cacDocument}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-sm btn-outline"
+            >
+              View CAC Document
+            </a>
+          </div>
+        )}
       </div>
+
       <div>
         <p className="text-xs text-gray-500">Residential Address</p>
         <p className="font-medium">{data.address || "N/A"}</p>
