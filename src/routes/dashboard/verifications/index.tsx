@@ -171,7 +171,7 @@ function RouteComponent() {
       label: "Status",
       render: (val) => (
         <span
-          className={`badge badge-sm ${
+          className={`badge badge-soft ring fade badge-sm ${
             val === "VERIFIED"
               ? "badge-success"
               : val === "PENDING"

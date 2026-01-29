@@ -67,7 +67,7 @@ function InvestorsPage() {
       label: "Verification",
       render: (value) => (
         <span
-          className={`badge ${
+          className={`badge badge-soft ring fade ${
             value === "ACTIVE"
               ? "badge-success"
               : value === "PENDING"

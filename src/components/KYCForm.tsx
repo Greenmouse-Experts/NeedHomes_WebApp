@@ -119,7 +119,7 @@ export default function KYCForm() {
       backPage: null,
       utilityBill: null,
     };
-
+    toast.info("submitting", { duration: 1500 });
     try {
       // Upload images first
       if (frontImage.image && typeof frontImage.image !== "string") {

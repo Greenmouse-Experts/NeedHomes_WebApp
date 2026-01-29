@@ -53,7 +53,7 @@ export default function SelectImage(props: ImageProps) {
             <div className="size-full relative group">
               <img
                 className="size-full object-cover rounded-lg shadow-md"
-                src={props.prev}
+                src={props.image_link}
                 alt={`Selected image`}
               />
               <button
