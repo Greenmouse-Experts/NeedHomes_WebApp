@@ -10,6 +10,7 @@ import { useAuth } from "@/store/authStore";
 import type { USER } from "@/types";
 import BankDetails from "@/simpleComps/BankDetails";
 import KYCForm from "@/components/KYCForm";
+import { PhoneInput } from "@/components/CountryPhoneInput";
 
 export const Route = createFileRoute("/investors/settings")({
   component: SettingsPage,
@@ -94,7 +95,7 @@ function SettingsPage() {
             <Bell className="w-5 h-5 text-gray-600" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
           </button>
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-linear-to-br from-orange-400 to-orange-600 rounded-full"></div>
         </div>
       </header>
 
@@ -216,20 +217,16 @@ function SettingsPage() {
                       <Label htmlFor="phoneNumber" className="text-sm">
                         Phone Number
                       </Label>
-                      <div className="flex gap-2">
-                        <div className="w-12 md:w-16 flex items-center justify-center border border-gray-300 rounded-md shrink-0">
-                          <span className="text-xl md:text-2xl">🇳🇬</span>
-                        </div>
-                        <Input
-                          id="phoneNumber"
-                          value={profileData.phoneNumber}
-                          onChange={(e) =>
-                            handleProfileChange("phoneNumber", e.target.value)
-                          }
-                          placeholder="0700 000 0000"
-                          className="flex-1 text-sm md:text-base"
-                        />
-                      </div>
+                      <PhoneInput
+                        id="phoneNumber"
+                        value={profileData.phoneNumber}
+                        onPhoneChange={(val) =>
+                          handleProfileChange("phoneNumber", val)
+                        }
+                        defaultCountry="NG"
+                        placeholder="0700 000 0000"
+                        className="text-sm md:text-base"
+                      />
                     </div>
 
                     {/* Date of Birth */}
