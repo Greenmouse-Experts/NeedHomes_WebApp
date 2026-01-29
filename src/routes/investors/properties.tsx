@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Bell, ChevronDown } from 'lucide-react'
+import { Building2, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 
 export const Route = createFileRoute('/investors/properties')({
@@ -96,11 +96,14 @@ function InvestorPropertiesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Properties</h1>
-        </div>
-        <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Building2 className="h-6 w-6 text-green-600" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Properties</h1>
+          </div>
           {/* Property Type Dropdown */}
           <div className="relative flex-1 md:flex-none">
             <button
@@ -130,13 +133,11 @@ function InvestorPropertiesPage() {
               </div>
             )}
           </div>
-          <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <Bell className="w-5 h-5 text-gray-600" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
-          </button>
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
         </div>
-      </header>
+        <p className="text-gray-600 text-sm sm:text-base">
+          Browse and invest in premium real estate opportunities.
+        </p>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         {properties.map((property) => (

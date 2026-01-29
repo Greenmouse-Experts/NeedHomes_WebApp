@@ -17,6 +17,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as OtpRouteImport } from './routes/otp'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LeadershipRouteImport } from './routes/leadership'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -109,6 +110,11 @@ const NewsRoute = NewsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadershipRoute = LeadershipRouteImport.update({
+  id: '/leadership',
+  path: '/leadership',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqsRoute = FaqsRouteImport.update({
@@ -406,6 +412,7 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
@@ -466,6 +473,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
@@ -525,6 +533,7 @@ export interface FileRoutesById {
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
@@ -590,6 +599,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/contact-us'
     | '/faqs'
+    | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
@@ -650,6 +660,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/contact-us'
     | '/faqs'
+    | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
@@ -708,6 +719,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/contact-us'
     | '/faqs'
+    | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
@@ -772,6 +784,7 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRoute
   ContactUsRoute: typeof ContactUsRoute
   FaqsRoute: typeof FaqsRoute
+  LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   NewsRoute: typeof NewsRoute
   OtpRoute: typeof OtpRoute
@@ -844,6 +857,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leadership': {
+      id: '/leadership'
+      path: '/leadership'
+      fullPath: '/leadership'
+      preLoaderRoute: typeof LeadershipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faqs': {
@@ -1412,6 +1432,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRoute,
   ContactUsRoute: ContactUsRoute,
   FaqsRoute: FaqsRoute,
+  LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   NewsRoute: NewsRoute,
   OtpRoute: OtpRoute,

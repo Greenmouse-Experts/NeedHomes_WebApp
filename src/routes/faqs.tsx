@@ -88,9 +88,16 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="min-h-screen bg-background pb-20 flex flex-col items-center">
+      <section className="bg-[#333d42] py-20">
+        <div className="contain mx-auto px-6">
+          <h1 className="text-5xl md:text-6xl font-serif font-medium text-white">
+            FAQs<span className="text-brand-orange">.</span>
+          </h1>
+        </div>
+      </section>
+      <div className="min-h-screen bg-background pb-20 mt-20 flex flex-col items-center">
         {/* Hero Section */}
-        <section className="relative w-full overflow-hidden bg-brand-orange/5 py-20 lg:py-32 flex justify-center">
+        {/* <section className="relative w-full overflow-hidden bg-brand-orange/5 py-20 lg:py-32 flex justify-center">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
             <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-orange blur-3xl" />
             <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-brand-orange-dark blur-3xl" />
@@ -107,21 +114,8 @@ function RouteComponent() {
               Search our knowledge base to find answers to frequently asked
               questions.
             </p>
-
-            {/* <div className="max-w-2xl mx-auto relative group">
-              <Search
-                className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-brand-orange transition-colors"
-                size={20}
-              />
-              <input
-                type="text"
-                placeholder="Search for questions..."
-                className="w-full pl-14 pr-6 py-5 rounded-2xl border-2 border-border bg-card focus:border-brand-orange focus:ring-4 focus:ring-brand-orange/10 outline-none transition-all shadow-xl shadow-brand-orange/5"
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div> */}
           </div>
-        </section>
+        </section> */}
 
         {/* FAQ Content */}
         <section className="contain px-6 -mt-12 relative z-20 w-full flex justify-center">
@@ -141,7 +135,7 @@ function RouteComponent() {
                     >
                       <button
                         onClick={() => toggleAccordion(idx)}
-                        className="w-full flex items-center justify-between p-6 text-left"
+                        className="cursor-pointer w-full flex items-center justify-between p-6 text-left"
                       >
                         <span
                           className={`text-lg font-semibold transition-colors ${isOpen ? "text-brand-orange" : "text-foreground"
@@ -174,7 +168,7 @@ function RouteComponent() {
               </div>
 
               {/* Support Cards - Centered Below */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
                 <div className="p-8 rounded-3xl bg-brand-orange text-white shadow-2xl shadow-brand-orange/20">
                   <MessageCircle className="mb-4 h-10 w-10" />
                   <h3 className="text-2xl font-bold mb-2">
@@ -202,7 +196,7 @@ function RouteComponent() {
                     Read Docs →
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>

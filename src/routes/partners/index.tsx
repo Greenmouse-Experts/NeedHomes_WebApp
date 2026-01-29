@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Bell } from "lucide-react";
+import { Calendar, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -86,20 +86,19 @@ function PartnerDashboard() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="flex items-center justify-between mb-6 md:mb-8">
-        <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-            Partner
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-center space-x-3 mb-2">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <LayoutDashboard className="h-6 w-6 text-blue-600" />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Dashboard
           </h1>
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <Bell className="w-5 h-5 text-gray-600" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
-          </button>
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
-        </div>
-      </header>
+        <p className="text-gray-600 text-sm sm:text-base">
+          Welcome to your partnership overview and property management.
+        </p>
+      </div>
 
       {/* Welcome Banner */}
       {/* Welcome Section */}
