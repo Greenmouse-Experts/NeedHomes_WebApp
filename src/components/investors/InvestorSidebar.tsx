@@ -79,9 +79,8 @@ export function InvestorSidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 z-40 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed left-0 top-0 h-full w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 z-40 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
       >
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">
@@ -103,11 +102,10 @@ export function InvestorSidebar({
           <Link
             to="/investors"
             onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "dashboard"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "dashboard"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -126,38 +124,12 @@ export function InvestorSidebar({
           </Link>
 
           <Link
-            to="/investors/my-investments"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "my-investments"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            <span>My Investment</span>
-          </Link>
-
-          <Link
             to="/investors/properties"
             onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "properties"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "properties"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -176,13 +148,36 @@ export function InvestorSidebar({
           </Link>
 
           <Link
-            to="/investors/notifications"
+            to="/investors/my-investments"
             onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "notifications"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "my-investments"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <span>My Investment</span>
+          </Link>
+
+          <Link
+            to="/investors/notifications"
+            onClick={handleLinkClick}
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "notifications"
+                ? "bg-[var(--color-orange)] text-white"
+                : "hover:bg-gray-800 text-gray-400"
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -203,11 +198,10 @@ export function InvestorSidebar({
           <Link
             to="/investors/transactions"
             onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "transactions"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "transactions"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -228,11 +222,10 @@ export function InvestorSidebar({
           <Link
             to="/investors/announcements"
             onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "announcements"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "announcements"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -253,11 +246,10 @@ export function InvestorSidebar({
           <Link
             to="/investors/settings"
             onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "settings"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "settings"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -284,11 +276,10 @@ export function InvestorSidebar({
             onClick={() => {
               logout();
             }}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "announcements"
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === "announcements"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
-            }`}
+              }`}
           >
             <LogOut className="size-4" /> Logout
           </button>

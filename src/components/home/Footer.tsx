@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router'
+import { Phone, Mail } from 'lucide-react'
 
 interface Links {
   name: string
   path?: string
+  icon?: React.ReactNode
 }
 
 const companyLinks = [
@@ -60,16 +62,14 @@ const resources_links: Links[] = [
 
 const support_links = [
   {
-    name: 'Live Chat',
-    path: '/',
+    name: '+234 702 500 5857',
+    path: 'tel:+2347025005857',
+    icon: <Phone className="w-4 h-4" />,
   },
   {
-    name: 'Book a call',
-    path: '/',
-  },
-  {
-    name: 'Support Email',
-    path: '/',
+    name: 'sales@needhomes.ng',
+    path: 'mailto:sales@needhomes.ng',
+    icon: <Mail className="w-4 h-4" />,
   },
 ]
 
@@ -118,7 +118,8 @@ const RenderLinks = ({ title, links }: { title: string; links: Links[] }) => {
         {links.map((item: Links, index) => {
           return (
             <li key={item.name + index}>
-              <Link to={item.path || '/'} className="hover:text-[var(--color-orange)] transition-colors">
+              <Link to={item.path || '/'} className="hover:text-[var(--color-orange)] transition-colors flex items-center gap-2">
+                {item.icon && item.icon}
                 {item.name}
               </Link>
             </li>
