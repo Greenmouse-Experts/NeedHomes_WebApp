@@ -7,6 +7,7 @@ export const Route = createFileRoute("/dashboard/properties/new")({
 
 function RouteComponent() {
   return (
+    //@ts-ignore
     <DashboardLayout>
       <Outlet />
     </DashboardLayout>

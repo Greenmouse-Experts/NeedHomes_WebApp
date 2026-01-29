@@ -6,7 +6,9 @@ import UpdateImages from "@/components/images/UpdateImages";
 import { useImages } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 
-export const Route = createFileRoute("/dashboard/properties/new/fractional")({
+export const Route = createFileRoute(
+  "/dashboard/properties/new/co-development",
+)({
   component: RouteComponent,
 });
 
@@ -17,13 +19,15 @@ function RouteComponent() {
       propertyType: "RESIDENTIAL",
       location: "",
       description: "",
-      developmentStage: "COMPLETED",
+      developmentStage: "PLANNING",
       completionDate: "",
-      premiumProperty: false,
       basePrice: 0,
       availableUnits: 1,
-      paymentOption: "FULL_PAYMENT",
-      additionalFees: [{ label: "Legal Fee", amount: 5000000 }],
+      minimumInvestment: 0,
+      profitSharingRatio: 0,
+      projectDuration: 0,
+      exitRule: "AFTER_PROJECT_COMPLETION",
+      additionalFees: [{ label: "Project Admin", amount: 20000000 }],
     },
   });
 
@@ -31,8 +35,10 @@ function RouteComponent() {
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
-      // Logic to handle image uploads and API call would go here
-      console.log("Submitting data:", { ...data, galleryImages: images });
+      console.log("Submitting Co-Development data:", {
+        ...data,
+        galleryImages: images,
+      });
       return data;
     },
   });
@@ -43,8 +49,10 @@ function RouteComponent() {
 
   return (
     <ThemeProvider>
-      <div className="p-6 bg-base-100 rounded-xl ring  fade  mx-auto">
-        <h1 className="text-xl font-bold mb-6">Create Fractional Property</h1>
+      <div className="p-6 bg-base-100 rounded-xl ring fade mx-auto">
+        <h1 className="text-xl font-bold mb-6">
+          Create Co-Development Property
+        </h1>
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
@@ -52,13 +60,13 @@ function RouteComponent() {
               <SimpleInput
                 label="Property Title"
                 name="propertyTitle"
-                placeholder="Sunnyvale Villa"
+                placeholder="Riverside Estate"
                 required
               />
               <SimpleInput
                 label="Location"
                 name="location"
-                placeholder="Lekki, Lagos"
+                placeholder="Banana Island, Lagos"
                 required
               />
               <SimpleInput
@@ -70,6 +78,25 @@ function RouteComponent() {
               <SimpleInput
                 label="Available Units"
                 name="availableUnits"
+                type="number"
+                required
+              />
+              <SimpleInput
+                label="Minimum Investment"
+                name="minimumInvestment"
+                type="number"
+                required
+              />
+              <SimpleInput
+                label="Profit Sharing Ratio (e.g. 0.25)"
+                name="profitSharingRatio"
+                type="number"
+                step="0.01"
+                required
+              />
+              <SimpleInput
+                label="Project Duration (Months)"
+                name="projectDuration"
                 type="number"
                 required
               />
@@ -92,6 +119,34 @@ function RouteComponent() {
                   <option value="LAND">Land</option>
                 </select>
               </div>
+              <div className="flex flex-col gap-2">
+                <label className="fieldset-label font-semibold text-sm">
+                  Development Stage
+                </label>
+                <select
+                  {...methods.register("developmentStage")}
+                  className="select select-bordered w-full"
+                >
+                  <option value="PLANNING">Planning</option>
+                  <option value="UNDER_CONSTRUCTION">Under Construction</option>
+                  <option value="COMPLETED">Completed</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="fieldset-label font-semibold text-sm">
+                Exit Rule
+              </label>
+              <select
+                {...methods.register("exitRule")}
+                className="select select-bordered w-full"
+              >
+                <option value="AFTER_PROJECT_COMPLETION">
+                  After Project Completion
+                </option>
+                <option value="ANYTIME">Anytime</option>
+              </select>
             </div>
 
             <div className="space-y-2">
@@ -101,7 +156,7 @@ function RouteComponent() {
               <textarea
                 {...methods.register("description")}
                 className="textarea textarea-bordered w-full h-24"
-                placeholder="Describe the property..."
+                placeholder="Describe the co-development project..."
               />
             </div>
 
@@ -116,23 +171,14 @@ function RouteComponent() {
               />
             </div>
 
-            <div className="flex items-center gap-4 p-4 border rounded-lg">
-              <input
-                type="checkbox"
-                {...methods.register("premiumProperty")}
-                className="checkbox checkbox-primary"
-              />
-              <span className="text-sm font-medium">
-                Mark as Premium Property
-              </span>
-            </div>
-
             <button
               type="submit"
               className={`btn btn-primary w-full ${mutation.isPending ? "loading" : ""}`}
               disabled={mutation.isPending}
             >
-              {mutation.isPending ? "Creating..." : "Create Property"}
+              {mutation.isPending
+                ? "Creating..."
+                : "Create Co-Development Property"}
             </button>
           </form>
         </FormProvider>
