@@ -503,7 +503,7 @@ function SettingsPage() {
                     <Input
                       id="newPassword"
                       type="password"
-                      placeholder="SuperAdmin"
+                      placeholder="**********"
                       value={passwordData.newPassword}
                       onChange={(e) =>
                         handlePasswordChange("newPassword", e.target.value)
@@ -518,7 +518,7 @@ function SettingsPage() {
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder="SuperAdmin"
+                      placeholder="**********"
                       value={passwordData.confirmPassword}
                       onChange={(e) =>
                         handlePasswordChange("confirmPassword", e.target.value)

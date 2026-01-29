@@ -1,12 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import {
-  User,
-  CreditCard,
-  FileText,
-  Shield,
-  Bell,
-} from "lucide-react";
+import { User, CreditCard, FileText, Shield, Bell } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
@@ -28,7 +22,6 @@ function SettingsPage() {
   const [authRecord] = useAuth();
   const user: USER | undefined = authRecord?.user;
 
-
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -36,10 +29,6 @@ function SettingsPage() {
     phoneNumber: "",
     dateOfBirth: "",
   });
-
-
-
-
 
   const [passwordData, setPasswordData] = useState({
     newPassword: "",
@@ -62,10 +51,6 @@ function SettingsPage() {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
-
-
-
-
   const handlePasswordChange = (field: string, value: string) => {
     setPasswordData((prev) => ({ ...prev, [field]: value }));
   };
@@ -74,10 +59,6 @@ function SettingsPage() {
     e.preventDefault();
     console.log("Profile update:", profileData);
   };
-
-
-
-
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,10 +112,11 @@ function SettingsPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 md:gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm mb-1 whitespace-nowrap ${activeTab === tab.id
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:bg-white/50"
-                      }`}
+                    className={`flex items-center gap-2 md:gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm mb-1 whitespace-nowrap ${
+                      activeTab === tab.id
+                        ? "bg-white text-gray-900 shadow-sm"
+                        : "text-gray-600 hover:bg-white/50"
+                    }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />
                     <span>{tab.label}</span>
@@ -318,7 +300,7 @@ function SettingsPage() {
                     <Input
                       id="newPassword"
                       type="password"
-                      placeholder="SuperAdmin"
+                      placeholder="**********"
                       value={passwordData.newPassword}
                       onChange={(e) =>
                         handlePasswordChange("newPassword", e.target.value)
@@ -336,13 +318,10 @@ function SettingsPage() {
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder="SuperAdmin"
+                      placeholder="**********"
                       value={passwordData.confirmPassword}
                       onChange={(e) =>
-                        handlePasswordChange(
-                          "confirmPassword",
-                          e.target.value,
-                        )
+                        handlePasswordChange("confirmPassword", e.target.value)
                       }
                       required
                       className="text-sm md:text-base"
