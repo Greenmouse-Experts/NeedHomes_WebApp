@@ -11,24 +11,20 @@ const companyLinks = [
     path: '/about-us',
   },
   {
-    name: 'Contact Us',
-    path: '/contact-us',
-  },
-  {
-    name: 'FAQ',
-    path: '/faqs',
+    name: 'Leadership',
+    path: '/leadership',
   },
   {
     name: 'Careers',
-    path: '/',
+    path: '/careers',
+  },
+  {
+    name: 'Partner with us',
+    path: '/partner-with-us',
   },
 ] satisfies Links[]
 
 const investment_links: Links[] = [
-  {
-    name: 'How it works',
-    path: '/',
-  },
   {
     name: 'Fractional Ownership',
     path: '/',
@@ -38,11 +34,7 @@ const investment_links: Links[] = [
     path: '/',
   },
   {
-    name: 'ROI calculator',
-    path: '/',
-  },
-  {
-    name: 'Partner with us',
+    name: 'Land Banking',
     path: '/',
   },
 ]
@@ -52,13 +44,13 @@ const resources_links: Links[] = [
     name: 'Blog',
     path: '/blog',
   },
-  // {
-  //   name: 'News',
-  //   path: '/news',
-  // },
   {
-    name: 'Real Estate Insights',
-    path: '/',
+    name: 'FAQs',
+    path: '/faqs',
+  },
+  {
+    name: 'How it works',
+    path: '/how-it-works',
   },
 ]
 
