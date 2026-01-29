@@ -18,10 +18,12 @@ import {
   X,
   Search,
   Bell,
+  LogOut,
 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import { show_logout } from "@/store/authStore";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -230,6 +232,14 @@ export function DashboardLayout({
           <NavLink to="/dashboard/settings" icon={Settings}>
             SETTING
           </NavLink>
+          <button
+            onClick={() => {
+              show_logout();
+            }}
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${"hover:bg-gray-800 text-gray-400"}`}
+          >
+            <LogOut className="size-4" /> Logout
+          </button>
         </nav>
       </aside>
 
