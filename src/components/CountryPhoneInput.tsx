@@ -52,7 +52,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
           inputComponent={Input}
           className={cn(
             "[&_.PhoneInputCountry]:flex [&_.PhoneInputCountry]:items-center [&_.PhoneInputCountry]:justify-center [&_.PhoneInputCountry]:min-w-27.5 [&_.PhoneInputCountry]:rounded-xl [&_.PhoneInputCountry]:border-2 [&_.PhoneInputCountry]:border-gray-200 [&_.PhoneInputCountry]:bg-white/90 [&_.PhoneInputCountry]:px-3 [&_.PhoneInputCountry]:mr-2 [&_.PhoneInputCountry]:transition-all [&_.PhoneInputCountry]:duration-300 [&_.PhoneInputCountry]:hover:shadow-md",
-            "[&_.PhoneInputCountrySelect]:cursor-pointer",
+            "[&_.PhoneInputCountrySelect]:cursor-pointer **:text-black",
             className,
           )}
         />
