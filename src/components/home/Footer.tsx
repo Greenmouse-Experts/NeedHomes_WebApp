@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Phone, Mail } from 'lucide-react'
+import { Phone, Mail, MailIcon, MailCheck } from 'lucide-react'
 
 interface Links {
   name: string
@@ -43,6 +43,14 @@ const investment_links: Links[] = [
     name: 'Land Banking',
     path: '/',
   },
+  {
+    name: 'Outright Purchase',
+    path: '/',
+  },
+  {
+    name: 'Save to Own',
+    path: '/',
+  },
 ]
 
 const resources_links: Links[] = [
@@ -64,12 +72,12 @@ const support_links = [
   {
     name: '+234 702 500 5857',
     path: 'tel:+2347025005857',
-    icon: <Phone className="w-4 h-4" />,
+    icon: <Phone className="w-4 h-4 shrink-0" />,
   },
   {
     name: 'sales@needhomes.ng',
     path: 'mailto:sales@needhomes.ng',
-    icon: <Mail className="w-4 h-4" />,
+    icon: <Mail className="w-4 h-4 shrink-0" />,
   },
 ]
 
