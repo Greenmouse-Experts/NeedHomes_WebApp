@@ -15,7 +15,7 @@ export interface INVESTOR {
   lastName: string | null;
   email: string;
   phone: string;
-  accountType: "CORPORATE";
+  accountType: "INVESTOR";
   account_status: "ACTIVE";
   account_verification_status: "PENDING";
   isEmailVerified: boolean;

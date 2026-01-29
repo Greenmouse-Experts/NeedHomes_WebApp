@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import Header from "@/components/Header";
+import LogoutModal from "@/components/LogoutModal";
 const client = new QueryClient({
   defaultOptions: {
     queries: {
@@ -30,6 +31,8 @@ export const Route = createRootRoute({
           <Toaster richColors position="top-right" />
           {/*<Head*/}
           {!hideHeader && <Header />}
+          <LogoutModal />
+
           <Outlet />
         </QueryClientProvider>
 

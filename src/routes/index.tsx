@@ -9,6 +9,7 @@ import BankIntegrations from "@/components/home/BankIntegrations";
 import FAQ from "@/components/home/FAQ";
 import GetOnDevices from "@/components/home/OnDevices";
 import Footer from "@/components/home/Footer";
+import LogoutModal from "@/components/LogoutModal";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
