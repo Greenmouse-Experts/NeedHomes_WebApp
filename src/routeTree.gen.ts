@@ -15,10 +15,11 @@ import { Route as TestRouteImport } from './routes/test'
 import { Route as SignupPartnerRouteImport } from './routes/signup-partner'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as OtpRouteImport } from './routes/otp'
+import { Route as NewsRouteImport } from './routes/news'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
-import { Route as BlogsRouteImport } from './routes/blogs'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountTypeRouteImport } from './routes/account-type'
 import { Route as AboutUsRouteImport } from './routes/about-us'
@@ -100,6 +101,11 @@ const OtpRoute = OtpRouteImport.update({
   path: '/otp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -115,9 +121,9 @@ const ContactUsRoute = ContactUsRouteImport.update({
   path: '/contact-us',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogsRoute = BlogsRouteImport.update({
-  id: '/blogs',
-  path: '/blogs',
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -397,10 +403,11 @@ export interface FileRoutesByFullPath {
   '/about-us': typeof AboutUsRoute
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
-  '/blogs': typeof BlogsRoute
+  '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
+  '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
@@ -456,10 +463,11 @@ export interface FileRoutesByTo {
   '/about-us': typeof AboutUsRoute
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
-  '/blogs': typeof BlogsRoute
+  '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
+  '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
@@ -514,10 +522,11 @@ export interface FileRoutesById {
   '/about-us': typeof AboutUsRoute
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
-  '/blogs': typeof BlogsRoute
+  '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
+  '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
@@ -578,10 +587,11 @@ export interface FileRouteTypes {
     | '/about-us'
     | '/account-type'
     | '/admin'
-    | '/blogs'
+    | '/blog'
     | '/contact-us'
     | '/faqs'
     | '/login'
+    | '/news'
     | '/otp'
     | '/signup'
     | '/signup-partner'
@@ -637,10 +647,11 @@ export interface FileRouteTypes {
     | '/about-us'
     | '/account-type'
     | '/admin'
-    | '/blogs'
+    | '/blog'
     | '/contact-us'
     | '/faqs'
     | '/login'
+    | '/news'
     | '/otp'
     | '/signup'
     | '/signup-partner'
@@ -694,10 +705,11 @@ export interface FileRouteTypes {
     | '/about-us'
     | '/account-type'
     | '/admin'
-    | '/blogs'
+    | '/blog'
     | '/contact-us'
     | '/faqs'
     | '/login'
+    | '/news'
     | '/otp'
     | '/signup'
     | '/signup-partner'
@@ -757,10 +769,11 @@ export interface RootRouteChildren {
   AboutUsRoute: typeof AboutUsRoute
   AccountTypeRoute: typeof AccountTypeRoute
   AdminRoute: typeof AdminRoute
-  BlogsRoute: typeof BlogsRoute
+  BlogRoute: typeof BlogRoute
   ContactUsRoute: typeof ContactUsRoute
   FaqsRoute: typeof FaqsRoute
   LoginRoute: typeof LoginRoute
+  NewsRoute: typeof NewsRoute
   OtpRoute: typeof OtpRoute
   SignupRoute: typeof SignupRoute
   SignupPartnerRoute: typeof SignupPartnerRoute
@@ -819,6 +832,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OtpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -840,11 +860,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactUsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blogs': {
-      id: '/blogs'
-      path: '/blogs'
-      fullPath: '/blogs'
-      preLoaderRoute: typeof BlogsRouteImport
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -1389,10 +1409,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutUsRoute: AboutUsRoute,
   AccountTypeRoute: AccountTypeRoute,
   AdminRoute: AdminRoute,
-  BlogsRoute: BlogsRoute,
+  BlogRoute: BlogRoute,
   ContactUsRoute: ContactUsRoute,
   FaqsRoute: FaqsRoute,
   LoginRoute: LoginRoute,
+  NewsRoute: NewsRoute,
   OtpRoute: OtpRoute,
   SignupRoute: SignupRoute,
   SignupPartnerRoute: SignupPartnerRoute,

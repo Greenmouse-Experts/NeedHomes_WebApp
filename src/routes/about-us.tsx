@@ -1,200 +1,493 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Shield, Target, Award, Play } from "lucide-react";
+import { ArrowRight, User, Mail, Phone, MapPin } from "lucide-react";
+import Footer from "@/components/home/Footer";
 
 export const Route = createFileRoute("/about-us")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const stats = [
-    { label: "Properties Managed", value: "10k+" },
-    { label: "Happy Families", value: "8k+" },
-    { label: "Cities Covered", value: "25+" },
-    { label: "Years Experience", value: "12+" },
-  ];
-
   const values = [
     {
-      icon: <Shield className="w-6 h-6 text-brand-orange" />,
-      title: "Trust & Transparency",
+      title: "Our Vision",
       description:
-        "We believe in honest dealings and clear communication at every step of your property journey.",
+        "To be the leading real estate investment partner in Africa, recognized for creating sustainable wealth through property.",
     },
     {
-      icon: <Target className="w-6 h-6 text-brand-orange" />,
-      title: "Client-Centric",
+      title: "Our Mission",
       description:
-        "Your needs are our priority. We tailor our services to match your unique lifestyle and budget.",
+        "To provide accessible property investment opportunities by leveraging technology, market expertise, and transparent processes.",
     },
     {
-      icon: <Award className="w-6 h-6 text-brand-orange" />,
-      title: "Excellence",
+      title: "Our Promise",
       description:
-        "We strive for the highest standards in property selection and customer service quality.",
+        "We are committed to securing your future by delivering high-yield real estate assets and exceptional value to our investors.",
+    },
+  ];
+
+  const tiips = [
+    { letter: "M", label: "Market Intelligence" },
+    { letter: "R", label: "Regulatory Rigor" },
+    { letter: "T", label: "Technological Edge" },
+    { letter: "S", label: "Synergistic Partners" },
+    { letter: "I", label: "Investor Legacy" },
+  ];
+
+  const team = [
+    { name: "Collins Amam", role: "Founder/CEO" },
+    { name: "Daniel Aghedo", role: "CTO – Chief Technical Officer" },
+    { name: "Jeremiah Ochai", role: "Head of Operations" },
+    { name: "Esther Chuna", role: "Client Relations Manager (CRM)" },
+    { name: "Andyson Ukaegbu", role: "Admin" },
+    { name: "Blessing Monday", role: "Media/Publicity" },
+    { name: "Emmanuel Mbaogu Chidozie", role: "Clients Services" },
+    { name: "Teusan Gideon David", role: "Head Clients Services" },
+    { name: "Esther Ironcho", role: "Sales/Marketing" },
+    { name: "Christy Marcel", role: "Marketing" },
+    { name: "Taiwo O. Olayinka", role: "Partnerships Lead – Co-development" },
+    {
+      name: "Barr. Seye Dara",
+      role: "Legal Advisors – Real Estate, Finance, gov",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Professional Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
-        {/* Background Image with sophisticated overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000"
-            alt="Modern Office Space"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-        </div>
+    <>
+      <div className="min-h-screen bg-white">
+        {/* Header Section */}
+        <section className="bg-[#333d42] py-20">
+          <div className="contain mx-auto px-6">
+            <h1 className="text-5xl md:text-6xl font-serif font-medium text-white">
+              About Us<span className="text-brand-orange">.</span>
+            </h1>
+          </div>
+        </section>
 
-        <div className="contain mx-auto px-6 relative z-10 text-center">
-          <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-orange/10 border border-brand-orange/20 backdrop-blur-md mb-4">
-              <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
-              <span className="text-brand-orange text-xs font-bold tracking-widest uppercase">
-                Established 2012
+        {/* Intro Section */}
+        <section className="py-20 bg-[#f8f8f8]">
+          <div className="contain mx-auto px-6 grid md:grid-cols-2 gap-12 items-start">
+            <h2 className="text-3xl md:text-4xl font-serif font-medium leading-tight text-[#333d42]">
+              In a world where home ownership feels out of reach, NeedHomes
+              stands as a vibrant force of change
+              <span className="text-brand-orange">.</span>
+            </h2>
+            <div className="space-y-6 text-muted-foreground leading-relaxed">
+              <p>
+                We are not just a property company; we are your dedicated
+                partners on a journey of wealth creation through strategic real
+                estate investments.
+              </p>
+              <p>
+                For us, success is not merely about square footage; it's about
+                the financial security and legacy that property ownership
+                provides.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Investment Stats Section */}
+        <section className="py-24 border-y border-gray-100">
+          <div className="contain mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-12">
+              <div className="p-10 bg-[#333d42] text-white">
+                <p className="text-brand-orange font-medium mb-2">
+                  Track Record
+                </p>
+                <h3 className="text-4xl font-serif mb-4">Over ₦500 Million</h3>
+                <p className="text-gray-300">
+                  Invested so far into the company by partners who trust our
+                  vision for the African real estate market.
+                </p>
+              </div>
+              <div className="p-10 bg-brand-orange text-white">
+                <p className="text-[#333d42] font-medium mb-2">Current Round</p>
+                <h3 className="text-4xl font-serif mb-4">
+                  $1.33m (₦2 Billion)
+                </h3>
+                <p className="text-white/90">
+                  Our target raise for this round to scale our property
+                  portfolio and deliver even greater value to our investors.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Nautilus Section */}
+        <section className="py-24">
+          <div className="contain mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                <h2 className="text-4xl font-serif font-medium text-[#333d42]">
+                  The Keystone: The Foundation of Lasting Wealth
+                  <span className="text-brand-orange">.</span>
+                </h2>
+                <div className="space-y-6 text-muted-foreground leading-relaxed">
+                  <p>
+                    In ancient architecture, the Keystone is the most critical
+                    piece of an arch. It locks all other stones into position,
+                    allowing the structure to bear weight and stand the test of
+                    time.
+                  </p>
+                  <p>
+                    At NeedHomes, we view strategic real estate as the Keystone
+                    of your financial portfolio. It is the stabilizing force
+                    that turns scattered investments into a unified, unbreakable
+                    legacy.
+                  </p>
+                  <p>
+                    Our approach ensures that every property you acquire through
+                    us isn't just a piece of land, but a structural necessity
+                    for your long-term prosperity.
+                  </p>
+                </div>
+              </div>
+              <div className="relative flex justify-center">
+                {/* Using a structural/architectural image */}
+                <img
+                  src="https://images.unsplash.com/photo-1518005020411-38b83d23c91d?auto=format&fit=crop&q=80&w=800"
+                  alt="Architectural Archway"
+                  className="w-full max-w-md grayscale opacity-80"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Symbols Matter & Vision/Mission Cards */}
+        <section className="py-24 bg-[#f8f8f8]">
+          <div className="contain mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-12 mb-20">
+              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
+                Why structural integrity matters
+                <span className="text-brand-orange">.</span>
+              </h2>
+              <div className="grid md:grid-cols-2 gap-8 text-muted-foreground text-sm leading-relaxed">
+                <p>
+                  Just as an arch distributes weight evenly to prevent collapse,
+                  NeedHomes utilizes technology and market data to distribute
+                  risk and maximize yield for our partners.
+                </p>
+                <p>
+                  When you choose NeedHomes, you are building on a foundation of
+                  mathematical precision and architectural permanence. We don't
+                  just sell property; we engineer wealth.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {values.map((value, i) => (
+                <Card
+                  key={i}
+                  className="border-none bg-white rounded-none shadow-none relative overflow-hidden"
+                >
+                  <CardContent className="p-10 space-y-6">
+                    <h3 className="text-2xl font-serif font-medium text-[#333d42]">
+                      {value.title}
+                      <span className="text-brand-orange">.</span>
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {value.description}
+                    </p>
+                  </CardContent>
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-brand-orange" />
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Blueprint Section */}
+        <section className="py-24">
+          <div className="contain mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-12 mb-16">
+              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
+                The Blueprint: Precision in Every Square Foot
+                <span className="text-brand-orange">.</span>
+              </h2>
+              <div className="grid md:grid-cols-2 gap-8 text-muted-foreground text-sm leading-relaxed">
+                <p>
+                  Success in the African real estate market requires more than
+                  optimism—it requires a blueprint. This is our commitment to
+                  transparency and calculated growth.
+                </p>
+                <p>
+                  Every investment round and development project follows a
+                  rigorous structural plan, ensuring that as your portfolio
+                  scales, its integrity remains uncompromised and its value
+                  remains undeniable.
+                </p>
+              </div>
+            </div>
+            <div className="w-full h-64 bg-[#f8f8f8] relative overflow-hidden flex items-center justify-center">
+              {/* Visualizing a Grid/Blueprint Pattern instead of a Spiral */}
+              <svg
+                viewBox="0 0 100 100"
+                className="absolute inset-0 h-full w-full text-brand-orange/10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="0.2"
+              >
+                <defs>
+                  <pattern
+                    id="grid"
+                    width="10"
+                    height="10"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path d="M 10 0 L 0 0 0 10" />
+                  </pattern>
+                </defs>
+                <rect width="100" height="100" fill="url(#grid)" />
+                <path
+                  d="M 10 90 L 50 10 L 90 90"
+                  strokeWidth="1"
+                  className="text-brand-orange/30"
+                />
+                <path
+                  d="M 30 50 L 70 50"
+                  strokeWidth="1"
+                  className="text-brand-orange/30"
+                />
+              </svg>
+              <span className="relative z-10 font-serif italic text-[#333d42]/40 text-lg">
+                Engineering Sustainable Wealth
               </span>
             </div>
-
-            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight">
-              About <span className="text-brand-orange">NeedHomes</span>
-            </h1>
-
-            <div className="h-1 w-24 bg-brand-orange mx-auto rounded-full" />
-
-            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed font-light">
-              Redefining the standard of modern living through integrity,
-              innovation, and a deep commitment to the communities we serve.
-            </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-brand-orange">
-        <div className="contain mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-white text-center">
-            {stats.map((stat, i) => (
-              <div key={i} className="space-y-2">
-                <p className="text-3xl md:text-5xl font-bold">{stat.value}</p>
-                <p className="text-orange-100 text-sm md:text-base opacity-80">
-                  {stat.label}
+        {/* The Pillars of Prosperity Section */}
+        <section className="py-24 bg-[#f8f8f8]">
+          <div className="contain mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+              <div className="max-w-2xl">
+                <h2 className="text-3xl md:text-4xl font-serif font-medium text-[#333d42]">
+                  M R T S I: The Pillars of Prosperity
+                  <span className="text-brand-orange">.</span>
+                </h2>
+                <p className="text-muted-foreground mt-4 leading-relaxed">
+                  Our culture is built on five structural pillars. Like the
+                  columns of a great estate, these values provide the strength,
+                  stability, and integrity required to build lasting African
+                  wealth.
                 </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Mission & Values */}
-      <section className="py-24">
-        <div className="contain mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Our Core Values
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              The principles that guide us in helping thousands of people find
-              their dream homes every day.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {values.map((value, i) => (
-              <Card
-                key={i}
-                className="border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-card"
+              <Link
+                to="/contact-us"
+                className="flex items-center gap-2 text-sm font-medium hover:text-brand-orange transition-all group"
               >
-                <CardContent className="pt-10 text-center space-y-4">
-                  <div className="mx-auto w-14 h-14 bg-brand-orange/10 rounded-2xl flex items-center justify-center">
-                    {value.icon}
-                  </div>
-                  <h3 className="text-xl font-bold">{value.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {value.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+                Build with us{" "}
+                <ArrowRight className="w-4 h-4 text-brand-orange group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
 
-      {/* Team Section */}
-      <section className="py-24 bg-white">
-        <div className="contain mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div className="max-w-xl">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Meet Our Leadership
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-px bg-gray-200 border border-gray-200">
+              {tiips.map((item, i) => (
+                <div
+                  key={i}
+                  className="bg-white group relative p-8 flex flex-col h-[320px] justify-between transition-all hover:bg-[#333d42]"
+                >
+                  {/* Column Numbering / Top Detail */}
+                  <span className="text-xs font-medium tracking-widest text-brand-orange uppercase opacity-60">
+                    Pillar 0{i + 1}
+                  </span>
+
+                  <div className="space-y-4">
+                    <span className="text-6xl font-serif text-[#333d42] group-hover:text-white transition-colors block">
+                      {item.letter}
+                    </span>
+                    <h3 className="text-xl font-serif font-medium text-[#333d42] group-hover:text-brand-orange transition-colors">
+                      {item.label}
+                    </h3>
+                  </div>
+
+                  {/* Subtle Decorative Line (The "Pillar" Base) */}
+                  <div className="w-8 h-1 bg-brand-orange group-hover:w-full transition-all duration-500" />
+
+                  {/* Hover Overlay Text (Optional - adds "Smart" depth) */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end bg-[#333d42] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <span className="text-brand-orange text-xs font-bold mb-2 uppercase tracking-tighter">
+                      0{i + 1} — {item.label}
+                    </span>
+                    <p className="text-white/80 text-xs leading-relaxed">
+                      {i === 0 &&
+                        "Our base layer: deep-dive research into African urban migration and land value trends."}
+                      {i === 1 &&
+                        "The protective layer: ensuring every asset is 100% verified and legally bulletproof.Transparent processes that protect your capital and trust."}
+                      {i === 2 &&
+                        "The efficiency layer: using digital tools to streamline property management and reporting."}
+                      {i === 3 &&
+                        "The growth layer: collaborating with top-tier developers to ensure high-yield delivery."}
+                      {i === 4 &&
+                        "The surface layer: the visible wealth and financial freedom enjoyed by our partners."}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Partners & Advisors Section */}
+        <section className="py-24">
+          <div className="contain mx-auto px-6">
+            <h2 className="text-4xl font-serif font-medium text-[#333d42] mb-6">
+              Partners & Advisors<span className="text-brand-orange">.</span>
+            </h2>
+            <p className="text-muted-foreground mb-12 max-w-3xl leading-relaxed">
+              We work with trusted contractors, legal advisors, escrow trustees, PropTech partners, and
+              financial institutions to ensure secure delivery and investor protection.
+            </p>
+
+            {/* Legal & Governance */}
+            <div className="bg-[#f8f8f8] p-8 md:p-12 rounded-lg">
+              <h3 className="text-2xl font-serif font-medium text-[#333d42] mb-6">
+                Legal & Governance
+              </h3>
+              <ul className="grid md:grid-cols-2 gap-4">
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
+                  <span className="text-muted-foreground">Incorporated with CAC Nigeria</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
+                  <span className="text-muted-foreground">Escrow-backed investments</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
+                  <span className="text-muted-foreground">Quarterly investor reporting</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
+                  <span className="text-muted-foreground">Strong compliance and due-diligence framework</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Investment Section */}
+        <section className="py-24 bg-[#f8f8f8]">
+          <div className="contain mx-auto px-6">
+            <h2 className="text-4xl font-serif font-medium text-[#333d42] mb-6">
+              Investment<span className="text-brand-orange">.</span>
+            </h2>
+            <p className="text-muted-foreground mb-12 max-w-3xl leading-relaxed">
+              Invest directly in verified Needhomes projects through outright purchase or fractional (co-ownership) investment via our PropTech platform.
+            </p>
+
+            <div>
+              <h3 className="text-2xl font-serif font-medium text-[#333d42] mb-6">
+                Available Investment Options
+              </h3>
+              <div className="space-y-4">
+                <div className="bg-white p-6 rounded-lg border-l-4 border-brand-orange">
+                  <h4 className="font-bold text-lg mb-2">Co-Develop</h4>
+                  <p className="text-muted-foreground">
+                    Join a network of forward-thinking investors turning development opportunities into profitable assets
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Team Section */}
+        <section className="py-24">
+          <div className="contain mx-auto px-6">
+            <div className="mb-16">
+              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
+                Meet the Team<span className="text-brand-orange">.</span>
               </h2>
-              <p className="text-muted-foreground text-lg">
-                A diverse group of experts with decades of combined experience
-                in real estate, technology, and customer service.
+              <p className="text-muted-foreground mt-4">
+                The dedicated professionals driving innovation and excellence in
+                property investment at NeedHomes.
               </p>
             </div>
-            <Button
-              variant="ghost"
-              className="text-brand-orange hover:text-brand-orange-dark"
-            >
-              Join Our Team →
-            </Button>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-            {[1, 2, 3, 4].map((member) => (
-              <div key={member} className="group">
-                <div className="relative mb-6 overflow-hidden rounded-3xl aspect-4/5">
-                  <img
-                    src={`https://i.pravatar.cc/600?img=${member + 10}`}
-                    alt="Team Member"
-                    className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
-                  />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {team.map((member, i) => (
+                <div key={i} className="group">
+                  <div className="aspect-square bg-[#f8f8f8] flex items-center justify-center mb-4 transition-colors group-hover:bg-[#f0f0f0]">
+                    <User className="w-16 h-16 text-[#333d42]/20" />
+                  </div>
+                  <h3 className="text-lg font-serif font-medium text-[#333d42]">
+                    {member.name}
+                  </h3>
+                  <p className="text-sm text-brand-orange font-medium">
+                    {member.role}
+                  </p>
                 </div>
-                <h4 className="text-xl font-bold">Alex Johnson</h4>
-                <p className="text-brand-orange text-sm font-semibold tracking-wide uppercase">
-                  Chief Executive Officer
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-24">
-        <div className="contain mx-auto px-4">
-          <Card className="bg-black text-white overflow-hidden relative border-none rounded-[2.5rem]">
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-brand-orange/20 to-transparent pointer-events-none" />
-            <CardContent className="p-12 md:p-24 text-center relative z-10">
-              <h2 className="text-4xl md:text-5xl font-bold mb-8">
-                Ready to find your next home?
+        {/* Help Center Section */}
+        {/* <section className="py-24 bg-[#f8f8f8]">
+          <div className="contain mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
+                Help Center<span className="text-brand-orange">.</span>
               </h2>
-              <p className="text-gray-400 mb-12 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
-                Let our experts guide you through the process. Whether you're
-                buying, selling, or renting, we're here to help.
+              <p className="text-muted-foreground mt-4">
+                Quick access to FAQs, guides, and platform walkthroughs.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-6">
-                <Button
-                  size="lg"
-                  className="bg-white text-black hover:bg-gray-100 h-14 px-10 text-base font-semibold"
-                >
-                  Get Started Now
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10 h-14 px-10 text-base font-semibold"
-                >
-                  Talk to an Agent
-                </Button>
+            </div>
+          </div>
+        </section> */}
+
+        {/* Contact Us Section */}
+        <section className="py-24 bg-white">
+          <div className="contain mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
+                Contact Us<span className="text-brand-orange">.</span>
+              </h2>
+            </div>
+
+            <div className="max-w-3xl mx-auto space-y-6">
+              {/* Address */}
+              <div className="flex items-start gap-4 p-6 bg-[#f8f8f8] rounded-lg">
+                <MapPin className="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Address</h3>
+                  <p className="text-muted-foreground">
+                    9 Orchid Road, Lekki, Lagos
+                  </p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-    </div>
+
+              {/* Phone & WhatsApp */}
+              <div className="flex items-start gap-4 p-6 bg-[#f8f8f8] rounded-lg">
+                <Phone className="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Phone & WhatsApp Support</h3>
+                  <p className="text-muted-foreground">
+                    +234 702 500 5857
+                  </p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start gap-4 p-6 bg-[#f8f8f8] rounded-lg">
+                <Mail className="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Email</h3>
+                  <p className="text-muted-foreground">
+                    support@needhomes.ng
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
   );
 }

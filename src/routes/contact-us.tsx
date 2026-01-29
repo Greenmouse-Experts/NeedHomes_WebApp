@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import Footer from "@/components/home/Footer";
 
 export const Route = createFileRoute("/contact-us")({
   component: RouteComponent,
@@ -7,149 +8,143 @@ export const Route = createFileRoute("/contact-us")({
 
 function RouteComponent() {
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary mb-4">
-            Get in Touch
+    <div className="min-h-screen bg-white">
+      {/* Header Section */}
+      <div className="bg-[#333D42] py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-5xl md:text-6xl text-white">
+            Contact us<span className="text-orange-500">.</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Have questions or feedback? We're here to help. Send us a message
-            and we'll respond as soon as possible.
-          </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Contact Information Cards */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-card p-8 rounded-2xl shadow-sm border border-border flex flex-col items-center text-center transition-all hover:shadow-md">
-              <div className="p-3 bg-brand-orange/10 rounded-full mb-4">
-                <Mail className="h-6 w-6 text-brand-orange" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Email Us</h3>
-              <a
-                href="mailto:info@example.com"
-                className="text-muted-foreground hover:text-brand-orange transition-colors"
-              >
-                info@example.com
-              </a>
-            </div>
-
-            <div className="bg-card p-8 rounded-2xl shadow-sm border border-border flex flex-col items-center text-center transition-all hover:shadow-md">
-              <div className="p-3 bg-brand-orange/10 rounded-full mb-4">
-                <Phone className="h-6 w-6 text-brand-orange" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Call Us</h3>
-              <a
-                href="tel:+1234567890"
-                className="text-muted-foreground hover:text-brand-orange transition-colors"
-              >
-                +1 (234) 567-890
-              </a>
-            </div>
-
-            <div className="bg-card p-8 rounded-2xl shadow-sm border border-border flex flex-col items-center text-center transition-all hover:shadow-md">
-              <div className="p-3 bg-brand-orange/10 rounded-full mb-4">
-                <MapPin className="h-6 w-6 text-brand-orange" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Visit Us</h3>
-              <p className="text-muted-foreground">
-                123 Main Street, Anytown, USA 12345
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Column: Office Info */}
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-2 text-muted-foreground mb-8">
+              <Clock className="h-5 w-5 text-orange-500" />
+              <p>
+                Our offices are open Monday to Friday, from 8:00 AM to 5:00 PM,
+                excluding public holidays.
               </p>
             </div>
+
+            {/* Office Location */}
+            <div className="bg-[#F8F9FA] p-8 rounded-sm">
+              <div className="flex items-start gap-4">
+                <MapPin className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-xl mb-3">Our Office</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    9 Orchid Road, Lekki, Lagos
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Direct Contact Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <div className="bg-[#333D42] p-6 rounded-sm text-white">
+                <h3 className="font-bold mb-4">Phone & WhatsApp</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 text-orange-500" />
+                    <span className="text-sm">+234 702 500 5857</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#333D42] p-6 rounded-sm text-white">
+                <h3 className="font-bold mb-4">Email</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 text-orange-500" />
+                    <span className="text-sm">support@needhomes.ng</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Contact Form Section */}
-          <div className="lg:col-span-2 bg-card p-8 md:p-10 rounded-2xl shadow-lg border border-border">
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label
-                  htmlFor="name"
-                  className="text-sm font-semibold text-foreground"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all outline-none"
-                  placeholder="John Doe"
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-semibold text-foreground"
-                >
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all outline-none"
-                  placeholder="john@example.com"
-                />
-              </div>
-              <div className="md:col-span-2 space-y-2">
-                <label
-                  htmlFor="subject"
-                  className="text-sm font-semibold text-foreground"
-                >
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all outline-none"
-                  placeholder="How can we help?"
-                />
-              </div>
-              <div className="md:col-span-2 space-y-2">
-                <label
-                  htmlFor="message"
-                  className="text-sm font-semibold text-foreground"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all outline-none resize-none"
-                  placeholder="Tell us more about your inquiry..."
-                ></textarea>
-              </div>
-              <div className="md:col-span-2 pt-2">
+          {/* Right Column: Form */}
+          <div className="lg:col-span-5">
+            <div className="bg-[#333D42] p-8 rounded-sm text-white">
+              <h2 className="text-2xl font-serif mb-8">
+                Send a message<span className="text-orange-500">.</span>
+              </h2>
+
+              <form className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs uppercase tracking-wider text-gray-400">
+                      First Name *
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full bg-[#3d484e] border-none rounded p-3 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs uppercase tracking-wider text-gray-400">
+                      Last Name *
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full bg-[#3d484e] border-none rounded p-3 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs uppercase tracking-wider text-gray-400">
+                      Telephone No *
+                    </label>
+                    <input
+                      type="tel"
+                      className="w-full bg-[#3d484e] border-none rounded p-3 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs uppercase tracking-wider text-gray-400">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      className="w-full bg-[#3d484e] border-none rounded p-3 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs uppercase tracking-wider text-gray-400">
+                    Your Message
+                  </label>
+                  <textarea
+                    rows={4}
+                    className="w-full bg-[#3d484e] border-none rounded p-3 focus:ring-1 focus:ring-orange-500 outline-none transition-all resize-none"
+                  ></textarea>
+                </div>
+
+                <p className="text-[10px] text-gray-400 leading-tight">
+                  By providing your name, phone number and email you consent to
+                  NeedHomes Property Investment Limited's use of your personal data in
+                  accordance with the Privacy Policy.
+                </p>
+
                 <button
                   type="submit"
-                  className="w-full md:w-max px-8 py-4 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold rounded-xl shadow-lg shadow-brand-orange/20 transition-all flex items-center justify-center gap-2 group"
+                  className="w-full bg-brand-orange hover:bg-orange-600 text-white py-4 rounded-md font-bold transition-colors flex items-center justify-center gap-2"
                 >
                   Send Message
-                  <Send className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="mt-16 rounded-3xl overflow-hidden shadow-xl border border-border bg-card">
-          <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-bold text-primary">Our Location</h2>
-          </div>
-          <div className="aspect-video w-full grayscale hover:grayscale-0 transition-all duration-700">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.298533729864!2d-122.4194158846817!3d37.77492947975932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858087e9c9a0b1%3A0x4f1f5f3f3f3f3f3f!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1678901234567!5m2!1sen!2sus"
-              width="100%"
-              height="100%"
-              style={{ border: 0, minHeight: "400px" }}
-              allowFullScreen={true}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Our Location"
-            ></iframe>
+              </form>
+            </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

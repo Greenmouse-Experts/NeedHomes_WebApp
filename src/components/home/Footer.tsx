@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router'
+
 interface Links {
   name: string
   path?: string
@@ -6,18 +8,18 @@ interface Links {
 const companyLinks = [
   {
     name: 'About Us',
-    path: '/',
+    path: '/about-us',
   },
   {
-    name: 'Customer stories',
-    path: '/',
-  },
-  {
-    name: 'Careers',
-    path: '/',
+    name: 'Contact Us',
+    path: '/contact-us',
   },
   {
     name: 'FAQ',
+    path: '/faqs',
+  },
+  {
+    name: 'Careers',
     path: '/',
   },
 ] satisfies Links[]
@@ -47,15 +49,15 @@ const investment_links: Links[] = [
 
 const resources_links: Links[] = [
   {
+    name: 'Blog',
+    path: '/blog',
+  },
+  {
+    name: 'News',
+    path: '/news',
+  },
+  {
     name: 'Real Estate Insights',
-    path: '/',
-  },
-  {
-    name: 'Proptech News',
-    path: '/',
-  },
-  {
-    name: 'Home Buying Tips',
     path: '/',
   },
 ]
@@ -115,9 +117,9 @@ const RenderLinks = ({ title, links }: { title: string; links: Links[] }) => {
         {links.map((item: Links, index) => {
           return (
             <li key={item.name + index}>
-              <a href="#" className="hover:text-[var(--color-orange)] transition-colors">
+              <Link to={item.path || '/'} className="hover:text-[var(--color-orange)] transition-colors">
                 {item.name}
-              </a>
+              </Link>
             </li>
           )
         })}
