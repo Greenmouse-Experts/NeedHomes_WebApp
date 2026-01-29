@@ -28,7 +28,7 @@ export default function CoTypes() {
           style={{ background: type.background }}
         >
           <div className="text-center space-y-4 mt-12 max-w-md mx-auto">
-            <h2 className="text-white font-bold text-xl">{type.title}</h2>
+            <h2 className="text-white font-bold text-2xl">{type.title}</h2>
             <p>{type.description}</p>
             <Link to="/account-type">
               <Button variant="primary">Get Started</Button>

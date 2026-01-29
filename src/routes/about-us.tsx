@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent } from "@/components/ui/Card";
-import { ArrowRight, User, Mail, Phone, MapPin } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
 import Footer from "@/components/home/Footer";
 
 export const Route = createFileRoute("/about-us")({
@@ -204,41 +204,6 @@ function RouteComponent() {
                 </p>
               </div>
             </div>
-            <div className="w-full h-64 bg-[#f8f8f8] relative overflow-hidden flex items-center justify-center">
-              {/* Visualizing a Grid/Blueprint Pattern instead of a Spiral */}
-              <svg
-                viewBox="0 0 100 100"
-                className="absolute inset-0 h-full w-full text-brand-orange/10"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.2"
-              >
-                <defs>
-                  <pattern
-                    id="grid"
-                    width="10"
-                    height="10"
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <path d="M 10 0 L 0 0 0 10" />
-                  </pattern>
-                </defs>
-                <rect width="100" height="100" fill="url(#grid)" />
-                <path
-                  d="M 10 90 L 50 10 L 90 90"
-                  strokeWidth="1"
-                  className="text-brand-orange/30"
-                />
-                <path
-                  d="M 30 50 L 70 50"
-                  strokeWidth="1"
-                  className="text-brand-orange/30"
-                />
-              </svg>
-              <span className="relative z-10 font-serif italic text-[#333d42]/40 text-lg">
-                Engineering Sustainable Wealth
-              </span>
-            </div>
           </div>
         </section>
 
@@ -313,128 +278,6 @@ function RouteComponent() {
             </div>
           </div>
         </section>
-
-        {/* Partners & Advisors Section */}
-        <section className="py-24">
-          <div className="contain mx-auto px-6">
-            <h2 className="text-4xl font-serif font-medium text-[#333d42] mb-6">
-              Partners & Advisors<span className="text-brand-orange">.</span>
-            </h2>
-            <p className="text-muted-foreground mb-12 max-w-3xl leading-relaxed">
-              We work with trusted contractors, legal advisors, escrow trustees, PropTech partners, and
-              financial institutions to ensure secure delivery and investor protection.
-            </p>
-
-            {/* Legal & Governance */}
-            <div className="bg-[#f8f8f8] p-8 md:p-12 rounded-lg">
-              <h3 className="text-2xl font-serif font-medium text-[#333d42] mb-6">
-                Legal & Governance
-              </h3>
-              <ul className="grid md:grid-cols-2 gap-4">
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Incorporated with CAC Nigeria</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Escrow-backed investments</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Quarterly investor reporting</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-brand-orange rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Strong compliance and due-diligence framework</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Investment Section */}
-        <section className="py-24 bg-[#f8f8f8]">
-          <div className="contain mx-auto px-6">
-            <h2 className="text-4xl font-serif font-medium text-[#333d42] mb-6">
-              Investment<span className="text-brand-orange">.</span>
-            </h2>
-            <p className="text-muted-foreground mb-12 max-w-3xl leading-relaxed">
-              Invest directly in verified Needhomes projects through outright purchase or fractional (co-ownership) investment via our PropTech platform.
-            </p>
-
-            <div>
-              <h3 className="text-2xl font-serif font-medium text-[#333d42] mb-6">
-                Available Investment Options
-              </h3>
-              <div className="space-y-4">
-                <div className="bg-white p-6 rounded-lg border-l-4 border-brand-orange">
-                  <h4 className="font-bold text-lg mb-2">Co-Develop</h4>
-                  <p className="text-muted-foreground">
-                    Join a network of forward-thinking investors turning development opportunities into profitable assets
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-        {/* Help Center Section */}
-        {/* <section className="py-24 bg-[#f8f8f8]">
-          <div className="contain mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
-                Help Center<span className="text-brand-orange">.</span>
-              </h2>
-              <p className="text-muted-foreground mt-4">
-                Quick access to FAQs, guides, and platform walkthroughs.
-              </p>
-            </div>
-          </div>
-        </section> */}
-
-        {/* Contact Us Section */}
-        {/* <section className="py-24 bg-white">
-          <div className="contain mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-serif font-medium text-[#333d42]">
-                Contact Us<span className="text-brand-orange">.</span>
-              </h2>
-            </div>
-
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div className="flex items-start gap-4 p-6 bg-[#f8f8f8] rounded-lg">
-                <MapPin className="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Address</h3>
-                  <p className="text-muted-foreground">
-                    9 Orchid Road, Lekki, Lagos
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-6 bg-[#f8f8f8] rounded-lg">
-                <Phone className="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Phone & WhatsApp Support</h3>
-                  <p className="text-muted-foreground">
-                    +234 702 500 5857
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-6 bg-[#f8f8f8] rounded-lg">
-                <Mail className="w-6 h-6 text-brand-orange flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Email</h3>
-                  <p className="text-muted-foreground">
-                    support@needhomes.ng
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section> */}
       </div>
       <Footer />
     </>

@@ -22,6 +22,10 @@ const companyLinks = [
     name: 'Partner with us',
     path: '/partner-with-us',
   },
+  {
+    name: 'Contact Us',
+    path: '/contact-us',
+  },
 ] satisfies Links[]
 
 const investment_links: Links[] = [
@@ -92,8 +96,13 @@ export default function Footer() {
             © 2025 Needhomes Property Investment Limited. All rights reserved.
           </p>
           <div className="md:ml-auto space-x-2 flex gap-2">
-            <p>Privacy Policy</p>
-            <p>Terms and Conditions</p>
+            <Link to="/privacy-policy" className="hover:text-[var(--color-orange)] transition-colors">
+              Privacy Policy
+            </Link>
+            <span>•</span>
+            <Link to="/terms-and-conditions" className="hover:text-[var(--color-orange)] transition-colors">
+              Terms and Conditions
+            </Link>
           </div>
         </div>
       </footer>

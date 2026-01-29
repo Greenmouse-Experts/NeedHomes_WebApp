@@ -12,14 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyPartnerRouteImport } from './routes/verify-partner'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TestRouteImport } from './routes/test'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as SignupPartnerRouteImport } from './routes/signup-partner'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as OtpRouteImport } from './routes/otp'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountTypeRouteImport } from './routes/account-type'
@@ -87,6 +91,11 @@ const TestRoute = TestRouteImport.update({
   path: '/test',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupPartnerRoute = SignupPartnerRouteImport.update({
   id: '/signup-partner',
   path: '/signup-partner',
@@ -95,6 +104,11 @@ const SignupPartnerRoute = SignupPartnerRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OtpRoute = OtpRouteImport.update({
@@ -117,6 +131,11 @@ const LeadershipRoute = LeadershipRouteImport.update({
   path: '/leadership',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqsRoute = FaqsRouteImport.update({
   id: '/faqs',
   path: '/faqs',
@@ -125,6 +144,11 @@ const FaqsRoute = FaqsRouteImport.update({
 const ContactUsRoute = ContactUsRouteImport.update({
   id: '/contact-us',
   path: '/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -410,14 +434,18 @@ export interface FileRoutesByFullPath {
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
+  '/careers': typeof CareersRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
@@ -471,14 +499,18 @@ export interface FileRoutesByTo {
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
+  '/careers': typeof CareersRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
@@ -531,14 +563,18 @@ export interface FileRoutesById {
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
+  '/careers': typeof CareersRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
@@ -597,14 +633,18 @@ export interface FileRouteTypes {
     | '/account-type'
     | '/admin'
     | '/blog'
+    | '/careers'
     | '/contact-us'
     | '/faqs'
+    | '/how-it-works'
     | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
+    | '/privacy-policy'
     | '/signup'
     | '/signup-partner'
+    | '/terms-and-conditions'
     | '/test'
     | '/verify'
     | '/verify-partner'
@@ -658,14 +698,18 @@ export interface FileRouteTypes {
     | '/account-type'
     | '/admin'
     | '/blog'
+    | '/careers'
     | '/contact-us'
     | '/faqs'
+    | '/how-it-works'
     | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
+    | '/privacy-policy'
     | '/signup'
     | '/signup-partner'
+    | '/terms-and-conditions'
     | '/test'
     | '/verify'
     | '/verify-partner'
@@ -717,14 +761,18 @@ export interface FileRouteTypes {
     | '/account-type'
     | '/admin'
     | '/blog'
+    | '/careers'
     | '/contact-us'
     | '/faqs'
+    | '/how-it-works'
     | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
+    | '/privacy-policy'
     | '/signup'
     | '/signup-partner'
+    | '/terms-and-conditions'
     | '/test'
     | '/verify'
     | '/verify-partner'
@@ -782,14 +830,18 @@ export interface RootRouteChildren {
   AccountTypeRoute: typeof AccountTypeRoute
   AdminRoute: typeof AdminRoute
   BlogRoute: typeof BlogRoute
+  CareersRoute: typeof CareersRoute
   ContactUsRoute: typeof ContactUsRoute
   FaqsRoute: typeof FaqsRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   NewsRoute: typeof NewsRoute
   OtpRoute: typeof OtpRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   SignupRoute: typeof SignupRoute
   SignupPartnerRoute: typeof SignupPartnerRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   TestRoute: typeof TestRoute
   VerifyRoute: typeof VerifyRoute
   VerifyPartnerRoute: typeof VerifyPartnerRoute
@@ -824,6 +876,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup-partner': {
       id: '/signup-partner'
       path: '/signup-partner'
@@ -836,6 +895,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/otp': {
@@ -866,6 +932,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadershipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faqs': {
       id: '/faqs'
       path: '/faqs'
@@ -878,6 +951,13 @@ declare module '@tanstack/react-router' {
       path: '/contact-us'
       fullPath: '/contact-us'
       preLoaderRoute: typeof ContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -1430,14 +1510,18 @@ const rootRouteChildren: RootRouteChildren = {
   AccountTypeRoute: AccountTypeRoute,
   AdminRoute: AdminRoute,
   BlogRoute: BlogRoute,
+  CareersRoute: CareersRoute,
   ContactUsRoute: ContactUsRoute,
   FaqsRoute: FaqsRoute,
+  HowItWorksRoute: HowItWorksRoute,
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   NewsRoute: NewsRoute,
   OtpRoute: OtpRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   SignupRoute: SignupRoute,
   SignupPartnerRoute: SignupPartnerRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   TestRoute: TestRoute,
   VerifyRoute: VerifyRoute,
   VerifyPartnerRoute: VerifyPartnerRoute,

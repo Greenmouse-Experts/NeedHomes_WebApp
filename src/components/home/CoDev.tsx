@@ -29,9 +29,9 @@ export default function CoDev() {
       />
       <div className="space-y-12 py-12 text-white flex flex-col w-full">
         <div className="mx-auto max-w-3xl text-center space-y-2">
-          <h2 className="text-3xl font-semibold">What is Co-Development?</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold">What is Co-Development?</h2>
           <p>
-           We bring multiple qualified home buyers or investors together to fund, build & own housing units collectively. Each subscriber contributes an agreed portion into the project during construction and receives full legal ownership upon completion.
+            We bring multiple qualified home buyers or investors together to fund, build & own housing units collectively. Each subscriber contributes an agreed portion into the project during construction and receives full legal ownership upon completion.
           </p>
         </div>
       </div>
@@ -49,8 +49,8 @@ export default function CoDev() {
                   className="flex-1 object-contain size-10"
                 />
               </div>
-              <h3 className="text-2xl font-bold">{step.title}</h3>
-              <p className="text-center">{step.description}</p>
+              <h3 className="text-xl font-bold">{step.title}</h3>
+               <p className="text-center">{step.description}</p>
             </div>
           ))}
         </div>

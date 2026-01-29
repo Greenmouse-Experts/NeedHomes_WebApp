@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, LayoutDashboard } from "lucide-react";
+import { Calendar, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -85,26 +85,20 @@ function PartnerDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Welcome Header */}
       <div className="mb-6 sm:mb-8">
-        <div className="flex items-center space-x-3 mb-2">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <LayoutDashboard className="h-6 w-6 text-blue-600" />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            Dashboard
-          </h1>
-        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          Welcome, {user?.firstName?.trim() ?? "Partner"}
+        </h1>
         <p className="text-gray-600 text-sm sm:text-base">
           Welcome to your partnership overview and property management.
         </p>
       </div>
 
-      {/* Welcome Banner */}
-      {/* Welcome Section */}
+      {/* Stats Cards in Orange Box + Calendar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 h-full">
-          <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg h-full flex flex-col justify-center">
+          <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg h-full flex flex-col justify-between">
             <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 opacity-20">
               <svg viewBox="0 0 200 200" className="w-full h-full">
                 <path
@@ -114,19 +108,124 @@ function PartnerDashboard() {
                 />
               </svg>
             </div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 text-white/90 mb-2 md:mb-3">
-                <Calendar className="w-4 h-4" />
-                <span className="text-xs md:text-sm font-medium">
-                  {getCurrentDate()}
-                </span>
+
+            <div className="relative z-10 flex items-center gap-2 text-white/90 mb-6">
+              <Star className="w-4 h-4" />
+              <span className="text-xs md:text-sm font-medium">
+                BASIC STATISTICS
+              </span>
+            </div>
+
+            {/* Stats Cards inside orange box */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl md:text-3xl font-bold text-white">
+                      10
+                    </p>
+                    <p className="text-xs md:text-sm text-white/90 font-medium">
+                      Total Property
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">
-                Welcome, {user?.firstName?.trim() ?? "Partner"}
-              </h2>
-              <p className="text-sm md:text-base text-white/90">
-                Have a great day!
-              </p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xl md:text-2xl font-bold text-white">
+                      N 20,000,000
+                    </p>
+                    <p className="text-xs md:text-sm text-white/90 font-medium">
+                      Total Amount Paid
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl md:text-3xl font-bold text-white">
+                      8
+                    </p>
+                    <p className="text-xs md:text-sm text-white/90 font-medium">
+                      Active Projects
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xl md:text-2xl font-bold text-white">
+                      N 35,000,000
+                    </p>
+                    <p className="text-xs md:text-sm text-white/90 font-medium">
+                      Partnership Revenue
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -134,65 +233,8 @@ function PartnerDashboard() {
         <div className="lg:col-span-1">
           <CalendarWidget />
         </div>
-      </div>
+      </div >
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg
-                className="w-6 h-6 md:w-7 md:h-7 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-            </div>
-            <div>
-              <p className="text-2xl md:text-3xl font-bold text-gray-900">
-                10
-              </p>
-              <p className="text-xs md:text-sm text-gray-500 font-medium">
-                Total Property
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg
-                className="w-6 h-6 md:w-7 md:h-7 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <div>
-              <p className="text-xl md:text-2xl font-bold text-gray-900">
-                N 20,000,000
-              </p>
-              <p className="text-xs md:text-sm text-gray-500 font-medium">
-                Total Amount Paid
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Property */}
@@ -416,6 +458,6 @@ function PartnerDashboard() {
           <span className="whitespace-nowrap">N60M</span>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

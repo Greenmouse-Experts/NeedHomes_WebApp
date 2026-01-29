@@ -40,6 +40,12 @@ const dropdownMenus = {
       description: "Collaboration opportunities",
       icon: "🤝"
     },
+    {
+      name: "Contact Us",
+      path: "/contact-us",
+      description: "Collaboration opportunities",
+      icon: "🤝"
+    },
   ],
   Investment: [
     {
@@ -59,6 +65,18 @@ const dropdownMenus = {
       path: "/",
       description: "Secure land for future",
       icon: "🌍"
+    },
+    {
+      name: "Outright Purchase",
+      path: "/",
+      description: "Purchase property in full",
+      icon: "🏠"
+    },
+    {
+      name: "Save to Own",
+      path: "/",
+      description: "Flexible payment plans",
+      icon: "💰"
     },
   ],
   Resources: [
@@ -125,8 +143,9 @@ export default function Header() {
       icon: FileText,
     },
     {
-      name: "Support",
+      name: "Contact Us",
       icon: Headset,
+      path: "/contact-us",
     },
   ];
 
@@ -171,84 +190,97 @@ export default function Header() {
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-2 h-full">
-          {links.map((link, index) => (
-            <div
-              key={link.name}
-              className="relative h-full"
-              onMouseEnter={() => setActiveDropdown(link.name)}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button
-                className={`cursor-pointer px-4 h-full flex items-center gap-1 font-medium text-sm transition-colors ${index === 0 ? "text-white" : "text-gray-300 hover:text-white"
-                  }`}
-              >
-                {link.name}{" "}
-                <ChevronDown
-                  size={14}
-                  className={`transition-transform duration-200 ${activeDropdown === link.name ? "rotate-180" : ""
-                    }`}
-                />
-              </button>
-
-              {/* Desktop Dropdown */}
-              {activeDropdown === link.name && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute top-full left-0 mt-1 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300"
-                  style={{
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-                  }}
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center h-full">
+          {links.map((link, index) => {
+            // If link has a path, render as direct link
+            if (link.path) {
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`cursor-pointer px-4 h-full flex items-center gap-1 font-medium text-sm transition-colors ${index === 0 ? "text-white" : "text-gray-300 hover:text-white"}`}
                 >
-                  {/* Header */}
-                  <div className="px-5 py-3 bg-gradient-to-r from-orange-50 to-orange-100 border-b border-gray-100">
-                    <p className="text-xs font-bold text-orange-600 uppercase tracking-wider">
-                      {link.name === "Company" && "About NeedHomes"}
-                      {link.name === "Investment" && "Investment Options"}
-                      {link.name === "Resources" && "Helpful Resources"}
-                      {link.name === "Support" && "Get Support"}
-                    </p>
-                  </div>
+                  {link.name}
+                </Link>
+              );
+            }
 
-                  {/* Menu Items */}
-                  <div className="py-2">
-                    {dropdownMenus[link.name as keyof typeof dropdownMenus].map(
-                      (item, idx) => (
-                        <Link
-                          key={item.name}
-                          to={item.path}
-                          className="group flex items-center gap-4 px-5 py-3.5 hover:bg-orange-50/50 transition-all duration-200 cursor-pointer"
-                          onClick={() => setActiveDropdown(null)}
-                        >
-                          {/* Icon */}
-                          <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">
-                            {item.icon}
-                          </div>
+            // Otherwise render dropdown menu
+            return (
+              <div
+                key={link.name}
+                className="relative h-full"
+                onMouseEnter={() => setActiveDropdown(link.name)}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button
+                  className={`cursor-pointer px-4 h-full flex items-center gap-1 font-medium text-sm transition-colors ${index === 0 ? "text-white" : "text-gray-300 hover:text-white"}`}
+                >
+                  {link.name}{" "}
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${activeDropdown === link.name ? "rotate-180" : ""}`}
+                  />
+                </button>
 
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
-                                {item.name}
-                              </p>
-                              <ChevronDown
-                                size={16}
-                                className="text-orange-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 -rotate-90"
-                              />
+                {/* Desktop Dropdown */}
+                {activeDropdown === link.name && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-full left-0 mt-1 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300"
+                    style={{
+                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                    }}
+                  >
+                    {/* Header */}
+                    <div className="px-5 py-3 bg-gradient-to-r from-orange-50 to-orange-100 border-b border-gray-100">
+                      <p className="text-xs font-bold text-orange-600 uppercase tracking-wider">
+                        {link.name === "Company" && "About NeedHomes"}
+                        {link.name === "Investment" && "Investment Options"}
+                        {link.name === "Resources" && "Helpful Resources"}
+                      </p>
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="py-2">
+                      {dropdownMenus[link.name as keyof typeof dropdownMenus].map(
+                        (item) => (
+                          <Link
+                            key={item.name}
+                            to={item.path}
+                            className="group flex items-center gap-4 px-5 py-3.5 hover:bg-orange-50/50 transition-all duration-200 cursor-pointer"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            {/* Icon */}
+                            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">
+                              {item.icon}
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              {item.description}
-                            </p>
-                          </div>
-                        </Link>
-                      )
-                    )}
+
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+                                  {item.name}
+                                </p>
+                                <ChevronDown
+                                  size={16}
+                                  className="text-orange-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 -rotate-90"
+                                />
+                              </div>
+                              <p className="text-xs text-gray-600 mt-0.5">
+                                {item.description}
+                              </p>
+                            </div>
+                          </Link>
+                        )
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Mobile Menu Button */}
@@ -270,6 +302,25 @@ export default function Header() {
                 const Icon = link.icon;
                 const isExpanded = mobileExpandedMenu === link.name;
 
+                // If link has a path, render as direct link
+                if (link.path) {
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.path}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setMobileExpandedMenu(null);
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{link.name}</span>
+                    </Link>
+                  );
+                }
+
+                // Otherwise render dropdown menu
                 return (
                   <div key={link.name}>
                     <button
@@ -282,14 +333,13 @@ export default function Header() {
                       </div>
                       <ChevronDown
                         size={16}
-                        className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
-                          }`}
+                        className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
                       />
                     </button>
 
                     {/* Sub-menu items */}
                     {isExpanded && (
-                      <div className="bg-gradient-to-br from-orange-50/30 to-orange-100/30 backdrop-blur-sm animate-in slide-in-from-top-2 duration-300">
+                      <div className="bg-white border-t border-gray-200 animate-in slide-in-from-top-2 duration-300">
                         {dropdownMenus[
                           link.name as keyof typeof dropdownMenus
                         ].map((item) => (
@@ -300,19 +350,19 @@ export default function Header() {
                               setMobileMenuOpen(false);
                               setMobileExpandedMenu(null);
                             }}
-                            className="group flex items-center gap-3 pl-12 pr-4 py-3 hover:bg-orange-100/50 transition-all duration-200 cursor-pointer"
+                            className="group flex items-center gap-3 pl-12 pr-4 py-3 hover:bg-orange-50 transition-all duration-200 cursor-pointer border-b border-gray-100 last:border-b-0"
                           >
                             {/* Icon */}
-                            <div className="flex-shrink-0 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-transform duration-200">
+                            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-transform duration-200">
                               {item.icon}
                             </div>
 
                             {/* Content */}
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-800 group-hover:text-orange-600 transition-colors">
+                              <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
                                 {item.name}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-gray-600">
                                 {item.description}
                               </p>
                             </div>
@@ -320,7 +370,7 @@ export default function Header() {
                             {/* Arrow */}
                             <ChevronDown
                               size={14}
-                              className="text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity -rotate-90 flex-shrink-0"
+                              className="text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity -rotate-90 flex-shrink-0"
                             />
                           </Link>
                         ))}
