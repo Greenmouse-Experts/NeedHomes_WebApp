@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/Button'
+import { useNavigate } from '@tanstack/react-router'
 
 export default function Explore() {
+  const navigate = useNavigate()
   return (
     <div className="contain mx-auto px-4 md:px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
@@ -23,7 +25,7 @@ export default function Explore() {
             you don't just invest in real estate — you invest in your future.
           </h2>
           <div className="mt-6">
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" onClick={() => { navigate({ to: '/how-it-works' }) }}>
               Explore How It Works
             </Button>
           </div>

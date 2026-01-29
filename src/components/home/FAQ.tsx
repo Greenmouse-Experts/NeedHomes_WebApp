@@ -94,7 +94,7 @@ export default function FAQ() {
                 NeedHomes
               </p>
               <div>
-                <Button variant="primary">Contact Us</Button>
+                <Button onClick={() => { navigate({ to: '/contact-us' }) }} variant="primary">Contact Us</Button>
               </div>
             </div>
           </FlexInfo>

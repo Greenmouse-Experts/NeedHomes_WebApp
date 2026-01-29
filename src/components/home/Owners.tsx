@@ -1,7 +1,10 @@
+import { Button } from '../ui/Button'
 import FlexInfo from './FlexInfo'
 import Sectiongrid from './SectionGrid'
+import { useNavigate } from '@tanstack/react-router'
 
 export default function Owners() {
+  const navigate = useNavigate()
   return (
     <div className="py-12">
       <Sectiongrid>
@@ -19,6 +22,9 @@ export default function Owners() {
               or entities can each purchase a portion of an asset. Each investor buys a fraction of the property, sharing both
               the cost and the potential profit.
             </p>
+            <Button variant="outline" size="lg" onClick={() => { navigate({ to: '/how-it-works' }) }}>
+              Read more
+            </Button>
           </div>
         </FlexInfo>
       </Sectiongrid>
