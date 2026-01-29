@@ -74,6 +74,7 @@ function RouteComponent() {
           (acc: number, fee: any) => acc + fee.amount,
           0,
         );
+      console.log(data.completionDate);
 
       const payload = {
         ...data,
@@ -81,7 +82,7 @@ function RouteComponent() {
         galleryImages: allImages,
         totalPrice,
         targetPropertyPrice: totalPrice,
-        completionDate: new Date(data.completionDate).toISOString(),
+        completionDate: new Date(data.completionDate).toISOString(), // Ensure this is in the correct format
       };
 
       console.log("Submitting Save-to-Own data:", payload);
