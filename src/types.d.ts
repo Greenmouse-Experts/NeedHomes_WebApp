@@ -51,6 +51,7 @@ export interface VERIFICATION_REQUEST {
   id: string;
   user_id: string;
   idType: string;
+  status: "PENDING" | "VERIFIED" | "REJECTED";
   frontPage: string | null;
   companyName: string | null;
   rcNumber: string | null;

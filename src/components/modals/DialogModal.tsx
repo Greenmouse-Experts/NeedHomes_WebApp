@@ -47,7 +47,7 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
               </button>
             </form>
           </div>
-          {children && <div className="my-3 ">{children}</div>}
+          {children && <div className="my-3 p-4">{children}</div>}
           {actions && <div className="ml-auto p-4">{actions}</div>}
         </div>
       </dialog>

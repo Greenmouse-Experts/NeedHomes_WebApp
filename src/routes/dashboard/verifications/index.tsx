@@ -55,6 +55,10 @@ const KYCViewer = ({ data }: { data: VERIFICATION_REQUEST | null }) => {
             {new Date(data.submitedAt).toLocaleString()}
           </p>
         </div>
+        <div>
+          <p className="text-xs text-gray-500">Status</p>
+          <p className="font-medium">{data.status}</p>
+        </div>
       </div>
 
       <div className="mt-4 space-y-4">
@@ -122,7 +126,6 @@ function RouteComponent() {
       return resp.data;
     },
     onSuccess: () => {
-      // toast.success("Verification approved successfully");
       queryClient.invalidateQueries({ queryKey: ["verifications-admin"] });
     },
     onError: (error: any) => {
@@ -163,6 +166,23 @@ function RouteComponent() {
       label: "Submitted At",
       render: (val) => new Date(val).toLocaleDateString(),
     },
+    {
+      key: "status",
+      label: "Status",
+      render: (val) => (
+        <span
+          className={`badge badge-sm ${
+            val === "VERIFIED"
+              ? "badge-success"
+              : val === "PENDING"
+                ? "badge-warning"
+                : "badge-error"
+          }`}
+        >
+          {val}
+        </span>
+      ),
+    },
   ];
 
   const actions: Actions[] = [
@@ -188,6 +208,10 @@ function RouteComponent() {
       key: "approve",
       label: "Approve KYC",
       action: (item) => {
+        if (item.status !== "PENDING") {
+          toast.error("Only pending verifications can be approved.");
+          return;
+        }
         toast.promise(approveMutation.mutateAsync(item.id), {
           loading: "Approving...",
           success: "KYC approved successfully.",
@@ -230,7 +254,11 @@ function RouteComponent() {
               <button
                 className="btn btn-primary"
                 onClick={() => {
-                  if (selectedKyc) approveMutation.mutate(selectedKyc.id);
+                  if (selectedKyc && selectedKyc.status === "PENDING") {
+                    approveMutation.mutate(selectedKyc.id);
+                  } else {
+                    toast.error("Only pending verifications can be approved.");
+                  }
                 }}
               >
                 Approve Now
