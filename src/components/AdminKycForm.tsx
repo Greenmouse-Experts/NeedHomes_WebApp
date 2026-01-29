@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import type { AxiosError } from "axios";
 import type { ApiResponse } from "@/api/simpleApi";
-import Modal,  from "@/components/modals/DialogModal";
+import Modal from "@/components/modals/DialogModal";
 import { useState } from "react";
 import { useModal } from "@/store/modals";
 
