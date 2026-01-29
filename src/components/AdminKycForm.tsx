@@ -88,6 +88,11 @@ export default function AdminKycForm({ id }: { id: string }) {
   }
 
   const kycData = kycResponse || {};
+  const hasDocuments = !!(
+    kycData.frontUpload ||
+    kycData.backUpload ||
+    kycData.utilityBill
+  );
 
   return (
     <div>
@@ -258,7 +263,7 @@ export default function AdminKycForm({ id }: { id: string }) {
               variant="ghost"
               size="lg"
               className="text-red-600 hover:bg-red-50"
-              disabled={verifyMutation.isPending}
+              disabled={verifyMutation.isPending || !hasDocuments}
               onClick={() => verifyMutation.mutate("REJECTED")}
             >
               Reject
@@ -267,7 +272,7 @@ export default function AdminKycForm({ id }: { id: string }) {
               variant="primary"
               size="lg"
               className="px-12"
-              disabled={verifyMutation.isPending}
+              disabled={verifyMutation.isPending || !hasDocuments}
               onClick={() => verifyMutation.mutate("APPROVED")}
             >
               {verifyMutation.isPending ? (
