@@ -40,12 +40,6 @@ const dropdownMenus = {
       description: "Collaboration opportunities",
       icon: "🤝"
     },
-    {
-      name: "Contact Us",
-      path: "/contact-us",
-      description: "Collaboration opportunities",
-      icon: "🤝"
-    },
   ],
   Investment: [
     {
