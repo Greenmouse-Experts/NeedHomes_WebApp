@@ -1,22 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import {
-  User,
-  CreditCard,
-  FileText,
-  Shield,
-  Upload,
-  Bell,
-  Menu,
-} from "lucide-react";
+import { User, CreditCard, FileText, Shield, Bell } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
+
 import type { USER } from "@/types";
-import KYCForm from "@/components/KYCForm";
 import BankDetails from "@/simpleComps/BankDetails";
+import KYCForm from "@/components/KYCForm";
+import { PhoneInput } from "@/components/CountryPhoneInput";
 
 export const Route = createFileRoute("/partners/settings")({
   component: SettingsPage,
@@ -35,21 +29,6 @@ function SettingsPage() {
     email: "",
     phoneNumber: "",
     dateOfBirth: "",
-  });
-
-  const [bankData, setBankData] = useState({
-    accountNumber: "",
-    bankName: "",
-    accountName: "",
-    accountType: "",
-  });
-
-  const [kycData, setKycData] = useState({
-    idType: "",
-    frontUpload: null as File | null,
-    backUpload: null as File | null,
-    utilityBill: null as File | null,
-    address: "",
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -73,14 +52,6 @@ function SettingsPage() {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleBankChange = (field: string, value: string) => {
-    setBankData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleKycChange = (field: string, value: string | File | null) => {
-    setKycData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handlePasswordChange = (field: string, value: string) => {
     setPasswordData((prev) => ({ ...prev, [field]: value }));
   };
@@ -88,16 +59,6 @@ function SettingsPage() {
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Profile update:", profileData);
-  };
-
-  const handleBankSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Bank details update:", bankData);
-  };
-
-  const handleKycSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("KYC update:", kycData);
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -121,12 +82,12 @@ function SettingsPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="space-y-6">
       {/* Header */}
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-            Partner
+            Settings
           </h1>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
@@ -134,7 +95,7 @@ function SettingsPage() {
             <Bell className="w-5 h-5 text-gray-600" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
           </button>
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-linear-to-br from-orange-400 to-orange-600 rounded-full"></div>
         </div>
       </header>
 
@@ -181,7 +142,7 @@ function SettingsPage() {
                   {/* Profile Picture */}
                   <div className="mb-4 md:mb-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4">
-                      <Avatar className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-cyan-400 to-cyan-500">
+                      <Avatar className="w-20 h-20 md:w-24 md:h-24 bg-linear-to-br from-cyan-400 to-cyan-500">
                         <AvatarFallback className="text-xl md:text-2xl text-white bg-transparent">
                           {user?.firstName
                             ? user.firstName.charAt(0).toUpperCase()
@@ -256,20 +217,16 @@ function SettingsPage() {
                       <Label htmlFor="phoneNumber" className="text-sm">
                         Phone Number
                       </Label>
-                      <div className="flex gap-2">
-                        <div className="w-12 md:w-16 flex items-center justify-center border border-gray-300 rounded-md shrink-0">
-                          <span className="text-xl md:text-2xl">🇳🇬</span>
-                        </div>
-                        <Input
-                          id="phoneNumber"
-                          value={profileData.phoneNumber}
-                          onChange={(e) =>
-                            handleProfileChange("phoneNumber", e.target.value)
-                          }
-                          placeholder="0700 000 0000"
-                          className="flex-1 text-sm md:text-base"
-                        />
-                      </div>
+                      <PhoneInput
+                        id="phoneNumber"
+                        value={profileData.phoneNumber}
+                        onPhoneChange={(val) =>
+                          handleProfileChange("phoneNumber", val)
+                        }
+                        defaultCountry="NG"
+                        placeholder="0700 000 0000"
+                        className="text-sm md:text-base"
+                      />
                     </div>
 
                     {/* Date of Birth */}
@@ -296,7 +253,7 @@ function SettingsPage() {
                   <div className="pt-4 md:pt-6">
                     <Button
                       type="submit"
-                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
+                      className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
                     >
                       Save
                     </Button>
@@ -313,7 +270,11 @@ function SettingsPage() {
             )}
 
             {/* KYC Tab */}
-            {activeTab === "kyc" && <KYCForm />}
+            {activeTab === "kyc" && (
+              <>
+                <KYCForm />
+              </>
+            )}
 
             {/* Security Tab */}
             {activeTab === "security" && (
@@ -336,7 +297,7 @@ function SettingsPage() {
                     <Input
                       id="newPassword"
                       type="password"
-                      placeholder="SuperAdmin"
+                      placeholder="**********"
                       value={passwordData.newPassword}
                       onChange={(e) =>
                         handlePasswordChange("newPassword", e.target.value)
@@ -354,7 +315,7 @@ function SettingsPage() {
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder="SuperAdmin"
+                      placeholder="**********"
                       value={passwordData.confirmPassword}
                       onChange={(e) =>
                         handlePasswordChange("confirmPassword", e.target.value)
@@ -368,7 +329,7 @@ function SettingsPage() {
                   <div className="pt-2 md:pt-4">
                     <Button
                       type="submit"
-                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
+                      className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
                     >
                       Update
                     </Button>

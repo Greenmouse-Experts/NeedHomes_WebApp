@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
-import { useAuth } from "@/store/authStore";
+import { show_logout, useAuth } from "@/store/authStore";
 import { useEffect } from "react";
 
 interface PartnerSidebarProps {
@@ -306,6 +306,18 @@ export function PartnerSidebar({
             </svg>
             <span>Setting</span>
           </Link>
+          <button
+            onClick={() => {
+              show_logout();
+            }}
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+              activePage === "announcements"
+                ? "bg-[var(--color-orange)] text-white"
+                : "hover:bg-gray-800 text-gray-400"
+            }`}
+          >
+            <LogOut className="size-4" /> Logout
+          </button>
         </nav>
 
         {/* Profile Card */}

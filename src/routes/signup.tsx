@@ -10,6 +10,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi"; // Assuming simpl
 import { set_temp_user_value } from "@/store/authStore";
 import type { AxiosError } from "axios";
 import { extract_message } from "@/helpers/apihelpers";
+import { PhoneInput } from "@/components/CountryPhoneInput";
 
 export const Route = createFileRoute("/signup")({
   component: SignUpPage,
@@ -26,7 +27,7 @@ function SignUpPage() {
   const navigate = useNavigate();
   const { type } = Route.useSearch();
   const [userType, setUserType] = useState<UserType>(
-    type == "investor" && "INDIVIDUAL",
+    type == "investor" ? "INDIVIDUAL" : "CORPORATE",
   );
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -288,14 +289,15 @@ function SignUpPage() {
                     <Label htmlFor="phoneNumber" className="text-white">
                       Phone Number
                     </Label>
-                    <Input
+                    <PhoneInput
                       id="phoneNumber"
-                      type="tel"
                       placeholder="Enter Phone Number"
                       value={formData.phoneNumber}
-                      onChange={(e) =>
-                        handleInputChange("phoneNumber", e.target.value)
-                      }
+                      onPhoneChange={(value) => {
+                        console.log("Phone number changed:", value);
+                        handleInputChange("phoneNumber", value);
+                      }}
+                      defaultCountry="US"
                       required
                       className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                     />
@@ -461,17 +463,14 @@ function SignUpPage() {
                     <Label htmlFor="corporatePhone" className="text-white">
                       Phone Number
                     </Label>
-                    <Input
+                    <PhoneInput
                       id="corporatePhone"
-                      type="tel"
                       placeholder="Enter Phone Number"
                       value={corporateData.phoneNumber}
-                      onChange={(e) =>
-                        handleCorporateInputChange(
-                          "phoneNumber",
-                          e.target.value,
-                        )
+                      onPhoneChange={(value) =>
+                        handleCorporateInputChange("phoneNumber", value)
                       }
+                      defaultCountry="US"
                       required
                       className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                     />

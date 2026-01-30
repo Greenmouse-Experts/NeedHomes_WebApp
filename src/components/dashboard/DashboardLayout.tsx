@@ -18,10 +18,12 @@ import {
   X,
   Search,
   Bell,
+  LogOut,
 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import { show_logout } from "@/store/authStore";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -220,7 +222,27 @@ export function DashboardLayout({
               </div>
             )}
           </div>
-
+          {/*kyc*/}
+          <div>
+            <button
+              onClick={() => toggleSection("kyc")}
+              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
+            >
+              <span>KYC</span>
+              {expandedSections.transaction ? (
+                <ChevronDown className="w-3 h-3" />
+              ) : (
+                <ChevronRight className="w-3 h-3" />
+              )}
+            </button>
+            {expandedSections.transaction && (
+              <div className="ml-3 mt-1 space-y-0.5">
+                <NavLink to="/dashboard/verifications" icon={Receipt}>
+                  KYC
+                </NavLink>
+              </div>
+            )}
+          </div>
           {/* Announcement */}
           <NavLink to="/dashboard/announcements" icon={Megaphone}>
             ANNOUNCEMENT
@@ -230,6 +252,14 @@ export function DashboardLayout({
           <NavLink to="/dashboard/settings" icon={Settings}>
             SETTING
           </NavLink>
+          <button
+            onClick={() => {
+              show_logout();
+            }}
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${"hover:bg-gray-800 text-gray-400"}`}
+          >
+            <LogOut className="size-4" /> Logout
+          </button>
         </nav>
       </aside>
 

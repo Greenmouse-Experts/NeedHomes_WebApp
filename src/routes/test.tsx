@@ -8,7 +8,18 @@ export const Route = createFileRoute("/test")({
 
 function RouteComponent() {
   return (
-    <div>
+    <div data-theme="nh-light">
+      <button
+        className="btn btn-primary"
+        onClick={() => {
+          const modal = document.getElementById(
+            "logout_modal",
+          ) as HTMLDialogElement;
+          modal.showModal();
+        }}
+      >
+        Click me
+      </button>
       <SimpleInput />
     </div>
   );

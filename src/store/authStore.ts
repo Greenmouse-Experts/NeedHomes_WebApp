@@ -70,3 +70,8 @@ export const logout = () => {
     error: extract_message,
   });
 };
+
+export const show_logout = () => {
+  const modal = document.getElementById("logout_modal") as HTMLDialogElement;
+  modal.showModal();
+};

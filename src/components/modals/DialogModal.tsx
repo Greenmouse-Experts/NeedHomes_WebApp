@@ -34,8 +34,8 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
     return (
       <dialog ref={modalRef} className="modal modal-middle sm:modal-middle">
         <Toaster theme="dark" richColors />
-        <div className="modal-box bg-white max-w-2xl flex flex-col max-h-[90vh] p-6 rounded-lg shadow-xl relative">
-          <div className="flex">
+        <div className="modal-box bg-white max-w-2xl flex flex-col max-h-[90vh]  rounded-lg shadow-xl relative p-0">
+          <div className="flex border-b fade py-4 items-center px-4">
             {title && <h3 className="font-bold text-lg ">{title}</h3>}
             <form method="dialog" className="ml-auto">
               <button
@@ -47,8 +47,8 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
               </button>
             </form>
           </div>
-          {children && <div className="my-3">{children}</div>}
-          {actions && <div className="ml-auto">{actions}</div>}
+          {children && <div className="my-3 p-4">{children}</div>}
+          {actions && <div className="ml-auto p-4">{actions}</div>}
         </div>
       </dialog>
     );

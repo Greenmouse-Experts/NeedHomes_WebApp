@@ -1,7 +1,7 @@
 import type { useSelectImage } from "@/helpers/images";
 import { XCircle, UploadCloud } from "lucide-react";
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 interface ImageProps extends ReturnType<typeof useSelectImage> {
   title?: string;
 }
@@ -19,13 +19,17 @@ export default function SelectImage(props: ImageProps) {
   }, [props.image_link]);
 
   return (
-    <div className="max-w-[380px] aspect-video flex flex-col">
+    <div className="max-w-95 aspect-video flex flex-col">
       {props.title && (
         <label htmlFor={id} className="label mb-2">
           <span className="label-text font-semibold">{props.title}</span>
         </label>
       )}
-      <div className="h-full flex flex-col justify-center items-center border-2 border-dashed border-base-300 rounded-lg p-4 hover:border-primary transition-colors duration-200">
+
+      <div
+        data-theme="nh-light"
+        className="h-full flex flex-col justify-center items-center border-2 border-dashed border-base-300 rounded-lg p-4 hover:border-primary transition-colors duration-200"
+      >
         <input
           type="file"
           accept="image/*"
@@ -64,6 +68,27 @@ export default function SelectImage(props: ImageProps) {
                 <XCircle className="h-5 w-5" />
               </button>
             </div>
+          ) : props.prev ? (
+            <>
+              <div className="size-full relative group">
+                <img
+                  className="size-full object-cover rounded-lg shadow-md"
+                  src={props.prev}
+                  alt={`Selected image`}
+                />
+                <button
+                  type="button"
+                  className="btn btn-circle btn-error btn-sm absolute -right-2 -top-2 m-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent opening file dialog
+                    props.setPrev(null);
+                  }}
+                  aria-label="Remove selected image"
+                >
+                  <XCircle className="h-5 w-5" />
+                </button>
+              </div>
+            </>
           ) : (
             <>
               <UploadCloud className="h-12 w-12 text-base-content opacity-60" />
