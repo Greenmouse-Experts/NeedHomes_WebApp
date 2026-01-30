@@ -10,6 +10,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import Footer from "@/components/home/Footer";
 
 export const Route = createFileRoute("/land-banking")({
   component: LandBankingPage,
@@ -92,6 +93,7 @@ function LandBankingPage() {
   ];
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative bg-[#333d42] text-white py-20 md:py-32">
@@ -252,5 +254,7 @@ function LandBankingPage() {
         </div>
       </section>
     </div>
+    <Footer/>
+    </>
   );
 }
