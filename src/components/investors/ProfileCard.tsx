@@ -19,7 +19,7 @@ export default function ProfileCard() {
               className="w-full h-full object-cover rounded-full"
             />
           ) : (
-            <span className="text-xl text-white bg-transparent">
+            <span className="text-xl text-white grid place-items-center flex-1 size-full bg-transparent">
               {user?.user.firstName
                 ? user.user.firstName.charAt(0).toUpperCase()
                 : "U"}

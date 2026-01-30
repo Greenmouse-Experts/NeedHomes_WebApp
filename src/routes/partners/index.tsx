@@ -125,7 +125,7 @@ function PartnerDashboard() {
               ) : (
                 <>
                   <div className="w-8 h-8 grid place-items-center rounded-full bg-orange-400 text-white">
-                    {user?.firstName.charAt(0)}
+                    {user?.firstName?.charAt(0)}
                   </div>
                 </>
               )}
