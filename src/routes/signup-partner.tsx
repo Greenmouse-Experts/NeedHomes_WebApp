@@ -19,7 +19,6 @@ const signupSchema = z
     email: z.string().email("Invalid email address"),
     phone: z
       .string()
-      .regex(/^\d+$/, "Phone number must contain only digits")
       .min(10, "Phone number must be at least 10 digits")
       .max(15, "Phone number must be at most 15 digits"),
     partnerType: z.string().min(1, "Please select a partner type"),
@@ -83,6 +82,7 @@ function SignUpPartnerPage() {
   });
 
   const onSubmit = (data: SignupFormValues) => {
+    console.log(data);
     const { confirmPassword, ...payload } = data;
     signupMutation.mutate(payload);
   };
