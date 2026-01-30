@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import Header from "@/components/Header";
 import LogoutModal from "@/components/LogoutModal";
+import CookieConsent from "@/components/CookieConsent";
 const client = new QueryClient({
   defaultOptions: {
     queries: {
@@ -34,6 +35,7 @@ export const Route = createRootRoute({
           <LogoutModal />
 
           <Outlet />
+          <CookieConsent />
         </QueryClientProvider>
 
         <TanStackDevtools

@@ -1,10 +1,26 @@
 import { logout } from "@/store/authStore";
-import { LogOut, AlertCircle } from "lucide-react";
+import { LogOut, AlertCircle, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function LogoutModal() {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <>
-      <dialog id="logout_modal" className="modal" data-theme="nh-light">
+      <dialog
+        id="logout_modal"
+        className="modal z-[9999]"
+        data-theme="nh-light"
+      >
         <div className="modal-box max-w-sm text-center p-6 rounded-lg shadow-lg">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 mb-6">
             <AlertCircle className="h-8 w-8 text-red-600" />
@@ -18,16 +34,29 @@ export default function LogoutModal() {
           </p>
           <div className="modal-action flex flex-col-reverse sm:flex-row gap-3">
             <form method="dialog" className="flex w-full gap-3">
-              <button className="btn btn-outline flex-1 border-gray-300 text-gray-700 hover:bg-gray-100">
+              <button
+                className="btn btn-outline flex-1 border-gray-300 text-gray-700 hover:bg-gray-100"
+                disabled={isLoggingOut}
+              >
                 Cancel
               </button>
               <button
                 type="button"
-                className="btn btn-error flex-1 gap-2 bg-red-600 text-white hover:bg-red-700"
-                onClick={() => logout()}
+                className="btn btn-error flex-1 gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
               >
-                <LogOut size={20} />
-                Logout
+                {isLoggingOut ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    Logging out...
+                  </>
+                ) : (
+                  <>
+                    <LogOut size={20} />
+                    Logout
+                  </>
+                )}
               </button>
             </form>
           </div>
