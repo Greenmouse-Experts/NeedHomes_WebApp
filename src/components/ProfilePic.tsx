@@ -24,7 +24,7 @@ export default function ProfilePicture() {
       const uploadResp = await uploadImage(imageState.image);
       const imageUrl = uploadResp.data.url;
 
-      const response = await apiClient.post("user/profile-picture", {
+      const response = await apiClient.post("users/profile-picture", {
         profilePicture: imageUrl,
       });
       return { response: response.data, imageUrl };
