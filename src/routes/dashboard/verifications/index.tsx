@@ -19,77 +19,93 @@ export const Route = createFileRoute("/dashboard/verifications/")({
 const KYCViewer = ({ data }: { data: VERIFICATION_REQUEST | null }) => {
   if (!data) return null;
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg shadow-sm">
         <div>
-          <p className="text-xs text-gray-500">Full Name</p>
-          <p className="font-medium">{`${data.user.firstName} ${data.user.lastName}`}</p>
+          <p className="text-sm text-gray-600">Full Name</p>
+          <p className="font-semibold text-gray-800">{`${data.user.firstName} ${data.user.lastName}`}</p>
         </div>
         <div>
-          <p className="text-xs text-gray-500">Email</p>
-          <p className="font-medium break-all">{data.user.email}</p>
+          <p className="text-sm text-gray-600">Email</p>
+          <p className="font-semibold text-gray-800 break-all">
+            {data.user.email}
+          </p>
         </div>
         <div>
-          <p className="text-xs text-gray-500">Verification Type</p>
-          <p className="font-medium">{data.verificationType}</p>
+          <p className="text-sm text-gray-600">Verification Type</p>
+          <p className="font-semibold text-gray-800">{data.verificationType}</p>
         </div>
         <div>
-          <p className="text-xs text-gray-500">ID Type</p>
-          <p className="font-medium">{data.idType}</p>
+          <p className="text-sm text-gray-600">ID Type</p>
+          <p className="font-semibold text-gray-800">{data.idType}</p>
         </div>
         {data.verificationType === "CORPORATE" && (
           <>
             <div>
-              <p className="text-xs text-gray-500">Company Name</p>
-              <p className="font-medium">{data.companyName || "N/A"}</p>
+              <p className="text-sm text-gray-600">Company Name</p>
+              <p className="font-semibold text-gray-800">
+                {data.companyName || "N/A"}
+              </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">RC Number</p>
-              <p className="font-medium">{data.rcNumber || "N/A"}</p>
+              <p className="text-sm text-gray-600">RC Number</p>
+              <p className="font-semibold text-gray-800">
+                {data.rcNumber || "N/A"}
+              </p>
             </div>
           </>
         )}
         <div>
-          <p className="text-xs text-gray-500">Submitted At</p>
-          <p className="font-medium">
+          <p className="text-sm text-gray-600">Submitted At</p>
+          <p className="font-semibold text-gray-800">
             {new Date(data.submitedAt).toLocaleString()}
           </p>
         </div>
         <div>
-          <p className="text-xs text-gray-500">Status</p>
-          <p className="font-medium">{data.status}</p>
+          <p className="text-sm text-gray-600">Status</p>
+          <p
+            className={`font-semibold ${
+              data.status === "VERIFIED"
+                ? "text-green-600"
+                : data.status === "PENDING"
+                  ? "text-yellow-600"
+                  : "text-red-600"
+            }`}
+          >
+            {data.status}
+          </p>
         </div>
       </div>
 
-      <div className="mt-4 space-y-4">
+      <div className="space-y-6">
         {data.frontPage && (
           <div>
-            <p className="text-xs text-gray-500 mb-2">ID Front Page</p>
+            <p className="text-sm text-gray-600 mb-2">ID Front Page</p>
             <img
               src={data.frontPage}
               alt="ID Front"
-              className="w-full h-auto max-h-64 object-contain rounded-lg border"
+              className="w-full h-auto max-h-64 object-contain rounded-lg border border-gray-200 shadow-sm"
             />
           </div>
         )}
         {data.backPage && (
           <div>
-            <p className="text-xs text-gray-500 mb-2">ID Back Page</p>
+            <p className="text-sm text-gray-600 mb-2">ID Back Page</p>
             <img
               src={data.backPage}
               alt="ID Back"
-              className="w-full h-auto max-h-64 object-contain rounded-lg border"
+              className="w-full h-auto max-h-64 object-contain rounded-lg border border-gray-200 shadow-sm"
             />
           </div>
         )}
         {data.cacDocument && (
           <div>
-            <p className="text-xs text-gray-500 mb-2">CAC Document</p>
+            <p className="text-sm text-gray-600 mb-2">CAC Document</p>
             <a
               href={data.cacDocument}
               target="_blank"
               rel="noreferrer"
-              className="btn btn-sm btn-outline"
+              className="btn btn-sm btn-outline btn-primary"
             >
               View CAC Document
             </a>
@@ -98,8 +114,8 @@ const KYCViewer = ({ data }: { data: VERIFICATION_REQUEST | null }) => {
       </div>
 
       <div>
-        <p className="text-xs text-gray-500">Residential Address</p>
-        <p className="font-medium">{data.address || "N/A"}</p>
+        <p className="text-sm text-gray-600">Residential Address</p>
+        <p className="font-semibold text-gray-800">{data.address || "N/A"}</p>
       </div>
     </div>
   );
