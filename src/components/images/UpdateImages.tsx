@@ -12,7 +12,7 @@ interface UpdateImagesProps {
 
 const ImageViewer = ({ imageUrl }: { imageUrl: string }) => {
   return (
-    <div className="flex justify-center items-center p-4">
+    <div className="flex flex-1 justify-center items-center p-4">
       <img
         src={imageUrl}
         alt="Preview"

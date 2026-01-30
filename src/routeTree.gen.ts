@@ -57,9 +57,9 @@ import { Route as InvestorsMyInvestmentsRouteImport } from './routes/investors/m
 import { Route as InvestorsAnnouncementsRouteImport } from './routes/investors/announcements'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardPartnersRouteImport } from './routes/dashboard/partners'
-import { Route as DashboardInvestorsRouteImport } from './routes/dashboard/investors'
 import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/announcements'
 import { Route as DashboardVerificationsRouteRouteImport } from './routes/dashboard/verifications/route'
+import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
 import { Route as PartnersPropertiesIndexRouteImport } from './routes/partners/properties/index'
 import { Route as InvestorsPropertiesIndexRouteImport } from './routes/investors/properties/index'
 import { Route as InvestorsMyInvestmentsIndexRouteImport } from './routes/investors/my-investments/index'
@@ -335,11 +335,6 @@ const DashboardPartnersRoute = DashboardPartnersRouteImport.update({
   path: '/partners',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardInvestorsRoute = DashboardInvestorsRouteImport.update({
-  id: '/investors',
-  path: '/investors',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const DashboardAnnouncementsRoute = DashboardAnnouncementsRouteImport.update({
   id: '/announcements',
   path: '/announcements',
@@ -351,6 +346,11 @@ const DashboardVerificationsRouteRoute =
     path: '/verifications',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const DashboardInvestorsRouteRoute = DashboardInvestorsRouteRouteImport.update({
+  id: '/investors',
+  path: '/investors',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const PartnersPropertiesIndexRoute = PartnersPropertiesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -388,7 +388,7 @@ const DashboardPartnersIndexRoute = DashboardPartnersIndexRouteImport.update({
 const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => DashboardInvestorsRoute,
+  getParentRoute: () => DashboardInvestorsRouteRoute,
 } as any)
 const PartnersPropertiesPropertyIdRoute =
   PartnersPropertiesPropertyIdRouteImport.update({
@@ -442,7 +442,7 @@ const DashboardInvestorsInvestorIdRoute =
   DashboardInvestorsInvestorIdRouteImport.update({
     id: '/$investorId',
     path: '/$investorId',
-    getParentRoute: () => DashboardInvestorsRoute,
+    getParentRoute: () => DashboardInvestorsRouteRoute,
   } as any)
 const DashboardPropertiesNewRouteRoute =
   DashboardPropertiesNewRouteRouteImport.update({
@@ -490,7 +490,7 @@ const DashboardInvestorsCorporateIndexRoute =
   DashboardInvestorsCorporateIndexRouteImport.update({
     id: '/corporate/',
     path: '/corporate/',
-    getParentRoute: () => DashboardInvestorsRoute,
+    getParentRoute: () => DashboardInvestorsRouteRoute,
   } as any)
 const DashboardInvestorsInvestorIdIndexRoute =
   DashboardInvestorsInvestorIdIndexRouteImport.update({
@@ -583,9 +583,9 @@ export interface FileRoutesByFullPath {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
-  '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
@@ -743,9 +743,9 @@ export interface FileRoutesById {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
-  '/dashboard/investors': typeof DashboardInvestorsRouteWithChildren
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
@@ -832,9 +832,9 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/investors'
     | '/dashboard/verifications'
     | '/dashboard/announcements'
-    | '/dashboard/investors'
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/investors/announcements'
@@ -991,9 +991,9 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/investors'
     | '/dashboard/verifications'
     | '/dashboard/announcements'
-    | '/dashboard/investors'
     | '/dashboard/partners'
     | '/dashboard/settings'
     | '/investors/announcements'
@@ -1425,13 +1425,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPartnersRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/investors': {
-      id: '/dashboard/investors'
-      path: '/investors'
-      fullPath: '/dashboard/investors'
-      preLoaderRoute: typeof DashboardInvestorsRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
     '/dashboard/announcements': {
       id: '/dashboard/announcements'
       path: '/announcements'
@@ -1444,6 +1437,13 @@ declare module '@tanstack/react-router' {
       path: '/verifications'
       fullPath: '/dashboard/verifications'
       preLoaderRoute: typeof DashboardVerificationsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/investors': {
+      id: '/dashboard/investors'
+      path: '/investors'
+      fullPath: '/dashboard/investors'
+      preLoaderRoute: typeof DashboardInvestorsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/partners/properties/': {
@@ -1493,7 +1493,7 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/investors/'
       preLoaderRoute: typeof DashboardInvestorsIndexRouteImport
-      parentRoute: typeof DashboardInvestorsRoute
+      parentRoute: typeof DashboardInvestorsRouteRoute
     }
     '/partners/properties/$propertyId': {
       id: '/partners/properties/$propertyId'
@@ -1556,7 +1556,7 @@ declare module '@tanstack/react-router' {
       path: '/$investorId'
       fullPath: '/dashboard/investors/$investorId'
       preLoaderRoute: typeof DashboardInvestorsInvestorIdRouteImport
-      parentRoute: typeof DashboardInvestorsRoute
+      parentRoute: typeof DashboardInvestorsRouteRoute
     }
     '/dashboard/properties/new': {
       id: '/dashboard/properties/new'
@@ -1612,7 +1612,7 @@ declare module '@tanstack/react-router' {
       path: '/corporate'
       fullPath: '/dashboard/investors/corporate/'
       preLoaderRoute: typeof DashboardInvestorsCorporateIndexRouteImport
-      parentRoute: typeof DashboardInvestorsRoute
+      parentRoute: typeof DashboardInvestorsRouteRoute
     }
     '/dashboard/investors/$investorId/': {
       id: '/dashboard/investors/$investorId/'
@@ -1687,20 +1687,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface DashboardVerificationsRouteRouteChildren {
-  DashboardVerificationsIndexRoute: typeof DashboardVerificationsIndexRoute
-}
-
-const DashboardVerificationsRouteRouteChildren: DashboardVerificationsRouteRouteChildren =
-  {
-    DashboardVerificationsIndexRoute: DashboardVerificationsIndexRoute,
-  }
-
-const DashboardVerificationsRouteRouteWithChildren =
-  DashboardVerificationsRouteRoute._addFileChildren(
-    DashboardVerificationsRouteRouteChildren,
-  )
-
 interface DashboardInvestorsInvestorIdRouteChildren {
   DashboardInvestorsInvestorIdKycRoute: typeof DashboardInvestorsInvestorIdKycRoute
   DashboardInvestorsInvestorIdIndexRoute: typeof DashboardInvestorsInvestorIdIndexRoute
@@ -1718,21 +1704,39 @@ const DashboardInvestorsInvestorIdRouteWithChildren =
     DashboardInvestorsInvestorIdRouteChildren,
   )
 
-interface DashboardInvestorsRouteChildren {
+interface DashboardInvestorsRouteRouteChildren {
   DashboardInvestorsInvestorIdRoute: typeof DashboardInvestorsInvestorIdRouteWithChildren
   DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
   DashboardInvestorsCorporateIndexRoute: typeof DashboardInvestorsCorporateIndexRoute
 }
 
-const DashboardInvestorsRouteChildren: DashboardInvestorsRouteChildren = {
-  DashboardInvestorsInvestorIdRoute:
-    DashboardInvestorsInvestorIdRouteWithChildren,
-  DashboardInvestorsIndexRoute: DashboardInvestorsIndexRoute,
-  DashboardInvestorsCorporateIndexRoute: DashboardInvestorsCorporateIndexRoute,
+const DashboardInvestorsRouteRouteChildren: DashboardInvestorsRouteRouteChildren =
+  {
+    DashboardInvestorsInvestorIdRoute:
+      DashboardInvestorsInvestorIdRouteWithChildren,
+    DashboardInvestorsIndexRoute: DashboardInvestorsIndexRoute,
+    DashboardInvestorsCorporateIndexRoute:
+      DashboardInvestorsCorporateIndexRoute,
+  }
+
+const DashboardInvestorsRouteRouteWithChildren =
+  DashboardInvestorsRouteRoute._addFileChildren(
+    DashboardInvestorsRouteRouteChildren,
+  )
+
+interface DashboardVerificationsRouteRouteChildren {
+  DashboardVerificationsIndexRoute: typeof DashboardVerificationsIndexRoute
 }
 
-const DashboardInvestorsRouteWithChildren =
-  DashboardInvestorsRoute._addFileChildren(DashboardInvestorsRouteChildren)
+const DashboardVerificationsRouteRouteChildren: DashboardVerificationsRouteRouteChildren =
+  {
+    DashboardVerificationsIndexRoute: DashboardVerificationsIndexRoute,
+  }
+
+const DashboardVerificationsRouteRouteWithChildren =
+  DashboardVerificationsRouteRoute._addFileChildren(
+    DashboardVerificationsRouteRouteChildren,
+  )
 
 interface DashboardPartnersPartnerIdRouteChildren {
   DashboardPartnersPartnerIdKycRoute: typeof DashboardPartnersPartnerIdKycRoute
@@ -1809,9 +1813,9 @@ const DashboardPropertiesPropertyIdRouteWithChildren =
   )
 
 interface DashboardRouteRouteChildren {
+  DashboardInvestorsRouteRoute: typeof DashboardInvestorsRouteRouteWithChildren
   DashboardVerificationsRouteRoute: typeof DashboardVerificationsRouteRouteWithChildren
   DashboardAnnouncementsRoute: typeof DashboardAnnouncementsRoute
-  DashboardInvestorsRoute: typeof DashboardInvestorsRouteWithChildren
   DashboardPartnersRoute: typeof DashboardPartnersRouteWithChildren
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -1823,10 +1827,10 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardInvestorsRouteRoute: DashboardInvestorsRouteRouteWithChildren,
   DashboardVerificationsRouteRoute:
     DashboardVerificationsRouteRouteWithChildren,
   DashboardAnnouncementsRoute: DashboardAnnouncementsRoute,
-  DashboardInvestorsRoute: DashboardInvestorsRouteWithChildren,
   DashboardPartnersRoute: DashboardPartnersRouteWithChildren,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,

@@ -19,7 +19,7 @@ export default function SelectImage(props: ImageProps) {
   }, [props.image_link]);
 
   return (
-    <div className="max-w-95 aspect-video flex flex-col">
+    <div className="flex-1 aspect-video flex flex-col">
       {props.title && (
         <label htmlFor={id} className="label mb-2">
           <span className="label-text font-semibold">{props.title}</span>
@@ -81,7 +81,7 @@ export default function SelectImage(props: ImageProps) {
                   className="btn btn-circle btn-error btn-sm absolute -right-2 -top-2 m-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   onClick={(e) => {
                     e.preventDefault(); // Prevent opening file dialog
-                    props.setPrev(null);
+                    props.setPrev(null as any);
                   }}
                   aria-label="Remove selected image"
                 >
