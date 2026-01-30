@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Star } from "lucide-react";
+import { Bell, Calendar, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -86,13 +86,54 @@ function PartnerDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-          Welcome, {user?.firstName?.trim() ?? "Partner"}
-        </h1>
-        <p className="text-gray-600 text-sm sm:text-base">
-          Welcome to your partnership overview and property management.
-        </p>
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 sm:mb-8">
+        {/* Left Side: Welcome Message */}
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            Welcome, {user?.firstName?.trim() ?? "Partner"}
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Welcome to your partnership overview and property management.
+          </p>
+        </div>
+
+        {/* Right Side: Notifications and Profile */}
+        <div className="flex items-start gap-4 self-end sm:self-auto">
+          {/* Notification Icon */}
+          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+            <Bell size={24} />
+            {/* Optional Notification Dot */}
+            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-orange-500 border-2 border-white rounded-full"></span>
+          </button>
+
+          {/* Profile Section */}
+          <div className="flex flex-col items-center gap-1">
+            <div className="relative">
+              <img
+                src={
+                  "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                }
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+              />
+              {/* Verification Tag Overlay (Optional small badge) */}
+              <div className="absolute -bottom-1 -right-1">
+                <CheckCircle2
+                  size={16}
+                  className="text-green-500 bg-white rounded-full"
+                />
+              </div>
+            </div>
+
+            {/* Verification Text Tag below image */}
+            <span
+              className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${"bg-green-50 text-green-600 border-green-200"}`}
+            >
+              {"Verified"}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards in Orange Box + Calendar */}
@@ -233,8 +274,7 @@ function PartnerDashboard() {
         <div className="lg:col-span-1">
           <CalendarWidget />
         </div>
-      </div >
-
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Property */}
@@ -287,12 +327,13 @@ function PartnerDashboard() {
                         </td>
                         <td className="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
                           <span
-                            className={`inline-flex px-2 md:px-3 py-1 rounded-full text-xs font-semibold ${property.status === "Approved"
-                              ? "bg-green-100 text-green-700"
-                              : property.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-red-100 text-red-700"
-                              }`}
+                            className={`inline-flex px-2 md:px-3 py-1 rounded-full text-xs font-semibold ${
+                              property.status === "Approved"
+                                ? "bg-green-100 text-green-700"
+                                : property.status === "Pending"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-red-100 text-red-700"
+                            }`}
                           >
                             {property.status}
                           </span>
@@ -458,6 +499,6 @@ function PartnerDashboard() {
           <span className="whitespace-nowrap">N60M</span>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

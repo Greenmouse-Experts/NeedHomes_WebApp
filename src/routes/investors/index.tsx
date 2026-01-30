@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Star } from "lucide-react";
+import { Bell, Calendar, CheckCircle2, Star, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -74,11 +74,11 @@ function InvestorDashboard() {
   const user = authRecord?.user;
 
   // Note: Sidebar state is now handled in the parent route layout, but we might need a way to toggle it from here if we kept the mobile menu button.
-  // However, usually the layout handles the header/menu button if it is global. 
-  // In `partners/index.tsx`, the header was local. 
+  // However, usually the layout handles the header/menu button if it is global.
+  // In `partners/index.tsx`, the header was local.
   // Let's assume we keep the mobile menu button here but we need context or props to toggle sidebar?
   // Actually, standard practice with this sidebar is that it has its own toggle or the header is part of layout.
-  // BUT in `Partner` dashboard we kept header in `index.tsx`. 
+  // BUT in `Partner` dashboard we kept header in `index.tsx`.
   // Let's keep the Header here for now. If sidebar toggle breaks, we might need to lift state up or use a context.
   // For now, I'll remove the sidebar toggle functionality from THIS file since the Sidebar component isn't here anymore.
   // Wait, if the sidebar component is in the layout, the state `isSidebarOpen` is in the layout.
@@ -87,16 +87,16 @@ function InvestorDashboard() {
   // The simplest way for now is to move the Header to the Layout as well, or just render the button that does nothing?
   // Or better: The Layout creates the context.
   // Let's assume for this specific task, if I want to match `partners`, I should check how `partners/index.tsx` handles it.
-  // In `partners/index.tsx`, there is NO sidebar toggle button code in the snippet I saw earlier? 
+  // In `partners/index.tsx`, there is NO sidebar toggle button code in the snippet I saw earlier?
   // Let's look at `partners/index.tsx` from step 257.
-  // It has NO `Menu` icon or toggle logic! 
+  // It has NO `Menu` icon or toggle logic!
   // The `PartnerSidebar` handles the toggle inside itself? Or maybe the layout handles it?
   // In `PartnerSidebar.tsx`, it takes `setIsSidebarOpen`.
-  // Where is the menu button? 
-  // Ah, the `PartnerSidebar` has a Mobile Menu Button inside it? 
+  // Where is the menu button?
+  // Ah, the `PartnerSidebar` has a Mobile Menu Button inside it?
   // Let's check `InvestorSidebar`. It DOES have a Mobile Menu Button inside it (lines 61-67).
   // AND it handles the overlay.
-  // So the Dashboard page doesn't need to worry about the toggle button! 
+  // So the Dashboard page doesn't need to worry about the toggle button!
   // Great. I can just remove the header toggle button code from here.
 
   const getCurrentDate = () => {
@@ -112,13 +112,53 @@ function InvestorDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-          Welcome, {user?.firstName?.trim() ?? "User"}
-        </h1>
-        <p className="text-gray-600 text-sm sm:text-base">
-          Welcome to your investment overview and portfolio summary.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 sm:mb-8">
+        {/* Left Side: Welcome Message */}
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            Welcome, {user?.firstName?.trim() ?? "User"}
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Welcome to your investment overview and portfolio summary.
+          </p>
+        </div>
+
+        {/* Right Side: Notifications and Profile */}
+        <div className="flex items-start gap-4 self-end sm:self-auto">
+          {/* Notification Icon */}
+          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+            <Bell size={24} />
+            {/* Optional Notification Dot */}
+            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-orange-500 border-2 border-white rounded-full"></span>
+          </button>
+
+          {/* Profile Section */}
+          <div className="flex flex-col items-center gap-1">
+            <div className="relative">
+              <img
+                src={
+                  "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                }
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+              />
+              {/* Verification Tag Overlay (Optional small badge) */}
+              <div className="absolute -bottom-1 -right-1">
+                <CheckCircle2
+                  size={16}
+                  className="text-green-500 bg-white rounded-full"
+                />
+              </div>
+            </div>
+
+            {/* Verification Text Tag below image */}
+            <span
+              className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${"bg-green-50 text-green-600 border-green-200"}`}
+            >
+              {"Verified"}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards in Orange Box + Calendar */}
@@ -259,8 +299,7 @@ function InvestorDashboard() {
         <div className="lg:col-span-1">
           <CalendarWidget />
         </div>
-      </div >
-
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Property */}
@@ -313,12 +352,13 @@ function InvestorDashboard() {
                         </td>
                         <td className="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
                           <span
-                            className={`inline-flex px-2 md:px-3 py-1 rounded-full text-xs font-semibold ${property.status === "Approved"
-                              ? "bg-green-100 text-green-700"
-                              : property.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-red-100 text-red-700"
-                              }`}
+                            className={`inline-flex px-2 md:px-3 py-1 rounded-full text-xs font-semibold ${
+                              property.status === "Approved"
+                                ? "bg-green-100 text-green-700"
+                                : property.status === "Pending"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-red-100 text-red-700"
+                            }`}
                           >
                             {property.status}
                           </span>
@@ -484,6 +524,6 @@ function InvestorDashboard() {
           <span className="whitespace-nowrap">N60M</span>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
