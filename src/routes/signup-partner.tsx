@@ -22,7 +22,15 @@ const signupSchema = z
       .min(10, "Phone number must be at least 10 digits")
       .max(15, "Phone number must be at most 15 digits"),
     partnerType: z.string().min(1, "Please select a partner type"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
+      ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
