@@ -15,14 +15,20 @@ import { Route as TestRouteImport } from './routes/test'
 import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as SignupPartnerRouteImport } from './routes/signup-partner'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SaveToOwnRouteImport } from './routes/save-to-own'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as PartnerWithUsRouteImport } from './routes/partner-with-us'
+import { Route as OutrightPurchaseRouteImport } from './routes/outright-purchase'
 import { Route as OtpRouteImport } from './routes/otp'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as LandBankingRouteImport } from './routes/land-banking'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FractionalOwnershipRouteImport } from './routes/fractional-ownership'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
+import { Route as CoDevelopmentRouteImport } from './routes/co-development'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -106,9 +112,24 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SaveToOwnRoute = SaveToOwnRouteImport.update({
+  id: '/save-to-own',
+  path: '/save-to-own',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerWithUsRoute = PartnerWithUsRouteImport.update({
+  id: '/partner-with-us',
+  path: '/partner-with-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutrightPurchaseRoute = OutrightPurchaseRouteImport.update({
+  id: '/outright-purchase',
+  path: '/outright-purchase',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OtpRoute = OtpRouteImport.update({
@@ -131,9 +152,19 @@ const LeadershipRoute = LeadershipRouteImport.update({
   path: '/leadership',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LandBankingRoute = LandBankingRouteImport.update({
+  id: '/land-banking',
+  path: '/land-banking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FractionalOwnershipRoute = FractionalOwnershipRouteImport.update({
+  id: '/fractional-ownership',
+  path: '/fractional-ownership',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqsRoute = FaqsRouteImport.update({
@@ -144,6 +175,11 @@ const FaqsRoute = FaqsRouteImport.update({
 const ContactUsRoute = ContactUsRouteImport.update({
   id: '/contact-us',
   path: '/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoDevelopmentRoute = CoDevelopmentRouteImport.update({
+  id: '/co-development',
+  path: '/co-development',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersRoute = CareersRouteImport.update({
@@ -435,14 +471,20 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
+  '/co-development': typeof CoDevelopmentRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/fractional-ownership': typeof FractionalOwnershipRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/land-banking': typeof LandBankingRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
+  '/outright-purchase': typeof OutrightPurchaseRoute
+  '/partner-with-us': typeof PartnerWithUsRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/save-to-own': typeof SaveToOwnRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
@@ -500,14 +542,20 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
+  '/co-development': typeof CoDevelopmentRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/fractional-ownership': typeof FractionalOwnershipRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/land-banking': typeof LandBankingRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
+  '/outright-purchase': typeof OutrightPurchaseRoute
+  '/partner-with-us': typeof PartnerWithUsRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/save-to-own': typeof SaveToOwnRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
@@ -564,14 +612,20 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
+  '/co-development': typeof CoDevelopmentRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
+  '/fractional-ownership': typeof FractionalOwnershipRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/land-banking': typeof LandBankingRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/news': typeof NewsRoute
   '/otp': typeof OtpRoute
+  '/outright-purchase': typeof OutrightPurchaseRoute
+  '/partner-with-us': typeof PartnerWithUsRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/save-to-own': typeof SaveToOwnRoute
   '/signup': typeof SignupRoute
   '/signup-partner': typeof SignupPartnerRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
@@ -634,14 +688,20 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog'
     | '/careers'
+    | '/co-development'
     | '/contact-us'
     | '/faqs'
+    | '/fractional-ownership'
     | '/how-it-works'
+    | '/land-banking'
     | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
+    | '/outright-purchase'
+    | '/partner-with-us'
     | '/privacy-policy'
+    | '/save-to-own'
     | '/signup'
     | '/signup-partner'
     | '/terms-and-conditions'
@@ -699,14 +759,20 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog'
     | '/careers'
+    | '/co-development'
     | '/contact-us'
     | '/faqs'
+    | '/fractional-ownership'
     | '/how-it-works'
+    | '/land-banking'
     | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
+    | '/outright-purchase'
+    | '/partner-with-us'
     | '/privacy-policy'
+    | '/save-to-own'
     | '/signup'
     | '/signup-partner'
     | '/terms-and-conditions'
@@ -762,14 +828,20 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog'
     | '/careers'
+    | '/co-development'
     | '/contact-us'
     | '/faqs'
+    | '/fractional-ownership'
     | '/how-it-works'
+    | '/land-banking'
     | '/leadership'
     | '/login'
     | '/news'
     | '/otp'
+    | '/outright-purchase'
+    | '/partner-with-us'
     | '/privacy-policy'
+    | '/save-to-own'
     | '/signup'
     | '/signup-partner'
     | '/terms-and-conditions'
@@ -831,14 +903,20 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   BlogRoute: typeof BlogRoute
   CareersRoute: typeof CareersRoute
+  CoDevelopmentRoute: typeof CoDevelopmentRoute
   ContactUsRoute: typeof ContactUsRoute
   FaqsRoute: typeof FaqsRoute
+  FractionalOwnershipRoute: typeof FractionalOwnershipRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  LandBankingRoute: typeof LandBankingRoute
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   NewsRoute: typeof NewsRoute
   OtpRoute: typeof OtpRoute
+  OutrightPurchaseRoute: typeof OutrightPurchaseRoute
+  PartnerWithUsRoute: typeof PartnerWithUsRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  SaveToOwnRoute: typeof SaveToOwnRoute
   SignupRoute: typeof SignupRoute
   SignupPartnerRoute: typeof SignupPartnerRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
@@ -897,11 +975,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/save-to-own': {
+      id: '/save-to-own'
+      path: '/save-to-own'
+      fullPath: '/save-to-own'
+      preLoaderRoute: typeof SaveToOwnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy-policy': {
       id: '/privacy-policy'
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner-with-us': {
+      id: '/partner-with-us'
+      path: '/partner-with-us'
+      fullPath: '/partner-with-us'
+      preLoaderRoute: typeof PartnerWithUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outright-purchase': {
+      id: '/outright-purchase'
+      path: '/outright-purchase'
+      fullPath: '/outright-purchase'
+      preLoaderRoute: typeof OutrightPurchaseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/otp': {
@@ -932,11 +1031,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadershipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/land-banking': {
+      id: '/land-banking'
+      path: '/land-banking'
+      fullPath: '/land-banking'
+      preLoaderRoute: typeof LandBankingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fractional-ownership': {
+      id: '/fractional-ownership'
+      path: '/fractional-ownership'
+      fullPath: '/fractional-ownership'
+      preLoaderRoute: typeof FractionalOwnershipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faqs': {
@@ -951,6 +1064,13 @@ declare module '@tanstack/react-router' {
       path: '/contact-us'
       fullPath: '/contact-us'
       preLoaderRoute: typeof ContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/co-development': {
+      id: '/co-development'
+      path: '/co-development'
+      fullPath: '/co-development'
+      preLoaderRoute: typeof CoDevelopmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers': {
@@ -1511,14 +1631,20 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   BlogRoute: BlogRoute,
   CareersRoute: CareersRoute,
+  CoDevelopmentRoute: CoDevelopmentRoute,
   ContactUsRoute: ContactUsRoute,
   FaqsRoute: FaqsRoute,
+  FractionalOwnershipRoute: FractionalOwnershipRoute,
   HowItWorksRoute: HowItWorksRoute,
+  LandBankingRoute: LandBankingRoute,
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   NewsRoute: NewsRoute,
   OtpRoute: OtpRoute,
+  OutrightPurchaseRoute: OutrightPurchaseRoute,
+  PartnerWithUsRoute: PartnerWithUsRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  SaveToOwnRoute: SaveToOwnRoute,
   SignupRoute: SignupRoute,
   SignupPartnerRoute: SignupPartnerRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
