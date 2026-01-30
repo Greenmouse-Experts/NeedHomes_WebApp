@@ -11,6 +11,7 @@ import type { USER } from "@/types";
 import BankDetails from "@/simpleComps/BankDetails";
 import KYCForm from "@/components/KYCForm";
 import { PhoneInput } from "@/components/CountryPhoneInput";
+import UserProfile from "@/components/UserProfile";
 
 export const Route = createFileRoute("/partners/settings")({
   component: SettingsPage,
@@ -130,137 +131,7 @@ function SettingsPage() {
           {/* Main Content */}
           <div className="flex-1 p-4 md:p-6 lg:p-8">
             {/* Profile Tab */}
-            {activeTab === "profile" && (
-              <div>
-                <div className="mb-4 md:mb-6">
-                  <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
-                    PROFILE
-                  </h3>
-                </div>
-
-                <form onSubmit={handleProfileSubmit} className="max-w-2xl">
-                  {/* Profile Picture */}
-                  <div className="mb-4 md:mb-6">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4">
-                      <Avatar className="w-20 h-20 md:w-24 md:h-24 bg-linear-to-br from-cyan-400 to-cyan-500">
-                        <AvatarFallback className="text-xl md:text-2xl text-white bg-transparent">
-                          {user?.firstName
-                            ? user.firstName.charAt(0).toUpperCase()
-                            : "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="text-xs md:text-sm"
-                      >
-                        Change Picture
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {/* First Name */}
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-sm">
-                        First Name
-                      </Label>
-                      <Input
-                        id="firstName"
-                        value={profileData.firstName}
-                        onChange={(e) =>
-                          handleProfileChange("firstName", e.target.value)
-                        }
-                        placeholder="firstName"
-                        className="text-sm md:text-base"
-                      />
-                    </div>
-
-                    {/* Last Name */}
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-sm">
-                        Last Name
-                      </Label>
-                      <Input
-                        id="lastName"
-                        value={profileData.lastName}
-                        onChange={(e) =>
-                          handleProfileChange("lastName", e.target.value)
-                        }
-                        placeholder="Xylarz"
-                        className="text-sm md:text-base"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div className="space-y-2 mt-4 md:mt-6">
-                    <Label htmlFor="email" className="text-sm">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={profileData.email}
-                      onChange={(e) =>
-                        handleProfileChange("email", e.target.value)
-                      }
-                      placeholder="testmail@gmail.com"
-                      className="text-sm md:text-base"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
-                    {/* Phone Number */}
-                    <div className="space-y-2">
-                      <Label htmlFor="phoneNumber" className="text-sm">
-                        Phone Number
-                      </Label>
-                      <PhoneInput
-                        id="phoneNumber"
-                        value={profileData.phoneNumber}
-                        onPhoneChange={(val) =>
-                          handleProfileChange("phoneNumber", val)
-                        }
-                        defaultCountry="NG"
-                        placeholder="0700 000 0000"
-                        className="text-sm md:text-base"
-                      />
-                    </div>
-
-                    {/* Date of Birth */}
-                    <div className="space-y-2">
-                      <Label htmlFor="dateOfBirth" className="text-sm">
-                        Date of Birth
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="dateOfBirth"
-                          type="date"
-                          value={profileData.dateOfBirth}
-                          onChange={(e) =>
-                            handleProfileChange("dateOfBirth", e.target.value)
-                          }
-                          placeholder="20/01/2028"
-                          className="text-sm md:text-base"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Save Button */}
-                  <div className="pt-4 md:pt-6">
-                    <Button
-                      type="submit"
-                      className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
-                    >
-                      Save
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
+            {activeTab === "profile" && <UserProfile />}
 
             {/* Bank Details Tab */}
             {activeTab === "bankDetails" && (
