@@ -190,39 +190,6 @@ function PartnersPage() {
               <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
               <span className="hidden sm:inline">Filter</span>
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 text-xs md:text-sm"
-            >
-              <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline">Filter</span>
-            </Button>
-            <DropdownMenu
-              trigger={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 text-xs md:text-sm"
-                >
-                  Action
-                  <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                </Button>
-              }
-            >
-              <DropdownMenuItem>Export</DropdownMenuItem>
-              <DropdownMenuItem>Import</DropdownMenuItem>
-              <DropdownMenuItem>Delete Selected</DropdownMenuItem>
-            </DropdownMenu>
-            <Button
-              variant="primary"
-              size="sm"
-              className="gap-2 text-xs md:text-sm"
-            >
-              <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline">Add a New Partners</span>
-              <span className="sm:hidden">Add Partner</span>
-            </Button>
           </div>
         </div>
       </div>

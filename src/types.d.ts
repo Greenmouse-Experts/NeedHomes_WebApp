@@ -7,6 +7,8 @@ export interface USER {
   isEmailVerified: boolean;
   roles: string[];
   permissions: string[];
+  profilePicture: string | null;
+  [key: string]: any;
 }
 
 export interface INVESTOR {

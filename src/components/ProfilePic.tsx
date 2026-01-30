@@ -46,6 +46,7 @@ export default function ProfilePicture() {
     },
   });
 
+  if (!user) return null;
   return (
     <div>
       <div className="mb-4 md:mb-6">
