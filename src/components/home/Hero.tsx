@@ -118,7 +118,7 @@ export default function Hero() {
                   </button>
                 </div>
               )} */}
-              <div className="relative w-full h-full">
+              {/* <div className="relative w-full h-full">
                 <video
                   className="w-full h-full object-contain rounded-lg"
                   controls
@@ -134,7 +134,7 @@ export default function Hero() {
                 >
                   <Maximize2 size={24} />
                 </button>
-              </div>
+              </div> */}
             </div>
           </FlexInfo>
         </Sectiongrid>

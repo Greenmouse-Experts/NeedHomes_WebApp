@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bell, Calendar, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
@@ -101,11 +101,14 @@ function PartnerDashboard() {
         {/* Right Side: Notifications and Profile */}
         <div className="flex items-start gap-4 self-end sm:self-auto">
           {/* Notification Icon */}
-          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+          <Link
+            to="/partners/notifications"
+            className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+          >
             <Bell size={24} />
             {/* Optional Notification Dot */}
             <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-orange-500 border-2 border-white rounded-full"></span>
-          </button>
+          </Link>
 
           {/* Profile Section */}
           <div className="flex flex-col items-center gap-1">
