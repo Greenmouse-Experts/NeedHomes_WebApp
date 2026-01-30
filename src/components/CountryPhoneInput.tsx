@@ -38,7 +38,7 @@ export interface PhoneInputProps extends Omit<
 
 export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
   (
-    { className, value, onPhoneChange, defaultCountry = "NG", ...props },
+    { className, value, onPhoneChange, defaultCountry = "NGN", ...props },
     ref,
   ) => {
     return (
@@ -46,7 +46,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         <PhoneInputWithCountry
           {...props}
           international
-          defaultCountry={defaultCountry}
+          defaultCountry={"NG"}
           value={value as Value}
           onChange={(val) => onPhoneChange?.(val || "")}
           inputComponent={Input}

@@ -51,12 +51,6 @@ export default function ProfilePicture() {
     <div>
       <div className="mb-4 md:mb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4">
-          <Avatar className="w-20 h-20 md:w-24 md:h-24 bg-linear-to-br from-cyan-400 to-cyan-500">
-            <AvatarImage src={user?.profilePicture} />
-            <AvatarFallback className="text-xl md:text-2xl text-white bg-transparent">
-              {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
-            </AvatarFallback>
-          </Avatar>
           <Button
             type="button"
             variant="outline"
