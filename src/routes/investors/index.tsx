@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Calendar, CheckCircle2, Star, XCircle } from "lucide-react";
+import { Bell, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -73,41 +73,10 @@ function InvestorDashboard() {
   const [authRecord] = useAuth();
   const user = authRecord?.user;
 
-  // Note: Sidebar state is now handled in the parent route layout, but we might need a way to toggle it from here if we kept the mobile menu button.
-  // However, usually the layout handles the header/menu button if it is global.
-  // In `partners/index.tsx`, the header was local.
-  // Let's assume we keep the mobile menu button here but we need context or props to toggle sidebar?
-  // Actually, standard practice with this sidebar is that it has its own toggle or the header is part of layout.
-  // BUT in `Partner` dashboard we kept header in `index.tsx`.
-  // Let's keep the Header here for now. If sidebar toggle breaks, we might need to lift state up or use a context.
-  // For now, I'll remove the sidebar toggle functionality from THIS file since the Sidebar component isn't here anymore.
-  // Wait, if the sidebar component is in the layout, the state `isSidebarOpen` is in the layout.
-  // The Mobile Menu Button is in the Header, which is in THIS file.
-  // So the Header needs to communicate with the Layout.
-  // The simplest way for now is to move the Header to the Layout as well, or just render the button that does nothing?
-  // Or better: The Layout creates the context.
-  // Let's assume for this specific task, if I want to match `partners`, I should check how `partners/index.tsx` handles it.
-  // In `partners/index.tsx`, there is NO sidebar toggle button code in the snippet I saw earlier?
-  // Let's look at `partners/index.tsx` from step 257.
-  // It has NO `Menu` icon or toggle logic!
-  // The `PartnerSidebar` handles the toggle inside itself? Or maybe the layout handles it?
-  // In `PartnerSidebar.tsx`, it takes `setIsSidebarOpen`.
-  // Where is the menu button?
-  // Ah, the `PartnerSidebar` has a Mobile Menu Button inside it?
-  // Let's check `InvestorSidebar`. It DOES have a Mobile Menu Button inside it (lines 61-67).
-  // AND it handles the overlay.
-  // So the Dashboard page doesn't need to worry about the toggle button!
-  // Great. I can just remove the header toggle button code from here.
-
-  const getCurrentDate = () => {
-    const date = new Date();
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return date.toLocaleDateString("en-US", options);
-  };
+  const isVerified = user?.account_verification_status === "VERIFIED";
+  const profilePictureUrl =
+    user?.profilePicture ||
+    "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   return (
     <div className="space-y-6">
@@ -139,26 +108,30 @@ function InvestorDashboard() {
           <div className="flex flex-col items-center gap-1">
             <div className="relative">
               <img
-                src={
-                  "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                }
+                src={profilePictureUrl}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
               />
               {/* Verification Tag Overlay (Optional small badge) */}
-              <div className="absolute -bottom-1 -right-1">
-                <CheckCircle2
-                  size={16}
-                  className="text-green-500 bg-white rounded-full"
-                />
-              </div>
+              {isVerified && (
+                <div className="absolute -bottom-1 -right-1">
+                  <CheckCircle2
+                    size={16}
+                    className="text-green-500 bg-white rounded-full"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Verification Text Tag below image */}
             <span
-              className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${"bg-green-50 text-green-600 border-green-200"}`}
+              className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
+                isVerified
+                  ? "bg-green-50 text-green-600 border-green-200"
+                  : "bg-yellow-50 text-yellow-600 border-yellow-200"
+              }`}
             >
-              {"Verified"}
+              {isVerified ? "Verified" : "Pending"}
             </span>
           </div>
         </div>
@@ -189,7 +162,7 @@ function InvestorDashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -216,7 +189,7 @@ function InvestorDashboard() {
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -243,7 +216,7 @@ function InvestorDashboard() {
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -270,7 +243,7 @@ function InvestorDashboard() {
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-6 h-6 text-white"
                       fill="none"
@@ -452,7 +425,7 @@ function InvestorDashboard() {
                 Recent
               </h4>
               <div className="flex items-start gap-2 md:gap-3 p-2 md:p-3 bg-gray-50 rounded-lg">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center shrink-0">
                   <svg
                     className="w-6 h-6 md:w-7 md:h-7 text-green-600"
                     fill="none"
