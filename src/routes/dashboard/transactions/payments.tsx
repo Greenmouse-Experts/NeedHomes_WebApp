@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   Search,
   Filter,
@@ -15,7 +15,7 @@ import {
   FileText,
   DollarSign,
   CreditCard,
-} from 'lucide-react'
+} from "lucide-react";
 import {
   LineChart,
   Line,
@@ -30,10 +30,10 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-} from 'recharts'
-import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
-import { Input } from '@/components/ui/Input'
-import { Button } from '@/components/ui/Button'
+} from "recharts";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 import {
   Table,
   TableBody,
@@ -41,163 +41,166 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/Table'
-import { DropdownMenu, DropdownMenuItem } from '@/components/ui/DropdownMenu'
+} from "@/components/ui/Table";
+import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 
-export const Route = createFileRoute('/dashboard/transactions/payments')({
+export const Route = createFileRoute("/dashboard/transactions/payments")({
   component: PaymentsPage,
-})
+});
 
 const payments = [
   {
-    id: '1',
-    transactionId: 'TRX215465789123',
-    date: '12 Aug 2025 - 12:25 am',
-    userName: 'Chukka Uzo',
-    userType: 'Partners',
-    amount: '₦25,000.00',
-    transactionType: 'Refund',
-    status: 'Refund',
+    id: "1",
+    transactionId: "TRX215465789123",
+    date: "12 Aug 2025 - 12:25 am",
+    userName: "Chukka Uzo",
+    userType: "Partners",
+    amount: "₦25,000.00",
+    transactionType: "Refund",
+    status: "Refund",
   },
   {
-    id: '2',
-    transactionId: 'TRX215465789124',
-    date: '12 Aug 2025 - 12:25 am',
-    userName: 'Chukka Uzo',
-    userType: 'Investor',
-    amount: '₦25,000.00',
-    transactionType: 'Payment',
-    status: 'In-Progress',
+    id: "2",
+    transactionId: "TRX215465789124",
+    date: "12 Aug 2025 - 12:25 am",
+    userName: "Chukka Uzo",
+    userType: "Investor",
+    amount: "₦25,000.00",
+    transactionType: "Payment",
+    status: "In-Progress",
   },
   {
-    id: '3',
-    transactionId: 'TRX215465789125',
-    date: '12 Aug 2025 - 12:25 am',
-    userName: 'Chukka Uzo',
-    userType: 'Investor',
-    amount: '₦25,000.00',
-    transactionType: 'Payment',
-    status: 'Completed',
+    id: "3",
+    transactionId: "TRX215465789125",
+    date: "12 Aug 2025 - 12:25 am",
+    userName: "Chukka Uzo",
+    userType: "Investor",
+    amount: "₦25,000.00",
+    transactionType: "Payment",
+    status: "Completed",
   },
   {
-    id: '4',
-    transactionId: 'TRX215465789126',
-    date: '11 Aug 2025 - 10:15 am',
-    userName: 'Amina Hassan',
-    userType: 'Investor',
-    amount: '₦30,000.00',
-    transactionType: 'Payment',
-    status: 'Pending',
+    id: "4",
+    transactionId: "TRX215465789126",
+    date: "11 Aug 2025 - 10:15 am",
+    userName: "Amina Hassan",
+    userType: "Investor",
+    amount: "₦30,000.00",
+    transactionType: "Payment",
+    status: "Pending",
   },
   {
-    id: '5',
-    transactionId: 'TRX215465789127',
-    date: '11 Aug 2025 - 09:30 am',
-    userName: 'David Okonkwo',
-    userType: 'Partners',
-    amount: '₦20,000.00',
-    transactionType: 'Payment',
-    status: 'Completed',
+    id: "5",
+    transactionId: "TRX215465789127",
+    date: "11 Aug 2025 - 09:30 am",
+    userName: "David Okonkwo",
+    userType: "Partners",
+    amount: "₦20,000.00",
+    transactionType: "Payment",
+    status: "Completed",
   },
   {
-    id: '6',
-    transactionId: 'TRX215465789128',
-    date: '10 Aug 2025 - 03:45 pm',
-    userName: 'Grace Okafor',
-    userType: 'Investor',
-    amount: '₦35,000.00',
-    transactionType: 'Payment',
-    status: 'In-Progress',
+    id: "6",
+    transactionId: "TRX215465789128",
+    date: "10 Aug 2025 - 03:45 pm",
+    userName: "Grace Okafor",
+    userType: "Investor",
+    amount: "₦35,000.00",
+    transactionType: "Payment",
+    status: "In-Progress",
   },
   {
-    id: '7',
-    transactionId: 'TRX215465789129',
-    date: '10 Aug 2025 - 02:20 pm',
-    userName: 'Michael Adeyemi',
-    userType: 'Partners',
-    amount: '₦28,000.00',
-    transactionType: 'Refund',
-    status: 'Refund',
+    id: "7",
+    transactionId: "TRX215465789129",
+    date: "10 Aug 2025 - 02:20 pm",
+    userName: "Michael Adeyemi",
+    userType: "Partners",
+    amount: "₦28,000.00",
+    transactionType: "Refund",
+    status: "Refund",
   },
   {
-    id: '8',
-    transactionId: 'TRX215465789130',
-    date: '09 Aug 2025 - 11:10 am',
-    userName: 'Fatima Danjuma',
-    userType: 'Investor',
-    amount: '₦40,000.00',
-    transactionType: 'Payment',
-    status: 'Completed',
+    id: "8",
+    transactionId: "TRX215465789130",
+    date: "09 Aug 2025 - 11:10 am",
+    userName: "Fatima Danjuma",
+    userType: "Investor",
+    amount: "₦40,000.00",
+    transactionType: "Payment",
+    status: "Completed",
   },
-]
+];
 
 function PaymentsPage() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedRows, setSelectedRows] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const filteredPayments = payments.filter(
     (payment) =>
       payment.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       payment.transactionId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      payment.userType.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+      payment.userType.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   const toggleRowSelection = (id: string) => {
     setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
-    )
-  }
+      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id],
+    );
+  };
 
   const toggleAllSelection = () => {
     if (selectedRows.length === filteredPayments.length) {
-      setSelectedRows([])
+      setSelectedRows([]);
     } else {
-      setSelectedRows(filteredPayments.map((p) => p.id))
+      setSelectedRows(filteredPayments.map((p) => p.id));
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      Completed: { color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
-      'In-Progress': { color: 'bg-blue-100 text-blue-700', icon: Clock },
-      Pending: { color: 'bg-orange-100 text-orange-700', icon: Clock },
-      Refund: { color: 'bg-red-100 text-red-700', icon: CheckCircle2 },
-      Payment: { color: 'bg-purple-100 text-purple-700', icon: Wallet },
-    }
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.Pending
-    const Icon = config.icon
+      Completed: { color: "bg-green-100 text-green-700", icon: CheckCircle2 },
+      "In-Progress": { color: "bg-blue-100 text-blue-700", icon: Clock },
+      Pending: { color: "bg-orange-100 text-orange-700", icon: Clock },
+      Refund: { color: "bg-red-100 text-red-700", icon: CheckCircle2 },
+      Payment: { color: "bg-purple-100 text-purple-700", icon: Wallet },
+    };
+    const config =
+      statusConfig[status as keyof typeof statusConfig] || statusConfig.Pending;
+    const Icon = config.icon;
 
     return (
-      <div className={`${config.color} inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full`}>
+      <div
+        className={`${config.color} inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full`}
+      >
         <Icon className="w-3.5 h-3.5 flex-shrink-0" />
         <span className="text-sm font-medium whitespace-nowrap">{status}</span>
       </div>
-    )
-  }
+    );
+  };
 
   // Chart data
   const revenueData = [
-    { month: 'Jan', income: 200, expenses: 150 },
-    { month: 'Feb', income: 210, expenses: 160 },
-    { month: 'Mar', income: 220, expenses: 170 },
-    { month: 'Apr', income: 215, expenses: 165 },
-    { month: 'May', income: 230, expenses: 180 },
-    { month: 'Jun', income: 240, expenses: 190 },
-    { month: 'Jul', income: 235, expenses: 185 },
-    { month: 'Aug', income: 245, expenses: 195 },
-    { month: 'Sep', income: 250, expenses: 200 },
-    { month: 'Oct', income: 248, expenses: 198 },
-    { month: 'Nov', income: 255, expenses: 205 },
-    { month: 'Dec', income: 260, expenses: 210 },
-  ]
+    { month: "Jan", income: 200, expenses: 150 },
+    { month: "Feb", income: 210, expenses: 160 },
+    { month: "Mar", income: 220, expenses: 170 },
+    { month: "Apr", income: 215, expenses: 165 },
+    { month: "May", income: 230, expenses: 180 },
+    { month: "Jun", income: 240, expenses: 190 },
+    { month: "Jul", income: 235, expenses: 185 },
+    { month: "Aug", income: 245, expenses: 195 },
+    { month: "Sep", income: 250, expenses: 200 },
+    { month: "Oct", income: 248, expenses: 198 },
+    { month: "Nov", income: 255, expenses: 205 },
+    { month: "Dec", income: 260, expenses: 210 },
+  ];
 
   const incomeSummaryData = [
-    { name: 'Investment', value: 1754, color: '#3B82F6' },
-    { name: 'Partners', value: 873, color: '#EF671D' },
-    { name: 'Projects', value: 685, color: '#6B7280' },
-  ]
+    { name: "Investment", value: 1754, color: "#3B82F6" },
+    { name: "Partners", value: 873, color: "#EF671D" },
+    { name: "Projects", value: 685, color: "#6B7280" },
+  ];
 
-  const COLORS = ['#3B82F6', '#EF671D', '#6B7280']
+  const COLORS = ["#3B82F6", "#EF671D", "#6B7280"];
 
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Payments">
@@ -205,20 +208,26 @@ function PaymentsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-4 md:mb-6">
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 md:p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-3 md:mb-4">
-            <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Investment</h3>
+            <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Total Investment
+            </h3>
             <div className="p-1.5 md:p-2 bg-orange-100 rounded-lg">
               <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
             </div>
           </div>
           <div className="space-y-1">
-            <p className="text-xl md:text-2xl font-bold text-gray-900">₦ 1,002,432</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">
+              ₦ 1,002,432
+            </p>
             <p className="text-[10px] md:text-xs text-gray-500">This Month</p>
           </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Completed Projects</h3>
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Total Completed Projects
+            </h3>
             <div className="p-2 bg-orange-100 rounded-lg">
               <Building2 className="w-5 h-5 text-[var(--color-orange)]" />
             </div>
@@ -231,7 +240,9 @@ function PaymentsPage() {
 
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Amount</h3>
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Total Amount
+            </h3>
             <div className="p-2 bg-orange-100 rounded-lg">
               <Wallet className="w-5 h-5 text-[var(--color-orange)]" />
             </div>
@@ -244,7 +255,9 @@ function PaymentsPage() {
 
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Pending Payments</h3>
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Pending Payments
+            </h3>
             <div className="p-2 bg-orange-100 rounded-lg">
               <CreditCard className="w-5 h-5 text-[var(--color-orange)]" />
             </div>
@@ -287,24 +300,36 @@ function PaymentsPage() {
                     className="pl-10 text-sm"
                   />
                 </div>
-                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-xs md:text-sm"
+                >
                   <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   <span className="hidden sm:inline">Filter</span>
                 </Button>
-                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-xs md:text-sm"
+                >
                   <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   <span className="hidden sm:inline">Filter</span>
                 </Button>
                 <DropdownMenu
                   trigger={
-                    <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 text-xs md:text-sm"
+                    >
                       Bulk Action
                       <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                     </Button>
                   }
                 >
                   <DropdownMenuItem>Export Selected</DropdownMenuItem>
-                  <DropdownMenuItem>Delete Selected</DropdownMenuItem>
+                  {/*<DropdownMenuItem>Delete Selected</DropdownMenuItem>*/}
                   <DropdownMenuItem>Mark as Completed</DropdownMenuItem>
                 </DropdownMenu>
               </div>
@@ -319,7 +344,10 @@ function PaymentsPage() {
                   <TableHead className="w-12">
                     <input
                       type="checkbox"
-                      checked={selectedRows.length === filteredPayments.length && filteredPayments.length > 0}
+                      checked={
+                        selectedRows.length === filteredPayments.length &&
+                        filteredPayments.length > 0
+                      }
                       onChange={toggleAllSelection}
                       className="w-4 h-4 text-[var(--color-orange)] border-gray-300 rounded focus:ring-[var(--color-orange)]"
                     />
@@ -385,21 +413,35 @@ function PaymentsPage() {
                         className="w-4 h-4 text-[var(--color-orange)] border-gray-300 rounded focus:ring-[var(--color-orange)]"
                       />
                     </TableCell>
-                    <TableCell className="font-mono text-sm text-gray-900 whitespace-nowrap">{payment.transactionId}</TableCell>
-                    <TableCell className="text-gray-600 whitespace-nowrap">{payment.date}</TableCell>
-                    <TableCell className="font-medium text-gray-900 whitespace-nowrap">{payment.userName}</TableCell>
+                    <TableCell className="font-mono text-sm text-gray-900 whitespace-nowrap">
+                      {payment.transactionId}
+                    </TableCell>
                     <TableCell className="text-gray-600 whitespace-nowrap">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                        payment.userType === 'Investor' 
-                          ? 'bg-blue-100 text-blue-700' 
-                          : 'bg-orange-100 text-orange-700'
-                      }`}>
+                      {payment.date}
+                    </TableCell>
+                    <TableCell className="font-medium text-gray-900 whitespace-nowrap">
+                      {payment.userName}
+                    </TableCell>
+                    <TableCell className="text-gray-600 whitespace-nowrap">
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                          payment.userType === "Investor"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-orange-100 text-orange-700"
+                        }`}
+                      >
                         {payment.userType}
                       </span>
                     </TableCell>
-                    <TableCell className="font-semibold text-gray-900 whitespace-nowrap">{payment.amount}</TableCell>
-                    <TableCell className="text-gray-600 whitespace-nowrap">{payment.transactionType}</TableCell>
-                    <TableCell className="whitespace-nowrap">{getStatusBadge(payment.status)}</TableCell>
+                    <TableCell className="font-semibold text-gray-900 whitespace-nowrap">
+                      {payment.amount}
+                    </TableCell>
+                    <TableCell className="text-gray-600 whitespace-nowrap">
+                      {payment.transactionType}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {getStatusBadge(payment.status)}
+                    </TableCell>
                     <TableCell className="whitespace-nowrap">
                       <DropdownMenu
                         trigger={
@@ -410,7 +452,7 @@ function PaymentsPage() {
                       >
                         <DropdownMenuItem>View Details</DropdownMenuItem>
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                        {/*<DropdownMenuItem>Delete</DropdownMenuItem>*/}
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
@@ -444,15 +486,23 @@ function PaymentsPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
             <div>
-              <h3 className="text-base md:text-lg font-bold text-gray-900">Today Revenue Trend</h3>
+              <h3 className="text-base md:text-lg font-bold text-gray-900">
+                Today Revenue Trend
+              </h3>
               <div className="flex items-center gap-2 mt-1">
                 <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600" />
-                <span className="text-xs md:text-sm font-semibold text-green-600">24.6%</span>
+                <span className="text-xs md:text-sm font-semibold text-green-600">
+                  24.6%
+                </span>
               </div>
             </div>
             <DropdownMenu
               trigger={
-                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-xs md:text-sm"
+                >
                   <span className="hidden sm:inline">Jan 2024 - Dec 2024</span>
                   <span className="sm:hidden">2024</span>
                   <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
@@ -464,56 +514,62 @@ function PaymentsPage() {
               <DropdownMenuItem>Jan 2022 - Dec 2022</DropdownMenuItem>
             </DropdownMenu>
           </div>
-          
+
           {/* Chart */}
           <div className="h-48 md:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData}>
                 <defs>
                   <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                   </linearGradient>
-                  <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EF671D" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#EF671D" stopOpacity={0}/>
+                  <linearGradient
+                    id="colorExpenses"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#EF671D" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#EF671D" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis 
-                  dataKey="month" 
+                <XAxis
+                  dataKey="month"
                   stroke="#6B7280"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis 
+                <YAxis
                   stroke="#6B7280"
                   tick={{ fontSize: 12 }}
                   tickFormatter={(value) => `${value}K`}
                 />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#fff', 
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '8px',
-                    padding: '8px'
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: "8px",
+                    padding: "8px",
                   }}
-                  formatter={(value: number) => [`₦${value}K`, '']}
+                  formatter={(value: number) => [`₦${value}K`, ""]}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="income" 
-                  stroke="#10B981" 
+                <Area
+                  type="monotone"
+                  dataKey="income"
+                  stroke="#10B981"
                   strokeWidth={2}
-                  fillOpacity={1} 
+                  fillOpacity={1}
                   fill="url(#colorIncome)"
                   name="Income"
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="expenses" 
-                  stroke="#EF671D" 
+                <Area
+                  type="monotone"
+                  dataKey="expenses"
+                  stroke="#EF671D"
                   strokeWidth={2}
-                  fillOpacity={1} 
+                  fillOpacity={1}
                   fill="url(#colorExpenses)"
                   name="Expenses"
                 />
@@ -537,10 +593,16 @@ function PaymentsPage() {
         {/* Income Summary */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
-            <h3 className="text-base md:text-lg font-bold text-gray-900">Income Summary</h3>
+            <h3 className="text-base md:text-lg font-bold text-gray-900">
+              Income Summary
+            </h3>
             <DropdownMenu
               trigger={
-                <Button variant="outline" size="sm" className="gap-2 text-xs md:text-sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 text-xs md:text-sm"
+                >
                   Sort by
                   <ChevronDown className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </Button>
@@ -564,18 +626,23 @@ function PaymentsPage() {
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
+                  }
                 >
                   {incomeSummaryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#fff', 
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '8px',
-                    padding: '8px'
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: "8px",
+                    padding: "8px",
                   }}
                 />
               </PieChart>
@@ -589,31 +656,43 @@ function PaymentsPage() {
                 <div className="p-1.5 md:p-2 bg-blue-100 rounded-lg">
                   <Building2 className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                 </div>
-                <span className="text-xs md:text-sm font-medium text-gray-700">Investment</span>
+                <span className="text-xs md:text-sm font-medium text-gray-700">
+                  Investment
+                </span>
               </div>
-              <span className="text-base md:text-lg font-bold text-blue-600">1,754</span>
+              <span className="text-base md:text-lg font-bold text-blue-600">
+                1,754
+              </span>
             </div>
             <div className="flex items-center justify-between p-2.5 md:p-3 bg-orange-50 rounded-lg">
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="p-1.5 md:p-2 bg-orange-100 rounded-lg">
                   <Wallet className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
                 </div>
-                <span className="text-xs md:text-sm font-medium text-gray-700">Partners</span>
+                <span className="text-xs md:text-sm font-medium text-gray-700">
+                  Partners
+                </span>
               </div>
-              <span className="text-base md:text-lg font-bold text-[var(--color-orange)]">873</span>
+              <span className="text-base md:text-lg font-bold text-[var(--color-orange)]">
+                873
+              </span>
             </div>
             <div className="flex items-center justify-between p-2.5 md:p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="p-1.5 md:p-2 bg-gray-100 rounded-lg">
                   <FileText className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
                 </div>
-                <span className="text-xs md:text-sm font-medium text-gray-700">Projects</span>
+                <span className="text-xs md:text-sm font-medium text-gray-700">
+                  Projects
+                </span>
               </div>
-              <span className="text-base md:text-lg font-bold text-gray-600">685</span>
+              <span className="text-base md:text-lg font-bold text-gray-600">
+                685
+              </span>
             </div>
           </div>
         </div>
       </div>
     </DashboardLayout>
-  )
+  );
 }

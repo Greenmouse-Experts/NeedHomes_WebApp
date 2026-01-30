@@ -133,11 +133,11 @@ function PartnersPage() {
       label: "Edit",
       action: (item: PARTNER) => console.log("Edit", item.id),
     },
-    {
-      key: "delete",
-      label: "Delete",
-      action: (item: PARTNER) => console.log("Delete", item.id),
-    },
+    // {
+    //   key: "delete",
+    //   label: "Delete",
+    //   action: (item: PARTNER) => console.log("Delete", item.id),
+    // },
   ];
 
   return (

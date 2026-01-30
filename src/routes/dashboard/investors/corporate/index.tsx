@@ -115,11 +115,11 @@ function InvestorsPage() {
       label: "Edit",
       action: (item: INVESTOR) => console.log("Edit", item.id),
     },
-    {
-      key: "delete",
-      label: "Delete",
-      action: (item: INVESTOR) => console.log("Delete", item.id),
-    },
+    // {
+    //   key: "delete",
+    //   label: "Delete",
+    //   action: (item: INVESTOR) => console.log("Delete", item.id),
+    // },
   ];
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Investors">

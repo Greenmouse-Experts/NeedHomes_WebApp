@@ -1,76 +1,87 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
-import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { DropdownMenu, DropdownMenuItem } from '@/components/ui/DropdownMenu'
-import { Search, Plus, Filter, Printer, MoreVertical, Eye, Edit, Upload, Download, Trash2 } from 'lucide-react'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
+import {
+  Search,
+  Plus,
+  Filter,
+  Printer,
+  MoreVertical,
+  Eye,
+  Edit,
+  Upload,
+  Download,
+  Trash2,
+} from "lucide-react";
 
-export const Route = createFileRoute('/dashboard/properties/listed')({
+export const Route = createFileRoute("/dashboard/properties/listed")({
   component: ListedPropertiesPage,
-})
+});
 
-type FilterTab = 'all' | 'published' | 'unpublished'
+type FilterTab = "all" | "published" | "unpublished";
 
 interface Property {
-  sku: string
-  property: string
-  image: string
-  package: string
-  location: string
-  status: 'Published' | 'Unpublished'
+  sku: string;
+  property: string;
+  image: string;
+  package: string;
+  location: string;
+  status: "Published" | "Unpublished";
 }
 
 // Mock data
 const mockProperties: Property[] = [
   {
-    sku: 'LAG-CAT-001',
-    property: 'Semi Detached',
-    image: '/property-placeholder.jpg',
-    package: 'Outright Purchase',
-    location: 'Lagos',
-    status: 'Published',
+    sku: "LAG-CAT-001",
+    property: "Semi Detached",
+    image: "/property-placeholder.jpg",
+    package: "Outright Purchase",
+    location: "Lagos",
+    status: "Published",
   },
   {
-    sku: 'LAG-CAT-001',
-    property: 'Semi Detached',
-    image: '/property-placeholder.jpg',
-    package: 'Co-Develop',
-    location: 'Ogun',
-    status: 'Unpublished',
+    sku: "LAG-CAT-001",
+    property: "Semi Detached",
+    image: "/property-placeholder.jpg",
+    package: "Co-Develop",
+    location: "Ogun",
+    status: "Unpublished",
   },
   {
-    sku: 'LAG-CAT-001',
-    property: 'Semi Detached',
-    image: '/property-placeholder.jpg',
-    package: 'Outright Purchase',
-    location: 'Lagos',
-    status: 'Published',
+    sku: "LAG-CAT-001",
+    property: "Semi Detached",
+    image: "/property-placeholder.jpg",
+    package: "Outright Purchase",
+    location: "Lagos",
+    status: "Published",
   },
   {
-    sku: 'LAG-CAT-001',
-    property: 'Semi Detached',
-    image: '/property-placeholder.jpg',
-    package: 'Co-Develop',
-    location: 'Ogun',
-    status: 'Unpublished',
+    sku: "LAG-CAT-001",
+    property: "Semi Detached",
+    image: "/property-placeholder.jpg",
+    package: "Co-Develop",
+    location: "Ogun",
+    status: "Unpublished",
   },
-]
+];
 
 function ListedPropertiesPage() {
-  const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<FilterTab>('all')
-  const [searchQuery, setSearchQuery] = useState('')
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleAddProperty = () => {
-    navigate({ to: '/dashboard/properties/new' })
-  }
+    navigate({ to: "/dashboard/properties/new" });
+  };
 
   const filteredProperties = mockProperties.filter((property) => {
-    if (activeTab === 'published') return property.status === 'Published'
-    if (activeTab === 'unpublished') return property.status === 'Unpublished'
-    return true
-  })
+    if (activeTab === "published") return property.status === "Published";
+    if (activeTab === "unpublished") return property.status === "Unpublished";
+    return true;
+  });
 
   return (
     <DashboardLayout title="Manage Properties" subtitle="">
@@ -91,31 +102,31 @@ function ListedPropertiesPage() {
           {/* Filter Tabs */}
           <div className="flex gap-2">
             <button
-              onClick={() => setActiveTab('all')}
+              onClick={() => setActiveTab("all")}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                activeTab === 'all'
-                  ? 'bg-[var(--color-orange)] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                activeTab === "all"
+                  ? "bg-[var(--color-orange)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               All Property
             </button>
             <button
-              onClick={() => setActiveTab('published')}
+              onClick={() => setActiveTab("published")}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                activeTab === 'published'
-                  ? 'bg-[var(--color-orange)] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                activeTab === "published"
+                  ? "bg-[var(--color-orange)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               Publish Properties
             </button>
             <button
-              onClick={() => setActiveTab('unpublished')}
+              onClick={() => setActiveTab("unpublished")}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                activeTab === 'unpublished'
-                  ? 'bg-[var(--color-orange)] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                activeTab === "unpublished"
+                  ? "bg-[var(--color-orange)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               Unpublished Properties
@@ -136,11 +147,19 @@ function ListedPropertiesPage() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <Filter className="w-4 h-4" />
               Filter
             </Button>
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <Printer className="w-4 h-4" />
               Print
             </Button>
@@ -181,8 +200,12 @@ function ListedPropertiesPage() {
             <tbody className="divide-y divide-gray-200">
               {filteredProperties.map((property, index) => (
                 <tr key={index} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm text-gray-900">{property.sku}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{property.property}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {property.sku}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {property.property}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="w-12 h-12 bg-gray-200 rounded overflow-hidden">
                       <img
@@ -190,20 +213,25 @@ function ListedPropertiesPage() {
                         alt={property.property}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          const target = e.target as HTMLImageElement
-                          target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48"%3E%3Crect fill="%23ddd" width="48" height="48"/%3E%3C/svg%3E'
+                          const target = e.target as HTMLImageElement;
+                          target.src =
+                            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48"%3E%3Crect fill="%23ddd" width="48" height="48"/%3E%3C/svg%3E';
                         }}
                       />
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{property.package}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{property.location}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {property.package}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    {property.location}
+                  </td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
-                        property.status === 'Published'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-orange-100 text-orange-800'
+                        property.status === "Published"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-orange-100 text-orange-800"
                       }`}
                     >
                       {property.status}
@@ -218,22 +246,36 @@ function ListedPropertiesPage() {
                       }
                     >
                       <DropdownMenuItem
-                        onClick={() => navigate({ to: '/dashboard/properties/$propertyId', params: { propertyId: property.sku } })}
+                        onClick={() =>
+                          navigate({
+                            to: "/dashboard/properties/$propertyId",
+                            params: { propertyId: property.sku },
+                          })
+                        }
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         View Details
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => navigate({ to: '/dashboard/properties/$propertyId/edit', params: { propertyId: property.sku } })}
+                        onClick={() =>
+                          navigate({
+                            to: "/dashboard/properties/$propertyId/edit",
+                            params: { propertyId: property.sku },
+                          })
+                        }
                       >
                         <Edit className="w-4 h-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
-                      {property.status === 'Published' ? (
+                      {property.status === "Published" ? (
                         <DropdownMenuItem
                           onClick={() => {
-                            if (confirm(`Are you sure you want to unpublish "${property.property}"?`)) {
-                              console.log('Unpublish property:', property.sku)
+                            if (
+                              confirm(
+                                `Are you sure you want to unpublish "${property.property}"?`,
+                              )
+                            ) {
+                              console.log("Unpublish property:", property.sku);
                             }
                           }}
                         >
@@ -243,8 +285,12 @@ function ListedPropertiesPage() {
                       ) : (
                         <DropdownMenuItem
                           onClick={() => {
-                            if (confirm(`Are you sure you want to publish "${property.property}"?`)) {
-                              console.log('Publish property:', property.sku)
+                            if (
+                              confirm(
+                                `Are you sure you want to publish "${property.property}"?`,
+                              )
+                            ) {
+                              console.log("Publish property:", property.sku);
                             }
                           }}
                         >
@@ -252,7 +298,7 @@ function ListedPropertiesPage() {
                           Publish
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem
+                      {/*<DropdownMenuItem
                         onClick={() => {
                           if (confirm(`Are you sure you want to delete "${property.property}"? This action cannot be undone.`)) {
                             console.log('Delete property:', property.sku)
@@ -262,7 +308,7 @@ function ListedPropertiesPage() {
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
                         Delete
-                      </DropdownMenuItem>
+                      </DropdownMenuItem>*/}
                     </DropdownMenu>
                   </td>
                 </tr>
@@ -279,5 +325,5 @@ function ListedPropertiesPage() {
         )}
       </div>
     </DashboardLayout>
-  )
+  );
 }
