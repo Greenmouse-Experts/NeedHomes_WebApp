@@ -20,57 +20,57 @@ const dropdownMenus = {
       name: "About Us",
       path: "/about-us",
       description: "Learn about our mission",
-      icon: "🏢"
+      icon: "🏢",
     },
     {
       name: "Leadership",
       path: "/leadership",
       description: "Meet our team",
-      icon: "👥"
+      icon: "👥",
     },
     {
       name: "Careers",
       path: "/careers",
       description: "Join our team",
-      icon: "💼"
+      icon: "💼",
     },
     {
       name: "Partner with us",
       path: "/partner-with-us",
       description: "Collaboration opportunities",
-      icon: "🤝"
+      icon: "🤝",
     },
   ],
   Investment: [
     {
       name: "Fractional Ownership",
-      path: "/",
+      path: "/fractional-ownership",
       description: "Own a fraction of prime property",
-      icon: "🏘️"
+      icon: "🏘️",
     },
     {
       name: "Co-Development",
-      path: "/",
+      path: "/co-development",
       description: "Develop property together",
-      icon: "🏗️"
+      icon: "🏗️",
     },
     {
       name: "Land Banking",
-      path: "/",
+      path: "/land-banking",
       description: "Secure land for future",
-      icon: "🌍"
+      icon: "🌍",
     },
     {
       name: "Outright Purchase",
-      path: "/",
+      path: "/outright-purchase",
       description: "Purchase property in full",
-      icon: "🏠"
+      icon: "🏠",
     },
     {
       name: "Save to Own",
-      path: "/",
+      path: "/save-to-own",
       description: "Flexible payment plans",
-      icon: "💰"
+      icon: "💰",
     },
   ],
   Resources: [
@@ -78,19 +78,19 @@ const dropdownMenus = {
       name: "Blog",
       path: "/blog",
       description: "Latest updates & insights",
-      icon: "📝"
+      icon: "📝",
     },
     {
       name: "FAQs",
       path: "/faqs",
       description: "Common questions answered",
-      icon: "❓"
+      icon: "❓",
     },
     {
       name: "How it works",
       path: "/how-it-works",
       description: "Step-by-step guide",
-      icon: "📖"
+      icon: "📖",
     },
   ],
   Support: [
@@ -98,19 +98,19 @@ const dropdownMenus = {
       name: "Live Chat",
       path: "/",
       description: "Chat with our team",
-      icon: "💬"
+      icon: "💬",
     },
     {
       name: "Book a call",
       path: "/",
       description: "Schedule a consultation",
-      icon: "📞"
+      icon: "📞",
     },
     {
       name: "Support Email",
       path: "/",
       description: "Email us your questions",
-      icon: "✉️"
+      icon: "✉️",
     },
   ],
 };
@@ -119,7 +119,9 @@ export default function Header() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileExpandedMenu, setMobileExpandedMenu] = useState<string | null>(null);
+  const [mobileExpandedMenu, setMobileExpandedMenu] = useState<string | null>(
+    null,
+  );
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -224,7 +226,8 @@ export default function Header() {
                     ref={dropdownRef}
                     className="absolute top-full left-0 mt-1 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300"
                     style={{
-                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                      boxShadow:
+                        "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
                     }}
                   >
                     {/* Header */}
@@ -238,37 +241,37 @@ export default function Header() {
 
                     {/* Menu Items */}
                     <div className="py-2">
-                      {dropdownMenus[link.name as keyof typeof dropdownMenus].map(
-                        (item) => (
-                          <Link
-                            key={item.name}
-                            to={item.path}
-                            className="group flex items-center gap-4 px-5 py-3.5 hover:bg-orange-50/50 transition-all duration-200 cursor-pointer"
-                            onClick={() => setActiveDropdown(null)}
-                          >
-                            {/* Icon */}
-                            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">
-                              {item.icon}
-                            </div>
+                      {dropdownMenus[
+                        link.name as keyof typeof dropdownMenus
+                      ].map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          className="group flex items-center gap-4 px-5 py-3.5 hover:bg-orange-50/50 transition-all duration-200 cursor-pointer"
+                          onClick={() => setActiveDropdown(null)}
+                        >
+                          {/* Icon */}
+                          <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-200">
+                            {item.icon}
+                          </div>
 
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between">
-                                <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
-                                  {item.name}
-                                </p>
-                                <ChevronDown
-                                  size={16}
-                                  className="text-orange-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 -rotate-90"
-                                />
-                              </div>
-                              <p className="text-xs text-gray-600 mt-0.5">
-                                {item.description}
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+                                {item.name}
                               </p>
+                              <ChevronDown
+                                size={16}
+                                className="text-orange-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 -rotate-90"
+                              />
                             </div>
-                          </Link>
-                        )
-                      )}
+                            <p className="text-xs text-gray-600 mt-0.5">
+                              {item.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 )}
