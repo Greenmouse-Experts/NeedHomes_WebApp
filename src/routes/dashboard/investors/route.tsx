@@ -7,8 +7,10 @@ export const Route = createFileRoute("/dashboard/investors")({
 
 function RouteComponent() {
   return (
-    <DashboardLayout title="Investors">
-      <Outlet />
-    </DashboardLayout>
+    <>
+      <DashboardLayout subtitle="Investors" title="Super Admin">
+        <Outlet />
+      </DashboardLayout>
+    </>
   );
 }

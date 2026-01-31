@@ -122,7 +122,7 @@ function InvestorsPage() {
     // },
   ];
   return (
-    <DashboardLayout title="Super Admin Dashboard" subtitle="Investors">
+    <>
       {/* Toolbar */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 mb-4 md:mb-6">
         <div className="flex flex-col gap-3 md:gap-4">
@@ -240,6 +240,6 @@ function InvestorsPage() {
           No investors match your search.
         </div>
       )}
-    </DashboardLayout>
+    </>
   );
 }
