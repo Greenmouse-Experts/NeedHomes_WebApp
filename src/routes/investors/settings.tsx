@@ -4,7 +4,6 @@ import { User, CreditCard, FileText, Shield, Bell } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
 
 import type { USER } from "@/types";
@@ -96,7 +95,15 @@ function SettingsPage() {
             <Bell className="w-5 h-5 text-gray-600" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
           </button>
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-linear-to-br from-orange-400 to-orange-600 rounded-full"></div>
+          {user?.profilePicture ? (
+            <img
+              src={user.profilePicture}
+              alt="Profile"
+              className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-linear-to-br from-orange-400 to-orange-600 rounded-full"></div>
+          )}
         </div>
       </header>
 

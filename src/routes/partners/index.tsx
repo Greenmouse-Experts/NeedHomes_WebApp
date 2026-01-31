@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Calendar, CheckCircle2, Star } from "lucide-react";
+import { Bell, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -83,6 +83,9 @@ function PartnerDashboard() {
     return date.toLocaleDateString("en-US", options);
   };
 
+  const isVerified = user?.isEmailVerified; // Assuming isEmailVerified indicates overall verification
+  const profilePicture = user?.profilePicture;
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -113,28 +116,45 @@ function PartnerDashboard() {
           {/* Profile Section */}
           <div className="flex flex-col items-center gap-1">
             <div className="relative">
-              <img
-                src={
-                  "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                }
-                alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
-              />
-              {/* Verification Tag Overlay (Optional small badge) */}
-              <div className="absolute -bottom-1 -right-1">
-                <CheckCircle2
-                  size={16}
-                  className="text-green-500 bg-white rounded-full"
+              {profilePicture ? (
+                <img
+                  src={profilePicture}
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
                 />
-              </div>
+              ) : (
+                <>
+                  <div className="w-8 h-8 grid place-items-center rounded-full bg-orange-400 text-white">
+                    {user?.firstName?.charAt(0)}
+                  </div>
+                </>
+              )}
+              {/* Verification Tag Overlay (Optional small badge) */}
+              {isVerified && (
+                <div className="absolute -bottom-1 -right-1">
+                  <CheckCircle2
+                    size={16}
+                    className="text-green-500 bg-white rounded-full"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Verification Text Tag below image */}
-            <span
-              className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${"bg-green-50 text-green-600 border-green-200"}`}
-            >
-              {"Verified"}
-            </span>
+            {isVerified && (
+              <span
+                className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${"bg-green-50 text-green-600 border-green-200"}`}
+              >
+                Verified
+              </span>
+            )}
+            {!isVerified && (
+              <span
+                className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${"bg-yellow-50 text-yellow-600 border-yellow-200"}`}
+              >
+                Unverified
+              </span>
+            )}
           </div>
         </div>
       </div>

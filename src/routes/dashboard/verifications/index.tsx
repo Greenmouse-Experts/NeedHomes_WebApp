@@ -151,6 +151,21 @@ function RouteComponent() {
     },
   });
 
+  const rejectMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const resp = await apiClient.post(`admin/verifications/${id}/reject`);
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["verifications-admin"] });
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to reject verification",
+      );
+    },
+  });
+
   const columns: columnType<VERIFICATION_REQUEST>[] = [
     {
       key: "user",
@@ -235,6 +250,21 @@ function RouteComponent() {
         });
       },
     },
+    {
+      key: "reject",
+      label: "Reject KYC",
+      action: (item) => {
+        if (item.status !== "PENDING") {
+          toast.error("Only pending verifications can be rejected.");
+          return;
+        }
+        toast.promise(rejectMutation.mutateAsync(item.id), {
+          loading: "Rejecting...",
+          success: "KYC rejected successfully.",
+          error: (err) => extract_message(err as any) || "An error occurred.",
+        });
+      },
+    },
   ];
 
   return (
@@ -267,6 +297,18 @@ function RouteComponent() {
           title="KYC Verification Details"
           actions={
             <div className="flex gap-2">
+              <button
+                className="btn btn-error btn-outline"
+                onClick={() => {
+                  if (selectedKyc && selectedKyc.status === "PENDING") {
+                    rejectMutation.mutate(selectedKyc.id);
+                  } else {
+                    toast.error("Only pending verifications can be rejected.");
+                  }
+                }}
+              >
+                Reject
+              </button>
               <button
                 className="btn btn-primary"
                 onClick={() => {

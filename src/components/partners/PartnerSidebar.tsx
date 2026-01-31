@@ -3,6 +3,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { show_logout, useAuth } from "@/store/authStore";
 import { useEffect } from "react";
+import ProfileCard from "../investors/ProfileCard";
 
 interface PartnerSidebarProps {
   activePage?: string;
@@ -322,26 +323,7 @@ export function PartnerSidebar({
 
         {/* Profile Card */}
         <div className="p-4 md:p-6 border-t border-gray-700">
-          <div className="bg-white rounded-xl p-4 text-center">
-            <Avatar className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 mx-auto mb-3">
-              <AvatarFallback className="text-xl text-white bg-transparent">
-                {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
-              </AvatarFallback>
-            </Avatar>
-            <h3 className="text-gray-900 font-bold text-sm mb-1">Profile</h3>
-            <p className="text-gray-500 text-xs mb-3">
-              {user?.firstName && user?.lastName
-                ? `${user.firstName} ${user.lastName}`
-                : "John Doe"}
-            </p>
-            {/* <Link
-                            to="/partners/settings"
-                            onClick={handleLinkClick}
-                            className="w-full bg-orange-500 text-white text-xs font-medium py-2 rounded-lg hover:bg-orange-600 transition-colors block"
-                        >
-                            Profile
-                        </Link> */}
-          </div>
+          <ProfileCard />
         </div>
       </aside>
     </>

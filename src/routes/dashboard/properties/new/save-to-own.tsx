@@ -1,91 +1,113 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import UpdateImages from "@/components/images/UpdateImages";
-import { useImages } from "@/helpers/images";
+import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient from "@/api/simpleApi";
+import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import SelectImage from "@/components/images/SelectImage";
+import {
+  Plus,
+  Home,
+  MapPin,
+  DollarSign,
+  Calendar,
+  Clock,
+  Repeat,
+} from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
   component: RouteComponent,
 });
 
+interface SaveToOwnFormValues {
+  propertyTitle: string;
+  propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
+  location: string;
+  description: string;
+  developmentStage:
+    | "PLANNING"
+    | "OFF_PLAN"
+    | "UNDER_CONSTRUCTION"
+    | "COMPLETED";
+  completionDate: string;
+  basePrice: number;
+  availableUnits: number;
+  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  savingsDuration: number;
+  additionalFees: { label: string; amount: number }[];
+  coverImage: string;
+}
+
 function RouteComponent() {
-  const methods = useForm({
+  const methods = useForm<SaveToOwnFormValues>({
     defaultValues: {
-      propertyTitle: "Starter Home Plan",
+      propertyTitle: "",
       propertyType: "RESIDENTIAL",
-      location: "Ikeja, Lagos",
-      description: "Save-to-own program for first-time buyers",
+      location: "",
+      description: "",
       developmentStage: "PLANNING",
-      completionDate: "2029-06-01",
-      basePrice: 150000000,
-      availableUnits: 20,
+      completionDate: "",
+      basePrice: 0,
+      availableUnits: 1,
       savingsFrequency: "MONTHLY",
-      savingsDuration: 36,
+      savingsDuration: 12,
       additionalFees: [],
-      coverImage: "", // Initialize coverImage
+      coverImage: "",
     },
   });
 
   const { images, setPrev, newImages, setNew } = useImages([]);
+  const selectProps = useSelectImage(null as any);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
-      const uploadedImageUrls: string[] = [];
-      let coverImageUrl: string | undefined;
+    mutationFn: async (data: SaveToOwnFormValues) => {
+      let coverImageUrl = "";
 
+      if (selectProps.image) {
+        const uploaded = await uploadImage(selectProps.image);
+        coverImageUrl = uploaded.data.url;
+      } else if (selectProps.prev) {
+        coverImageUrl = selectProps.prev;
+      }
+
+      if (!coverImageUrl) throw new Error("A cover image is required.");
+
+      const uploadedGalleryUrls: string[] = [];
       if (newImages && newImages.length > 0) {
-        for (const [index, newImage] of newImages.entries()) {
-          const uploaded = await uploadImage(newImage);
-          if (uploaded.data && uploaded.data.url) {
-            if (index === 0) {
-              // Assuming the first new image is the cover image if none is explicitly set
-              coverImageUrl = uploaded.data.url;
-            }
-            uploadedImageUrls.push(uploaded.data.url);
-          }
+        for (const img of newImages) {
+          const uploaded = await uploadImage(img);
+          if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
         }
       }
 
-      // If there are existing images and no new cover image, use the first existing one
-      if (!coverImageUrl && images && images.length > 0) {
-        coverImageUrl = images[0].url;
-      }
-
-      // If no cover image is found at this point, it's required
-      if (!coverImageUrl) {
-        throw new Error("Cover image is required.");
-      }
-
-      const allImages = [
+      const allGallery = [
         ...(images || []).map((img) => img.url),
-        ...uploadedImageUrls,
+        ...uploadedGalleryUrls,
       ];
 
       const totalPrice =
         Number(data.basePrice) +
-        data.additionalFees.reduce(
-          (acc: number, fee: any) => acc + fee.amount,
+        (data.additionalFees?.reduce(
+          (acc, fee) => acc + (Number(fee.amount) || 0),
           0,
-        );
-      console.log(data.completionDate);
+        ) || 0);
 
       const payload = {
         ...data,
-        coverImage: coverImageUrl, // Set the cover image
-        galleryImages: allImages,
+        coverImage: coverImageUrl,
+        galleryImages: allGallery,
         totalPrice,
         targetPropertyPrice: totalPrice,
-        completionDate: new Date(data.completionDate).toISOString(), // Ensure this is in the correct format
+        completionDate: new Date(data.completionDate).toISOString(),
       };
 
-      console.log("Submitting Save-to-Own data:", payload);
       const response = await apiClient.post(
         "/admin/properties/save-to-own",
         payload,
@@ -94,9 +116,9 @@ function RouteComponent() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: SaveToOwnFormValues) => {
     toast.promise(mutation.mutateAsync(data), {
-      loading: "Submitting...",
+      loading: "Creating save-to-own listing...",
       success: extract_message,
       error: (err) => extract_message(err) || "An error occurred.",
     });
@@ -104,108 +126,217 @@ function RouteComponent() {
 
   return (
     <ThemeProvider>
-      <div className="p-6 bg-base-100 rounded-xl ring fade mx-auto">
-        <h1 className="text-xl font-bold mb-6">Create Save-to-Own Property</h1>
+      <div className="mx-auto">
+        <div className="bg-base-200 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
+          <div className="bg-primary p-6 text-secondary-content">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <Home size={24} />
+              New Save-to-Own Property
+            </h1>
+            <p className="opacity-80 text-sm">
+              Create a structured savings plan for prospective homeowners.
+            </p>
+          </div>
 
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <SimpleInput
-                label="Property Title"
-                name="propertyTitle"
-                placeholder="Starter Home Plan"
-                required
-              />
-              <SimpleInput
-                label="Location"
-                name="location"
-                placeholder="Ikeja, Lagos"
-                required
-              />
-              <SimpleInput
-                label="Base Price"
-                name="basePrice"
-                type="number"
-                required
-              />
-              <SimpleInput
-                label="Available Units"
-                name="availableUnits"
-                type="number"
-                required
-              />
-              <SimpleInput
-                label="Completion Date"
-                name="completionDate"
-                type="date"
-                required
-              />
-              <SimpleInput
-                label="Savings Duration (Months)"
-                name="savingsDuration"
-                type="number"
-                required
-              />
-              <LocalSelect
-                label="Property Type"
-                {...methods.register("propertyType")}
-              >
-                <option value="RESIDENTIAL">Residential</option>
-                <option value="COMMERCIAL">Commercial</option>
-                <option value="LAND">Land</option>
-              </LocalSelect>
-              <LocalSelect
-                label="Development Stage"
-                {...methods.register("developmentStage")}
-              >
-                <option value="PLANNING">Planning</option>
-                <option value="OFF_PLAN">Off Plan</option>
-                <option value="UNDER_CONSTRUCTION">Under Construction</option>
-                <option value="COMPLETED">Completed</option>
-              </LocalSelect>
-              <LocalSelect
-                label="Savings Frequency"
-                {...methods.register("savingsFrequency")}
-              >
-                <option value="DAILY">Daily</option>
-                <option value="WEEKLY">Weekly</option>
-                <option value="MONTHLY">Monthly</option>
-              </LocalSelect>
+          <div className="p-6 md:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <section className="flex-1 flex flex-col">
+                  <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                    Primary Cover
+                  </label>
+                  <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
+                    <SelectImage {...selectProps} title="Select Cover" />
+                  </div>
+                </section>
+
+                <section className="space-y-3">
+                  <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                    Gallery Images
+                  </label>
+                  <UpdateImages
+                    images={images || []}
+                    setPrev={setPrev}
+                    setNew={setNew}
+                  />
+                </section>
+              </div>
+
+              <div className="lg:col-span-2">
+                <FormProvider {...methods}>
+                  <form
+                    onSubmit={methods.handleSubmit(onSubmit)}
+                    className="space-y-8"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                      <Controller
+                        name="propertyTitle"
+                        control={methods.control}
+                        rules={{ required: "Title is required" }}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Property Title"
+                            placeholder="e.g. Starter Home Plan"
+                            required
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="location"
+                        control={methods.control}
+                        rules={{ required: "Location is required" }}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Location"
+                            placeholder="Ikeja, Lagos"
+                            required
+                            icon={<MapPin size={16} />}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="propertyType"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <LocalSelect {...field} label="Property Type">
+                            <option value="RESIDENTIAL">Residential</option>
+                            <option value="COMMERCIAL">Commercial</option>
+                            <option value="LAND">Land</option>
+                          </LocalSelect>
+                        )}
+                      />
+                      <Controller
+                        name="developmentStage"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <LocalSelect {...field} label="Development Stage">
+                            <option value="PLANNING">Planning</option>
+                            <option value="OFF_PLAN">Off Plan</option>
+                            <option value="UNDER_CONSTRUCTION">
+                              Under Construction
+                            </option>
+                            <option value="COMPLETED">Completed</option>
+                          </LocalSelect>
+                        )}
+                      />
+                    </div>
+
+                    <div className="divider opacity-50">
+                      Financials & Savings Plan
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Controller
+                        name="basePrice"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Base Price"
+                            type="number"
+                            icon={<DollarSign size={16} />}
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="savingsFrequency"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <LocalSelect
+                            {...field}
+                            label="Savings Frequency"
+                            icon={<Repeat size={16} />}
+                          >
+                            <option value="DAILY">Daily</option>
+                            <option value="WEEKLY">Weekly</option>
+                            <option value="MONTHLY">Monthly</option>
+                          </LocalSelect>
+                        )}
+                      />
+                      <Controller
+                        name="savingsDuration"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Duration (Months)"
+                            type="number"
+                            icon={<Clock size={16} />}
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Controller
+                        name="availableUnits"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Units Available"
+                            type="number"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="completionDate"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Completion Date"
+                            type="date"
+                            icon={<Calendar size={16} />}
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <Controller
+                      name="description"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <SimpleTextArea
+                          {...field}
+                          label="Program Description"
+                          placeholder="Describe the save-to-own program, benefits, and eligibility..."
+                          rows={4}
+                        />
+                      )}
+                    />
+
+                    <div className="pt-4">
+                      <button
+                        type="submit"
+                        className={`btn btn-secondary btn-block h-14 text-lg shadow-lg ${mutation.isPending ? "loading" : ""}`}
+                        disabled={mutation.isPending}
+                      >
+                        {!mutation.isPending && (
+                          <Plus size={20} className="mr-2" />
+                        )}
+                        {mutation.isPending
+                          ? "Processing..."
+                          : "Create Save-to-Own Property"}
+                      </button>
+                    </div>
+                  </form>
+                </FormProvider>
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <label className="fieldset-label font-semibold text-sm">
-                Description
-              </label>
-              <textarea
-                {...methods.register("description")}
-                className="textarea textarea-bordered w-full h-24"
-                placeholder="Describe the save-to-own program..."
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="fieldset-label font-semibold text-sm">
-                Gallery Images (First image will be used as cover image)
-              </label>
-              <UpdateImages
-                images={images || []}
-                setPrev={setPrev}
-                setNew={setNew}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className={`btn btn-primary w-full ${mutation.isPending ? "loading" : ""}`}
-              disabled={mutation.isPending}
-            >
-              {mutation.isPending
-                ? "Creating..."
-                : "Create Save-to-Own Property"}
-            </button>
-          </form>
-        </FormProvider>
+          </div>
+        </div>
       </div>
     </ThemeProvider>
   );

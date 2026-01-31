@@ -1,5 +1,4 @@
 import { useAuth, set_user_value } from "@/store/authStore";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import { Button } from "./ui/Button";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
@@ -51,12 +50,19 @@ export default function ProfilePicture() {
     <div>
       <div className="mb-4 md:mb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4">
-          <Avatar className="w-20 h-20 md:w-24 md:h-24 bg-linear-to-br from-cyan-400 to-cyan-500">
-            <AvatarImage src={user?.profilePicture} />
-            <AvatarFallback className="text-xl md:text-2xl text-white bg-transparent">
-              {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
-            </AvatarFallback>
-          </Avatar>
+          <div className="avatar placeholder">
+            <div className="w-20 md:w-24 rounded-full bg-linear-to-br from-cyan-400 to-cyan-500 text-white">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Profile" />
+              ) : (
+                <span className="text-xl grid place-items-center size-full md:text-2xl">
+                  {user?.firstName
+                    ? user.firstName.charAt(0).toUpperCase()
+                    : "U"}
+                </span>
+              )}
+            </div>
+          </div>
           <Button
             type="button"
             variant="outline"
