@@ -10,7 +10,7 @@ export default function Hero() {
 
   return (
     <div
-      className="relative pt-6 overflow-hidden"
+      className="relative pt-4 md:pt-6 overflow-hidden max-h-[65vh] md:max-h-none"
       style={{
         backgroundImage: "url(/assets/hero.jpg)",
         backgroundRepeat: "repeat",
@@ -23,13 +23,13 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10">
-        <Sectiongrid className="pt-12 lg:pt-0">
+        <Sectiongrid className="pt-6 md:pt-12 lg:pt-0">
           <FlexInfo className="leading-loose text-left lg:text-left">
-            <h1 className="md:text-5xl text-4xl font-bold text-white">
+            <h1 className="md:text-5xl text-3xl font-bold text-white">
               Your Smooth Journey <br className="" />
               to Property Ownership.
             </h1>
-            <ul className="md:text-base text-sm space-y-3 mt-6 text-gray-100">
+            <ul className="md:text-base text-sm space-y-2 md:space-y-3 mt-4 md:mt-6 text-gray-100">
               <li className="flex items-center gap-3">
                 <span className="bg-[var(--color-orange)] text-white rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0 text-xs">
                   ✓
@@ -62,11 +62,11 @@ export default function Hero() {
                 </span>
               </li>
             </ul>
-            <div className="lg:flex-row gap-2 flex flex-col mt-6 mb-6">
+            <div className="lg:flex-row gap-2 flex flex-col mt-4 md:mt-6 mb-4 md:mb-6">
               <Button
                 variant="primary"
                 size="lg"
-                className="md:w-auto w-[250px] mx-auto md:mx-0 flex items-center justify-center"
+                className="md:w-auto w-full mx-auto md:mx-0 flex items-center justify-center"
               >
                 <img src="/apple_white.svg" alt="" className="w-5 h-5 mr-2" />
                 Get on iPhone
@@ -74,7 +74,7 @@ export default function Hero() {
               <Button
                 variant="primary"
                 size="lg"
-                className="w-[250px] md:w-auto mx-auto md:mx-0 flex items-center justify-center"
+                className="w-full md:w-auto mx-auto md:mx-0 flex items-center justify-center"
               >
                 <img src="/google_icon.svg" alt="" className="w-5 h-5 mr-2" />
                 Get on Android

@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import Header from "@/components/Header";
 import LogoutModal from "@/components/LogoutModal";
 import CookieConsent from "@/components/CookieConsent";
+import { TawkToWidget } from "@/components/TawkToWidget";
 const client = new QueryClient({
   defaultOptions: {
     queries: {
@@ -36,6 +37,7 @@ export const Route = createRootRoute({
 
           <Outlet />
           <CookieConsent />
+          <TawkToWidget />
         </QueryClientProvider>
 
         <TanStackDevtools
