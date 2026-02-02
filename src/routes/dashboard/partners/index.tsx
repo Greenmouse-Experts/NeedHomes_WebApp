@@ -128,11 +128,11 @@ function PartnersPage() {
           params: { partnerId: item.id },
         }),
     },
-    {
-      key: "edit",
-      label: "Edit",
-      action: (item: PARTNER) => console.log("Edit", item.id),
-    },
+    // {
+    //   key: "edit",
+    //   label: "Edit",
+    //   action: (item: PARTNER) => console.log("Edit", item.id),
+    // },
     // {
     //   key: "delete",
     //   label: "Delete",

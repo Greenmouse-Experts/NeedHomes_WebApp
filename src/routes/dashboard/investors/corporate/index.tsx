@@ -110,11 +110,11 @@ function InvestorsPage() {
       action: (item: INVESTOR, nav) =>
         nav({ to: `/dashboard/investors/${item.id}` }),
     },
-    {
-      key: "edit",
-      label: "Edit",
-      action: (item: INVESTOR) => console.log("Edit", item.id),
-    },
+    // {
+    //   key: "edit",
+    //   label: "Edit",
+    //   action: (item: INVESTOR) => console.log("Edit", item.id),
+    // },
     // {
     //   key: "delete",
     //   label: "Delete",
