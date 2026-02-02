@@ -151,7 +151,7 @@ function PartnerDashboard() {
 
               <ul className="menu bg-base-100 rounded dropdown-content shadow">
                 <li>
-                  <Link to="/investors/settings">Profile</Link>
+                  <Link to="/partners/settings">Profile</Link>
                 </li>
               </ul>
             </div>
