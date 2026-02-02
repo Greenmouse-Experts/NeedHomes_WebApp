@@ -26,6 +26,8 @@ import type { ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_PARTNER_DATA } from "@/types";
 import apiClient from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import SimpleAvatar from "@/simpleComps/SimpleAvatar";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/dashboard/partners/$partnerId/")({
   component: PartnerDetailsPage,
@@ -68,7 +70,13 @@ function PartnerDetailsPage() {
                 <div className="bg-linear-to-r from-orange-50 to-orange-100 p-6 md:p-8">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                     {/* Avatar */}
-                    <Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
+                    <ThemeProvider className="!flex-0 ">
+                      <SimpleAvatar
+                        url={partner.profilePicture || ""}
+                        alt={partner.firstName}
+                      />
+                    </ThemeProvider>
+                    {/*<Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
                       <AvatarImage
                         src={partner.profilePicture || ""}
                         // alt={`${partner.firstName} ${partner.lastName}`}
@@ -78,7 +86,7 @@ function PartnerDetailsPage() {
                         {partner.firstName[0]}
                         {partner.lastName[0]}
                       </AvatarFallback>
-                    </Avatar>
+                    </Avatar>*/}
 
                     {/* Partner Info */}
                     <div className="flex-1">
