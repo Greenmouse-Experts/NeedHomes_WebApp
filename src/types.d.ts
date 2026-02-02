@@ -8,6 +8,7 @@ export interface USER {
   roles: string[];
   permissions: string[];
   profilePicture: string | null;
+  phone: string | number;
   [key: string]: any;
 }
 

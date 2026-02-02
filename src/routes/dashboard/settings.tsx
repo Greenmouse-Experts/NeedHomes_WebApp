@@ -238,7 +238,7 @@ function SettingsPage() {
                     </div>
 
                     {/* Date of Birth */}
-                    <div className="space-y-2">
+                    {/*<div className="space-y-2">
                       <Label htmlFor="dateOfBirth">Date of Birth</Label>
                       <div className="relative">
                         <Input
@@ -251,7 +251,7 @@ function SettingsPage() {
                           placeholder="20/01/2028"
                         />
                       </div>
-                    </div>
+                    </div>*/}
                   </div>
 
                   {/* Save Button */}

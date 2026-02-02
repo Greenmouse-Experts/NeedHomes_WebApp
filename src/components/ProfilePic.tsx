@@ -35,6 +35,7 @@ export default function ProfilePicture() {
           user: { ...auth.user, profilePicture: data.imageUrl },
         });
       }
+
       toast.success("Profile picture updated successfully");
       closeModal();
     },

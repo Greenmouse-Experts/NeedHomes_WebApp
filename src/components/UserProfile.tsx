@@ -4,7 +4,7 @@ import { Button } from "./ui/Button";
 import { Label } from "./ui/Label";
 import { Input } from "./ui/Input";
 import { PhoneInput } from "./CountryPhoneInput";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
 import { toast } from "sonner";
@@ -15,8 +15,7 @@ interface ProfileFormValues {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
-  dateOfBirth: string;
+  phone: string;
 }
 
 export default function UserProfile() {
@@ -27,13 +26,13 @@ export default function UserProfile() {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<ProfileFormValues>({
     defaultValues: {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       email: user?.email || "",
-      phoneNumber: (user as any)?.phoneNumber || "",
-      dateOfBirth: (user as any)?.dateOfBirth || "",
+      phone: user?.phone,
     },
   });
 
@@ -126,17 +125,30 @@ export default function UserProfile() {
             <Label htmlFor="phoneNumber" className="text-sm">
               Phone Number
             </Label>
-            <PhoneInput
-              id="phoneNumber"
-              {...register("phoneNumber")}
-              defaultCountry="NG"
-              placeholder="0700 000 0000"
-              className="text-sm md:text-base"
-            />
+            <Controller
+              control={control}
+              name="phone"
+              render={(states) => {
+                return (
+                  <>
+                    <PhoneInput
+                      // id="phoneNumber"
+                      {...register("phone")}
+                      defaultCountry="NG"
+                      value={states.field.value}
+                      className="text-sm md:text-base"
+                      onPhoneChange={(e) => {
+                        states.field.onChange(e);
+                      }}
+                    />
+                  </>
+                );
+              }}
+            ></Controller>
           </div>
 
           {/* Date of Birth */}
-          <div className="space-y-2">
+          {/*<div className="space-y-2">
             <Label htmlFor="dateOfBirth" className="text-sm">
               Date of Birth
             </Label>
@@ -149,7 +161,7 @@ export default function UserProfile() {
                 className="text-sm md:text-base"
               />
             </div>
-          </div>
+          </div>*/}
         </div>
 
         {/* Save Button */}
