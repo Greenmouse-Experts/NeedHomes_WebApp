@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/api/simpleApi";
 
 export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
   component: PropertyDetailsPage,
@@ -102,6 +104,13 @@ function PropertyDetailsPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
 
+  const query = useQuery({
+    queryKey: ["admnin-properties", propertyId],
+    queryFn: async () => {
+      let resp = await apiClient.get("/properties/" + propertyId);
+      return resp.data;
+    },
+  });
   const property = propertyData[propertyId] || {
     id: propertyId,
     propertyTitle: "Semi Detached Duplex",
