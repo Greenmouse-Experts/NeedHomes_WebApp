@@ -42,11 +42,10 @@ interface FractionalPropertyFormValues {
   additionalFees: AdditionalFee[];
   availableUnits: number;
   totalPrice: number;
-  totalShares: number;
-  pricePerShare: number;
-  minimumShares: number;
-  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "FLEXIBLE";
-  premiumProperty?: boolean;
+  minimumInvestment: number;
+  profitSharingRatio: number;
+  projectDuration: number;
+  exitRule: "AFTER_PROJECT_COMPLETION" | "FLEXIBLE";
 }
 
 function AdditionalFeesManager() {
@@ -117,21 +116,20 @@ function RouteComponent() {
     defaultValues: {
       propertyTitle: "",
       propertyType: "RESIDENTIAL",
-      location: "Yaba, Lagos",
-      description: "Fractional shares in co-living units",
-      developmentStage: "ONGOING",
-      completionDate: "2027-09-01",
+      location: "Banana Island, Lagos",
+      description: "Premium co-development plot",
+      developmentStage: "PLANNING",
+      completionDate: "2028-12-01T00:00:00.000Z",
       coverImage: "",
       galleryImages: [],
-      basePrice: 200000000,
-      additionalFees: [],
-      availableUnits: 50,
-      totalPrice: 200000000,
-      totalShares: 10000,
-      pricePerShare: 20000,
-      minimumShares: 10,
-      exitWindow: "MONTHLY",
-      premiumProperty: false,
+      basePrice: 1000000000,
+      additionalFees: [{ label: "Project Admin", amount: 20000000 }],
+      availableUnits: 10,
+      totalPrice: 1020000000,
+      minimumInvestment: 10000000,
+      profitSharingRatio: 0.25,
+      projectDuration: 24,
+      exitRule: "AFTER_PROJECT_COMPLETION",
     },
   });
 
@@ -182,11 +180,11 @@ function RouteComponent() {
         completionDate: new Date(data.completionDate).toISOString(),
       };
 
-      payload.totalShares = Number(payload.totalShares) || 0;
-      payload.pricePerShare = Number(payload.pricePerShare) || 0;
-      payload.minimumShares = Number(payload.minimumShares) || 0;
       payload.basePrice = Number(payload.basePrice) || 0;
       payload.availableUnits = Number(payload.availableUnits) || 0;
+      payload.minimumInvestment = Number(payload.minimumInvestment) || 0;
+      payload.profitSharingRatio = Number(payload.profitSharingRatio) || 0;
+      payload.projectDuration = Number(payload.projectDuration) || 0;
 
       const response = await apiClient.post(
         "/admin/properties/fractional",
@@ -259,7 +257,7 @@ function RouteComponent() {
                           <SimpleInput
                             {...field}
                             label="Property Title"
-                            placeholder="e.g. Azure Heights"
+                            placeholder="e.g. Riverside Estate"
                             required
                           />
                         )}
@@ -272,7 +270,7 @@ function RouteComponent() {
                           <SimpleInput
                             {...field}
                             label="Location"
-                            placeholder="Lekki Phase 1, Lagos"
+                            placeholder="Banana Island, Lagos"
                             required
                             icon={<MapPin size={16} />}
                           />
@@ -306,7 +304,7 @@ function RouteComponent() {
                     </div>
 
                     <div className="divider opacity-50">
-                      Financials & Shares
+                      Financials & Investment
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -326,12 +324,12 @@ function RouteComponent() {
                         )}
                       />
                       <Controller
-                        name="totalShares"
+                        name="minimumInvestment"
                         control={methods.control}
                         render={({ field }) => (
                           <SimpleInput
                             {...field}
-                            label="Total Shares"
+                            label="Minimum Investment"
                             type="number"
                             onChange={(e) =>
                               field.onChange(Number((e as any).target?.value))
@@ -340,13 +338,14 @@ function RouteComponent() {
                         )}
                       />
                       <Controller
-                        name="pricePerShare"
+                        name="profitSharingRatio"
                         control={methods.control}
                         render={({ field }) => (
                           <SimpleInput
                             {...field}
-                            label="Price Per Share"
+                            label="Profit Sharing Ratio"
                             type="number"
+                            step="0.01"
                             onChange={(e) =>
                               field.onChange(Number((e as any).target?.value))
                             }
@@ -357,12 +356,12 @@ function RouteComponent() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <Controller
-                        name="minimumShares"
+                        name="availableUnits"
                         control={methods.control}
                         render={({ field }) => (
                           <SimpleInput
                             {...field}
-                            label="Minimum Shares"
+                            label="Units Available"
                             type="number"
                             onChange={(e) =>
                               field.onChange(Number((e as any).target?.value))
@@ -371,12 +370,12 @@ function RouteComponent() {
                         )}
                       />
                       <Controller
-                        name="availableUnits"
+                        name="projectDuration"
                         control={methods.control}
                         render={({ field }) => (
                           <SimpleInput
                             {...field}
-                            label="Units Available"
+                            label="Project Duration (Months)"
                             type="number"
                             onChange={(e) =>
                               field.onChange(Number((e as any).target?.value))
@@ -402,13 +401,13 @@ function RouteComponent() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Controller
-                        name="exitWindow"
+                        name="exitRule"
                         control={methods.control}
                         render={({ field }) => (
-                          <LocalSelect {...field} label="Exit Window">
-                            <option value="MONTHLY">Monthly</option>
-                            <option value="QUARTERLY">Quarterly</option>
-                            <option value="ANNUALLY">Annually</option>
+                          <LocalSelect {...field} label="Exit Rule">
+                            <option value="AFTER_PROJECT_COMPLETION">
+                              After Project Completion
+                            </option>
                             <option value="FLEXIBLE">Flexible</option>
                           </LocalSelect>
                         )}
@@ -437,17 +436,6 @@ function RouteComponent() {
                         setPrev={setPrev}
                         setNew={setNew}
                       />
-                    </div>
-
-                    <div className="flex items-center gap-4 p-4 border rounded-lg">
-                      <input
-                        type="checkbox"
-                        {...methods.register("premiumProperty")}
-                        className="checkbox checkbox-primary"
-                      />
-                      <span className="text-sm font-medium">
-                        Mark as Premium Property
-                      </span>
                     </div>
 
                     <div className="pt-4">
