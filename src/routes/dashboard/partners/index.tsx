@@ -24,6 +24,7 @@ import type { PARTNER } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
 import PartnerListCard from "./-components/PartnerListCard";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/dashboard/partners/")({
   component: PartnersPage,
@@ -34,10 +35,13 @@ function PartnersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
+  const props = usePagination();
   const { data, isLoading, error } = useQuery<ApiResponse<PARTNER[]>>({
-    queryKey: ["partners"],
+    queryKey: ["partners", props.page],
     queryFn: async () => {
-      const response = await apiClient.get("admin/users?accountType=PARTNER");
+      const response = await apiClient.get("admin/users?accountType=PARTNER", {
+        // params: props.page,
+      });
       return response.data;
     },
   });
@@ -224,6 +228,7 @@ function PartnersPage() {
         </div>
       ) : (
         <CustomTable
+          paginationProps={props}
           data={filteredPartners}
           columns={columns}
           actions={actions}
