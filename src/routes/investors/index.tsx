@@ -3,6 +3,7 @@ import { Bell, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -105,35 +106,47 @@ function InvestorDashboard() {
           </Link>
 
           {/* Profile Section */}
-          <div className="flex flex-col items-center gap-1">
-            <div className="relative">
-              <img
-                src={profilePictureUrl}
-                alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
-              />
-              {/* Verification Tag Overlay (Optional small badge) */}
-              {isVerified && (
-                <div className="absolute -bottom-1 -right-1">
-                  <CheckCircle2
-                    size={16}
-                    className="text-green-500 bg-white rounded-full"
-                  />
-                </div>
-              )}
-            </div>
+          <ThemeProvider>
+            <div className="dropdown dropdown-end">
+              <button className="btn btn-circle">
+                <div className="flex flex-col items-center gap-1 btn btn-circle">
+                  <div className="relative">
+                    <img
+                      src={profilePictureUrl}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+                    />
+                    {/* Verification Tag Overlay (Optional small badge) */}
+                    {isVerified && (
+                      <div className="absolute -bottom-1 -right-1">
+                        <CheckCircle2
+                          size={16}
+                          className="text-green-500 bg-white rounded-full"
+                        />
+                      </div>
+                    )}
+                  </div>
 
-            {/* Verification Text Tag below image */}
-            <span
-              className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
-                isVerified
-                  ? "bg-green-50 text-green-600 border-green-200"
-                  : "bg-yellow-50 text-yellow-600 border-yellow-200"
-              }`}
-            >
-              {isVerified ? "Verified" : "Pending"}
-            </span>
-          </div>
+                  {/* Verification Text Tag below image */}
+                  <span
+                    className={`text-[10px] absolute mt-12 font-bold uppercase px-2 py-0.5 rounded-full border ${
+                      isVerified
+                        ? "bg-green-50 text-green-600 border-green-200"
+                        : "bg-yellow-50 text-yellow-600 border-yellow-200"
+                    }`}
+                  >
+                    {isVerified ? "Verified" : "Pending"}
+                  </span>
+                </div>
+              </button>
+
+              <ul className="menu bg-base-100 rounded dropdown-content shadow">
+                <li>
+                  <Link to="/investors/settings">Profile</Link>
+                </li>
+              </ul>
+            </div>
+          </ThemeProvider>
         </div>
       </div>
 
