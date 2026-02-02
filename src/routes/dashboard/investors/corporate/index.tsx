@@ -19,6 +19,7 @@ import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import type { INVESTOR } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import PopUp, { type Actions } from "@/components/tables/pop-up";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/dashboard/investors/corporate/")({
   component: InvestorsPage,
@@ -28,11 +29,18 @@ function InvestorsPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-
+  const props = usePagination();
   const { data, isLoading, error } = useQuery<ApiResponse<INVESTOR[]>>({
-    queryKey: ["investors", "corporate"],
+    queryKey: ["investors", "corporate", props.page],
     queryFn: async () => {
-      const response = await apiClient.get("admin/users?accountType=CORPORATE");
+      const response = await apiClient.get(
+        "admin/users?accountType=CORPORATE",
+        {
+          params: {
+            page: props.page,
+          },
+        },
+      );
       return response.data; // Assuming response.data is directly ApiResponse<INVESTOR[]>
     },
   });
@@ -194,6 +202,7 @@ function InvestorsPage() {
           data={filteredInvestors}
           columns={investorColumns}
           actions={actions}
+          paginationProps={props}
         />
       )}
 
