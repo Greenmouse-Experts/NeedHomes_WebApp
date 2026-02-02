@@ -75,7 +75,6 @@ import { Route as DashboardTransactionsPaymentsRouteImport } from './routes/dash
 import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
 import { Route as DashboardPropertiesPropertyIdRouteImport } from './routes/dashboard/properties/$propertyId'
 import { Route as DashboardPartnersPartnerIdRouteImport } from './routes/dashboard/partners/$partnerId'
-import { Route as DashboardInvestorsInvestorIdRouteImport } from './routes/dashboard/investors/$investorId'
 import { Route as DashboardPropertiesNewRouteRouteImport } from './routes/dashboard/properties/new/route'
 import { Route as PartnersPropertiesPropertyIdIndexRouteImport } from './routes/partners/properties/$propertyId/index'
 import { Route as PartnerRecoverForgotPasswordIndexRouteImport } from './routes/partner/recover/forgot-password/index'
@@ -438,12 +437,6 @@ const DashboardPartnersPartnerIdRoute =
     path: '/$partnerId',
     getParentRoute: () => DashboardPartnersRoute,
   } as any)
-const DashboardInvestorsInvestorIdRoute =
-  DashboardInvestorsInvestorIdRouteImport.update({
-    id: '/$investorId',
-    path: '/$investorId',
-    getParentRoute: () => DashboardInvestorsRouteRoute,
-  } as any)
 const DashboardPropertiesNewRouteRoute =
   DashboardPropertiesNewRouteRouteImport.update({
     id: '/properties/new',
@@ -494,9 +487,9 @@ const DashboardInvestorsCorporateIndexRoute =
   } as any)
 const DashboardInvestorsInvestorIdIndexRoute =
   DashboardInvestorsInvestorIdIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DashboardInvestorsInvestorIdRoute,
+    id: '/$investorId/',
+    path: '/$investorId/',
+    getParentRoute: () => DashboardInvestorsRouteRoute,
   } as any)
 const DashboardPropertiesNewSaveToOwnRoute =
   DashboardPropertiesNewSaveToOwnRouteImport.update({
@@ -542,9 +535,9 @@ const DashboardPartnersPartnerIdKycRoute =
   } as any)
 const DashboardInvestorsInvestorIdKycRoute =
   DashboardInvestorsInvestorIdKycRouteImport.update({
-    id: '/kyc',
-    path: '/kyc',
-    getParentRoute: () => DashboardInvestorsInvestorIdRoute,
+    id: '/$investorId/kyc',
+    path: '/$investorId/kyc',
+    getParentRoute: () => DashboardInvestorsRouteRoute,
   } as any)
 const PartnerRecoverForgotPasswordResetIndexRoute =
   PartnerRecoverForgotPasswordResetIndexRouteImport.update({
@@ -606,7 +599,6 @@ export interface FileRoutesByFullPath {
   '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
-  '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRouteWithChildren
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
@@ -766,7 +758,6 @@ export interface FileRoutesById {
   '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
-  '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdRouteWithChildren
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
@@ -855,7 +846,6 @@ export interface FileRouteTypes {
     | '/partners/'
     | '/recover-password/'
     | '/dashboard/properties/new'
-    | '/dashboard/investors/$investorId'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
@@ -1014,7 +1004,6 @@ export interface FileRouteTypes {
     | '/partners/'
     | '/recover-password/'
     | '/dashboard/properties/new'
-    | '/dashboard/investors/$investorId'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
@@ -1551,13 +1540,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPartnersPartnerIdRouteImport
       parentRoute: typeof DashboardPartnersRoute
     }
-    '/dashboard/investors/$investorId': {
-      id: '/dashboard/investors/$investorId'
-      path: '/$investorId'
-      fullPath: '/dashboard/investors/$investorId'
-      preLoaderRoute: typeof DashboardInvestorsInvestorIdRouteImport
-      parentRoute: typeof DashboardInvestorsRouteRoute
-    }
     '/dashboard/properties/new': {
       id: '/dashboard/properties/new'
       path: '/properties/new'
@@ -1616,10 +1598,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/investors/$investorId/': {
       id: '/dashboard/investors/$investorId/'
-      path: '/'
+      path: '/$investorId'
       fullPath: '/dashboard/investors/$investorId/'
       preLoaderRoute: typeof DashboardInvestorsInvestorIdIndexRouteImport
-      parentRoute: typeof DashboardInvestorsInvestorIdRoute
+      parentRoute: typeof DashboardInvestorsRouteRoute
     }
     '/dashboard/properties/new/save-to-own': {
       id: '/dashboard/properties/new/save-to-own'
@@ -1672,10 +1654,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/investors/$investorId/kyc': {
       id: '/dashboard/investors/$investorId/kyc'
-      path: '/kyc'
+      path: '/$investorId/kyc'
       fullPath: '/dashboard/investors/$investorId/kyc'
       preLoaderRoute: typeof DashboardInvestorsInvestorIdKycRouteImport
-      parentRoute: typeof DashboardInvestorsInvestorIdRoute
+      parentRoute: typeof DashboardInvestorsRouteRoute
     }
     '/partner/recover/forgot-password/reset/': {
       id: '/partner/recover/forgot-password/reset/'
@@ -1687,34 +1669,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface DashboardInvestorsInvestorIdRouteChildren {
+interface DashboardInvestorsRouteRouteChildren {
+  DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
   DashboardInvestorsInvestorIdKycRoute: typeof DashboardInvestorsInvestorIdKycRoute
   DashboardInvestorsInvestorIdIndexRoute: typeof DashboardInvestorsInvestorIdIndexRoute
-}
-
-const DashboardInvestorsInvestorIdRouteChildren: DashboardInvestorsInvestorIdRouteChildren =
-  {
-    DashboardInvestorsInvestorIdKycRoute: DashboardInvestorsInvestorIdKycRoute,
-    DashboardInvestorsInvestorIdIndexRoute:
-      DashboardInvestorsInvestorIdIndexRoute,
-  }
-
-const DashboardInvestorsInvestorIdRouteWithChildren =
-  DashboardInvestorsInvestorIdRoute._addFileChildren(
-    DashboardInvestorsInvestorIdRouteChildren,
-  )
-
-interface DashboardInvestorsRouteRouteChildren {
-  DashboardInvestorsInvestorIdRoute: typeof DashboardInvestorsInvestorIdRouteWithChildren
-  DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
   DashboardInvestorsCorporateIndexRoute: typeof DashboardInvestorsCorporateIndexRoute
 }
 
 const DashboardInvestorsRouteRouteChildren: DashboardInvestorsRouteRouteChildren =
   {
-    DashboardInvestorsInvestorIdRoute:
-      DashboardInvestorsInvestorIdRouteWithChildren,
     DashboardInvestorsIndexRoute: DashboardInvestorsIndexRoute,
+    DashboardInvestorsInvestorIdKycRoute: DashboardInvestorsInvestorIdKycRoute,
+    DashboardInvestorsInvestorIdIndexRoute:
+      DashboardInvestorsInvestorIdIndexRoute,
     DashboardInvestorsCorporateIndexRoute:
       DashboardInvestorsCorporateIndexRoute,
   }

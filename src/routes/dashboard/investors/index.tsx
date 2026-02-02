@@ -19,6 +19,7 @@ import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import type { INVESTOR } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import PopUp, { type Actions } from "@/components/tables/pop-up";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/dashboard/investors/")({
   component: InvestorsPage,
@@ -29,11 +30,17 @@ function InvestorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
+  const props = usePagination(20);
   const { data, isLoading, error } = useQuery<ApiResponse<INVESTOR[]>>({
-    queryKey: ["investors"],
+    queryKey: ["investors", props.page],
     queryFn: async () => {
       const response = await apiClient.get(
         "admin/users?accountType=INDIVIDUAL",
+        {
+          params: {
+            page: props.page,
+          },
+        },
       );
       return response.data; // Assuming response.data is directly ApiResponse<INVESTOR[]>
     },
@@ -86,24 +93,6 @@ function InvestorsPage() {
       label: "Created At",
       render: (value) => new Date(value).toLocaleDateString(),
     },
-    // {
-    //   key: "action",
-    //   label: "Actions",
-    //   render: (value, item) => (
-    //     <PopUp
-    //       item={item}
-    //       actions={[
-    //         {
-    //           label: "View Details",
-    //           onClick: () =>
-    //             navigate({ to: `/dashboard/investors/${item.id}` }),
-    //         },
-    //         { label: "Edit", onClick: () => console.log("Edit", item.id) },
-    //         { label: "Delete", onClick: () => console.log("Delete", item.id) },
-    //       ]}
-    //     />
-    //   ),
-    // },
   ];
   const actions: Actions[] = [
     {
@@ -112,16 +101,6 @@ function InvestorsPage() {
       action: (item: INVESTOR, nav) =>
         nav({ to: `/dashboard/investors/${item.id}` }),
     },
-    // {
-    //   key: "edit",
-    //   label: "Edit",
-    //   action: (item: INVESTOR) => console.log("Edit", item.id),
-    // },
-    // {
-    //   key: "delete",
-    //   label: "Delete",
-    //   action: (item: INVESTOR) => console.log("Delete", item.id),
-    // },
   ];
   return (
     <>
@@ -193,9 +172,11 @@ function InvestorsPage() {
       {/* Investors List View */}
       {!isLoading && !error && viewMode === "list" && (
         <CustomTable
+          paginationProps={props}
           data={filteredInvestors}
           columns={investorColumns}
           actions={actions}
+          totalCount={10}
         />
       )}
 

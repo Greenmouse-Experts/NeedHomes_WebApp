@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PopUp, { type Actions } from "./pop-up";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import { usePagination } from "@/helpers/pagination";
 
 export type columnType<T = any> = {
   key: string;
@@ -14,12 +15,20 @@ interface CustomTableProps {
   actions?: Actions[];
   user?: any;
   ring?: boolean;
+  totalCount?: number;
+  paginationProps?: ReturnType<typeof usePagination>;
 }
 
 export default function CustomTable(props: CustomTableProps) {
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const { ring = true } = props;
+  const pagination = props?.paginationProps;
+  const page = pagination?.page || 1;
+  const pageSize = pagination?.pageSize || 10;
+  // const setPagination = props.paginationProps?.setPagination;
+  const { ring = true, totalCount = props.data?.length || 0 } = props;
+
+  const startRange = (page - 1) * pageSize + 1;
+  const endRange = Math.min(page * pageSize, totalCount);
 
   return (
     <ThemeProvider>
@@ -90,28 +99,38 @@ export default function CustomTable(props: CustomTableProps) {
           </table>
         </div>
 
-        {/* Dummy Paginator */}
         <div className="flex items-center justify-between px-4 py-3 bg-base-200/30 border-t border-base-300">
           <div className="text-sm text-base-content/60">
-            Showing <span className="font-medium">1</span> to{" "}
-            <span className="font-medium">{props.data?.length || 0}</span> of{" "}
-            <span className="font-medium">{props.data?.length || 0}</span>{" "}
-            results
+            Showing{" "}
+            <span className="font-medium">
+              {totalCount > 0 ? startRange : 0}
+            </span>{" "}
+            to <span className="font-medium">{endRange}</span> of{" "}
+            <span className="font-medium">{totalCount}</span> results
           </div>
           <div className="join">
             <button
               className="join-item btn btn-sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
+              onClick={() => {
+                if (pagination) {
+                  pagination.setPagination(Math.max(1, page - 1));
+                }
+              }}
+              disabled={page === 1}
             >
               «
             </button>
             <button className="join-item btn btn-sm btn-active">
-              Page {currentPage}
+              Page {page}
             </button>
             <button
               className="join-item btn btn-sm"
-              onClick={() => setCurrentPage((p) => p + 1)}
+              onClick={() => {
+                if (pagination) {
+                  pagination.setPagination(page + 1);
+                }
+              }}
+              // disabled={endRange >= totalCount}
             >
               »
             </button>

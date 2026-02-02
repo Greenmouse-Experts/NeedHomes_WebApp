@@ -21,12 +21,20 @@ const client = new QueryClient({
   },
 });
 export const Route = createRootRoute({
+  validateSearch: (search: Record<string, string>): boolean => {
+    if (search.page) {
+      const page = parseInt(search.page);
+      if (isNaN(page) || page < 1) return false;
+    }
+    return true;
+  },
   component: () => {
     const { url } = useLocation();
     const hideHeader =
       url.pathname.startsWith("/dashboard") ||
       url.pathname.startsWith("/investors") ||
       url.pathname.startsWith("/partners");
+
     return (
       <>
         <QueryClientProvider client={client}>
