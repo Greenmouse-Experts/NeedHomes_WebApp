@@ -68,13 +68,13 @@ export function PartnerSidebar({
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#2A2A2A] text-white rounded-lg shadow-lg hover:bg-[#3A3A3A] transition-colors"
+        className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-[#2A2A2A] text-white rounded-lg shadow-lg hover:bg-[#3A3A3A] transition-colors"
         aria-label="Toggle menu"
       >
         {isSidebarOpen ? (
-          <X className="w-6 h-6" />
+          <X className="w-5 h-5" />
         ) : (
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         )}
       </button>
 

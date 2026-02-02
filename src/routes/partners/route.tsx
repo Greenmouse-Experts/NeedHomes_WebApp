@@ -1,8 +1,12 @@
 import { get_user_value } from "@/store/authStore";
-import { createFileRoute, Outlet, redirect, useLocation } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useLocation,
+} from "@tanstack/react-router";
 import { PartnerSidebar } from "@/components/partners/PartnerSidebar";
 import { useState } from "react";
-import { Menu } from "lucide-react";
 
 export const Route = createFileRoute("/partners")({
   component: RouteComponent,
@@ -21,7 +25,14 @@ function RouteComponent() {
   const match = useLocation();
   const path = match.pathname;
 
-  let activePage: "dashboard" | "my-investments" | "properties" | "settings" | "notifications" | "transactions" | "announcements" = "dashboard";
+  let activePage:
+    | "dashboard"
+    | "my-investments"
+    | "properties"
+    | "settings"
+    | "notifications"
+    | "transactions"
+    | "announcements" = "dashboard";
   if (path.includes("my-investments")) activePage = "my-investments";
   else if (path.includes("properties")) activePage = "properties";
   else if (path.includes("settings")) activePage = "settings";
@@ -38,15 +49,7 @@ function RouteComponent() {
       />
 
       {/* Main Content */}
-      <main className="md:ml-64 flex-1 p-4 md:p-8 min-h-screen">
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="md:hidden mb-4 p-2 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
-          aria-label="Toggle menu"
-        >
-          <Menu className="w-6 h-6 text-gray-600" />
-          <span className="font-semibold text-gray-700">Menu</span>
-        </button>
+      <main className="md:ml-64 flex-1 p-4 md:p-8 min-h-screen pt-16 md:pt-8">
         <Outlet />
       </main>
     </div>
