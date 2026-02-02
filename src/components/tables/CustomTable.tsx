@@ -103,7 +103,7 @@ export default function CustomTable(props: CustomTableProps) {
           <div className="text-sm text-base-content/60">
             Showing{" "}
             <span className="font-medium">
-              {totalCount > 0 ? startRange : 0}
+              {/*{totalCount > 0 ? startRange : 0}*/}
             </span>{" "}
             to <span className="font-medium">{endRange}</span> of{" "}
             <span className="font-medium">{totalCount}</span> results
