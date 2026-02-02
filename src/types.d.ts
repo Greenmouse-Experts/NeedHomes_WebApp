@@ -234,3 +234,46 @@ export interface ADMIN_PARTNER_DATA {
     deletedAt: string | null;
   } | null;
 }
+
+export interface ADMIN_KYC_RESPONSE {
+  id: string;
+  user_id: string;
+  idType: string;
+  status: "PENDING" | "VERIFIED" | "REJECTED";
+  frontPage: string | null;
+  companyName: string | null;
+  rcNumber: string | null;
+  cacDocument: string | null;
+  backPage: string | null;
+  authorizedId: string | null;
+  authorizedName: string | null;
+  utilityBill: string | null;
+  address: string;
+  verificationType: "INDIVIDUAL" | "CORPORATE";
+  submitedAt: string;
+  RejectionReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  user: {
+    id: string;
+    profilePicture: string | null;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    isEmailVerified: boolean;
+    accountType: string;
+    companyName: string | null;
+    account_status: string;
+    account_verification_status: string;
+    referral_source: string;
+    partnerType: string | null;
+    referralCode: string | null;
+    totalReferrals: number;
+    totalCommission: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  };
+}

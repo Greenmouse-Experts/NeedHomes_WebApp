@@ -77,122 +77,117 @@ function InvestorKYCPage() {
   };
 
   return (
-    <DashboardLayout
-      title="Super Admin Dashboard"
-      subtitle="Investor KYC Details"
-    >
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        {/* Header with Back Button */}
-        <div className="mb-6">
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      {/* Header with Back Button */}
+      <div className="mb-6">
+        <button
+          onClick={() =>
+            navigate({
+              to: "/dashboard/investors/$investorId",
+              params: { investorId },
+            })
+          }
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+        >
+          <ChevronLeft className="w-5 h-5" />
+          <span className="font-medium">Back to Investor Details</span>
+        </button>
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-gray-200 mb-6">
+        <div className="flex gap-8">
           <button
-            onClick={() =>
-              navigate({
-                to: "/dashboard/investors/$investorId",
-                params: { investorId },
-              })
-            }
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            onClick={() => setActiveTab("kyc")}
+            className={`pb-3 px-1 font-medium text-sm transition-colors relative ${
+              activeTab === "kyc"
+                ? "text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
           >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-medium">Back to Investor Details</span>
+            KYC Information
+          </button>
+          <button
+            onClick={() => setActiveTab("bank")}
+            className={`pb-3 px-1 font-medium text-sm transition-colors relative ${
+              activeTab === "bank"
+                ? "text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Bank Details
           </button>
         </div>
+      </div>
 
-        {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setActiveTab("kyc")}
-              className={`pb-3 px-1 font-medium text-sm transition-colors relative ${
-                activeTab === "kyc"
-                  ? "text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              KYC Information
-            </button>
-            <button
-              onClick={() => setActiveTab("bank")}
-              className={`pb-3 px-1 font-medium text-sm transition-colors relative ${
-                activeTab === "bank"
-                  ? "text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Bank Details
-            </button>
-          </div>
-        </div>
+      {/* KYC Information Tab */}
+      {activeTab === "kyc" && <AdminKycForm id={investorId} />}
 
-        {/* KYC Information Tab */}
-        {activeTab === "kyc" && <AdminKycForm id={investorId} />}
+      {/* Bank Details Tab */}
+      {activeTab === "bank" && (
+        <div className="max-w-3xl">
+          <h2 className="text-xl font-semibold mb-6">Bank Details</h2>
 
-        {/* Bank Details Tab */}
-        {activeTab === "bank" && (
-          <div className="max-w-3xl">
-            <h2 className="text-xl font-semibold mb-6">Bank Details</h2>
+          <div className="space-y-6">
+            {/* Account Number */}
+            <div className="space-y-2">
+              <Label htmlFor="accountNumber">Account Number</Label>
+              <Input
+                id="accountNumber"
+                value={bankDetails.accountNumber}
+                readOnly
+                className="bg-gray-50"
+              />
+            </div>
 
-            <div className="space-y-6">
-              {/* Account Number */}
-              <div className="space-y-2">
-                <Label htmlFor="accountNumber">Account Number</Label>
-                <Input
-                  id="accountNumber"
-                  value={bankDetails.accountNumber}
-                  readOnly
-                  className="bg-gray-50"
-                />
-              </div>
+            {/* Account Name */}
+            <div className="space-y-2">
+              <Label htmlFor="accountName">Account Name</Label>
+              <Input
+                id="accountName"
+                value={bankDetails.accountName}
+                readOnly
+                className="bg-gray-50"
+              />
+            </div>
 
-              {/* Account Name */}
-              <div className="space-y-2">
-                <Label htmlFor="accountName">Account Name</Label>
-                <Input
-                  id="accountName"
-                  value={bankDetails.accountName}
-                  readOnly
-                  className="bg-gray-50"
-                />
-              </div>
+            {/* Bank Name */}
+            <div className="space-y-2">
+              <Label htmlFor="bankName">Bank Name</Label>
+              <Select
+                id="bankName"
+                options={bankOptions}
+                value={bankDetails.bankName}
+                onChange={(e) =>
+                  setBankDetails((prev) => ({
+                    ...prev,
+                    bankName: e.target.value,
+                  }))
+                }
+                className="bg-gray-50"
+              />
+            </div>
 
-              {/* Bank Name */}
-              <div className="space-y-2">
-                <Label htmlFor="bankName">Bank Name</Label>
-                <Select
-                  id="bankName"
-                  options={bankOptions}
-                  value={bankDetails.bankName}
-                  onChange={(e) =>
-                    setBankDetails((prev) => ({
-                      ...prev,
-                      bankName: e.target.value,
-                    }))
-                  }
-                  className="bg-gray-50"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-4 pt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  className="px-12"
-                  onClick={() =>
-                    navigate({
-                      to: "/dashboard/investors/$investorId",
-                      params: { investorId },
-                    })
-                  }
-                >
-                  Back
-                </Button>
-              </div>
+            {/* Buttons */}
+            <div className="flex gap-4 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                className="px-12"
+                onClick={() =>
+                  navigate({
+                    to: "/dashboard/investors/$investorId",
+                    params: { investorId },
+                  })
+                }
+              >
+                Back
+              </Button>
             </div>
           </div>
-        )}
-      </div>
-    </DashboardLayout>
+        </div>
+      )}
+    </div>
   );
 }
