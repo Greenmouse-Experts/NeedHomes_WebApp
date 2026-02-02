@@ -24,6 +24,8 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_INVESTOR_DATA } from "@/types";
 import PageLoader from "@/components/layout/PageLoader";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
+import SimpleAvatar from "@/simpleComps/SimpleAvatar";
 
 export const Route = createFileRoute("/dashboard/investors/$investorId/")({
   component: InvestorDetailsPage,
@@ -81,7 +83,7 @@ function InvestorDetailsPage() {
               <div className="bg-linear-to-r from-orange-50 to-orange-100 p-6 md:p-8">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                   {/* Avatar */}
-                  <Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
+                  {/*<Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
                     <AvatarImage
                       src={investor.profilePicture || ""}
                       // alt={`${investor.firstName} ${investor.lastName}`}
@@ -91,8 +93,13 @@ function InvestorDetailsPage() {
                       {investor.firstName?.[0]}
                       {investor.lastName?.[0]}
                     </AvatarFallback>
-                  </Avatar>
-
+                  </Avatar>*/}
+                  <ThemeProvider className="!flex-0 ">
+                    <SimpleAvatar
+                      url={investor.profilePicture || ""}
+                      alt={investor.firstName}
+                    />
+                  </ThemeProvider>
                   {/* Investor Info */}
                   <div className="flex-1">
                     <div className="flex items-start justify-between">
