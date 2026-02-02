@@ -45,6 +45,8 @@ interface CoDevelopmentFormValues {
   exitRule: "AFTER_PROJECT_COMPLETION" | "ANYTIME";
   additionalFees: AdditionalFee[];
   coverImage: string;
+  galleryImages: string[];
+  totalPrice: number;
 }
 
 function AdditionalFeesManager() {
@@ -114,20 +116,22 @@ function AdditionalFeesManager() {
 function RouteComponent() {
   const methods = useForm<CoDevelopmentFormValues>({
     defaultValues: {
-      propertyTitle: "",
+      propertyTitle: "Riverside Estate",
       propertyType: "RESIDENTIAL",
-      location: "",
-      description: "",
+      location: "Banana Island, Lagos",
+      description: "Premium co-development plot",
       developmentStage: "PLANNING",
-      completionDate: "",
-      basePrice: 0,
-      availableUnits: 1,
-      minimumInvestment: 0,
-      profitSharingRatio: 0,
-      projectDuration: 0,
+      completionDate: "2028-12-01T00:00:00.000Z",
+      basePrice: 1000000000,
+      availableUnits: 10,
+      minimumInvestment: 10000000,
+      profitSharingRatio: 0.25,
+      projectDuration: 24,
       exitRule: "AFTER_PROJECT_COMPLETION",
       additionalFees: [{ label: "Project Admin", amount: 20000000 }],
-      coverImage: "",
+      coverImage: "https://example.com/images/cover2.jpg",
+      galleryImages: [],
+      totalPrice: 1020000000,
     },
   });
 
