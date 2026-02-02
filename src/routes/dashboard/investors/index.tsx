@@ -30,7 +30,7 @@ function InvestorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
-  const props = usePagination(20);
+  const props = usePagination();
   const { data, isLoading, error } = useQuery<ApiResponse<INVESTOR[]>>({
     queryKey: ["investors", props.page],
     queryFn: async () => {
@@ -200,6 +200,7 @@ function InvestorsPage() {
                   Verification: {investor.account_verification_status}
                 </p>
                 <Button
+                  //@ts-ignore
                   variant="link"
                   className="p-0 h-auto mt-2"
                   onClick={() =>

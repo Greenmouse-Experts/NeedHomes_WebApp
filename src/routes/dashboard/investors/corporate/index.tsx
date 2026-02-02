@@ -226,6 +226,7 @@ function InvestorsPage() {
                   Verification: {investor.account_verification_status}
                 </p>
                 <Button
+                  //@ts-ignore
                   variant="link"
                   className="p-0 h-auto mt-2"
                   onClick={() =>
