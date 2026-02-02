@@ -1,5 +1,5 @@
-import { HTMLAttributes, forwardRef, ImgHTMLAttributes } from 'react'
-import { cn } from '@/lib/utils'
+import { type HTMLAttributes, forwardRef, type ImgHTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -9,16 +9,16 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full',
-          className
+          "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+          className,
         )}
         {...props}
       />
-    )
-  }
-)
+    );
+  },
+);
 
-Avatar.displayName = 'Avatar'
+Avatar.displayName = "Avatar";
 
 export interface AvatarImageProps extends ImgHTMLAttributes<HTMLImageElement> {}
 
@@ -27,14 +27,14 @@ export const AvatarImage = forwardRef<HTMLImageElement, AvatarImageProps>(
     return (
       <img
         ref={ref}
-        className={cn('h-full w-full object-cover', className)}
+        className={cn("h-full w-full object-cover", className)}
         {...props}
       />
-    )
-  }
-)
+    );
+  },
+);
 
-AvatarImage.displayName = 'AvatarImage'
+AvatarImage.displayName = "AvatarImage";
 
 export interface AvatarFallbackProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -44,14 +44,13 @@ export const AvatarFallback = forwardRef<HTMLDivElement, AvatarFallbackProps>(
       <div
         ref={ref}
         className={cn(
-          'flex h-full w-full items-center justify-center rounded-full bg-gray-100 text-gray-600',
-          className
+          "flex h-full w-full items-center justify-center rounded-full bg-gray-100 text-gray-600",
+          className,
         )}
         {...props}
       />
-    )
-  }
-)
+    );
+  },
+);
 
-AvatarFallback.displayName = 'AvatarFallback'
-
+AvatarFallback.displayName = "AvatarFallback";

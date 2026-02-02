@@ -84,7 +84,7 @@ function InvestorDetailsPage() {
                   <Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
                     <AvatarImage
                       src={investor.profilePicture || ""}
-                      alt={`${investor.firstName} ${investor.lastName}`}
+                      // alt={`${investor.firstName} ${investor.lastName}`}
                       className="object-cover"
                     />
                     <AvatarFallback className="text-2xl font-bold">

@@ -71,7 +71,7 @@ function PartnerDetailsPage() {
                     <Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
                       <AvatarImage
                         src={partner.profilePicture || ""}
-                        alt={`${partner.firstName} ${partner.lastName}`}
+                        // alt={`${partner.firstName} ${partner.lastName}`}
                         className="object-cover"
                       />
                       <AvatarFallback className="text-2xl font-bold">
