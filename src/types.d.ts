@@ -177,3 +177,60 @@ export interface ADMIN_INVESTOR_DATA {
     deletedAt: string | null;
   } | null;
 }
+
+export interface ADMIN_PARTNER_DATA {
+  id: string;
+  profilePicture: string | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  isEmailVerified: boolean;
+  accountType: "PARTNER";
+  companyName: string | null;
+  account_status: string;
+  account_verification_status: string;
+  referral_source: string | null;
+  partnerType: string | null;
+  referralCode: string | null;
+  totalReferrals: number;
+  totalCommission: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  roles: any[];
+  verification_document: {
+    id: string;
+    user_id: string;
+    idType: string;
+    frontPage: string | null;
+    companyName: string | null;
+    rcNumber: string | null;
+    cacDocument: string | null;
+    backPage: string | null;
+    authorizedId: string | null;
+    authorizedName: string | null;
+    utilityBill: string | null;
+    address: string;
+    verificationType: string;
+    status: string;
+    submitedAt: string;
+    RejectionReason: string | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  } | null;
+  bank_account: {
+    id: string;
+    user_id: string;
+    account_number: string;
+    bank_code: string;
+    bank_name: string;
+    account_name: string;
+    country: string;
+    currency: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  } | null;
+}
