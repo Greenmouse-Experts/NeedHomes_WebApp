@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { show_logout } from "@/store/authStore";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -299,10 +300,21 @@ export function DashboardLayout({
                 6
               </Badge>
             </div>
-            <Avatar className="w-8 h-8 md:w-10 md:h-10">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback className="text-xs">AD</AvatarFallback>
-            </Avatar>
+            <ThemeProvider>
+              <div className="dropdown dropdown-end">
+                <button className="btn btn-circle">
+                  <Avatar className="w-8 h-8 md:w-10 md:h-10">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback className="text-xs">AD</AvatarFallback>
+                  </Avatar>
+                </button>
+                <ul className="menu bg-base-100  shadow ring fade rounded-xl p-2 dropdown-content ">
+                  <li>
+                    <Link to="/dashboard/settings">Profile</Link>
+                  </li>
+                </ul>
+              </div>
+            </ThemeProvider>
           </div>
         </header>
 
