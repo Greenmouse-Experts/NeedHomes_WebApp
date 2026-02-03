@@ -135,10 +135,10 @@ function RouteComponent() {
   const methods = useForm<CoDevelopmentFormValues>({
     defaultValues: {
       propertyTitle: "",
-      propertyType: "",
+      propertyType: "RESIDENTIAL",
       location: "",
       description: "",
-      developmentStage: "",
+      developmentStage: undefined,
       completionDate: "",
       basePrice: 0,
       availableUnits: 0,
