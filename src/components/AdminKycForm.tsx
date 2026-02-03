@@ -52,7 +52,7 @@ export default function AdminKycForm({ id }: { id: string }) {
         status === "APPROVED"
           ? `/admin/verifications/${id}/accept`
           : `/admin/verifications/${id}/reject`;
-      return apiClient.patch(endpoint);
+      return apiClient.post(endpoint);
     },
     onSuccess: (_, status) => {
       toast.success(
