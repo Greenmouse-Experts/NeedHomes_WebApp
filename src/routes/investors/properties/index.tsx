@@ -1,114 +1,46 @@
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import PageLoader from "@/components/layout/PageLoader";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
+import type { PROPERTY_DATA } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import PropertyCard from "./-components/PropertyCard";
+import { usePagination } from "@/helpers/pagination";
+import SimplePaginator from "@/simpleComps/SimplePaginator";
 
 export const Route = createFileRoute("/investors/properties/")({
-  component: InvestorPropertiesList,
+  component: PartnerPropertiesList,
 });
 
-const properties = [
-  {
-    id: "LAG-CAT-001",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-002",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-003",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-004",
-    image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-005",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-006",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-007",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-008",
-    image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-009",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-010",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-011",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-  {
-    id: "LAG-CAT-012",
-    image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop",
-    title: "2BR Fully detached Duplex",
-    location: "4, Adeniyi Coesent, Ogba",
-  },
-];
-
-function InvestorPropertiesList() {
+function PartnerPropertiesList() {
   const [selectedPropertyType, setSelectedPropertyType] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const propertyTypes = [
     { id: "all", label: "All Properties" },
-    { id: "outright-purchase", label: "Outright Purchase" },
-    { id: "co-development", label: "Co-Development" },
+    { id: "OUTRIGHT", label: "Outright Purchase" },
+    { id: "INVESTMENT", label: "Co-Development" },
     { id: "fractional-ownership", label: "Fractional Ownership" },
-    { id: "land-banking", label: "Land Banking" },
-    { id: "save-to-own", label: "Save to Own" },
+    { id: "LAND", label: "Land Banking" },
+    { id: "SAVE_TO_OWN", label: "Save to Own" },
   ];
+  const props = usePagination();
+  const query = useQuery<ApiResponse<PROPERTY_DATA[]>>({
+    queryKey: ["property-list", props.page],
+    queryFn: async () => {
+      let resp = await apiClient.get("/properties", {
+        params: {
+          page: props.page,
+        },
+      });
+      return resp.data;
+    },
+  });
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Header */}
+    <ThemeProvider>
       <div className="mb-6 sm:mb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
           <div className="flex items-center space-x-3">
@@ -154,34 +86,45 @@ function InvestorPropertiesList() {
           </div>
         </div>
         <p className="text-gray-600 text-sm sm:text-base">
-          Browse and invest in premium real estate opportunities.
+          Browse and manage your real estate partnership opportunities.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-        {properties.map((property) => (
-          <Link
-            key={property.id}
-            to="/investors/properties/$propertyId"
-            params={{ propertyId: property.id }}
-            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
-          >
-            <div className="relative h-48 overflow-hidden">
-              <img
-                src={property.image}
-                alt={property.title}
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-              />
+      <PageLoader query={query}>
+        {(response) => {
+          const properties = response.data || [];
+          const filteredProperties =
+            selectedPropertyType === "all"
+              ? properties
+              : properties.filter(
+                  (p) =>
+                    p.investmentModel === selectedPropertyType ||
+                    p.propertyType === selectedPropertyType,
+                );
+
+          return (
+            <div className="flex flex-col gap-6">
+              {/* Header */}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
+                {filteredProperties.map((property) => (
+                  <>
+                    <PropertyCard item={property} key={"ss"} />
+                  </>
+                ))}
+              </div>
+              {filteredProperties.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  No properties found for this category.
+                </div>
+              )}
+              <div>
+                <SimplePaginator />
+              </div>
             </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-2">
-                {property.title}
-              </h3>
-              <p className="text-sm text-gray-500">{property.location}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+          );
+        }}
+      </PageLoader>
+    </ThemeProvider>
   );
 }
