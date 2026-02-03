@@ -47,10 +47,11 @@ export default function InvHeader({
             />
           </div>*/}
           <div className="relative">
-            <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
-            <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0">
-              6
-            </Badge>
+            <Link to="/investors/notifications">
+              {" "}
+              <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
+              <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0"></Badge>
+            </Link>
           </div>
           <ThemeProvider>
             <div className="dropdown dropdown-end">
@@ -62,7 +63,7 @@ export default function InvHeader({
               </button>
               <ul className="menu bg-base-100  shadow ring fade rounded-xl p-2 dropdown-content ">
                 <li>
-                  <Link to="/dashboard/settings">Profile</Link>
+                  <Link to="/investors/settings">Profile</Link>
                 </li>
               </ul>
             </div>
