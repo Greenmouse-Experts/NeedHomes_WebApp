@@ -2,6 +2,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { InvestorSidebar } from "@/components/investors/InvestorSidebar";
 import { useState } from "react";
 import { useLocation } from "@tanstack/react-router";
+import InvHeader from "./-components/InvHeader";
 
 export const Route = createFileRoute("/investors")({
   component: LayoutComponent,
@@ -33,8 +34,11 @@ function LayoutComponent() {
       />
 
       {/* Main Content */}
-      <main className="md:ml-64 flex-1 p-4 md:p-8 min-h-screen pt-16 md:pt-8">
-        <Outlet />
+      <main className="min-h-screen md:ml-64">
+        <InvHeader title="" />
+        <div className="flex-1 p-4 md:p-8 min-h-screen pt-16 md:pt-8">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

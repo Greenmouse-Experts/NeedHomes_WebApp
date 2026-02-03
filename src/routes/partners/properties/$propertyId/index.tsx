@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, Home, MapPin, Package } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/api/simpleApi";
 
 export const Route = createFileRoute("/partners/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -92,7 +94,13 @@ const propertyData: Record<string, any> = {
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const property = propertyData[propertyId] || propertyData["LAG-CAT-001"];
-
+  const query = useQuery({
+    queryKey: ["property", propertyId],
+    queryFn: async () => {
+      let resp = await apiClient.get("properties/" + propertyId);
+      return resp.data;
+    },
+  });
   const formatCurrency = (amount: number) => {
     return `₦${amount.toLocaleString()}`;
   };
