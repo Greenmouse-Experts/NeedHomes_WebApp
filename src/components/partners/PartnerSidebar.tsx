@@ -311,11 +311,7 @@ export function PartnerSidebar({
             onClick={() => {
               show_logout();
             }}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "announcements"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${"hover:bg-gray-800 text-gray-400"}`}
           >
             <LogOut className="size-4" /> Logout
           </button>
