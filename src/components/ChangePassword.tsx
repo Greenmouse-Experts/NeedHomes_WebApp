@@ -2,13 +2,18 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import apiClient from "@/api/simpleApi";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "./ui/Button";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export default function ChangePassword() {
-  const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, reset, watch } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       oldPassword: "",
       newPassword: "",
@@ -16,21 +21,22 @@ export default function ChangePassword() {
     },
   });
 
-  const onSubmit = async (values: any) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: (values: any) => apiClient.post("auth/password/change", values),
+    onSuccess: () => {
+      toast.success("Password updated successfully");
+      reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update password");
+    },
+  });
+
+  const onSubmit = (values: any) => {
     if (values.newPassword !== values.confirmPasswprd) {
       return toast.error("Passwords do not match");
     }
-
-    setLoading(true);
-    try {
-      await apiClient.post("auth/password/change", values);
-      toast.success("Password updated successfully");
-      reset();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to update password");
-    } finally {
-      setLoading(false);
-    }
+    mutate(values);
   };
 
   return (
@@ -86,10 +92,10 @@ export default function ChangePassword() {
           <div className="pt-2 md:pt-4">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={isPending}
               className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
             >
-              {loading ? "Updating..." : "Update"}
+              {isPending ? "Updating..." : "Update"}
             </Button>
           </div>
         </form>
