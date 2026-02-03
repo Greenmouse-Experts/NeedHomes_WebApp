@@ -24,15 +24,12 @@ import {
   MapPin,
   DollarSign,
   Calendar,
-  Percent,
-  Clock,
   FileText,
+  Layers,
 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
-export const Route = createFileRoute(
-  "/dashboard/properties/new/outright",
-)({
+export const Route = createFileRoute("/dashboard/properties/new/outright")({
   component: RouteComponent,
 });
 
@@ -41,25 +38,23 @@ interface AdditionalFee {
   amount: number;
 }
 
-type ExitRuleType = "FIXED_PERIOD" | "UPON_SALE" | "ANYTIME";
-
-interface CoDevelopmentFormValues {
+interface OutrightPropertyFormValues {
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
   location: string;
   description: string;
-  developmentStage: "OFF_PLAN" | "UNDER_CONSTRUCTION";
+  developmentStage: "OFF_PLAN" | "UNDER_CONSTRUCTION" | "COMPLETED";
   completionDate: string;
-  basePrice: number;
-  availableUnits: number;
-  minimumInvestment: number;
-  profitSharingRatio: number;
-  projectDuration: number;
-  exitRule: ExitRuleType;
-  additionalFees: AdditionalFee[];
+  premiumProperty: boolean;
   coverImage: string;
   galleryImages: string[];
+  videos: string[] | null;
+  basePrice: number;
+  additionalFees: AdditionalFee[];
+  availableUnits: number;
   totalPrice: number;
+  paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
+  installmentDuration: number | null;
 }
 
 function AdditionalFeesManager() {
@@ -125,24 +120,24 @@ function AdditionalFeesManager() {
 }
 
 function RouteComponent() {
-  const methods = useForm<CoDevelopmentFormValues>({
+  const methods = useForm<OutrightPropertyFormValues>({
     defaultValues: {
       propertyTitle: "",
       propertyType: "RESIDENTIAL",
       location: "",
       description: "",
-      developmentStage: "OFF_PLAN",
+      developmentStage: "COMPLETED",
       completionDate: "",
-      basePrice: 0,
-      availableUnits: 1,
-      minimumInvestment: 0,
-      profitSharingRatio: 0,
-      projectDuration: 12,
-      exitRule: "FIXED_PERIOD",
-      additionalFees: [],
+      premiumProperty: false,
       coverImage: "",
       galleryImages: [],
+      videos: null,
+      basePrice: 0,
+      additionalFees: [],
+      availableUnits: 1,
       totalPrice: 0,
+      paymentOption: "FULL_PAYMENT",
+      installmentDuration: null,
     },
   });
 
@@ -151,7 +146,7 @@ function RouteComponent() {
   const nav = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: async (data: CoDevelopmentFormValues) => {
+    mutationFn: async (data: OutrightPropertyFormValues) => {
       let coverImageUrl = "";
       if (selectProps.image) {
         const uploaded = await uploadImage(selectProps.image);
@@ -185,11 +180,12 @@ function RouteComponent() {
         ...data,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
+        totalPrice,
         completionDate: new Date(data.completionDate).toISOString(),
       };
 
       const response = await apiClient.post(
-        "/admin/properties/co-development",
+        "/admin/properties/outright",
         payload,
       );
       return response.data;
@@ -199,7 +195,7 @@ function RouteComponent() {
     },
   });
 
-  const onSubmit = (data: CoDevelopmentFormValues) => {
+  const onSubmit = (data: OutrightPropertyFormValues) => {
     toast.promise(mutation.mutateAsync(data), {
       loading: "Submitting...",
       success: extract_message,
@@ -214,10 +210,10 @@ function RouteComponent() {
           <div className="bg-primary p-6 text-primary-content">
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <Home size={24} />
-              New Co-Development Project
+              New Outright Property
             </h1>
             <p className="opacity-80 text-sm">
-              List a new project for co-development investment.
+              List a new property for outright purchase.
             </p>
           </div>
 
@@ -244,7 +240,7 @@ function RouteComponent() {
                         <SimpleInput
                           {...field}
                           label="Property Title"
-                          placeholder="e.g. Grand View Estate"
+                          placeholder="e.g. Sunnyvale Villa"
                           required
                         />
                       )}
@@ -283,6 +279,7 @@ function RouteComponent() {
                           <option value="UNDER_CONSTRUCTION">
                             Under Construction
                           </option>
+                          <option value="COMPLETED">Completed</option>
                         </LocalSelect>
                       )}
                     />
@@ -293,21 +290,31 @@ function RouteComponent() {
                         render={({ field }) => (
                           <SimpleTextArea
                             {...field}
-                            label="Project Description"
-                            placeholder="Detailed project overview..."
+                            label="Property Description"
+                            placeholder="Detailed description..."
                             rows={4}
                           />
                         )}
                       />
                     </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary"
+                        {...methods.register("premiumProperty")}
+                      />
+                      <span className="label-text font-bold">
+                        Premium Property
+                      </span>
+                    </div>
                   </div>
                 </section>
 
-                {/* 2. Media & Documents */}
+                {/* 2. Media */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 border-b pb-2">
                     <Plus className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">2. Media & Documents</h2>
+                    <h2 className="text-lg font-bold">2. Media</h2>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div className="space-y-2">
@@ -331,13 +338,11 @@ function RouteComponent() {
                   </div>
                 </section>
 
-                {/* 3. Pricing & Availability */}
+                {/* 3. Pricing & Payment */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 border-b pb-2">
                     <DollarSign className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">
-                      3. Pricing & Availability
-                    </h2>
+                    <h2 className="text-lg font-bold">3. Pricing & Payment</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Controller
@@ -346,7 +351,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Base Price (Total Value)"
+                          label="Base Price"
                           type="number"
                           icon={<DollarSign size={16} />}
                           onChange={(e) =>
@@ -361,7 +366,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Total Investment Units"
+                          label="Available Units"
                           type="number"
                           onChange={(e) =>
                             field.onChange(e.target.valueAsNumber)
@@ -375,82 +380,40 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Expected Completion"
+                          label="Completion Date"
                           type="date"
                           icon={<Calendar size={16} />}
                         />
                       )}
                     />
-                  </div>
-                  <AdditionalFeesManager />
-                </section>
-
-                {/* 4. Investment-Specific Details */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 border-b pb-2">
-                    <Percent className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">
-                      4. Investment-Specific Details
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Controller
-                      name="minimumInvestment"
+                      name="paymentOption"
                       control={methods.control}
                       render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Min Investment"
-                          type="number"
-                          icon={<DollarSign size={16} />}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="profitSharingRatio"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Profit Share (%)"
-                          type="number"
-                          icon={<Percent size={16} />}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="projectDuration"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Duration (Months)"
-                          type="number"
-                          icon={<Clock size={16} />}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="exitRule"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Exit Strategy">
-                          <option value="FIXED_PERIOD">Fixed Period</option>
-                          <option value="UPON_SALE">Upon Sale</option>
-                          <option value="ANYTIME">Flexible Exit</option>
+                        <LocalSelect {...field} label="Payment Option">
+                          <option value="FULL_PAYMENT">Full Payment</option>
+                          <option value="INSTALLMENT">Installment</option>
                         </LocalSelect>
                       )}
                     />
+                    {methods.watch("paymentOption") === "INSTALLMENT" && (
+                      <Controller
+                        name="installmentDuration"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Duration (Months)"
+                            type="number"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                    )}
                   </div>
+                  <AdditionalFeesManager />
                 </section>
 
                 <div className="pt-8">
@@ -461,8 +424,8 @@ function RouteComponent() {
                   >
                     {!mutation.isPending && <Plus size={20} className="mr-2" />}
                     {mutation.isPending
-                      ? "Creating Project..."
-                      : "Create Co-Development Project"}
+                      ? "Creating Property..."
+                      : "Create Outright Property"}
                   </button>
                 </div>
               </form>
