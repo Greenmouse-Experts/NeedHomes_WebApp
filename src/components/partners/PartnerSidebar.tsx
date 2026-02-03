@@ -13,76 +13,29 @@ interface PartnerSidebarProps {
 
 export function PartnerSidebar({
   activePage,
-  isSidebarOpen,
   setIsSidebarOpen,
 }: PartnerSidebarProps) {
   const [authRecord] = useAuth();
   const user = authRecord?.user;
 
   // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (isSidebarOpen && window.innerWidth < 768) {
-        if (
-          !target.closest("aside") &&
-          !target.closest('button[aria-label="Toggle menu"]')
-        ) {
-          setIsSidebarOpen(false);
-        }
-      }
-    };
-
-    if (isSidebarOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      // Prevent body scroll when sidebar is open on mobile
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.body.style.overflow = "";
-    };
-  }, [isSidebarOpen, setIsSidebarOpen]);
-
   // Close sidebar when route changes on mobile
   const handleLinkClick = () => {
-    if (window.innerWidth < 768) {
-      setIsSidebarOpen(false);
-    }
+    const close_div = document.getElementById(
+      "my-drawer-3",
+    ) as HTMLLabelElement;
+    close_div.click();
   };
 
   return (
     <>
       {/* Mobile Overlay/Backdrop */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300"
-          onClick={() => setIsSidebarOpen(false)}
-          aria-hidden="true"
-        />
-      )}
 
       {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-[#2A2A2A] text-white rounded-lg shadow-lg hover:bg-[#3A3A3A] transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isSidebarOpen ? (
-          <X className="w-5 h-5" />
-        ) : (
-          <Menu className="w-5 h-5" />
-        )}
-      </button>
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 z-40 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed left-0 top-0 h-full w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 z-40`}
       >
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">

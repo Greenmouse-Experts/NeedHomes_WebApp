@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-router";
 import { PartnerSidebar } from "@/components/partners/PartnerSidebar";
 import { useState } from "react";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
+import PatHeader from "./-components/PatHeader";
 
 export const Route = createFileRoute("/partners")({
   component: RouteComponent,
@@ -40,6 +42,42 @@ function RouteComponent() {
   else if (path.includes("transactions")) activePage = "transactions";
   else if (path.includes("announcements")) activePage = "announcements";
 
+  return (
+    <>
+      <ThemeProvider>
+        <div className="drawer lg:drawer-open">
+          <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+
+          <div className="drawer-content flex flex-col  min-h-screen">
+            {/* Page content here */}
+            <div className="w-full">
+              <PatHeader title="" />
+            </div>
+            <main className="w-full px-6 py-6  flex-1">
+              <Outlet />
+            </main>
+            {/*<label
+              htmlFor="my-drawer-3"
+              className="btn drawer-button lg:hidden"
+            >
+              Open drawer
+            </label>*/}
+          </div>
+          <div className="drawer-side z-20">
+            <label
+              htmlFor="my-drawer-3"
+              aria-label="close sidebar"
+              className="drawer-overlay"
+            ></label>
+            <ul className="menu p-0 bg-[#2A2A2A]    min-h-full w-64">
+              {/*//@ts-ignore*/}
+              <PartnerSidebar />
+            </ul>
+          </div>
+        </div>
+      </ThemeProvider>
+    </>
+  );
   return (
     <div className="flex min-h-screen bg-gray-100">
       <PartnerSidebar
