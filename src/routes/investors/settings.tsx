@@ -11,6 +11,7 @@ import BankDetails from "@/simpleComps/BankDetails";
 import KYCForm from "@/components/KYCForm";
 import { PhoneInput } from "@/components/CountryPhoneInput";
 import UserProfile from "@/components/UserProfile";
+import ChangePassword from "@/components/ChangePassword";
 
 export const Route = createFileRoute("/investors/settings")({
   component: SettingsPage,
@@ -156,64 +157,9 @@ function SettingsPage() {
 
             {/* Security Tab */}
             {activeTab === "security" && (
-              <div>
-                <div className="mb-4 md:mb-6">
-                  <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
-                    Change Password
-                  </h3>
-                </div>
-
-                <form
-                  onSubmit={handlePasswordSubmit}
-                  className="max-w-2xl space-y-4 md:space-y-6"
-                >
-                  {/* New Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="newPassword" className="text-sm">
-                      New Password
-                    </Label>
-                    <Input
-                      id="newPassword"
-                      type="password"
-                      placeholder="**********"
-                      value={passwordData.newPassword}
-                      onChange={(e) =>
-                        handlePasswordChange("newPassword", e.target.value)
-                      }
-                      required
-                      className="text-sm md:text-base"
-                    />
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-sm">
-                      Confirm Password
-                    </Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="**********"
-                      value={passwordData.confirmPassword}
-                      onChange={(e) =>
-                        handlePasswordChange("confirmPassword", e.target.value)
-                      }
-                      required
-                      className="text-sm md:text-base"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-2 md:pt-4">
-                    <Button
-                      type="submit"
-                      className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
-                    >
-                      Update
-                    </Button>
-                  </div>
-                </form>
-              </div>
+              <>
+                <ChangePassword />
+              </>
             )}
           </div>
         </div>
