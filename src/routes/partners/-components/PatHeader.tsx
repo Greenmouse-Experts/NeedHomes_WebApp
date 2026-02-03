@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { useAuth } from "@/store/authStore";
+import { show_logout, useAuth } from "@/store/authStore";
 import { Link } from "@tanstack/react-router";
 import { Bell, Menu, Search } from "lucide-react";
 
@@ -64,6 +64,9 @@ export default function PatHeader({
               <ul className="menu bg-base-100  shadow ring fade rounded-xl p-2 dropdown-content ">
                 <li>
                   <Link to="/partners/settings">Profile</Link>
+                </li>
+                <li>
+                  <a onClick={() => show_logout()}>Logout</a>
                 </li>
               </ul>
             </div>
