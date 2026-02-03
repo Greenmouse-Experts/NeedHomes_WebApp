@@ -103,60 +103,6 @@ function PartnerDashboard() {
         </div>
 
         {/* Right Side: Notifications and Profile */}
-        <div className="flex items-start gap-4 self-end sm:self-auto">
-          {/* Notification Icon */}
-          <Link
-            to="/partners/notifications"
-            className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <Bell size={24} />
-            {/* Optional Notification Dot */}
-            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-orange-500 border-2 border-white rounded-full"></span>
-          </Link>
-
-          {/* Profile Section */}
-          <ThemeProvider>
-            <div className="dropdown dropdown-end">
-              <button className="btn btn-circle">
-                <div className="flex flex-col items-center gap-1 btn btn-circle">
-                  <div className="relative">
-                    <img
-                      src={profilePicture || ""}
-                      alt="Profile"
-                      className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
-                    />
-                    {/* Verification Tag Overlay (Optional small badge) */}
-                    {isVerified && (
-                      <div className="absolute -bottom-1 -right-1">
-                        <CheckCircle2
-                          size={16}
-                          className="text-green-500 bg-white rounded-full"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Verification Text Tag below image */}
-                  <span
-                    className={`text-[10px] absolute mt-12 font-bold uppercase px-2 py-0.5 rounded-full border ${
-                      isVerified
-                        ? "bg-green-50 text-green-600 border-green-200"
-                        : "bg-yellow-50 text-yellow-600 border-yellow-200"
-                    }`}
-                  >
-                    {isVerified ? "Verified" : "Pending"}
-                  </span>
-                </div>
-              </button>
-
-              <ul className="menu bg-base-100 rounded dropdown-content shadow">
-                <li>
-                  <Link to="/partners/settings">Profile</Link>
-                </li>
-              </ul>
-            </div>
-          </ThemeProvider>
-        </div>
       </div>
 
       {/* Stats Cards in Orange Box + Calendar */}
