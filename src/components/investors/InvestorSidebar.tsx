@@ -35,7 +35,7 @@ export function InvestorSidebar({
       {/* Mobile Menu Button */}
 
       {/* Sidebar */}
-      <aside className={` bg-[#2A2A2A] text-white flex flex-col h-full w-full`}>
+      <aside className={` bg-[#2A2A2A] text-white flex flex-col h-full `}>
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center gap-2.5">

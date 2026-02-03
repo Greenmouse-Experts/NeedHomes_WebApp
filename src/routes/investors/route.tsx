@@ -48,12 +48,12 @@ function LayoutComponent() {
             </label>*/}
           </div>
           <div className="drawer-side z-20">
-            {/*<label
+            <label
               htmlFor="my-drawer-3"
               aria-label="close sidebar"
               className="drawer-overlay"
-            ></label>*/}
-            <ul className="menu p-0 bg-[#2A2A2A]  min-h-full w-64">
+            ></label>
+            <ul className="menu p-0 bg-[#2A2A2A]    min-h-full w-64">
               <InvestorSidebar />
             </ul>
           </div>
