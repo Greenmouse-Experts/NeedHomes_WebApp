@@ -33,7 +33,7 @@ export const Route = createFileRoute("/dashboard/partners/")({
 function PartnersPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
   const { data, isLoading, error } = useQuery<ApiResponse<PARTNER[]>>({
