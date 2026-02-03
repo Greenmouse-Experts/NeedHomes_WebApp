@@ -17,7 +17,7 @@ export default function PropertyCard({
 
   return (
     <Link
-      to="/partners/investors/$propertyId"
+      to="/investors/properties/$propertyId"
       params={{ propertyId: property.id }}
       className="card card-compact bg-base-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
     >
