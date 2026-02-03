@@ -54,6 +54,7 @@ function LayoutComponent() {
               className="drawer-overlay"
             ></label>
             <ul className="menu p-0 bg-[#2A2A2A]    min-h-full w-64">
+              {/*//@ts-ignore*/}
               <InvestorSidebar />
             </ul>
           </div>

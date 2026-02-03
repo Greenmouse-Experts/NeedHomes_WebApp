@@ -22,7 +22,12 @@ export function InvestorSidebar({
   // Close sidebar when clicking outside on mobile
 
   // Close sidebar when route changes on mobile
+
   const handleLinkClick = () => {
+    const close_div = document.getElementById(
+      "my-drawer-3",
+    ) as HTMLLabelElement;
+    close_div.click();
     // if (window.innerWidth < 768) {
     //   setIsSidebarOpen(false);
     // }
