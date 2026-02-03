@@ -52,10 +52,6 @@ interface FractionalPropertyFormValues {
   additionalFees: AdditionalFee[];
   availableUnits: number;
   totalPrice: number;
-  minimumInvestment: number;
-  profitSharingRatio: number;
-  projectDuration: number;
-  exitRule: "AFTER_PROJECT_COMPLETION" | "FLEXIBLE";
   totalShares: number;
   pricePerShare: number;
   minimumShares: number;
@@ -140,10 +136,6 @@ function RouteComponent() {
       additionalFees: [],
       availableUnits: 50,
       totalPrice: 200000000,
-      minimumInvestment: 200000,
-      profitSharingRatio: 0.25,
-      projectDuration: 24,
-      exitRule: "FLEXIBLE",
       totalShares: 10000,
       pricePerShare: 20000,
       minimumShares: 10,
@@ -201,12 +193,10 @@ function RouteComponent() {
 
       payload.basePrice = Number(payload.basePrice) || 0;
       payload.availableUnits = Number(payload.availableUnits) || 0;
-      payload.minimumInvestment = Number(payload.minimumInvestment) || 0;
-      payload.profitSharingRatio = Number(payload.profitSharingRatio) || 0;
-      payload.projectDuration = Number(payload.projectDuration) || 0;
       payload.totalShares = Number(payload.totalShares) || 0;
       payload.pricePerShare = Number(payload.pricePerShare) || 0;
       payload.minimumShares = Number(payload.minimumShares) || 0;
+      payload.totalPrice = Number(payload.totalPrice) || 0;
 
       const response = await apiClient.post(
         "/admin/properties/fractional",
@@ -382,13 +372,14 @@ function RouteComponent() {
                       )}
                     />
                     <Controller
-                      name="availableUnits"
+                      name="totalPrice"
                       control={methods.control}
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Units Available"
+                          label="Total Price"
                           type="number"
+                          icon={<DollarSign size={16} />}
                           onChange={(e) =>
                             field.onChange(Number((e as any).target?.value))
                           }
@@ -396,12 +387,12 @@ function RouteComponent() {
                       )}
                     />
                     <Controller
-                      name="minimumInvestment"
+                      name="availableUnits"
                       control={methods.control}
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Minimum Investment"
+                          label="Units Available"
                           type="number"
                           onChange={(e) =>
                             field.onChange(Number((e as any).target?.value))
@@ -482,36 +473,7 @@ function RouteComponent() {
                     </h2>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Controller
-                      name="profitSharingRatio"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Profit Sharing Ratio"
-                          type="number"
-                          step="0.01"
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="projectDuration"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Project Duration (Months)"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Controller
                       name="completionDate"
                       control={methods.control}
@@ -522,21 +484,6 @@ function RouteComponent() {
                           type="date"
                           icon={<Calendar size={16} />}
                         />
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Controller
-                      name="exitRule"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Exit Rule">
-                          <option value="AFTER_PROJECT_COMPLETION">
-                            After Project Completion
-                          </option>
-                          <option value="FLEXIBLE">Flexible</option>
-                        </LocalSelect>
                       )}
                     />
                     <Controller
