@@ -121,7 +121,7 @@ function PartnerDashboard() {
                 <div className="flex flex-col items-center gap-1 btn btn-circle">
                   <div className="relative">
                     <img
-                      src={profilePicture}
+                      src={profilePicture || ""}
                       alt="Profile"
                       className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
                     />
