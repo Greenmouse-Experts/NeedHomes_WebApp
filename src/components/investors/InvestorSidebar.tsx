@@ -20,50 +20,17 @@ export function InvestorSidebar({
   const user = authRecord?.user;
 
   // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (isSidebarOpen && window.innerWidth < 768) {
-        if (
-          !target.closest("aside") &&
-          !target.closest('button[aria-label="Toggle menu"]')
-        ) {
-          setIsSidebarOpen(false);
-        }
-      }
-    };
-
-    if (isSidebarOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      // Prevent body scroll when sidebar is open on mobile
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.body.style.overflow = "";
-    };
-  }, [isSidebarOpen, setIsSidebarOpen]);
 
   // Close sidebar when route changes on mobile
   const handleLinkClick = () => {
-    if (window.innerWidth < 768) {
-      setIsSidebarOpen(false);
-    }
+    // if (window.innerWidth < 768) {
+    //   setIsSidebarOpen(false);
+    // }
   };
 
   return (
     <>
       {/* Mobile Overlay/Backdrop */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity duration-300"
-          onClick={() => setIsSidebarOpen(false)}
-          aria-hidden="true"
-        />
-      )}
 
       {/* Mobile Menu Button */}
       <button

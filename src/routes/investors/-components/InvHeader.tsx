@@ -17,10 +17,15 @@ export default function InvHeader({
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200 p-2.5 md:p-3 lg:p-4 flex items-center justify-between sticky top-0 z-30">
+      <header className="bg-white border-b border-gray-200 p-2.5 md:p-3 lg:p-4 flex items-center justify-between sticky top-0">
         <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
           <button className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg flex-shrink-0">
-            <Menu className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
+            <label
+              htmlFor="my-drawer-3"
+              className="btn drawer-button btn-circle lg:hidden"
+            >
+              <Menu className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
+            </label>
           </button>
           <div className="min-w-0">
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 truncate">
