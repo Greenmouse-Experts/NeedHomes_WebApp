@@ -320,3 +320,46 @@ export interface ADMIN_PROPERTY_LISTING {
   updatedAt: string;
   additionalFees: any[];
 }
+
+export interface PROPERTY_DATA {
+  id: string;
+  propertyTitle: string;
+  propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
+  investmentModel: "SAVE_TO_OWN" | "RENT_TO_OWN" | "INVESTMENT" | "OUTRIGHT";
+  location: string;
+  description: string;
+  developmentStage: "PLANNING" | "FOUNDATION" | "ROOFING" | "FINISHED";
+  completionDate: string;
+  published: boolean;
+  premiumProperty: boolean;
+  coverImage: string;
+  galleryImages: string[];
+  videos: string | null;
+  certificate: string | null;
+  surveyPlanDocument: string | null;
+  brochure: string | null;
+  transferDocument: string | null;
+  basePrice: number;
+  availableUnits: number;
+  totalPrice: number;
+  paymentOption: string | null;
+  installmentDuration: number | null;
+  minimumInvestment: number | null;
+  profitSharingRatio: number | null;
+  projectDuration: number | null;
+  exitRule: string | null;
+  totalShares: number | null;
+  pricePerShare: number | null;
+  minimumShares: number | null;
+  exitWindow: number | null;
+  plotSize: string | null;
+  pricePerPlot: number | null;
+  holdingPeriod: number | null;
+  buyBackOption: boolean | null;
+  targetPropertyPrice: number;
+  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY" | null;
+  savingsDuration: number | null;
+  createdAt: string;
+  updatedAt: string;
+  additionalFees: any[];
+}
