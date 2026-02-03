@@ -65,8 +65,12 @@ export default function PatHeader({
                 <li>
                   <Link to="/partners/settings">Profile</Link>
                 </li>
-                <li>
-                  <a onClick={() => show_logout()}>Logout</a>
+                <li
+                  onMouseDown={() => {
+                    show_logout();
+                  }}
+                >
+                  <a onClick={() => {}}>Logout</a>
                 </li>
               </ul>
             </div>

@@ -66,8 +66,12 @@ export default function InvHeader({
                   <Link to="/investors/settings">Profile</Link>
                 </li>
 
-                <li>
-                  <a onClick={() => show_logout()}>Logout</a>
+                <li
+                  onMouseDown={() => {
+                    show_logout();
+                  }}
+                >
+                  <a onClick={() => {}}>Logout</a>
                 </li>
               </ul>
             </div>
