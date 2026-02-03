@@ -6,19 +6,18 @@ import type { ApiResponse } from "@/api/simpleApi";
 import {
   Search,
   Filter,
-  Calendar,
   List,
   Grid,
-  Plus,
-  ChevronDown,
+  Mail,
+  Phone,
+  User,
+  ExternalLink,
 } from "lucide-react";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import type { INVESTOR } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
-import PopUp, { type Actions } from "@/components/tables/pop-up";
+import { type Actions } from "@/components/tables/pop-up";
 import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/dashboard/investors/")({
@@ -42,7 +41,7 @@ function InvestorsPage() {
           },
         },
       );
-      return response.data; // Assuming response.data is directly ApiResponse<INVESTOR[]>
+      return response.data;
     },
   });
 
@@ -60,7 +59,7 @@ function InvestorsPage() {
     {
       key: "firstName",
       label: "First Name",
-      render: (value, item) => (
+      render: (value) => (
         <div className="flex items-center gap-2">
           <span>{value}</span>
         </div>
@@ -76,8 +75,8 @@ function InvestorsPage() {
       label: "Verification",
       render: (value) => (
         <span
-          className={`badge   badge-soft ring fade ${
-            value === "ACTIVE"
+          className={`badge badge-soft ring fade ${
+            value === "ACTIVE" || value === "VERIFIED"
               ? "badge-success"
               : value === "PENDING"
                 ? "badge-warning"
@@ -94,6 +93,7 @@ function InvestorsPage() {
       render: (value) => new Date(value).toLocaleDateString(),
     },
   ];
+
   const actions: Actions[] = [
     {
       key: "view-details",
@@ -102,13 +102,13 @@ function InvestorsPage() {
         nav({ to: `/dashboard/investors/${item.id}` }),
     },
   ];
+
   return (
     <>
       {/* Toolbar */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 mb-4 md:mb-6">
         <div className="flex flex-col gap-3 md:gap-4">
-          {/* View Toggle */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode("list")}
@@ -133,12 +133,11 @@ function InvestorsPage() {
             </div>
           </div>
 
-          {/* Search and Filters */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
             <div className="relative flex-1 min-w-50 md:flex-initial md:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="Search"
+                placeholder="Search investors..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 text-sm"
@@ -156,7 +155,6 @@ function InvestorsPage() {
         </div>
       </div>
 
-      {/* Loading & Error States */}
       {isLoading && (
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-orange"></div>
@@ -169,61 +167,93 @@ function InvestorsPage() {
         </div>
       )}
 
-      {/* Investors List View */}
       {!isLoading && !error && viewMode === "list" && (
         <CustomTable
           paginationProps={props}
           data={filteredInvestors}
           columns={investorColumns}
           actions={actions}
-          totalCount={10}
+          totalCount={data?.totalCount || filteredInvestors.length}
         />
       )}
 
-      {/* Investors Grid View (Placeholder - implement as needed) */}
       {!isLoading && !error && viewMode === "grid" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredInvestors.length > 0 ? (
             filteredInvestors.map((investor) => (
               <div
                 key={investor.id}
-                className="border p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
               >
-                <h3 className="font-semibold text-lg">
-                  {investor.firstName} {investor.lastName}
-                </h3>
-                <p className="text-gray-600">{investor.email}</p>
-                <p className="text-gray-500 text-sm">
-                  Status: {investor.account_status}
-                </p>
-                <p className="text-gray-500 text-sm">
-                  Verification: {investor.account_verification_status}
-                </p>
-                <Button
-                  //@ts-ignore
-                  variant="link"
-                  className="p-0 h-auto mt-2"
-                  onClick={() =>
-                    navigate({ to: `/dashboard/investors/${investor.id}` })
-                  }
-                >
-                  View Details
-                </Button>
+                <div className="p-5">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-brand-orange">
+                      <User className="w-6 h-6" />
+                    </div>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        investor.account_verification_status === "ACTIVE" ||
+                        investor.account_verification_status === "VERIFIED"
+                          ? "bg-green-50 text-green-700 border border-green-100"
+                          : "bg-yellow-50 text-yellow-700 border border-yellow-100"
+                      }`}
+                    >
+                      {investor.account_verification_status}
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-gray-900 text-lg mb-1 truncate">
+                    {investor.firstName} {investor.lastName}
+                  </h3>
+
+                  <div className="space-y-2 mt-4">
+                    <div className="flex items-center text-sm text-gray-600 gap-2">
+                      <Mail className="w-4 h-4 text-gray-400" />
+                      <span className="truncate">{investor.email}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600 gap-2">
+                      <Phone className="w-4 h-4 text-gray-400" />
+                      <span>{investor.phone}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
+                    ID: {investor.id.slice(0, 8)}...
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-brand-orange hover:text-brand-orange hover:bg-orange-50 gap-1.5 h-8 px-2"
+                    onClick={() =>
+                      navigate({ to: `/dashboard/investors/${investor.id}` })
+                    }
+                  >
+                    <span className="text-xs font-semibold">View Profile</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
             ))
           ) : (
-            <div className="col-span-full text-center py-10 text-gray-500">
-              No investors found.
+            <div className="col-span-full text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
+              <p className="text-gray-500">
+                No investors found matching your criteria.
+              </p>
             </div>
           )}
         </div>
       )}
 
-      {!isLoading && !error && filteredInvestors.length === 0 && (
-        <div className="text-center py-20 text-gray-500">
-          No investors match your search.
-        </div>
-      )}
+      {!isLoading &&
+        !error &&
+        filteredInvestors.length === 0 &&
+        viewMode === "list" && (
+          <div className="text-center py-20 text-gray-500">
+            No investors match your search.
+          </div>
+        )}
     </>
   );
 }
