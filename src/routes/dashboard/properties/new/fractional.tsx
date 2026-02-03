@@ -27,6 +27,7 @@ import {
   Calendar,
   Image as ImageIcon,
   Briefcase,
+  Layers,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
@@ -55,6 +56,10 @@ interface FractionalPropertyFormValues {
   profitSharingRatio: number;
   projectDuration: number;
   exitRule: "AFTER_PROJECT_COMPLETION" | "FLEXIBLE";
+  totalShares: number;
+  pricePerShare: number;
+  minimumShares: number;
+  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "NONE";
 }
 
 function AdditionalFeesManager() {
@@ -123,22 +128,26 @@ function AdditionalFeesManager() {
 function RouteComponent() {
   const methods = useForm<FractionalPropertyFormValues>({
     defaultValues: {
-      propertyTitle: "",
+      propertyTitle: "Urban Co-Living",
       propertyType: "RESIDENTIAL",
-      location: "Banana Island, Lagos",
-      description: "Premium co-development plot",
-      developmentStage: "PLANNING",
-      completionDate: "2028-12-01T00:00:00.000Z",
-      coverImage: "",
+      location: "Yaba, Lagos",
+      description: "Fractional shares in co-living units",
+      developmentStage: "ONGOING",
+      completionDate: "2027-09-01T00:00:00.000Z",
+      coverImage: "https://example.com/images/cover3.jpg",
       galleryImages: [],
-      basePrice: 1000000000,
-      additionalFees: [{ label: "Project Admin", amount: 20000000 }],
-      availableUnits: 10,
-      totalPrice: 1020000000,
-      minimumInvestment: 10000000,
+      basePrice: 200000000,
+      additionalFees: [],
+      availableUnits: 50,
+      totalPrice: 200000000,
+      minimumInvestment: 200000,
       profitSharingRatio: 0.25,
       projectDuration: 24,
-      exitRule: "AFTER_PROJECT_COMPLETION",
+      exitRule: "FLEXIBLE",
+      totalShares: 10000,
+      pricePerShare: 20000,
+      minimumShares: 10,
+      exitWindow: "MONTHLY",
     },
   });
 
@@ -172,6 +181,10 @@ function RouteComponent() {
         coverImageUrl = uploadedGalleryUrls[0];
       }
 
+      if (!coverImageUrl && data.coverImage) {
+        coverImageUrl = data.coverImage;
+      }
+
       if (!coverImageUrl) throw new Error("A cover image is required.");
 
       const allGallery = [
@@ -191,6 +204,9 @@ function RouteComponent() {
       payload.minimumInvestment = Number(payload.minimumInvestment) || 0;
       payload.profitSharingRatio = Number(payload.profitSharingRatio) || 0;
       payload.projectDuration = Number(payload.projectDuration) || 0;
+      payload.totalShares = Number(payload.totalShares) || 0;
+      payload.pricePerShare = Number(payload.pricePerShare) || 0;
+      payload.minimumShares = Number(payload.minimumShares) || 0;
 
       const response = await apiClient.post(
         "/admin/properties/fractional",
@@ -397,14 +413,72 @@ function RouteComponent() {
                   <AdditionalFeesManager />
                 </section>
 
-                {/* 4. Investment-Specific Details */}
+                {/* 4. Fractional Share Details */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 pb-2 border-b border-base-200">
+                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                      <Layers size={20} />
+                    </div>
+                    <h2 className="text-lg font-bold">
+                      4. Fractional Share Details
+                    </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Controller
+                      name="totalShares"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <SimpleInput
+                          {...field}
+                          label="Total Shares"
+                          type="number"
+                          onChange={(e) =>
+                            field.onChange(Number((e as any).target?.value))
+                          }
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="pricePerShare"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <SimpleInput
+                          {...field}
+                          label="Price Per Share"
+                          type="number"
+                          icon={<DollarSign size={16} />}
+                          onChange={(e) =>
+                            field.onChange(Number((e as any).target?.value))
+                          }
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="minimumShares"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <SimpleInput
+                          {...field}
+                          label="Minimum Shares"
+                          type="number"
+                          onChange={(e) =>
+                            field.onChange(Number((e as any).target?.value))
+                          }
+                        />
+                      )}
+                    />
+                  </div>
+                </section>
+
+                {/* 5. Investment-Specific Details */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 pb-2 border-b border-base-200">
                     <div className="p-2 bg-primary/10 rounded-lg text-primary">
                       <Briefcase size={20} />
                     </div>
                     <h2 className="text-lg font-bold">
-                      4. Investment-Specific Details
+                      5. Investment-Specific Details
                     </h2>
                   </div>
 
@@ -462,6 +536,18 @@ function RouteComponent() {
                             After Project Completion
                           </option>
                           <option value="FLEXIBLE">Flexible</option>
+                        </LocalSelect>
+                      )}
+                    />
+                    <Controller
+                      name="exitWindow"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <LocalSelect {...field} label="Exit Window">
+                          <option value="MONTHLY">Monthly</option>
+                          <option value="QUARTERLY">Quarterly</option>
+                          <option value="ANNUALLY">Annually</option>
+                          <option value="NONE">None</option>
                         </LocalSelect>
                       )}
                     />
