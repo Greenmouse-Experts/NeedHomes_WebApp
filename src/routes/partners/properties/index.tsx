@@ -8,6 +8,7 @@ import { Building2, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import PropertyCard from "./-components/PropertyCard";
 import { usePagination } from "@/helpers/pagination";
+import SimplePaginator from "@/simpleComps/SimplePaginator";
 
 export const Route = createFileRoute("/partners/properties/")({
   component: PartnerPropertiesList,
@@ -117,6 +118,9 @@ function PartnerPropertiesList() {
                   No properties found for this category.
                 </div>
               )}
+              <div>
+                <SimplePaginator />
+              </div>
             </div>
           );
         }}
