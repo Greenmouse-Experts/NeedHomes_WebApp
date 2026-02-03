@@ -7,6 +7,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Building2, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import PropertyCard from "./-components/PropertyCard";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/partners/properties/")({
   component: PartnerPropertiesList,
@@ -24,11 +25,15 @@ function PartnerPropertiesList() {
     { id: "LAND", label: "Land Banking" },
     { id: "SAVE_TO_OWN", label: "Save to Own" },
   ];
-
+  const props = usePagination();
   const query = useQuery<ApiResponse<PROPERTY_DATA[]>>({
-    queryKey: ["property-list"],
+    queryKey: ["property-list", props.page],
     queryFn: async () => {
-      let resp = await apiClient.get("/properties");
+      let resp = await apiClient.get("/properties", {
+        params: {
+          page: props.page,
+        },
+      });
       return resp.data;
     },
   });
