@@ -37,7 +37,8 @@ interface SaveToOwnFormValues {
     | "UNDER_CONSTRUCTION"
     | "COMPLETED";
   completionDate: string;
-  basePrice: number;
+  targetPropertyPrice: number;
+  minimumSavingsAmount: number;
   availableUnits: number;
   savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
   savingsDuration: number;
@@ -54,7 +55,8 @@ function RouteComponent() {
       description: "",
       developmentStage: "PLANNING",
       completionDate: "",
-      basePrice: 0,
+      targetPropertyPrice: 0,
+      minimumSavingsAmount: 0,
       availableUnits: 1,
       savingsFrequency: "MONTHLY",
       savingsDuration: 12,
@@ -93,7 +95,7 @@ function RouteComponent() {
       ];
 
       const totalPrice =
-        Number(data.basePrice) +
+        Number(data.targetPropertyPrice) +
         (data.additionalFees?.reduce(
           (acc, fee) => acc + (Number(fee.amount) || 0),
           0,
@@ -104,7 +106,6 @@ function RouteComponent() {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         totalPrice,
-        targetPropertyPrice: totalPrice,
         completionDate: new Date(data.completionDate).toISOString(),
       };
 
@@ -227,14 +228,14 @@ function RouteComponent() {
                       Financials & Savings Plan
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Controller
-                        name="basePrice"
+                        name="targetPropertyPrice"
                         control={methods.control}
                         render={({ field }) => (
                           <SimpleInput
                             {...field}
-                            label="Base Price"
+                            label="Target Property Price"
                             type="number"
                             icon={<DollarSign size={16} />}
                             onChange={(e) =>
@@ -244,10 +245,32 @@ function RouteComponent() {
                         )}
                       />
                       <Controller
+                        name="minimumSavingsAmount"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <SimpleInput
+                            {...field}
+                            label="Minimum Savings Amount"
+                            type="number"
+                            icon={<DollarSign size={16} />}
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Controller
                         name="savingsFrequency"
                         control={methods.control}
                         render={({ field }) => (
-                          <LocalSelect {...field} label="Savings Frequency">
+                          <LocalSelect
+                            {...field}
+                            label="Savings Frequency"
+                            icon={<Repeat size={16} />}
+                          >
                             <option value="DAILY">Daily</option>
                             <option value="WEEKLY">Weekly</option>
                             <option value="MONTHLY">Monthly</option>
@@ -260,7 +283,7 @@ function RouteComponent() {
                         render={({ field }) => (
                           <SimpleInput
                             {...field}
-                            label="Duration (Months)"
+                            label="Savings Duration (Months)"
                             type="number"
                             icon={<Clock size={16} />}
                             onChange={(e) =>
