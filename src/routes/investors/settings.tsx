@@ -49,28 +49,6 @@ function SettingsPage() {
     }
   }, [user]);
 
-  const handleProfileChange = (field: string, value: string) => {
-    setProfileData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handlePasswordChange = (field: string, value: string) => {
-    setPasswordData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleProfileSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Profile update:", profileData);
-  };
-
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-    console.log("Password update:", passwordData);
-  };
-
   const tabs = [
     { id: "profile" as SettingsTab, label: "Profile", icon: User },
     {
@@ -85,28 +63,13 @@ function SettingsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="flex items-center justify-between">
+      {/*<header className="flex items-center justify-between">
         <div>
           <h1 className="text-xl md:text-2xl font-bold text-gray-900">
             Settings
           </h1>
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <Bell className="w-5 h-5 text-gray-600" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
-          </button>
-          {user?.profilePicture ? (
-            <img
-              src={user.profilePicture}
-              alt="Profile"
-              className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-linear-to-br from-orange-400 to-orange-600 rounded-full"></div>
-          )}
-        </div>
-      </header>
+      </header>*/}
 
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="flex flex-col md:flex-row">
