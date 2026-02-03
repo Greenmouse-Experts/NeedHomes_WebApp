@@ -33,24 +33,9 @@ export function InvestorSidebar({
       {/* Mobile Overlay/Backdrop */}
 
       {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-[#2A2A2A] text-white rounded-lg shadow-lg hover:bg-[#3A3A3A] transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isSidebarOpen ? (
-          <X className="w-5 h-5" />
-        ) : (
-          <Menu className="w-5 h-5" />
-        )}
-      </button>
 
       {/* Sidebar */}
-      <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 z-40 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
-      >
+      <aside className={` bg-[#2A2A2A] text-white flex flex-col h-full w-full`}>
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center gap-2.5">
