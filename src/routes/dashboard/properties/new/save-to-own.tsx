@@ -247,11 +247,7 @@ function RouteComponent() {
                         name="savingsFrequency"
                         control={methods.control}
                         render={({ field }) => (
-                          <LocalSelect
-                            {...field}
-                            label="Savings Frequency"
-                            icon={<Repeat size={16} />}
-                          >
+                          <LocalSelect {...field} label="Savings Frequency">
                             <option value="DAILY">Daily</option>
                             <option value="WEEKLY">Weekly</option>
                             <option value="MONTHLY">Monthly</option>
