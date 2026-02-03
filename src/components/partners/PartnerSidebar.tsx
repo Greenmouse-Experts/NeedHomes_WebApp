@@ -73,7 +73,7 @@ export function PartnerSidebar({
             to="/partners"
             onClick={handleLinkClick}
             className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "dashboard" || activePage === undefined
+              activePage === "dashboard"
                 ? "bg-[var(--color-orange)] text-white"
                 : "hover:bg-gray-800 text-gray-400"
             }`}
