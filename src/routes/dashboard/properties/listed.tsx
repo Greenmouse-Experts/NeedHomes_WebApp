@@ -129,20 +129,6 @@ function ListedPropertiesPage() {
         }
       },
     },
-    {
-      key: "delete",
-      label: "Delete",
-      action: (item: ADMIN_PROPERTY_LISTING, nav) => {
-        if (
-          confirm(
-            `Are you sure you want to delete "${item.propertyTitle}"? This action cannot be undone.`,
-          )
-        ) {
-          console.log("Delete property:", item.id);
-          // TODO: Implement actual delete logic
-        }
-      },
-    },
   ];
 
   return (

@@ -40,7 +40,9 @@ function PartnersPage() {
     queryKey: ["partners", props.page],
     queryFn: async () => {
       const response = await apiClient.get("admin/users?accountType=PARTNER", {
-        // params: props.page,
+        params: {
+          page: props.page,
+        },
       });
       return response.data;
     },
