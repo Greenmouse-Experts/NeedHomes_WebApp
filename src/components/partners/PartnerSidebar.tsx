@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LogOut, Menu, X } from "lucide-react";
+import { List, LogOut, Menu, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { show_logout, useAuth } from "@/store/authStore";
 import { useEffect } from "react";
@@ -225,6 +225,19 @@ export function PartnerSidebar({
               />
             </svg>
             <span>Announcement</span>
+          </Link>
+
+          <Link
+            to="/investors/subscriptions"
+            onClick={handleLinkClick}
+            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+              activePage === "subscriptions"
+                ? "bg-[var(--color-orange)] text-white"
+                : "hover:bg-gray-800 text-gray-400"
+            }`}
+          >
+            <List className="size-4" />
+            <span>Subscriptions</span>
           </Link>
 
           <Link
