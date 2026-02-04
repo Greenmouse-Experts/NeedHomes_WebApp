@@ -43,7 +43,7 @@ export function InvestorSidebar({
       <aside className={` bg-[#2A2A2A] text-white flex flex-col h-full `}>
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">
-          <div className="flex items-center gap-2.5">
+          <Link to="/" className="flex items-center gap-2.5">
             <img
               src="/logo_white.png"
               alt="NeedHomes"
@@ -53,7 +53,7 @@ export function InvestorSidebar({
                 target.style.display = "none";
               }}
             />
-          </div>
+          </Link>
         </div>
 
         {/* Navigation */}

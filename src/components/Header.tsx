@@ -10,8 +10,10 @@ import {
   UserPlus,
   PieChart,
   Headset,
+  LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/store/authStore";
 
 // Dropdown menu items with enhanced design
 const dropdownMenus = {
@@ -124,6 +126,7 @@ export default function Header() {
   );
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [user] = useAuth();
 
   const links = [
     {
@@ -382,28 +385,44 @@ export default function Header() {
 
               {/* Auth Buttons */}
               <div className="px-4 py-2 space-y-2">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 border-gray-600 text-white hover:bg-gray-800"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate({ to: "/login" });
-                  }}
-                >
-                  <LogIn className="w-4 h-4" />
-                  Sign In
-                </Button>
-                <Button
-                  variant="primary"
-                  className="w-full justify-start gap-3"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate({ to: "/account-type" });
-                  }}
-                >
-                  <UserPlus className="w-4 h-4" />
-                  Get Free Account
-                </Button>
+                {user ? (
+                  <Button
+                    variant="primary"
+                    className="w-full justify-start gap-3"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate({ to: "/dashboard" });
+                    }}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-3 border-gray-600 text-white hover:bg-gray-800"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        navigate({ to: "/login" });
+                      }}
+                    >
+                      <LogIn className="w-4 h-4" />
+                      Sign In
+                    </Button>
+                    <Button
+                      variant="primary"
+                      className="w-full justify-start gap-3"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        navigate({ to: "/account-type" });
+                      }}
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      Get Free Account
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -411,20 +430,32 @@ export default function Header() {
 
         {/* Desktop Auth Buttons */}
         <div className="space-x-3 hidden lg:flex items-center">
-          <Button
-            variant="outline"
-            className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
-            onClick={() => navigate({ to: "/login" })}
-          >
-            Sign In
-          </Button>
-          <Button
-            variant="primary"
-            className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
-            onClick={() => navigate({ to: "/account-type" })}
-          >
-            Get Free Account
-          </Button>
+          {user ? (
+            <Button
+              variant="primary"
+              className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
+              onClick={() => navigate({ to: "/dashboard" })}
+            >
+              Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
+                onClick={() => navigate({ to: "/login" })}
+              >
+                Sign In
+              </Button>
+              <Button
+                variant="primary"
+                className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
+                onClick={() => navigate({ to: "/account-type" })}
+              >
+                Get Free Account
+              </Button>
+            </>
+          )}
         </div>
       </nav>
     </div>

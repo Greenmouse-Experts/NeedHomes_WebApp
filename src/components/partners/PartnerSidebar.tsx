@@ -39,7 +39,7 @@ export function PartnerSidebar({
       >
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">
-          <div className="flex items-center gap-2.5">
+          <Link to="/" className="flex items-center gap-2.5">
             <img
               src="/logo_white.png"
               alt="NeedHomes"
@@ -49,7 +49,7 @@ export function PartnerSidebar({
                 target.style.display = "none";
               }}
             />
-          </div>
+          </Link>
         </div>
 
         {/* Navigation */}
