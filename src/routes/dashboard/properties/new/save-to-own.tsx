@@ -1,5 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, FormProvider, Controller } from "react-hook-form";
+import {
+  useForm,
+  FormProvider,
+  Controller,
+  useFieldArray,
+} from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
@@ -12,6 +17,11 @@ import { extract_message } from "@/helpers/apihelpers";
 import apiClient from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SelectImage from "@/components/images/SelectImage";
+import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
+import {
+  DocumentUpload,
+  useDocumentUpload,
+} from "../../-components/DocumentUpload";
 import {
   Plus,
   Home,
@@ -20,8 +30,7 @@ import {
   Calendar,
   Clock,
   Repeat,
-  FileText,
-  Video,
+  Trash2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
@@ -46,11 +55,63 @@ interface SaveToOwnFormValues {
   savingsDuration: number;
   additionalFees: { label: string; amount: number }[];
   coverImage: string;
-  certificate?: string;
-  surveyPlanDocument?: string;
-  transferDocument?: string;
-  brochure?: string;
-  videos?: string[];
+  galleryImages: string[];
+  certificate: string;
+  surveyPlanDocument: string;
+  transferDocument: string;
+  brochure: string;
+  videos: string;
+}
+
+function AdditionalFeesManager() {
+  const { control, register } = useForm<SaveToOwnFormValues>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "additionalFees",
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+          Additional Fees
+        </label>
+        <button
+          type="button"
+          onClick={() => append({ label: "", amount: 0 })}
+          className="btn btn-ghost btn-xs text-primary"
+        >
+          <Plus size={14} className="mr-1" /> Add Fee
+        </button>
+      </div>
+      {fields.map((field, index) => (
+        <div key={field.id} className="flex gap-2 items-end">
+          <div className="flex-1">
+            <SimpleInput
+              {...register(`additionalFees.${index}.label` as const)}
+              placeholder="Fee Label (e.g. Legal)"
+            />
+          </div>
+          <div className="flex-1">
+            <SimpleInput
+              {...register(`additionalFees.${index}.amount` as const, {
+                valueAsNumber: true,
+              })}
+              type="number"
+              placeholder="Amount"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => remove(index)}
+            className="btn btn-square btn-ghost text-error"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function RouteComponent() {
@@ -69,13 +130,19 @@ function RouteComponent() {
       savingsDuration: 12,
       additionalFees: [],
       coverImage: "",
+      galleryImages: [],
+      certificate: "",
+      surveyPlanDocument: "",
+      transferDocument: "",
+      brochure: "",
+      videos: "",
     },
   });
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
-  const docUpload = useSelectImage(null as any);
-  const videoUpload = useSelectImage(null as any);
+  const docUpload = useDocumentUpload();
+  const videoUpload = useVideoUpload();
 
   const mutation = useMutation({
     mutationFn: async (data: SaveToOwnFormValues) => {
@@ -104,23 +171,16 @@ function RouteComponent() {
       ];
 
       const uploadedDocUrls: Record<string, string> = {};
-      const docFields = [
-        "certificate",
-        "surveyPlanDocument",
-        "transferDocument",
-        "brochure",
-      ];
-      for (const field of docFields) {
-        const file = (data as any)[field];
-        if (file instanceof File) {
+      for (const [key, file] of Object.entries(docUpload.documents)) {
+        if (file) {
           const uploaded = await uploadImage(file);
-          uploadedDocUrls[field] = uploaded.data.url;
+          uploadedDocUrls[key] = uploaded.data.url;
         }
       }
 
       let videoUrl = "";
-      if (videoUpload.image) {
-        const uploaded = await uploadImage(videoUpload.image);
+      if (videoUpload.videoFile) {
+        const uploaded = await uploadImage(videoUpload.videoFile);
         videoUrl = uploaded.data.url;
       }
 
@@ -133,10 +193,13 @@ function RouteComponent() {
 
       const payload = {
         ...data,
-        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        videos: videoUrl ? [videoUrl] : [],
+        videos: videoUrl,
+        certificate: uploadedDocUrls.certificateOfOwnership || "",
+        surveyPlanDocument: uploadedDocUrls.surveyPlan || "",
+        transferDocument: uploadedDocUrls.transferOfOwnershipDocument || "",
+        brochure: uploadedDocUrls.brochureFactSheet || "",
         totalPrice,
         completionDate: new Date(data.completionDate).toISOString(),
       };
@@ -174,29 +237,14 @@ function RouteComponent() {
           <div className="p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="lg:col-span-2 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <section className="md:col-span-2 flex flex-col">
-                    <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                      Primary Cover
-                    </label>
-                    <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
-                      <SelectImage {...selectProps} title="Select Cover" />
-                    </div>
-                  </section>
-
-                  <section className="flex flex-col">
-                    <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                      Promotional Video
-                    </label>
-                    <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
-                      <SelectImage
-                        {...videoUpload}
-                        title="Upload Video"
-                        icon={<Video size={32} />}
-                      />
-                    </div>
-                  </section>
-                </div>
+                <section className="flex-1 flex flex-col">
+                  <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                    Primary Cover
+                  </label>
+                  <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
+                    <SelectImage {...selectProps} title="Select Cover" />
+                  </div>
+                </section>
 
                 <section className="space-y-3">
                   <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
@@ -366,62 +414,6 @@ function RouteComponent() {
                       />
                     </div>
 
-                    <div className="divider opacity-50">Documents</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Controller
-                        name="certificate"
-                        control={methods.control}
-                        render={({ field: { onChange, value, ...field } }) => (
-                          <SimpleInput
-                            {...field}
-                            type="file"
-                            label="C of O / Title Document"
-                            icon={<FileText size={16} />}
-                            onChange={(e) => onChange(e.target.files?.[0])}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="surveyPlanDocument"
-                        control={methods.control}
-                        render={({ field: { onChange, value, ...field } }) => (
-                          <SimpleInput
-                            {...field}
-                            type="file"
-                            label="Survey Plan"
-                            icon={<FileText size={16} />}
-                            onChange={(e) => onChange(e.target.files?.[0])}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="transferDocument"
-                        control={methods.control}
-                        render={({ field: { onChange, value, ...field } }) => (
-                          <SimpleInput
-                            {...field}
-                            type="file"
-                            label="Deed of Transfer"
-                            icon={<FileText size={16} />}
-                            onChange={(e) => onChange(e.target.files?.[0])}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="brochure"
-                        control={methods.control}
-                        render={({ field: { onChange, value, ...field } }) => (
-                          <SimpleInput
-                            {...field}
-                            type="file"
-                            label="Project Brochure"
-                            icon={<FileText size={16} />}
-                            onChange={(e) => onChange(e.target.files?.[0])}
-                          />
-                        )}
-                      />
-                    </div>
-
                     <Controller
                       name="description"
                       control={methods.control}
@@ -434,6 +426,14 @@ function RouteComponent() {
                         />
                       )}
                     />
+
+                    <AdditionalFeesManager />
+
+                    <div className="divider opacity-50">Media & Documents</div>
+                    <div className="grid grid-cols-1 gap-6">
+                      <VideoUpload videoProps={videoUpload} />
+                      <DocumentUpload useDocUpload={docUpload} />
+                    </div>
 
                     <div className="pt-4">
                       <button
