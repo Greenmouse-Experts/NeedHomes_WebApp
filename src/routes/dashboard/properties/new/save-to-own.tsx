@@ -20,6 +20,8 @@ import {
   Calendar,
   Clock,
   Repeat,
+  FileText,
+  Video,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
@@ -44,6 +46,11 @@ interface SaveToOwnFormValues {
   savingsDuration: number;
   additionalFees: { label: string; amount: number }[];
   coverImage: string;
+  certificate?: string;
+  surveyPlanDocument?: string;
+  transferDocument?: string;
+  brochure?: string;
+  videos?: string[];
 }
 
 function RouteComponent() {
@@ -67,6 +74,8 @@ function RouteComponent() {
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
+  const docUpload = useSelectImage(null as any);
+  const videoUpload = useSelectImage(null as any);
 
   const mutation = useMutation({
     mutationFn: async (data: SaveToOwnFormValues) => {
@@ -94,6 +103,27 @@ function RouteComponent() {
         ...uploadedGalleryUrls,
       ];
 
+      const uploadedDocUrls: Record<string, string> = {};
+      const docFields = [
+        "certificate",
+        "surveyPlanDocument",
+        "transferDocument",
+        "brochure",
+      ];
+      for (const field of docFields) {
+        const file = (data as any)[field];
+        if (file instanceof File) {
+          const uploaded = await uploadImage(file);
+          uploadedDocUrls[field] = uploaded.data.url;
+        }
+      }
+
+      let videoUrl = "";
+      if (videoUpload.image) {
+        const uploaded = await uploadImage(videoUpload.image);
+        videoUrl = uploaded.data.url;
+      }
+
       const totalPrice =
         Number(data.targetPropertyPrice) +
         (data.additionalFees?.reduce(
@@ -103,8 +133,10 @@ function RouteComponent() {
 
       const payload = {
         ...data,
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
+        videos: videoUrl ? [videoUrl] : [],
         totalPrice,
         completionDate: new Date(data.completionDate).toISOString(),
       };
@@ -142,14 +174,29 @@ function RouteComponent() {
           <div className="p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="lg:col-span-2 space-y-6">
-                <section className="flex-1 flex flex-col">
-                  <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                    Primary Cover
-                  </label>
-                  <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
-                    <SelectImage {...selectProps} title="Select Cover" />
-                  </div>
-                </section>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <section className="md:col-span-2 flex flex-col">
+                    <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                      Primary Cover
+                    </label>
+                    <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
+                      <SelectImage {...selectProps} title="Select Cover" />
+                    </div>
+                  </section>
+
+                  <section className="flex flex-col">
+                    <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
+                      Promotional Video
+                    </label>
+                    <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
+                      <SelectImage
+                        {...videoUpload}
+                        title="Upload Video"
+                        icon={<Video size={32} />}
+                      />
+                    </div>
+                  </section>
+                </div>
 
                 <section className="space-y-3">
                   <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
@@ -266,11 +313,7 @@ function RouteComponent() {
                         name="savingsFrequency"
                         control={methods.control}
                         render={({ field }) => (
-                          <LocalSelect
-                            {...field}
-                            label="Savings Frequency"
-                            icon={<Repeat size={16} />}
-                          >
+                          <LocalSelect {...field} label="Savings Frequency">
                             <option value="DAILY">Daily</option>
                             <option value="WEEKLY">Weekly</option>
                             <option value="MONTHLY">Monthly</option>
@@ -318,6 +361,62 @@ function RouteComponent() {
                             label="Completion Date"
                             type="date"
                             icon={<Calendar size={16} />}
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="divider opacity-50">Documents</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Controller
+                        name="certificate"
+                        control={methods.control}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <SimpleInput
+                            {...field}
+                            type="file"
+                            label="C of O / Title Document"
+                            icon={<FileText size={16} />}
+                            onChange={(e) => onChange(e.target.files?.[0])}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="surveyPlanDocument"
+                        control={methods.control}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <SimpleInput
+                            {...field}
+                            type="file"
+                            label="Survey Plan"
+                            icon={<FileText size={16} />}
+                            onChange={(e) => onChange(e.target.files?.[0])}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="transferDocument"
+                        control={methods.control}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <SimpleInput
+                            {...field}
+                            type="file"
+                            label="Deed of Transfer"
+                            icon={<FileText size={16} />}
+                            onChange={(e) => onChange(e.target.files?.[0])}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="brochure"
+                        control={methods.control}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <SimpleInput
+                            {...field}
+                            type="file"
+                            label="Project Brochure"
+                            icon={<FileText size={16} />}
+                            onChange={(e) => onChange(e.target.files?.[0])}
                           />
                         )}
                       />

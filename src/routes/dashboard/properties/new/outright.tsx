@@ -25,9 +25,15 @@ import {
   DollarSign,
   Calendar,
   FileText,
-  Layers,
+  Video,
 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import type { DocProps } from "@/types/form";
+import {
+  DocumentUpload,
+  useDocumentUpload,
+} from "../../-components/DocumentUpload";
+import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
 
 export const Route = createFileRoute("/dashboard/properties/new/outright")({
   component: RouteComponent,
@@ -38,7 +44,7 @@ interface AdditionalFee {
   amount: number;
 }
 
-interface OutrightPropertyFormValues {
+interface OutrightPropertyFormValues extends DocProps {
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
   location: string;
@@ -48,7 +54,7 @@ interface OutrightPropertyFormValues {
   premiumProperty: boolean;
   coverImage: string;
   galleryImages: string[];
-  videos: string[] | null;
+  videos: string;
   basePrice: number;
   additionalFees: AdditionalFee[];
   availableUnits: number;
@@ -131,7 +137,7 @@ function RouteComponent() {
       premiumProperty: false,
       coverImage: "",
       galleryImages: [],
-      videos: null,
+      videos: "",
       basePrice: 0,
       additionalFees: [],
       availableUnits: 1,
@@ -143,10 +149,13 @@ function RouteComponent() {
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
+  const docUpload = useDocumentUpload();
+  const videoUpload = useVideoUpload();
   const nav = useNavigate();
 
   const mutation = useMutation({
     mutationFn: async (data: OutrightPropertyFormValues) => {
+      // 1. Upload Cover Image
       let coverImageUrl = "";
       if (selectProps.image) {
         const uploaded = await uploadImage(selectProps.image);
@@ -157,6 +166,7 @@ function RouteComponent() {
 
       if (!coverImageUrl) throw new Error("A cover image is required.");
 
+      // 2. Upload Gallery Images
       const uploadedGalleryUrls: string[] = [];
       if (newImages && newImages.length > 0) {
         for (const img of newImages) {
@@ -170,6 +180,30 @@ function RouteComponent() {
         ...uploadedGalleryUrls,
       ];
 
+      // 3. Upload Documents
+      const docUrls: Partial<DocProps> = {};
+      const docEntries = Object.entries(docUpload.documents);
+      for (const [key, file] of docEntries) {
+        if (file) {
+          const uploaded = await uploadImage(file);
+          const map: Record<string, keyof DocProps> = {
+            certificateOfOwnership: "certificate",
+            surveyPlan: "surveyPlanDocument",
+            transferOfOwnershipDocument: "transferDocument",
+            brochureFactSheet: "brochure",
+          };
+          const apiKey = map[key];
+          if (apiKey) docUrls[apiKey] = uploaded.data.url;
+        }
+      }
+
+      // 4. Upload Video
+      let videoUrl = "";
+      if (videoUpload.videoFile) {
+        const uploaded = await uploadImage(videoUpload.videoFile);
+        videoUrl = uploaded.data.url;
+      }
+
       const feesTotal = (data.additionalFees || []).reduce(
         (acc, fee) => acc + Number(fee.amount || 0),
         0,
@@ -178,10 +212,14 @@ function RouteComponent() {
 
       const payload = {
         ...data,
+        ...docUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
+        videos: videoUrl,
         totalPrice,
-        completionDate: new Date(data.completionDate).toISOString(),
+        completionDate: data.completionDate
+          ? new Date(data.completionDate).toISOString()
+          : null,
       };
 
       const response = await apiClient.post(
@@ -336,13 +374,29 @@ function RouteComponent() {
                       />
                     </div>
                   </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 border-b pb-2">
+                      <Video className="text-primary" size={20} />
+                      <h2 className="text-lg font-bold">Video Presentation</h2>
+                    </div>
+                    <VideoUpload videoProps={videoUpload} />
+                  </div>
                 </section>
 
-                {/* 3. Pricing & Payment */}
+                {/* 3. Documents */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 border-b pb-2">
+                    <FileText className="text-primary" size={20} />
+                    <h2 className="text-lg font-bold">3. Documents</h2>
+                  </div>
+                  <DocumentUpload useDocUpload={docUpload} />
+                </section>
+
+                {/* 4. Pricing & Payment */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 border-b pb-2">
                     <DollarSign className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">3. Pricing & Payment</h2>
+                    <h2 className="text-lg font-bold">4. Pricing & Payment</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Controller
