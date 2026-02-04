@@ -1,4 +1,5 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
 import CustomTable from "@/components/tables/CustomTable";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
@@ -152,13 +153,21 @@ function RouteComponent() {
           Add Plan
         </button>
       </div>
-      <div className="">
-        <CustomTable
-          data={query.data?.data || []}
-          columns={columns}
-          actions={actions}
-        />
-      </div>
+      <PageLoader query={query}>
+        {(data) => {
+          return (
+            <>
+              <div className="">
+                <CustomTable
+                  data={data.data || []}
+                  columns={columns}
+                  actions={actions}
+                />
+              </div>
+            </>
+          );
+        }}
+      </PageLoader>
     </ThemeProvider>
   );
 }
