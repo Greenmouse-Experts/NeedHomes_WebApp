@@ -1,12 +1,16 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import Modal from "@/components/modals/DialogModal";
 import CustomTable from "@/components/tables/CustomTable";
+import { type Actions } from "@/components/tables/pop-up";
 import { Button } from "@/components/ui/Button";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useAuth } from "@/store/authStore";
-import { useQuery } from "@tanstack/react-query";
+import { useModal } from "@/store/modals";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/investors/subscriptions/")({
   component: RouteComponent,
@@ -23,9 +27,15 @@ interface SUBSCRIPTIONS {
   maxInvestments: number;
   isActive: boolean;
 }
+
 function RouteComponent() {
   const [auth] = useAuth();
   const user = auth?.user;
+  const queryClient = useQueryClient();
+  const { ref, showModal, closeModal } = useModal();
+  const [selectedPlan, setSelectedPlan] = useState<SUBSCRIPTIONS | null>(null);
+  const [autoRenew, setAutoRenew] = useState(false);
+
   const query = useQuery<ApiResponse<SUBSCRIPTIONS[]>>({
     queryKey: ["subscriptions-plans", user],
     queryFn: async () => {
@@ -33,6 +43,31 @@ function RouteComponent() {
       return resp.data;
     },
   });
+
+  const subscribeMutation = useMutation({
+    mutationFn: async (payload: { planId: string; autorenew: string }) => {
+      const resp = await apiClient.post("/subscriptions/subscribe", payload);
+      return resp.data;
+    },
+    onSuccess: () => {
+      toast.success("Subscribed successfully!");
+      queryClient.invalidateQueries({ queryKey: ["subscriptions", user] });
+      closeModal();
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to subscribe");
+    },
+  });
+
+  const handleConfirmSubscription = () => {
+    if (selectedPlan) {
+      subscribeMutation.mutate({
+        planId: selectedPlan.id,
+        autorenew: autoRenew.toString(),
+      });
+    }
+  };
+
   const columns = [
     { key: "name", label: "Name" },
     { key: "type", label: "Type" },
@@ -51,6 +86,18 @@ function RouteComponent() {
       render: (value: boolean) => (value ? "Yes" : "No"),
     },
   ];
+
+  const actions: Actions[] = [
+    {
+      key: "subscribe",
+      label: "Subscribe",
+      action: (item: SUBSCRIPTIONS) => {
+        setSelectedPlan(item);
+        showModal();
+      },
+    },
+  ];
+
   return (
     <ThemeProvider className="space-y-6">
       <CurrentPlan />
@@ -63,12 +110,68 @@ function RouteComponent() {
                 data={data.data}
                 columns={columns}
                 ring={true}
-                actions={[]}
+                actions={actions}
               />
             </div>
           );
         }}
       </PageLoader>
+
+      <Modal
+        ref={ref}
+        title="Confirm Subscription"
+        actions={
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmSubscription}
+              disabled={subscribeMutation.isPending}
+            >
+              Confirm & Pay
+            </Button>
+          </div>
+        }
+      >
+        {selectedPlan && (
+          <div className="space-y-4">
+            <div className="rounded-lg bg-slate-50 p-4 border">
+              <h4 className="font-bold text-xl">{selectedPlan.name}</h4>
+              <p className="text-sm text-gray-600">
+                {selectedPlan.description}
+              </p>
+              <div className="mt-4 flex justify-between items-center">
+                <span className="text-gray-500">Price:</span>
+                <span className="font-bold text-lg">${selectedPlan.price}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Validity:</span>
+                <span>{selectedPlan.validity} Days</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="autorenew"
+                className="checkbox checkbox-primary checkbox-sm"
+                checked={autoRenew}
+                onChange={(e) => setAutoRenew(e.target.checked)}
+              />
+              <label
+                htmlFor="autorenew"
+                className="text-sm font-medium cursor-pointer"
+              >
+                Enable Auto-renewal
+              </label>
+            </div>
+            <p className="text-xs text-gray-400">
+              By clicking confirm, you agree to be charged the plan amount.
+            </p>
+          </div>
+        )}
+      </Modal>
     </ThemeProvider>
   );
 }
