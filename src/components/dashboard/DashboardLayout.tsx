@@ -19,6 +19,7 @@ import {
   Search,
   Bell,
   LogOut,
+  List,
 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -247,6 +248,9 @@ export function DashboardLayout({
           {/* Announcement */}
           <NavLink to="/dashboard/announcements" icon={Megaphone}>
             ANNOUNCEMENT
+          </NavLink>
+          <NavLink to="/dashboard/subscriptions" icon={List}>
+            SUBSCRIPTIONS
           </NavLink>
 
           {/* Setting */}
