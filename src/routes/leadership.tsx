@@ -1,20 +1,48 @@
-import { createFileRoute } from '@tanstack/react-router'
-import Footer from '@/components/home/Footer'
+import { createFileRoute } from "@tanstack/react-router";
+import Footer from "@/components/home/Footer";
 
-export const Route = createFileRoute('/leadership')({
+export const Route = createFileRoute("/leadership")({
   component: RouteComponent,
-})
+});
 
 const team = [
   { name: "Collins Amam", role: "Founder/CEO", image: "/assets/ceo.jpg" },
-  { name: "Daniel Aghedo", role: "CTO – Chief Technical Officer", image: "/assets/cto.jpg" },
-  { name: "Jeremiah Ochai", role: "Head of Operations", image: "/assets/hoo.jpg" },
-  { name: "Esther Chuna", role: "Client Relations Manager (CRM)", image: "/assets/crm.jpg" },
+  {
+    name: "Adenuga Ayomide",
+    role: "Product Manager",
+    image: "/old.jpeg",
+  },
+  {
+    name: "Jeremiah Ochai",
+    role: "Head of Operations",
+    image: "/assets/hoo.jpg",
+  },
+  {
+    name: "Esther Chuna",
+    role: "Client Relations Manager (CRM)",
+    image: "/assets/crm.jpg",
+  },
   { name: "Andyson Ukaegbu", role: "Admin", image: "/assets/admin.jpg" },
-  { name: "Blessing Monday", role: "Media/Publicity", image: "/assets/mediapub.jpg" },
-  { name: "Emmanuel Mbaogu Chidozie", role: "Clients Services", image: "/assets/clientservice.jpg" },
-  { name: "Teusan Gideon David", role: "Head Clients Services", image: "/assets/hcs.jpg" },
-  { name: "Esther Ironcho", role: "Sales/Marketing", image: "/assets/salesmarket.jpg" },
+  {
+    name: "Blessing Monday",
+    role: "Media/Publicity",
+    image: "/assets/mediapub.jpg",
+  },
+  {
+    name: "Emmanuel Mbaogu Chidozie",
+    role: "Clients Services",
+    image: "/assets/clientservice.jpg",
+  },
+  {
+    name: "Teusan Gideon David",
+    role: "Head Clients Services",
+    image: "/assets/hcs.jpg",
+  },
+  {
+    name: "Esther Ironcho",
+    role: "Sales/Marketing",
+    image: "/assets/salesmarket.jpg",
+  },
   { name: "Christy Marcel", role: "Marketing", image: "/assets/marketing.jpg" },
   // { name: "Taiwo O. Olayinka", role: "Partnerships Lead – Co-development", image: "/assets/Rectangle 21299.png" },
   // {
@@ -72,5 +100,5 @@ function RouteComponent() {
       </div>
       <Footer />
     </>
-  )
+  );
 }
