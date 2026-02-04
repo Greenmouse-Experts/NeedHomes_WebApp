@@ -58,21 +58,21 @@ function PartnersPage() {
   );
 
   const columns: columnType<PARTNER>[] = [
-    {
-      key: "profile",
-      label: "Profile",
-      render: (_, item) => (
-        <div className="flex items-center gap-2 md:gap-3">
-          <Avatar className="w-8 h-8 md:w-10 md:h-10">
-            <AvatarImage className="object-cover" />
-            <AvatarFallback>
-              {item.firstName?.charAt(0)}
-              {item.lastName?.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      ),
-    },
+    // {
+    //   key: "profile",
+    //   label: "Profile",
+    //   render: (_, item) => (
+    //     <div className="flex items-center gap-2 md:gap-3">
+    //       <Avatar className="w-8 h-8 md:w-10 md:h-10">
+    //         <AvatarImage className="object-cover"  src={item.}/>
+    //         <AvatarFallback>
+    //           {item.firstName?.charAt(0)}
+    //           {item.lastName?.charAt(0)}
+    //         </AvatarFallback>
+    //       </Avatar>
+    //     </div>
+    //   ),
+    // },
     {
       key: "name",
       label: "Name",
