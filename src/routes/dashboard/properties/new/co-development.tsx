@@ -29,6 +29,12 @@ import {
   Wallet,
   TrendingUp,
 } from "lucide-react";
+import {
+  DocumentUpload,
+  useDocumentUpload,
+} from "../../-components/DocumentUpload";
+import type { DocProps } from "@/types/form";
+import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
 
 export const Route = createFileRoute(
   "/dashboard/properties/new/co-development",
@@ -48,7 +54,7 @@ type ExitRuleType =
   | "AT_EXIT_WINDOW_ONLY"
   | "NOT_ALLOWED";
 
-interface CoDevelopmentFormValues {
+interface CoDevelopmentFormValues extends DocProps {
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
   location: string;
@@ -75,7 +81,6 @@ function AdditionalFeesManager() {
     control,
     name: "additionalFees",
   });
-
   return (
     <div className="space-y-4 bg-base-200/50 p-4 rounded-lg border border-base-300">
       <div className="flex justify-between items-center">
@@ -150,12 +155,17 @@ function RouteComponent() {
       coverImage: "https://example.com/images/cover2.jpg",
       galleryImages: [],
       totalPrice: 1020000000,
+      certificate: "", // Default for DocProps
+      surveyPlanDocument: "", // Default for DocProps
+      transferDocument: "", // Default for DocProps
+      brochure: "", // Default for DocProps
     },
   });
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
-
+  const docUpload = useDocumentUpload();
+  const videoUpload = useVideoUpload();
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
       let coverImageUrl = "";
@@ -184,6 +194,33 @@ function RouteComponent() {
         ...uploadedGalleryUrls,
       ];
 
+      // Handle Document Uploads
+      const uploadedDocUrls: Partial<DocProps> = {};
+      for (const docType in docUpload.documents) {
+        const file =
+          docUpload.documents[docType as keyof typeof docUpload.documents];
+        if (file) {
+          const uploaded = await uploadImage(file); // Assuming uploadImage can handle any file type and returns a URL
+          if (uploaded.data?.url) {
+            // Map the document type from useDocumentUpload to DocProps keys
+            switch (docType) {
+              case "certificateOfOwnership":
+                uploadedDocUrls.certificate = uploaded.data.url;
+                break;
+              case "surveyPlan":
+                uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
+                break;
+              case "transferOfOwnershipDocument":
+                uploadedDocUrls.transferDocument = uploaded.data.url;
+                break;
+              case "brochureFactSheet":
+                uploadedDocUrls.brochure = uploaded.data.url;
+                break;
+            }
+          }
+        }
+      }
+
       const totalPrice =
         Number(data.basePrice) +
         data.additionalFees.reduce(
@@ -193,6 +230,7 @@ function RouteComponent() {
 
       const payload = {
         ...data,
+        ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         totalPrice,
@@ -338,6 +376,7 @@ function RouteComponent() {
                       />
                     </div>
                   </div>
+                  <VideoUpload videoProps={VideoUpload} />
                 </section>
 
                 {/* 3. Pricing & Availability */}
@@ -469,11 +508,14 @@ function RouteComponent() {
                     />
                   </div>
                 </section>
+                <section>
+                  <DocumentUpload useDocUpload={docUpload} />
+                </section>
 
                 <div className="pt-8 border-t border-base-200">
                   <button
                     type="submit"
-                    className={`btn btn-primary btn-block h-14 text-lg shadow-lg ${mutation.isPending ? "loading" : ""}`}
+                    className={`btn btn-primary  h-14 text-base shadow-lg ${mutation.isPending ? "loading" : ""}`}
                     disabled={mutation.isPending}
                   >
                     {!mutation.isPending && <Plus size={20} className="mr-2" />}
