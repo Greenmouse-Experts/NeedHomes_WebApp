@@ -159,6 +159,7 @@ function RouteComponent() {
       surveyPlanDocument: "", // Default for DocProps
       transferDocument: "", // Default for DocProps
       brochure: "", // Default for DocProps
+      videos: "",
     },
   });
 
@@ -221,6 +222,15 @@ function RouteComponent() {
         }
       }
 
+      // Handle Video Upload
+      let videoUrl = "";
+      if (videoUpload.videoFile) {
+        const uploaded = await uploadImage(videoUpload.videoFile); // Assuming uploadImage can handle video files
+        if (uploaded.data?.url) {
+          videoUrl = uploaded.data.url;
+        }
+      }
+
       const totalPrice =
         Number(data.basePrice) +
         data.additionalFees.reduce(
@@ -233,6 +243,7 @@ function RouteComponent() {
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
+        videos: videoUrl, // Add uploaded video URL to the payload
         totalPrice,
         completionDate: new Date(data.completionDate).toISOString(),
       };
@@ -376,7 +387,7 @@ function RouteComponent() {
                       />
                     </div>
                   </div>
-                  <VideoUpload videoProps={VideoUpload} />
+                  <VideoUpload videoProps={videoUpload} />
                 </section>
 
                 {/* 3. Pricing & Availability */}

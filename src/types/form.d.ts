@@ -3,4 +3,5 @@ export interface DocProps {
   surveyPlanDocument: string;
   transferDocument: string;
   brochure: string;
+  videos: string;
 }
