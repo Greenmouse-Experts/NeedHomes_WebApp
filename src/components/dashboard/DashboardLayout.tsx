@@ -20,12 +20,14 @@ import {
   Bell,
   LogOut,
   List,
+  Check,
 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -249,7 +251,7 @@ export function DashboardLayout({
           <NavLink to="/dashboard/announcements" icon={Megaphone}>
             ANNOUNCEMENT
           </NavLink>
-          <NavLink to="/dashboard/subscriptions" icon={List}>
+          <NavLink to="/dashboard/subscriptions" icon={CheckBadgeIcon}>
             SUBSCRIPTIONS
           </NavLink>
 
