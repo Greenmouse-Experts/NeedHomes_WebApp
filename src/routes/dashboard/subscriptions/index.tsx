@@ -4,6 +4,7 @@ import Modal from "@/components/modals/DialogModal";
 import CustomTable from "@/components/tables/CustomTable";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
+import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -204,7 +205,7 @@ const EditPlanForm = ({
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <SimpleInput label="Name" {...register("name")} />
       <SimpleInput label="Type" {...register("type")} />
-      <SimpleInput label="Description" {...register("description")} />
+      <SimpleTextArea label="Description" {...register("description")} />
       <SimpleInput label="Price" type="number" {...register("price")} />
       <SimpleInput label="Validity" type="number" {...register("validity")} />
       {/* Add other input fields as needed */}
@@ -283,7 +284,7 @@ const PlanForm = ({
       >
         <option value={"BASIC"}>Basic</option>
       </LocalSelect>
-      <SimpleInput
+      <SimpleTextArea
         label="Description"
         {...register("description", { required: "Description is required" })}
       />
