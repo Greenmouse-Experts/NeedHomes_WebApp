@@ -11,6 +11,10 @@ import {
   Grid,
   Plus,
   ChevronDown,
+  User,
+  Mail,
+  Phone,
+  ExternalLink,
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/Input";
@@ -211,31 +215,63 @@ function InvestorsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
           {filteredInvestors.length > 0 ? (
             filteredInvestors.map((investor) => (
-              <div
-                key={investor.id}
-                className="border p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-              >
-                <h3 className="font-semibold text-lg">
-                  {investor.firstName} {investor.lastName}
-                </h3>
-                <p className="text-gray-600">{investor.email}</p>
-                <p className="text-gray-500 text-sm">
-                  Status: {investor.account_status}
-                </p>
-                <p className="text-gray-500 text-sm">
-                  Verification: {investor.account_verification_status}
-                </p>
-                <Button
-                  //@ts-ignore
-                  variant="link"
-                  className="p-0 h-auto mt-2"
-                  onClick={() =>
-                    navigate({ to: `/dashboard/investors/${investor.id}` })
-                  }
+              <>
+                <div
+                  key={investor.id}
+                  className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
                 >
-                  View Details
-                </Button>
-              </div>
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-brand-orange">
+                        <User className="w-6 h-6" />
+                      </div>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          investor.account_verification_status != "PENDING"
+                            ? "bg-green-50 text-green-700 border border-green-100"
+                            : "bg-yellow-50 text-yellow-700 border border-yellow-100"
+                        }`}
+                      >
+                        {investor.account_verification_status}
+                      </span>
+                    </div>
+
+                    <h3 className="font-bold text-gray-900 text-lg mb-1 truncate">
+                      {investor.firstName} {investor.lastName}
+                    </h3>
+
+                    <div className="space-y-2 mt-4">
+                      <div className="flex items-center text-sm text-gray-600 gap-2">
+                        <Mail className="w-4 h-4 text-gray-400" />
+                        <span className="truncate">{investor.email}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600 gap-2">
+                        <Phone className="w-4 h-4 text-gray-400" />
+                        <span>{investor.phone}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
+                      ID: {investor.id.slice(0, 8)}...
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-brand-orange hover:text-brand-orange hover:bg-orange-50 gap-1.5 h-8 px-2"
+                      onClick={() =>
+                        navigate({ to: `/dashboard/investors/${investor.id}` })
+                      }
+                    >
+                      <span className="text-xs font-semibold">
+                        View Profile
+                      </span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              </>
             ))
           ) : (
             <div className="col-span-full text-center py-10 text-gray-500">
