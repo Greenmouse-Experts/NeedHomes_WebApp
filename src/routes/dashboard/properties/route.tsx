@@ -1,4 +1,5 @@
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard/properties")({
@@ -9,7 +10,9 @@ function RouteComponent() {
   return (
     <>
       <DashboardLayout subtitle="Propert Listing" title="SuperAdmin Dashboard">
-        <Outlet />
+        <ThemeProvider>
+          <Outlet />
+        </ThemeProvider>
       </DashboardLayout>
     </>
   );
