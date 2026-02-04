@@ -12,7 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/investors/subscriptions/")({
+export const Route = createFileRoute("/partners/subscriptions/")({
   component: RouteComponent,
 });
 

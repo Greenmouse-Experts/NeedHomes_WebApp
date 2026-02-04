@@ -62,6 +62,7 @@ import { Route as DashboardVerificationsRouteRouteImport } from './routes/dashbo
 import { Route as DashboardSubscriptionsRouteRouteImport } from './routes/dashboard/subscriptions/route'
 import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard/properties/route'
 import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
+import { Route as PartnersSubscriptionsIndexRouteImport } from './routes/partners/subscriptions/index'
 import { Route as PartnersPropertiesIndexRouteImport } from './routes/partners/properties/index'
 import { Route as InvestorsSubscriptionsIndexRouteImport } from './routes/investors/subscriptions/index'
 import { Route as InvestorsPropertiesIndexRouteImport } from './routes/investors/properties/index'
@@ -366,6 +367,12 @@ const DashboardInvestorsRouteRoute = DashboardInvestorsRouteRouteImport.update({
   path: '/investors',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const PartnersSubscriptionsIndexRoute =
+  PartnersSubscriptionsIndexRouteImport.update({
+    id: '/subscriptions/',
+    path: '/subscriptions/',
+    getParentRoute: () => PartnersRouteRoute,
+  } as any)
 const PartnersPropertiesIndexRoute = PartnersPropertiesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -646,6 +653,7 @@ export interface FileRoutesByFullPath {
   '/investors/properties/': typeof InvestorsPropertiesIndexRoute
   '/investors/subscriptions/': typeof InvestorsSubscriptionsIndexRoute
   '/partners/properties/': typeof PartnersPropertiesIndexRoute
+  '/partners/subscriptions/': typeof PartnersSubscriptionsIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
@@ -721,6 +729,7 @@ export interface FileRoutesByTo {
   '/investors/properties': typeof InvestorsPropertiesIndexRoute
   '/investors/subscriptions': typeof InvestorsSubscriptionsIndexRoute
   '/partners/properties': typeof PartnersPropertiesIndexRoute
+  '/partners/subscriptions': typeof PartnersSubscriptionsIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
@@ -812,6 +821,7 @@ export interface FileRoutesById {
   '/investors/properties/': typeof InvestorsPropertiesIndexRoute
   '/investors/subscriptions/': typeof InvestorsSubscriptionsIndexRoute
   '/partners/properties/': typeof PartnersPropertiesIndexRoute
+  '/partners/subscriptions/': typeof PartnersSubscriptionsIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
@@ -904,6 +914,7 @@ export interface FileRouteTypes {
     | '/investors/properties/'
     | '/investors/subscriptions/'
     | '/partners/properties/'
+    | '/partners/subscriptions/'
     | '/dashboard/investors/$investorId/kyc'
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
@@ -979,6 +990,7 @@ export interface FileRouteTypes {
     | '/investors/properties'
     | '/investors/subscriptions'
     | '/partners/properties'
+    | '/partners/subscriptions'
     | '/dashboard/investors/$investorId/kyc'
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
@@ -1069,6 +1081,7 @@ export interface FileRouteTypes {
     | '/investors/properties/'
     | '/investors/subscriptions/'
     | '/partners/properties/'
+    | '/partners/subscriptions/'
     | '/dashboard/investors/$investorId/kyc'
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
@@ -1498,6 +1511,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/investors'
       preLoaderRoute: typeof DashboardInvestorsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/partners/subscriptions/': {
+      id: '/partners/subscriptions/'
+      path: '/subscriptions'
+      fullPath: '/partners/subscriptions/'
+      preLoaderRoute: typeof PartnersSubscriptionsIndexRouteImport
+      parentRoute: typeof PartnersRouteRoute
     }
     '/partners/properties/': {
       id: '/partners/properties/'
@@ -2031,6 +2051,7 @@ interface PartnersRouteRouteChildren {
   PartnersSettingsRoute: typeof PartnersSettingsRoute
   PartnersTransactionsRoute: typeof PartnersTransactionsRoute
   PartnersIndexRoute: typeof PartnersIndexRoute
+  PartnersSubscriptionsIndexRoute: typeof PartnersSubscriptionsIndexRoute
 }
 
 const PartnersRouteRouteChildren: PartnersRouteRouteChildren = {
@@ -2040,6 +2061,7 @@ const PartnersRouteRouteChildren: PartnersRouteRouteChildren = {
   PartnersSettingsRoute: PartnersSettingsRoute,
   PartnersTransactionsRoute: PartnersTransactionsRoute,
   PartnersIndexRoute: PartnersIndexRoute,
+  PartnersSubscriptionsIndexRoute: PartnersSubscriptionsIndexRoute,
 }
 
 const PartnersRouteRouteWithChildren = PartnersRouteRoute._addFileChildren(
