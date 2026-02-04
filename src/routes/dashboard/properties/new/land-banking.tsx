@@ -29,7 +29,17 @@ import {
   Image as ImageIcon,
   Briefcase,
   Info,
+  FileText,
+  Video,
 } from "lucide-react";
+import type { DocProps } from "@/types/form";
+import {
+  DocumentUpload,
+  useDocumentUpload,
+} from "@/routes/dashboard/-components/DocumentUpload";
+import VideoUpload, {
+  useVideoUpload,
+} from "@/routes/dashboard/-components/VideoUpload";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
@@ -40,7 +50,7 @@ interface AdditionalFee {
   amount: number;
 }
 
-interface LandBankingProperty {
+interface LandBankingProperty extends DocProps {
   propertyTitle: string;
   propertyType: "LAND" | "RESIDENTIAL" | "COMMERCIAL";
   location: string;
@@ -144,11 +154,18 @@ function RouteComponent() {
       coverImage: "",
       galleryImages: [],
       totalPrice: 0,
+      certificate: "",
+      surveyPlanDocument: "",
+      transferDocument: "",
+      brochure: "",
+      videos: "",
     },
   });
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
+  const useDocUpload = useDocumentUpload();
+  const useVideoUploadProps = useVideoUpload();
   const nav = useNavigate();
 
   const mutation = useMutation({
@@ -184,11 +201,64 @@ function RouteComponent() {
 
       const totalPrice = Number(data.basePrice || 0) + feesTotal;
 
+      // Upload documents
+      const uploadedDocUrls: DocProps = {
+        certificate: "",
+        surveyPlanDocument: "",
+        transferDocument: "",
+        brochure: "",
+        videos: "",
+      };
+
+      if (useDocUpload.documents.certificateOfOwnership) {
+        const uploaded = await apiClient.post(
+          "/admin/upload-file",
+          { file: useDocUpload.documents.certificateOfOwnership },
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        uploadedDocUrls.certificate = uploaded.data.url;
+      }
+      if (useDocUpload.documents.surveyPlan) {
+        const uploaded = await apiClient.post(
+          "/admin/upload-file",
+          { file: useDocUpload.documents.surveyPlan },
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
+      }
+      if (useDocUpload.documents.transferOfOwnershipDocument) {
+        const uploaded = await apiClient.post(
+          "/admin/upload-file",
+          { file: useDocUpload.documents.transferOfOwnershipDocument },
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        uploadedDocUrls.transferDocument = uploaded.data.url;
+      }
+      if (useDocUpload.documents.brochureFactSheet) {
+        const uploaded = await apiClient.post(
+          "/admin/upload-file",
+          { file: useDocUpload.documents.brochureFactSheet },
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        uploadedDocUrls.brochure = uploaded.data.url;
+      }
+
+      // Upload video
+      if (useVideoUploadProps.videoFile) {
+        const uploaded = await apiClient.post(
+          "/admin/upload-file",
+          { file: useVideoUploadProps.videoFile },
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        uploadedDocUrls.videos = uploaded.data.url;
+      }
+
       const payload = {
         ...data,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         totalPrice,
+        ...uploadedDocUrls,
       };
 
       const response = await apiClient.post(
@@ -347,6 +417,10 @@ function RouteComponent() {
                         setNew={setNew}
                       />
                     </div>
+                  </div>
+                  <div className="grid grid-cols-1  gap-8">
+                    <VideoUpload videoProps={useVideoUploadProps} />
+                    <DocumentUpload useDocUpload={useDocUpload} />
                   </div>
                 </section>
 
