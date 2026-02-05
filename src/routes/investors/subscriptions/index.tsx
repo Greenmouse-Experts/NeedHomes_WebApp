@@ -146,7 +146,7 @@ function RouteComponent() {
                 <span className="font-bold text-lg">${selectedPlan.price}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-500">Validity:</span>
+                <span className="text-gray-500">Validity (Months):</span>
                 <span>{selectedPlan.validity} Days</span>
               </div>
             </div>

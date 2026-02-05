@@ -91,7 +91,7 @@ function RouteComponent() {
     { key: "type", label: "Type" },
     { key: "description", label: "Description" },
     { key: "price", label: "Price" },
-    { key: "validity", label: "Validity" },
+    { key: "validity", label: "Validity (Months)" },
   ];
 
   return (
@@ -207,7 +207,11 @@ const EditPlanForm = ({
       <SimpleInput label="Type" {...register("type")} />
       <SimpleTextArea label="Description" {...register("description")} />
       <SimpleInput label="Price" type="number" {...register("price")} />
-      <SimpleInput label="Validity" type="number" {...register("validity")} />
+      <SimpleInput
+        label="Validity (Months)"
+        type="number"
+        {...register("validity")}
+      />
       {/* Add other input fields as needed */}
       <div className="flex justify-end">
         <button className="btn btn-ghost" type="button" onClick={closeModal}>
@@ -297,7 +301,7 @@ const PlanForm = ({
         })}
       />
       <SimpleInput
-        label="Validity"
+        label="Validity (Months)"
         type="number"
         {...register("validity", {
           required: "Validity is required",
