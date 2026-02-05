@@ -136,18 +136,45 @@ function RouteComponent() {
       >
         {selectedPlan && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-slate-50 p-4 border">
-              <h4 className="font-bold text-xl">{selectedPlan.name}</h4>
-              <p className="text-sm text-gray-600">
-                {selectedPlan.description}
-              </p>
-              <div className="mt-4 flex justify-between items-center">
-                <span className="text-gray-500">Price:</span>
-                <span className="font-bold text-lg">${selectedPlan.price}</span>
+            <div className="rounded-xl fade border border-border bg-card p-5 shadow-sm transition-all">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <h4 className="text-xl font-bold tracking-tight text-foreground">
+                    {selectedPlan.name}
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedPlan.description}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-primary">
+                    ${selectedPlan.price}
+                  </div>
+                  <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    One-time payment
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-500">Validity (Months):</span>
-                <span>{selectedPlan.validity} Days</span>
+
+              <div className="mt-6 grid grid-cols-2 gap-4 border-t border-border fade pt-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Duration
+                  </span>
+                  <p className="text-sm font-medium text-foreground">
+                    {selectedPlan.validity} Days
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Premium Access
+                  </span>
+                  <p className="text-sm font-medium text-foreground">
+                    {selectedPlan.canViewPremiumProperty
+                      ? "Included"
+                      : "Standard"}
+                  </p>
+                </div>
               </div>
             </div>
 
