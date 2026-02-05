@@ -20,7 +20,7 @@ export const user_atom = atomWithStorage<AUTHRECORD | null>(
 );
 export const kyc_atom = atomWithStorage<USER_KYC | null>(
   "kyc",
-  stored ? JSON.parse(userKyc) : null,
+  userKyc ? JSON.parse(userKyc) : null,
 );
 export const useKyc = () => {
   const [kyc, setKyc] = useAtom(kyc_atom);
