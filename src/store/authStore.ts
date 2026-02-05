@@ -57,7 +57,7 @@ export const set_user_value = (user: AUTHRECORD) => {
 
 export const set_kyc_value = (kyc: USER_KYC) => {
   const store = getDefaultStore();
-  store.set(kyc_atom, user);
+  store.set(kyc_atom, kyc);
 };
 
 let temp_user_atom = atomWithStorage<string | null>("temp_user", null);
