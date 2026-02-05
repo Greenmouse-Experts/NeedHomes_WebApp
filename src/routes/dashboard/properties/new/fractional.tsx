@@ -396,6 +396,16 @@ function RouteComponent() {
                       />
                     )}
                   />
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-primary"
+                      {...methods.register("premiumProperty")}
+                    />
+                    <span className="label-text font-bold">
+                      Premium Property
+                    </span>
+                  </div>
                 </section>
 
                 {/* 2. Media & Documents */}
