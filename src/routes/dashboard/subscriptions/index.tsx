@@ -2,6 +2,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
 import CustomTable from "@/components/tables/CustomTable";
+import { extract_message } from "@/helpers/apihelpers";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
@@ -53,6 +54,17 @@ function RouteComponent() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const resp = await apiClient.delete("admin/subscriptions/" + id);
+      return resp.data;
+    },
+    onSuccess: () => {
+      query.refetch();
+      modal.closeModal();
+    },
+  });
+
   const updateMutation = useMutation({
     mutationFn: async (updatedPlan: SUBSCRIPTIONS) => {
       delete updatedPlan.createdAt;
@@ -87,6 +99,17 @@ function RouteComponent() {
       action: (item: SUBSCRIPTIONS) => {
         setSelectedPlan(item);
         editModal.showModal();
+      },
+    },
+    {
+      key: "delete",
+      label: "Delete",
+      action: (item: SUBSCRIPTIONS) => {
+        toast.promise(deleteMutation.mutateAsync(item.id), {
+          loading: "deleting",
+          success: "deleted",
+          error: extract_message,
+        });
       },
     },
   ];
