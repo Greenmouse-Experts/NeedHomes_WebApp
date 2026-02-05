@@ -240,7 +240,7 @@ function RouteComponent() {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
-
+  const disable_completion = methods.watch("developmentStage") === "COMPLETED";
   return (
     <ThemeProvider>
       <div className="mx-auto">
@@ -436,6 +436,7 @@ function RouteComponent() {
                           {...field}
                           label="Completion Date"
                           type="date"
+                          disabled={disable_completion}
                           icon={<Calendar size={16} />}
                         />
                       )}
