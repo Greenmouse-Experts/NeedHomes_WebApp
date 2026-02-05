@@ -17,7 +17,7 @@ export default function ChangePassword() {
     defaultValues: {
       oldPassword: "",
       newPassword: "",
-      confirmPasswprd: "",
+      confirmPassword: "",
     },
   });
 
@@ -33,7 +33,7 @@ export default function ChangePassword() {
   });
 
   const onSubmit = (values: any) => {
-    if (values.newPassword !== values.confirmPasswprd) {
+    if (values.newPassword !== values.confirmPassword) {
       return toast.error("Passwords do not match");
     }
     mutate(values);
@@ -78,7 +78,7 @@ export default function ChangePassword() {
             label="Confirm Password"
             type="password"
             placeholder="**********"
-            {...register("confirmPasswprd", {
+            {...register("confirmPassword", {
               required: "Please confirm your password",
               validate: (val: string) => {
                 if (watch("newPassword") !== val) {
