@@ -241,7 +241,6 @@ function RouteComponent() {
       return response.data;
     },
   });
-
   const onSubmit = (data: CoDevelopmentFormValues) => {
     toast.promise(mutation.mutateAsync(data), {
       loading: "Creating property listing...",
@@ -249,6 +248,8 @@ function RouteComponent() {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
+  //@ts-ignore
+  const disable_completionn = methods.watch("developmentStage") === "COMPLETED";
 
   return (
     <ThemeProvider>
@@ -486,6 +487,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
+                          disabled={disable_completionn}
                           label="Completion Date"
                           type="date"
                           icon={<Calendar size={16} />}

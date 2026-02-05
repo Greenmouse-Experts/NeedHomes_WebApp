@@ -158,6 +158,7 @@ function RouteComponent() {
       surveyPlanDocument: "",
       transferDocument: "",
       brochure: "",
+      premiumProperty: false,
       videos: "",
     },
   });
@@ -293,7 +294,7 @@ function RouteComponent() {
     );
     return Number(vals.basePrice || 0) + feesTotal;
   };
-
+  const disable_completion = methods.watch("developmentStage") === "COMPLETED";
   return (
     <ThemeProvider>
       <div className="mx-auto max-w-5xl">
@@ -388,6 +389,16 @@ function RouteComponent() {
                           />
                         )}
                       />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary"
+                        {...methods.register("premiumProperty")}
+                      />
+                      <span className="label-text font-bold">
+                        Premium Property
+                      </span>
                     </div>
                   </div>
                 </section>
@@ -528,11 +539,12 @@ function RouteComponent() {
                     />
                     <Controller
                       name="completionDate"
+                      disabled={disable_completion}
                       control={methods.control}
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Maturity Date"
+                          label="Completion Date"
                           type="date"
                           icon={<Calendar size={16} />}
                         />

@@ -64,12 +64,12 @@ interface FractionalPropertyFormValues extends DocProps {
 }
 
 function AdditionalFeesManager() {
-  const { control, register } = useFormContext<FractionalPropertyFormValues>();
+  const { control, register, getValues, watch } =
+    useFormContext<FractionalPropertyFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "additionalFees",
   });
-
   return (
     <div className="space-y-4 bg-base-200/30 p-4 rounded-lg border border-base-300">
       <div className="flex justify-between items-center">
@@ -153,6 +153,7 @@ function RouteComponent() {
       videos: "",
     },
   });
+  const disable_completion = methods.watch("developmentStage") === "COMPLETED";
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
@@ -679,6 +680,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
+                          disabled={disable_completion}
                           label="Completion Date"
                           type="date"
                           icon={<Calendar size={16} />}
