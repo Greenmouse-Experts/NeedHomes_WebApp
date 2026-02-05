@@ -230,6 +230,7 @@ function RouteComponent() {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
+  const disable_completion = methods.watch("developmentStage") === "COMPLETED";
 
   return (
     <ThemeProvider>
@@ -418,6 +419,7 @@ function RouteComponent() {
                           <SimpleInput
                             {...field}
                             label="Completion Date"
+                            disabled={disable_completion}
                             type="date"
                             icon={<Calendar size={16} />}
                           />
