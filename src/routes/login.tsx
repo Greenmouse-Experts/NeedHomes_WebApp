@@ -39,6 +39,7 @@ function LoginPage() {
         `${new_url}auth/login`,
         credentials,
       );
+
       return response.data;
     },
     onSuccess: (data) => {

@@ -8,7 +8,7 @@ import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/dashboard/subscriptions/")({
 interface SUBSCRIPTIONS {
   id: string;
   name: string;
-  type: string;
+  type: "FREE" | "BASIC" | "PREMIUM";
   description: string;
   price: number;
   validity: number;
@@ -28,6 +28,7 @@ interface SUBSCRIPTIONS {
   maxInvestments: number;
   isActive: boolean;
 }
+
 function RouteComponent() {
   const [selectedPlan, setSelectedPlan] = useState<SUBSCRIPTIONS | null>(null);
   const query = useQuery<ApiResponse<SUBSCRIPTIONS[]>>({
@@ -40,7 +41,6 @@ function RouteComponent() {
   const modal = useModal();
   const editModal = useModal();
   const viewModal = useModal();
-  const nav = useNavigate();
 
   const createMutation = useMutation({
     mutationFn: async (newPlan: Omit<SUBSCRIPTIONS, "id">) => {
@@ -71,7 +71,7 @@ function RouteComponent() {
     {
       key: "view",
       label: "View",
-      action: (item: SUBSCRIPTIONS, nav: any) => {
+      action: (item: SUBSCRIPTIONS) => {
         setSelectedPlan(item);
         viewModal.showModal();
       },
@@ -79,7 +79,7 @@ function RouteComponent() {
     {
       key: "edit",
       label: "Edit",
-      action: (item: SUBSCRIPTIONS, nav: any) => {
+      action: (item: SUBSCRIPTIONS) => {
         setSelectedPlan(item);
         editModal.showModal();
       },
@@ -89,9 +89,9 @@ function RouteComponent() {
   const columns = [
     { key: "name", label: "Name" },
     { key: "type", label: "Type" },
-    { key: "description", label: "Description" },
     { key: "price", label: "Price" },
     { key: "validity", label: "Validity (Months)" },
+    { key: "maxInvestments", label: "Max Investments" },
   ];
 
   return (
@@ -101,34 +101,31 @@ function RouteComponent() {
           onSubmit={(values) => {
             toast.promise(createMutation.mutateAsync(values), {
               loading: "Creating plan...",
-              success: () => {
-                return "Plan created successfully!";
-              },
-              error: (error: any) => {
-                return `Failed to create plan: ${error.message}`;
-              },
+              success: () => "Plan created successfully!",
+              error: (error: any) => `Failed to create plan: ${error.message}`,
             });
           }}
           isLoading={createMutation.isPending}
+          closeModal={modal.closeModal}
         />
       </Modal>
 
       <Modal title="Edit Plan" ref={editModal.ref}>
         {selectedPlan && (
-          <EditPlanForm
-            plan={selectedPlan}
+          <PlanForm
+            defaultValues={selectedPlan}
             closeModal={editModal.closeModal}
             onSubmit={(values) => {
               toast.promise(
-                updateMutation.mutateAsync({ ...selectedPlan, ...values }),
+                updateMutation.mutateAsync({
+                  ...selectedPlan,
+                  ...values,
+                } as SUBSCRIPTIONS),
                 {
                   loading: "Updating plan...",
-                  success: () => {
-                    return "Plan updated successfully!";
-                  },
-                  error: (error: any) => {
-                    return `Failed to update plan: ${error.message}`;
-                  },
+                  success: () => "Plan updated successfully!",
+                  error: (error: any) =>
+                    `Failed to update plan: ${error.message}`,
                 },
               );
             }}
@@ -155,75 +152,19 @@ function RouteComponent() {
         </button>
       </div>
       <PageLoader query={query}>
-        {(data) => {
-          return (
-            <>
-              <div className="">
-                <CustomTable
-                  data={data.data || []}
-                  columns={columns}
-                  actions={actions}
-                />
-              </div>
-            </>
-          );
-        }}
+        {(data) => (
+          <div className="">
+            <CustomTable
+              data={data.data || []}
+              columns={columns}
+              actions={actions}
+            />
+          </div>
+        )}
       </PageLoader>
     </ThemeProvider>
   );
 }
-
-const EditPlanForm = ({
-  plan,
-  closeModal,
-  onSubmit,
-  isLoading,
-}: {
-  plan: SUBSCRIPTIONS;
-  closeModal: () => void;
-  onSubmit: (values: Partial<SUBSCRIPTIONS>) => void;
-  isLoading: boolean;
-}) => {
-  const { register, handleSubmit } = useForm<Partial<SUBSCRIPTIONS>>({
-    defaultValues: {
-      name: plan.name,
-      type: plan.type,
-      description: plan.description,
-      price: plan.price,
-      validity: plan.validity,
-      canViewPremiumProperty: plan.canViewPremiumProperty,
-      maxInvestments: plan.maxInvestments,
-      isActive: plan.isActive,
-    },
-  });
-
-  const submitHandler = (data: Partial<SUBSCRIPTIONS>) => {
-    onSubmit(data);
-  };
-
-  return (
-    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
-      <SimpleInput label="Name" {...register("name")} />
-      <SimpleInput label="Type" {...register("type")} />
-      <SimpleTextArea label="Description" {...register("description")} />
-      <SimpleInput label="Price" type="number" {...register("price")} />
-      <SimpleInput
-        label="Validity (Months)"
-        type="number"
-        {...register("validity")}
-      />
-      {/* Add other input fields as needed */}
-      <div className="flex justify-end">
-        <button className="btn btn-ghost" type="button" onClick={closeModal}>
-          Cancel
-        </button>
-        <button className="btn btn-primary" type="submit" disabled={isLoading}>
-          {isLoading ? "Updating..." : "Update"}
-        </button>
-      </div>
-    </form>
-  );
-};
 
 const ViewPlanForm = ({
   plan,
@@ -247,9 +188,17 @@ const ViewPlanForm = ({
         <span className="font-semibold">Price:</span> {plan.price}
       </div>
       <div>
-        <span className="font-semibold">Validity:</span> {plan.validity}
+        <span className="font-semibold">Validity:</span> {plan.validity}{" "}
+        Month(s)
       </div>
-      {/* Display other plan details */}
+      <div>
+        <span className="font-semibold">Can View Premium:</span>{" "}
+        {plan.canViewPremiumProperty ? "Yes" : "No"}
+      </div>
+      <div>
+        <span className="font-semibold">Max Investments:</span>{" "}
+        {plan.maxInvestments}
+      </div>
       <div className="flex justify-end">
         <button className="btn btn-ghost" onClick={closeModal}>
           Close
@@ -262,46 +211,69 @@ const ViewPlanForm = ({
 const PlanForm = ({
   onSubmit,
   isLoading,
+  defaultValues,
+  closeModal,
 }: {
   onSubmit: (values: Omit<SUBSCRIPTIONS, "id">) => void;
   isLoading: boolean;
+  defaultValues?: Partial<SUBSCRIPTIONS>;
+  closeModal: () => void;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Omit<SUBSCRIPTIONS, "id">>();
+  const { register, handleSubmit, watch, setValue } = useForm<
+    Omit<SUBSCRIPTIONS, "id">
+  >({
+    defaultValues: defaultValues || {
+      type: "FREE",
+      canViewPremiumProperty: false,
+      isActive: true,
+      price: 0,
+    },
+  });
+
+  const planType = watch("type");
 
   const submitHandler = (data: Omit<SUBSCRIPTIONS, "id">) => {
-    onSubmit(data);
+    const finalData = {
+      ...data,
+      price: planType === "FREE" ? 0 : data.price,
+    };
+    onSubmit(finalData);
   };
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
       <SimpleInput
-        label="Name"
+        label="Plan Name"
         {...register("name", { required: "Name is required" })}
       />
+
       <LocalSelect
         {...register("type", { required: "Type is required" })}
-        label="Type"
+        label="Plan Type"
       >
-        <option value={"BASIC"}>Basic</option>
+        <option value="FREE">Free</option>
+        <option value="BASIC">Basic</option>
+        <option value="PREMIUM">Premium</option>
       </LocalSelect>
+
       <SimpleTextArea
         label="Description"
         {...register("description", { required: "Description is required" })}
       />
+
+      {planType !== "FREE" && (
+        <SimpleInput
+          label="Price"
+          type="number"
+          {...register("price", {
+            required: "Price is required",
+            valueAsNumber: true,
+          })}
+        />
+      )}
+
       <SimpleInput
-        label="Price"
-        type="number"
-        {...register("price", {
-          required: "Price is required",
-          valueAsNumber: true,
-        })}
-      />
-      <SimpleInput
-        label="Validity (Months)"
+        label="Plan Validity (Months)"
         type="number"
         {...register("validity", {
           required: "Validity is required",
@@ -309,12 +281,40 @@ const PlanForm = ({
         })}
       />
 
-      <div className="flex justify-end">
-        <button className="btn btn-ghost" type="button">
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Benefits</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="canViewPremium"
+            className="checkbox checkbox-primary checkbox-sm"
+            {...register("canViewPremiumProperty")}
+          />
+          <label htmlFor="canViewPremium" className="text-sm">
+            Can view/invest on premium properties
+          </label>
+        </div>
+      </div>
+
+      <SimpleInput
+        label="Number of Investments Allowed"
+        type="number"
+        {...register("maxInvestments", {
+          required: "Max investments is required",
+          valueAsNumber: true,
+        })}
+      />
+
+      <div className="flex justify-end gap-2">
+        <button className="btn btn-ghost" type="button" onClick={closeModal}>
           Cancel
         </button>
         <button className="btn btn-primary" type="submit" disabled={isLoading}>
-          {isLoading ? "Creating..." : "Create"}
+          {isLoading
+            ? "Saving..."
+            : defaultValues
+              ? "Update Plan"
+              : "Create Plan"}
         </button>
       </div>
     </form>
