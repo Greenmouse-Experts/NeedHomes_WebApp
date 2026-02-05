@@ -4,4 +4,8 @@ export interface DocProps {
   transferDocument: string;
   brochure: string;
   videos: string;
+  premiumProperty: boolean;
+  ExpectedCompletionDate: string;
+  location: string;
+  description: string;
 }

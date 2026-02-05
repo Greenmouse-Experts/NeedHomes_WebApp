@@ -42,11 +42,6 @@ export const Route = createFileRoute(
   component: RouteComponent,
 });
 
-interface AdditionalFee {
-  label: string;
-  amount: number;
-}
-
 type ExitRuleType =
   | "ANYTIME"
   | "AFTER_LOCK_IN_PERIOD"
@@ -55,22 +50,11 @@ type ExitRuleType =
   | "NOT_ALLOWED";
 
 interface CoDevelopmentFormValues extends DocProps {
-  propertyTitle: string;
-  propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
-  location: string;
-  description: string;
-  developmentStage: "PLANNING" | "UNDER_CONSTRUCTION" | "COMPLETED";
-  completionDate: string;
-  basePrice: number;
-  availableUnits: number;
   minimumInvestment: number;
   profitSharingRatio: number;
   projectDuration: number;
   exitRule: ExitRuleType;
-  additionalFees: AdditionalFee[];
-  coverImage: string;
-  galleryImages: string[];
-  totalPrice: number;
+  propertyTitle: string;
 }
 
 function AdditionalFeesManager() {
@@ -139,6 +123,7 @@ function AdditionalFeesManager() {
 function RouteComponent() {
   const methods = useForm<CoDevelopmentFormValues>({
     defaultValues: {
+      //@ts-ignore
       propertyTitle: "",
       propertyType: "RESIDENTIAL",
       location: "",
@@ -154,6 +139,7 @@ function RouteComponent() {
       additionalFees: [{ label: "Project Admin", amount: 20000000 }],
       coverImage: "https://example.com/images/cover2.jpg",
       galleryImages: [],
+      premiumProperty: false,
       totalPrice: 1020000000,
       certificate: "", // Default for DocProps
       surveyPlanDocument: "", // Default for DocProps
@@ -358,6 +344,16 @@ function RouteComponent() {
                         )}
                       />
                     </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-primary"
+                      {...methods.register("premiumProperty")}
+                    />
+                    <span className="label-text font-bold">
+                      Premium Property
+                    </span>
                   </div>
                 </section>
 
