@@ -55,9 +55,14 @@ function RouteComponent() {
 
   const updateMutation = useMutation({
     mutationFn: async (updatedPlan: SUBSCRIPTIONS) => {
+      delete updatedPlan.createdAt;
+      delete updatedPlan.updatedAt;
+      delete updatedPlan.deletedAt;
+      const without_id = { ...updatedPlan };
+      delete without_id.id;
       const resp = await apiClient.patch(
         `admin/subscriptions/${updatedPlan.id}`,
-        updatedPlan,
+        without_id,
       );
       return resp.data;
     },
@@ -96,7 +101,7 @@ function RouteComponent() {
 
   return (
     <ThemeProvider className="p-6 bg-white shadow rounded-xl space-y-6">
-      <Modal title="Add Plan" ref={modal.ref}>
+      <Modal title="Add New Subscription Plan" ref={modal.ref}>
         <PlanForm
           onSubmit={(values) => {
             toast.promise(createMutation.mutateAsync(values), {
@@ -110,7 +115,7 @@ function RouteComponent() {
         />
       </Modal>
 
-      <Modal title="Edit Plan" ref={editModal.ref}>
+      <Modal title="Edit Subscription Plan" ref={editModal.ref}>
         {selectedPlan && (
           <PlanForm
             defaultValues={selectedPlan}
@@ -134,14 +139,14 @@ function RouteComponent() {
         )}
       </Modal>
 
-      <Modal title="View Plan" ref={viewModal.ref}>
+      <Modal title="Plan Details" ref={viewModal.ref}>
         {selectedPlan && (
           <ViewPlanForm plan={selectedPlan} closeModal={viewModal.closeModal} />
         )}
       </Modal>
 
       <div className="flex items-center">
-        <h2 className="font-bold">Subscription Plan</h2>
+        <h2 className="font-bold text-xl">Subscription Plans</h2>
         <button
           className="btn btn-primary ml-auto"
           onClick={() => {
@@ -174,34 +179,61 @@ const ViewPlanForm = ({
   closeModal: () => void;
 }) => {
   return (
-    <div className="space-y-4">
-      <div>
-        <span className="font-semibold">Name:</span> {plan.name}
+    <div className="space-y-6">
+      <div className="flex flex-col card  pb-4 ring fade">
+        <section className="card-body">
+          {" "}
+          <div className="badge  mb-2">
+            {plan.type === "PREMIUM"
+              ? "Premium"
+              : plan.type === "BASIC"
+                ? "Basic"
+                : "Free"}
+          </div>
+          <h3 className="text-2xl font-bold">{plan.name}</h3>
+          <div className="text-3xl font-black text-primary mt-2">
+            ${plan.price}
+            <span className="text-sm font-normal text-base-content/60 ml-1">
+              / {plan.validity} Months
+            </span>
+          </div>
+        </section>
       </div>
-      <div>
-        <span className="font-semibold">Type:</span> {plan.type}
+
+      <div className="grid grid-cols-1 gap-4">
+        <div className="bg-base-200/50 p-4 rounded-xl">
+          <span className="text-xs font-bold uppercase opacity-50 block mb-1">
+            Description
+          </span>
+          <p className="text-sm leading-relaxed">{plan.description}</p>
+        </div>
+
+        <div className="stats stats-vertical lg:stats-horizontal shadow-sm border border-base-200">
+          <div className="stat">
+            <div className="stat-title text-xs uppercase font-bold">
+              Investments
+            </div>
+            <div className="stat-value text-2xl">{plan.maxInvestments}</div>
+            <div className="stat-desc">Maximum allowed</div>
+          </div>
+
+          <div className="stat">
+            <div className="stat-title text-xs uppercase font-bold">
+              Premium Access
+            </div>
+            <div className="stat-value text-2xl">
+              {plan.canViewPremiumProperty ? "Yes" : "No"}
+            </div>
+            <div className="stat-desc">
+              {plan.canViewPremiumProperty ? "Full access" : "Limited access"}
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <span className="font-semibold">Description:</span> {plan.description}
-      </div>
-      <div>
-        <span className="font-semibold">Price:</span> {plan.price}
-      </div>
-      <div>
-        <span className="font-semibold">Validity:</span> {plan.validity}{" "}
-        Month(s)
-      </div>
-      <div>
-        <span className="font-semibold">Can View Premium:</span>{" "}
-        {plan.canViewPremiumProperty ? "Yes" : "No"}
-      </div>
-      <div>
-        <span className="font-semibold">Max Investments:</span>{" "}
-        {plan.maxInvestments}
-      </div>
-      <div className="flex justify-end">
-        <button className="btn btn-ghost" onClick={closeModal}>
-          Close
+
+      <div className="modal-action">
+        <button className="btn btn-block" onClick={closeModal}>
+          Close Details
         </button>
       </div>
     </div>
@@ -219,9 +251,7 @@ const PlanForm = ({
   defaultValues?: Partial<SUBSCRIPTIONS>;
   closeModal: () => void;
 }) => {
-  const { register, handleSubmit, watch, setValue } = useForm<
-    Omit<SUBSCRIPTIONS, "id">
-  >({
+  const { register, handleSubmit, watch } = useForm<Omit<SUBSCRIPTIONS, "id">>({
     defaultValues: defaultValues || {
       type: "FREE",
       canViewPremiumProperty: false,
@@ -241,75 +271,98 @@ const PlanForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
-      <SimpleInput
-        label="Plan Name"
-        {...register("name", { required: "Name is required" })}
-      />
+    <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="md:col-span-2">
+          <SimpleInput
+            label="Plan Name"
+            placeholder="e.g. Pro Investor"
+            {...register("name", { required: "Name is required" })}
+          />
+        </div>
 
-      <LocalSelect
-        {...register("type", { required: "Type is required" })}
-        label="Plan Type"
-      >
-        <option value="FREE">Free</option>
-        <option value="BASIC">Basic</option>
-        <option value="PREMIUM">Premium</option>
-      </LocalSelect>
+        <LocalSelect
+          {...register("type", { required: "Type is required" })}
+          label="Plan Type"
+        >
+          <option value="FREE">Free</option>
+          <option value="BASIC">Basic</option>
+          <option value="PREMIUM">Premium</option>
+        </LocalSelect>
 
-      <SimpleTextArea
-        label="Description"
-        {...register("description", { required: "Description is required" })}
-      />
-
-      {planType !== "FREE" && (
         <SimpleInput
-          label="Price"
+          label="Plan Validity (Months)"
           type="number"
-          {...register("price", {
-            required: "Price is required",
+          placeholder="12"
+          {...register("validity", {
+            required: "Validity is required",
             valueAsNumber: true,
           })}
         />
-      )}
 
-      <SimpleInput
-        label="Plan Validity (Months)"
-        type="number"
-        {...register("validity", {
-          required: "Validity is required",
-          valueAsNumber: true,
-        })}
-      />
+        <div className="md:col-span-2">
+          <SimpleTextArea
+            label="Description"
+            placeholder="Enter plan details and benefits..."
+            rows={3}
+            {...register("description", {
+              required: "Description is required",
+            })}
+          />
+        </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Benefits</label>
-        <div className="flex items-center gap-2">
+        {planType !== "FREE" && (
+          <SimpleInput
+            label="Price ($)"
+            type="number"
+            placeholder="0.00"
+            {...register("price", {
+              required: "Price is required",
+              valueAsNumber: true,
+            })}
+          />
+        )}
+
+        <SimpleInput
+          label="Max Investments Allowed"
+          type="number"
+          placeholder="5"
+          {...register("maxInvestments", {
+            required: "Max investments is required",
+            valueAsNumber: true,
+          })}
+        />
+      </div>
+
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+        <label className="text-xs font-bold uppercase text-gray-500 block mb-3">
+          Permissions & Benefits
+        </label>
+        <div className="flex items-center gap-3">
           <input
             type="checkbox"
             id="canViewPremium"
-            className="checkbox checkbox-primary checkbox-sm"
+            className="checkbox checkbox-primary"
             {...register("canViewPremiumProperty")}
           />
-          <label htmlFor="canViewPremium" className="text-sm">
-            Can view/invest on premium properties
+          <label
+            htmlFor="canViewPremium"
+            className="text-sm font-medium cursor-pointer"
+          >
+            Allow access to premium properties and investments
           </label>
         </div>
       </div>
 
-      <SimpleInput
-        label="Number of Investments Allowed"
-        type="number"
-        {...register("maxInvestments", {
-          required: "Max investments is required",
-          valueAsNumber: true,
-        })}
-      />
-
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-3 pt-4 border-t">
         <button className="btn btn-ghost" type="button" onClick={closeModal}>
           Cancel
         </button>
-        <button className="btn btn-primary" type="submit" disabled={isLoading}>
+        <button
+          className="btn btn-primary px-8"
+          type="submit"
+          disabled={isLoading}
+        >
           {isLoading
             ? "Saving..."
             : defaultValues
