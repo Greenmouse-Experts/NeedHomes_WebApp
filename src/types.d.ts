@@ -406,3 +406,76 @@ export type SINGLE_PROPERTY = {
   updatedAt: string;
   additionalFees: any[];
 };
+
+export interface USER_KYC {
+  id: string;
+  profilePicture: string | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  isEmailVerified: boolean;
+  accountType: "INDIVIDUAL";
+  companyName: string | null;
+  account_status: "ACTIVE";
+  account_verification_status: "VERIFIED";
+  referral_source: string;
+  partnerType: string | null;
+  referralCode: string | null;
+  totalReferrals: number;
+  totalCommission: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  roles: {
+    userId: string;
+    roleId: string;
+    assignedAt: string;
+    role: {
+      name: string;
+      permissions: {
+        roleId: string;
+        permissionId: string;
+        createdAt: string;
+        permission: {
+          key: string;
+          description: string;
+        };
+      }[];
+    };
+  }[];
+  verification_document: {
+    id: string;
+    user_id: string;
+    idType: string;
+    frontPage: string | null;
+    companyName: string | null;
+    rcNumber: string | null;
+    cacDocument: string | null;
+    backPage: string | null;
+    authorizedId: string | null;
+    authorizedName: string | null;
+    utilityBill: string | null;
+    address: string;
+    verificationType: string;
+    status: string;
+    submitedAt: string;
+    RejectionReason: string | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  } | null;
+  bank_account: {
+    id: string;
+    user_id: string;
+    account_number: string;
+    bank_code: string;
+    bank_name: string;
+    account_name: string;
+    country: string;
+    currency: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  } | null;
+}
