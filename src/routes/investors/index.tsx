@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import VerificationStatus from "../-components/VerificationStatus";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -85,6 +86,7 @@ function InvestorDashboard() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 sm:mb-8">
         {/* Left Side: Welcome Message */}
         <div>
+          <VerificationStatus />
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Welcome, {user?.firstName?.trim() ?? "User"}
           </h1>
