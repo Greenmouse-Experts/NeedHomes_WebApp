@@ -7,9 +7,13 @@ import { Switch } from "@/components/ui/Switch";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import apiClient, { new_url, type ApiResponse } from "@/api/simpleApi";
-import { type AUTHRECORD, set_user_value } from "@/store/authStore";
+import {
+  type AUTHRECORD,
+  set_kyc_value,
+  set_user_value,
+} from "@/store/authStore";
 import { toast } from "sonner";
-import type { USER } from "@/types";
+import type { USER, USER_KYC } from "@/types";
 import axios, { AxiosError } from "axios";
 import { extract_message } from "@/helpers/apihelpers";
 
@@ -42,13 +46,16 @@ function LoginPage() {
 
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // Combine user data with the access token
       const newUser = {
         ...data.data,
       } satisfies Partial<AUTHRECORD>;
 
       set_user_value(newUser as any);
+      const response =
+        await apiClient.get<ApiResponse<USER_KYC>>(`/users/profile`);
+      set_kyc_value(response.data.data);
       toast.success("Login successful!", { duration: 1500 });
       // set_user_value(data.data);
       if (newUser.user.accountType == "PARTNER") {
