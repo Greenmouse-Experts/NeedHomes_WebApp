@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { get_user_value } from "@/store/authStore";
+import { get_user_value, useKyc } from "@/store/authStore";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
   component: RouteComponent,
@@ -18,5 +19,7 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function RouteComponent() {
+  const [kyc] = useKyc();
+
   return <Outlet></Outlet>;
 }
