@@ -128,8 +128,11 @@ export default function BankDetails() {
 
   if (isLoadingCurrentBankInfo) {
     return (
-      <div className="p-4 text-sm text-gray-500">
-        Loading bank information...
+      <div className="flex flex-col items-center justify-center p-12 space-y-4">
+        <span className="loading loading-spinner loading-lg text-brand-orange"></span>
+        <p className="text-sm font-medium text-gray-500 animate-pulse">
+          Loading bank information...
+        </p>
       </div>
     );
   }
@@ -170,20 +173,28 @@ export default function BankDetails() {
               <Label htmlFor="bankCode" className="text-sm">
                 Bank Name
               </Label>
-              <LocalSelect
-                id="bankCode"
-                {...register("bankCode", { required: "Bank name is required" })}
-              >
-                <option value="">Select</option>
-                {isLoading && <option>Loading banks...</option>}
-                {isError && <option>Error loading banks</option>}
-                {bankList?.data &&
-                  bankList.data.map((bank) => (
-                    <option key={bank.id} value={bank.code}>
-                      {bank.name}
-                    </option>
-                  ))}
-              </LocalSelect>
+              <div className="relative">
+                <LocalSelect
+                  id="bankCode"
+                  {...register("bankCode", {
+                    required: "Bank name is required",
+                  })}
+                >
+                  <option value="">Select</option>
+                  {bankList?.data &&
+                    bankList.data.map((bank) => (
+                      <option key={bank.id} value={bank.code}>
+                        {bank.name}
+                      </option>
+                    ))}
+                </LocalSelect>
+                {isLoading && (
+                  <span className="absolute right-8 top-1/2 -translate-y-1/2 loading loading-spinner loading-xs text-gray-400"></span>
+                )}
+              </div>
+              {isError && (
+                <p className="text-red-500 text-xs">Error loading banks</p>
+              )}
               {errors.bankCode && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.bankCode.message}
@@ -198,12 +209,17 @@ export default function BankDetails() {
               <Label htmlFor="accountName" className="text-sm">
                 Account Name
               </Label>
-              <SimpleInput
-                id="accountName"
-                className="bg-gray-100 text-sm md:text-base"
-                disabled
-                {...register("accountName")}
-              />
+              <div className="relative">
+                <SimpleInput
+                  id="accountName"
+                  className="bg-gray-100 text-sm md:text-base"
+                  disabled
+                  {...register("accountName")}
+                />
+                {resolveBankMutation.isPending && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 loading loading-ring loading-sm text-brand-orange"></span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -214,9 +230,14 @@ export default function BankDetails() {
               className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
               disabled={resolveBankMutation.isPending}
             >
-              {resolveBankMutation.isPending
-                ? "Resolving..."
-                : "Update Bank Details"}
+              {resolveBankMutation.isPending ? (
+                <>
+                  <span className="loading loading-spinner loading-xs mr-2"></span>
+                  Resolving...
+                </>
+              ) : (
+                "Update Bank Details"
+              )}
             </Button>
           </div>
         </form>
