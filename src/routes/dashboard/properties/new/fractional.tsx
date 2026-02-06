@@ -453,7 +453,7 @@ function RouteComponent() {
                           {...field}
                           label="Base Price"
                           type="number"
-                          icon={<DollarSign size={16} />}
+                          icon={<span>₦</span>}
                           onChange={(e) =>
                             field.onChange(Number((e as any).target?.value))
                           }
@@ -468,7 +468,7 @@ function RouteComponent() {
                           {...field}
                           label="Total Price"
                           type="number"
-                          icon={<DollarSign size={16} />}
+                          icon={<span>₦</span>}
                           onChange={(e) =>
                             field.onChange(Number((e as any).target?.value))
                           }
@@ -527,7 +527,7 @@ function RouteComponent() {
                           {...field}
                           label="Price Per Share"
                           type="number"
-                          icon={<DollarSign size={16} />}
+                          icon={<span>₦</span>}
                           onChange={(e) =>
                             field.onChange(Number((e as any).target?.value))
                           }

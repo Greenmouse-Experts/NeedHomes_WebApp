@@ -407,7 +407,7 @@ function RouteComponent() {
                           {...field}
                           label="Base Price"
                           type="number"
-                          icon={<DollarSign size={16} />}
+                          icon={<span>₦</span>}
                           onChange={(e) =>
                             field.onChange(e.target.valueAsNumber)
                           }
