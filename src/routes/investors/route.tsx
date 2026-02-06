@@ -34,7 +34,7 @@ function LayoutComponent() {
 
           <div className="drawer-content flex flex-col  min-h-screen">
             {/* Page content here */}
-            <div className="w-full">
+            <div className="w-full sticky top-0 z-20">
               <InvHeader title="" />
             </div>
             <main className="w-full px-6 py-6  flex-1">

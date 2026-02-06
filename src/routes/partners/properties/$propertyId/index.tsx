@@ -1,5 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Home, MapPin, Package } from "lucide-react";
+import {
+  Calendar,
+  CheckCircle2,
+  Home,
+  MapPin,
+  Package,
+  Percent,
+} from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";

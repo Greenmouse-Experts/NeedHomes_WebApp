@@ -11,15 +11,7 @@ import { Link } from "@tanstack/react-router";
 export default function VerificationStatus() {
   const [kyc] = useKyc();
 
-  if (!kyc)
-    return (
-      <div className="flex items-center gap-3 p-4 rounded-box ring bg-info/10 text-info border border-info/20">
-        <InformationCircleIcon className="w-5 h-5 shrink-0" />
-        <span className="text-sm font-medium">
-          Please reauthenticate to receive updates
-        </span>
-      </div>
-    );
+  if (!kyc) return null;
 
   const isVerified = kyc.account_verification_status === "VERIFIED";
 

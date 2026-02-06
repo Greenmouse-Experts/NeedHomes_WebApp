@@ -17,9 +17,9 @@ export default function PatHeader({
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200 p-2.5 md:p-3 lg:p-4 lg:py-3 flex items-center justify-between sticky top-0">
+      <header className="bg-white border-b border-gray-200 p-2.5 md:p-3 lg:p-4 lg:py-3 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
-          <button className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg flex-shrink-0">
+          <button className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg shrink-0">
             <label
               htmlFor="my-drawer-3"
               className="btn drawer-button btn-circle lg:hidden"
@@ -29,7 +29,7 @@ export default function PatHeader({
           </button>
           <div className="min-w-0">
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 truncate">
-              Partner Dashboard
+              {title || "Partner Dashboard"}
             </h1>
             {subtitle && (
               <p className="text-xs md:text-sm text-gray-600 truncate">
@@ -38,7 +38,7 @@ export default function PatHeader({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0">
           {/*<div className="hidden lg:block relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Inpu
