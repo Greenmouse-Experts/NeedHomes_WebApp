@@ -53,7 +53,7 @@ function LayoutComponent() {
               aria-label="close sidebar"
               className="drawer-overlay"
             ></label>
-            <ul className="menu p-0 bg-[#2A2A2A]    min-h-full w-64">
+            <ul className="menu p-0 bg-[#2A2A2A]  h-screen    w-64">
               {/*//@ts-ignore*/}
               <InvestorSidebar />
             </ul>

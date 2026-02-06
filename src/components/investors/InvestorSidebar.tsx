@@ -40,9 +40,11 @@ export function InvestorSidebar({
       {/* Mobile Menu Button */}
 
       {/* Sidebar */}
-      <aside className={` bg-[#2A2A2A] text-white flex flex-col h-full `}>
+      <aside
+        className={` bg-[#2A2A2A] text-white flex flex-col justify-between  h-full `}
+      >
         {/* Logo */}
-        <div className="p-4 border-b border-gray-700">
+        <div className="p-4 border-b border-gray-700 ">
           <Link to="/" className="flex items-center gap-2.5">
             <img
               src="/logo_white.png"
@@ -57,7 +59,7 @@ export function InvestorSidebar({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+        <nav className="flex-1 overflow-y-auto p-3 space-y-1  ">
           <Link
             to="/investors"
             onClick={handleLinkClick}
