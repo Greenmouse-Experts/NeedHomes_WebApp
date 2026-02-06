@@ -25,7 +25,7 @@ export default function VerificationStatus() {
           </div>*/}
         </>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 mb-4">
           <div className="p-3 ring-1 ring-error/20 rounded-box bg-error/5 flex flex-col gap-1">
             <section className="flex items-center w-full ">
               <div className="badge badge-error gap-1.5 py-3 px-3 ring-1 ring-error/30 badge-soft font-medium">
