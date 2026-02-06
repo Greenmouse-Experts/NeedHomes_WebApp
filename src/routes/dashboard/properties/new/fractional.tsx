@@ -7,7 +7,6 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import UpdateImages from "@/components/images/UpdateImages";
@@ -21,7 +20,11 @@ import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SelectImage from "@/components/images/SelectImage";
 import VideoUpload, {
   useVideoUpload,
-} from "@/routes/dashboard/-components/VideoUpload"; // Import VideoUpload and useVideoUpload
+} from "@/routes/dashboard/-components/VideoUpload";
+import {
+  DocumentUpload,
+  useDocumentUpload,
+} from "@/routes/dashboard/-components/DocumentUpload";
 import {
   Plus,
   Trash2,
@@ -64,8 +67,7 @@ interface FractionalPropertyFormValues extends DocProps {
 }
 
 function AdditionalFeesManager() {
-  const { control, register, getValues, watch } =
-    useFormContext<FractionalPropertyFormValues>();
+  const { control, register } = useFormContext<FractionalPropertyFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "additionalFees",
@@ -145,7 +147,6 @@ function RouteComponent() {
       pricePerShare: 20000,
       minimumShares: 10,
       exitWindow: "MONTHLY",
-      // doc fields default to empty strings from DocProps
       certificate: "",
       surveyPlanDocument: "",
       transferDocument: "",
@@ -157,15 +158,8 @@ function RouteComponent() {
 
   const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
-  const videoProps = useVideoUpload(); // Initialize useVideoUpload
-
-  // local state to hold uploaded files (documents)
-  const [docFiles, setDocFiles] = useState<{
-    certificate?: File;
-    surveyPlanDocument?: File;
-    transferDocument?: File;
-    brochure?: File;
-  }>({});
+  const videoProps = useVideoUpload();
+  const docUploadProps = useDocumentUpload();
 
   const mutation = useMutation({
     mutationFn: async (data: FractionalPropertyFormValues) => {
@@ -200,13 +194,9 @@ function RouteComponent() {
 
       if (!coverImageUrl) throw new Error("A cover image is required.");
 
-      // Upload any selected documents
-      const uploadedDocUrls: Partial<DocProps> = {};
-      // helper to upload a file to the server and return url (expects endpoint to return { url })
       const uploadFile = async (file: File) => {
         const fd = new FormData();
         fd.append("file", file);
-        // NOTE: adjust endpoint or headers if your API expects a different route
         const resp = await apiClient.post("/admin/uploads", fd, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -215,45 +205,43 @@ function RouteComponent() {
         return resp.data?.url || "";
       };
 
-      if (docFiles.certificate) {
+      const uploadedDocUrls: Partial<DocProps> = {};
+      const docFiles = docUploadProps.documents;
+
+      if (docFiles.certificateOfOwnership) {
         try {
-          const url = await uploadFile(docFiles.certificate);
+          const url = await uploadFile(docFiles.certificateOfOwnership);
           if (url) uploadedDocUrls.certificate = url;
-        } catch (e) {
-          // continue; fallback to existing data.certificate if provided
-        }
+        } catch (e) {}
       }
 
-      if (docFiles.surveyPlanDocument) {
+      if (docFiles.surveyPlan) {
         try {
-          const url = await uploadFile(docFiles.surveyPlanDocument);
+          const url = await uploadFile(docFiles.surveyPlan);
           if (url) uploadedDocUrls.surveyPlanDocument = url;
         } catch (e) {}
       }
 
-      if (docFiles.transferDocument) {
+      if (docFiles.transferOfOwnershipDocument) {
         try {
-          const url = await uploadFile(docFiles.transferDocument);
+          const url = await uploadFile(docFiles.transferOfOwnershipDocument);
           if (url) uploadedDocUrls.transferDocument = url;
         } catch (e) {}
       }
 
-      if (docFiles.brochure) {
+      if (docFiles.brochureFactSheet) {
         try {
-          const url = await uploadFile(docFiles.brochure);
+          const url = await uploadFile(docFiles.brochureFactSheet);
           if (url) uploadedDocUrls.brochure = url;
         } catch (e) {}
       }
 
-      // Upload video if provided
       let videoUrl = "";
       if (videoProps.videoFile) {
         try {
           const url = await uploadFile(videoProps.videoFile);
           videoUrl = url || "";
-        } catch (e) {
-          // ignore and fallback to data.videos if present
-        }
+        } catch (e) {}
       }
 
       const allGallery = [
@@ -265,8 +253,9 @@ function RouteComponent() {
         ...data,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        completionDate: new Date(data.completionDate).toISOString(),
-        // prefer uploaded docs/videos, otherwise keep any URLs already in form values
+        completionDate: data.completionDate
+          ? new Date(data.completionDate).toISOString()
+          : null,
         certificate: uploadedDocUrls.certificate || data.certificate,
         surveyPlanDocument:
           uploadedDocUrls.surveyPlanDocument || data.surveyPlanDocument,
@@ -301,7 +290,7 @@ function RouteComponent() {
 
   return (
     <ThemeProvider>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto ">
         <div className="bg-base-100 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
           <div className="bg-primary p-6 text-primary-content">
             <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -438,119 +427,9 @@ function RouteComponent() {
                     </div>
                   </div>
 
-                  {/* Documents & Video Uploads (copied functionality) */}
-                  <div className="mt-4 space-y-4 bg-base-200/30 p-4 rounded-lg border border-base-300">
-                    <h3 className="text-sm font-bold uppercase tracking-wider opacity-70">
-                      Documents & Video
-                    </h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="label text-xs font-bold opacity-70">
-                          Certificate (PDF)
-                        </label>
-                        <input
-                          type="file"
-                          accept=".pdf,application/pdf"
-                          onChange={(e) =>
-                            setDocFiles({
-                              ...docFiles,
-                              certificate: e.target.files?.[0] || undefined,
-                            })
-                          }
-                          className="file-input file-input-bordered w-full"
-                        />
-                        {methods.getValues("certificate") &&
-                          !docFiles.certificate && (
-                            <p className="text-xs opacity-60">
-                              Existing URL: {methods.getValues("certificate")}
-                            </p>
-                          )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="label text-xs font-bold opacity-70">
-                          Survey Plan Document (PDF)
-                        </label>
-                        <input
-                          type="file"
-                          accept=".pdf,application/pdf"
-                          onChange={(e) =>
-                            setDocFiles({
-                              ...docFiles,
-                              surveyPlanDocument:
-                                e.target.files?.[0] || undefined,
-                            })
-                          }
-                          className="file-input file-input-bordered w-full"
-                        />
-                        {methods.getValues("surveyPlanDocument") &&
-                          !docFiles.surveyPlanDocument && (
-                            <p className="text-xs opacity-60">
-                              Existing URL:{" "}
-                              {methods.getValues("surveyPlanDocument")}
-                            </p>
-                          )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="label text-xs font-bold opacity-70">
-                          Transfer Document (PDF)
-                        </label>
-                        <input
-                          type="file"
-                          accept=".pdf,application/pdf"
-                          onChange={(e) =>
-                            setDocFiles({
-                              ...docFiles,
-                              transferDocument:
-                                e.target.files?.[0] || undefined,
-                            })
-                          }
-                          className="file-input file-input-bordered w-full"
-                        />
-                        {methods.getValues("transferDocument") &&
-                          !docFiles.transferDocument && (
-                            <p className="text-xs opacity-60">
-                              Existing URL:{" "}
-                              {methods.getValues("transferDocument")}
-                            </p>
-                          )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="label text-xs font-bold opacity-70">
-                          Brochure (PDF)
-                        </label>
-                        <input
-                          type="file"
-                          accept=".pdf,application/pdf"
-                          onChange={(e) =>
-                            setDocFiles({
-                              ...docFiles,
-                              brochure: e.target.files?.[0] || undefined,
-                            })
-                          }
-                          className="file-input file-input-bordered w-full"
-                        />
-                        {methods.getValues("brochure") &&
-                          !docFiles.brochure && (
-                            <p className="text-xs opacity-60">
-                              Existing URL: {methods.getValues("brochure")}
-                            </p>
-                          )}
-                      </div>
-
-                      <div className="md:col-span-2">
-                        <VideoUpload videoProps={videoProps} />
-                        {methods.getValues("videos") &&
-                          !videoProps.videoFile && (
-                            <p className="text-xs opacity-60 mt-2">
-                              Existing URL: {methods.getValues("videos")}
-                            </p>
-                          )}
-                      </div>
-                    </div>
+                  <div className="mt-4 space-y-4">
+                    <VideoUpload videoProps={videoProps} />
+                    <DocumentUpload useDocUpload={docUploadProps} />
                   </div>
                 </section>
 

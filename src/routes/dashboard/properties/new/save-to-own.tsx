@@ -212,7 +212,9 @@ function RouteComponent() {
         transferDocument: uploadedDocUrls.transferOfOwnershipDocument || "",
         brochure: uploadedDocUrls.brochureFactSheet || "",
         totalPrice,
-        completionDate: new Date(data.completionDate).toISOString(),
+        completionDate: data.completionDate
+          ? new Date(data.completionDate).toISOString()
+          : null,
       };
 
       const response = await apiClient.post(
