@@ -116,19 +116,19 @@ function ListedPropertiesPage() {
         });
       },
     },
-    {
-      key: "toggle_publish",
-      label: "Toggle Publish",
-      action: (item: ADMIN_PROPERTY_LISTING, nav) => {
-        const action = item.published ? "unpublish" : "publish";
-        if (
-          confirm(`Are you sure you want to ${action} "${item.propertyTitle}"?`)
-        ) {
-          console.log(`${action} property:`, item.id);
-          // TODO: Implement actual publish/unpublish logic
-        }
-      },
-    },
+    // {
+    //   key: "toggle_publish",
+    //   label: "Toggle Publish",
+    //   action: (item: ADMIN_PROPERTY_LISTING, nav) => {
+    //     const action = item.published ? "unpublish" : "publish";
+    //     if (
+    //       confirm(`Are you sure you want to ${action} "${item.propertyTitle}"?`)
+    //     ) {
+    //       console.log(`${action} property:`, item.id);
+    //       // TODO: Implement actual publish/unpublish logic
+    //     }
+    //   },
+    // },
   ];
 
   return (
