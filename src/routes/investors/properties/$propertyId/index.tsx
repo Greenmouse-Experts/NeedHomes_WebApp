@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Home, MapPin, Package } from "lucide-react";
+import { Calendar, MapPin, Percent, CheckCircle2 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
-import type { SINGLE_PROPERTY } from "@/types";
+import type { PROPERTY_TYPE, AdditionalFee } from "@/types/property";
 
 export const Route = createFileRoute("/investors/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/investors/properties/$propertyId/")({
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
 
-  const query = useQuery<ApiResponse<SINGLE_PROPERTY>>({
+  const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
     queryFn: async () => {
       let resp = await apiClient.get("properties/" + propertyId);
@@ -34,7 +34,7 @@ function PropertyDetailPage() {
         const totalPrice = property.additionalFees
           ? property.basePrice +
             property.additionalFees.reduce(
-              (sum: number, fee: any) => sum + fee.amount,
+              (sum: number, fee: AdditionalFee) => sum + fee.amount,
               0,
             )
           : property.basePrice;
@@ -46,7 +46,7 @@ function PropertyDetailPage() {
                 {/* Media Slider */}
                 <MediaSlider
                   images={property.galleryImages || []}
-                  videos={property.videos ? [property.videos] : []} // Ensure videos is an array of strings
+                  videos={property.videos ? [property.videos] : []}
                   coverImage={property.coverImage}
                 />
 
@@ -58,11 +58,6 @@ function PropertyDetailPage() {
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                           {property.propertyTitle}
                         </h1>
-                        {/* {property.premiumProperty && (
-                      <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-semibold rounded-full">
-                        PREMIUM
-                      </span>
-                    )} */}
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
@@ -72,7 +67,7 @@ function PropertyDetailPage() {
                       </div>
                     </div>
                     <div className="sm:text-right">
-                      <p className="text-2xl md:text-3xl font-bold text-[var(--color-orange)]">
+                      <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
                         {formatCurrency(totalPrice)}
                       </p>
                       <p className="text-xs md:text-sm text-gray-500 mt-1">
@@ -83,59 +78,9 @@ function PropertyDetailPage() {
 
                   {/* Quick Stats */}
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-                    {/* For properties with residential details like bedrooms, bathrooms, area */}
-                    {property.propertyType === "RESIDENTIAL" && (
-                      <>
-                        {/* Bedrooms */}
-                        {/* Note: The SINGLE_PROPERTY type does not currently have 'bedrooms', 'bathrooms', 'area'.
-                            If these are needed, the SINGLE_PROPERTY interface in types.d.ts should be updated.
-                            For now, these sections will not render unless the type is updated or data structure changes.
-                        */}
-                        {/* {property.bedrooms && (
-                          <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
-                            <div className="p-2 bg-white rounded-lg shrink-0">
-                              <Home className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs text-gray-500">Bedrooms</p>
-                              <p className="font-semibold text-sm md:text-base text-gray-900">
-                                {property.bedrooms}
-                              </p>
-                            </div>
-                          </div>
-                        )} */}
-                        {/* {property.bathrooms && (
-                          <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
-                            <div className="p-2 bg-white rounded-lg shrink-0">
-                              <Home className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs text-gray-500">Bathrooms</p>
-                              <p className="font-semibold text-sm md:text-base text-gray-900">
-                                {property.bathrooms}
-                              </p>
-                            </div>
-                          </div>
-                        )} */}
-                        {/* {property.plotSize && ( // Using plotSize as a proxy for 'area' for now
-                          <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
-                            <div className="p-2 bg-white rounded-lg shrink-0">
-                              <Package className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs text-gray-500">Plot Size</p>
-                              <p className="font-semibold text-sm md:text-base text-gray-900">
-                                {property.plotSize}
-                              </p>
-                            </div>
-                          </div>
-                        )} */}
-                      </>
-                    )}
-
                     <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <div className="p-2 bg-white rounded-lg shrink-0">
-                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
+                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs text-gray-500 whitespace-nowrap">
@@ -148,6 +93,21 @@ function PropertyDetailPage() {
                         </p>
                       </div>
                     </div>
+                    {property.profitSharingRatio && (
+                      <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="p-2 bg-white rounded-lg shrink-0">
+                          <Percent className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs text-gray-500 whitespace-nowrap">
+                            Profit Sharing
+                          </p>
+                          <p className="font-semibold text-sm md:text-base text-gray-900 truncate">
+                            {property.profitSharingRatio}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Main Content */}
@@ -163,8 +123,56 @@ function PropertyDetailPage() {
                         </p>
                       </div>
 
+                      {/* Amenities */}
+                      <div>
+                        <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                          Amenities
+                        </h2>
+                        {property.amenities && property.amenities.length > 0 ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {property.amenities.map((amenity, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 text-gray-600"
+                              >
+                                <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                                <span className="text-sm">{amenity}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-gray-400 italic text-sm">
+                            No amenities listed
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Features */}
+                      <div>
+                        <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                          Features
+                        </h2>
+                        {property.features && property.features.length > 0 ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {property.features.map((feature, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 text-gray-600"
+                              >
+                                <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
+                                <span className="text-sm">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-gray-400 italic text-sm">
+                            No features listed
+                          </p>
+                        )}
+                      </div>
+
                       {/* Investment Model Specific Information */}
-                      {property.investmentModel === "INVESTMENT" && (
+                      {property.investmentModel === "FRACTIONAL_OWNERSHIP" && (
                         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                           <h3 className="text-lg font-semibold text-gray-900 mb-4">
                             Investment Details
@@ -183,7 +191,7 @@ function PropertyDetailPage() {
                               <p className="text-sm text-gray-600">
                                 Price Per Share
                               </p>
-                              <p className="text-lg font-semibold text-[var(--color-orange)]">
+                              <p className="text-lg font-semibold text-(--color-orange)">
                                 {formatCurrency(property.pricePerShare)}
                               </p>
                             </div>
@@ -203,31 +211,36 @@ function PropertyDetailPage() {
                                 {property.exitWindow || "N/A"}
                               </p>
                             </div>
-                            <div>
-                              <p className="text-sm text-gray-600">
-                                Project Duration
-                              </p>
-                              <p className="text-lg font-semibold text-gray-900">
-                                {property.projectDuration
-                                  ? `${property.projectDuration} months`
-                                  : "N/A"}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-gray-600">
-                                Profit Sharing Ratio
-                              </p>
-                              <p className="text-lg font-semibold text-gray-900">
-                                {property.profitSharingRatio
-                                  ? `${property.profitSharingRatio}%`
-                                  : "N/A"}
-                              </p>
-                            </div>
                           </div>
                         </div>
                       )}
 
-                      {/* Additional Fees (Applicable to various models) */}
+                      {/* System Charges */}
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                          System Charges
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-600">
+                              Platform Charge
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {property.systemCharges.platformChargePercentage}%
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-600">
+                              Partner Charge
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {property.systemCharges.partnerChargePercentage}%
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Additional Fees */}
                       {property.additionalFees &&
                         property.additionalFees.length > 0 && (
                           <div>
@@ -237,7 +250,7 @@ function PropertyDetailPage() {
                             <div className="bg-gray-50 rounded-lg p-4">
                               <div className="space-y-2">
                                 {property.additionalFees.map(
-                                  (fee: any, index: number) => (
+                                  (fee: AdditionalFee, index: number) => (
                                     <div
                                       key={index}
                                       className="flex justify-between py-2"
@@ -255,10 +268,10 @@ function PropertyDetailPage() {
                                   <span className="font-semibold text-gray-900">
                                     Total Additional Fees:
                                   </span>
-                                  <span className="font-bold text-lg text-[var(--color-orange)]">
+                                  <span className="font-bold text-lg text-(--color-orange)">
                                     {formatCurrency(
                                       property.additionalFees.reduce(
-                                        (sum: number, fee: any) =>
+                                        (sum: number, fee: AdditionalFee) =>
                                           sum + fee.amount,
                                         0,
                                       ),
@@ -269,55 +282,6 @@ function PropertyDetailPage() {
                             </div>
                           </div>
                         )}
-
-                      {/* Features (if available in the API response) */}
-                      {/* Assuming 'features' and 'amenities' might be added to SINGLE_PROPERTY type later */}
-                      {/* {property.features && property.features.length > 0 && (
-                        <div>
-                          <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-3">
-                            Features
-                          </h2>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
-                            {property.features.map(
-                              (feature: string, index: number) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-2"
-                                >
-                                  <div className="w-2 h-2 bg-[var(--color-orange)] rounded-full shrink-0"></div>
-                                  <span className="text-sm md:text-base text-gray-700">
-                                    {feature}
-                                  </span>
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        </div>
-                      )} */}
-
-                      {/* Amenities (if available in the API response) */}
-                      {/* {property.amenities && property.amenities.length > 0 && (
-                        <div>
-                          <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-3">
-                            Amenities
-                          </h2>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
-                            {property.amenities.map(
-                              (amenity: string, index: number) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-2"
-                                >
-                                  <div className="w-2 h-2 bg-[var(--color-orange)] rounded-full shrink-0"></div>
-                                  <span className="text-sm md:text-base text-gray-700">
-                                    {amenity}
-                                  </span>
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        </div>
-                      )} */}
                     </div>
 
                     {/* Sidebar */}
@@ -359,6 +323,26 @@ function PropertyDetailPage() {
                               {property.availableUnits}
                             </span>
                           </div>
+                          {property.projectDuration && (
+                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                              <span className="text-sm text-gray-600">
+                                Project Duration:
+                              </span>
+                              <span className="text-sm font-medium text-gray-900">
+                                {property.projectDuration}
+                              </span>
+                            </div>
+                          )}
+                          {property.exitRule && (
+                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                              <span className="text-sm text-gray-600">
+                                Exit Rule:
+                              </span>
+                              <span className="text-sm font-medium text-gray-900">
+                                {property.exitRule}
+                              </span>
+                            </div>
+                          )}
                           {property.paymentOption && (
                             <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                               <span className="text-sm text-gray-600">
@@ -366,6 +350,26 @@ function PropertyDetailPage() {
                               </span>
                               <span className="text-sm font-medium text-gray-900">
                                 {property.paymentOption.replace(/_/g, " ")}
+                              </span>
+                            </div>
+                          )}
+                          {property.installmentDuration && (
+                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                              <span className="text-sm text-gray-600">
+                                Installment Duration:
+                              </span>
+                              <span className="text-sm font-medium text-gray-900">
+                                {property.installmentDuration} months
+                              </span>
+                            </div>
+                          )}
+                          {property.minimumInvestment && (
+                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                              <span className="text-sm text-gray-600">
+                                Min. Investment:
+                              </span>
+                              <span className="text-sm font-medium text-gray-900">
+                                {formatCurrency(property.minimumInvestment)}
                               </span>
                             </div>
                           )}
