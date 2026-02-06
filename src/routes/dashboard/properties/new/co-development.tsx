@@ -460,7 +460,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Profit Ratio (0-1)"
+                          label="Profit Ratio (0-100)%"
                           type="number"
                           step="0.01"
                           onChange={(e) =>
