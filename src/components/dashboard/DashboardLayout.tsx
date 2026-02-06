@@ -19,8 +19,6 @@ import {
   Search,
   Bell,
   LogOut,
-  List,
-  Check,
 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -28,6 +26,85 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+
+interface NavItem {
+  label: string;
+  to: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface NavSection {
+  id: string;
+  title: string;
+  items: NavItem[];
+}
+
+const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
+  { label: "Dashboards", to: "/dashboard", icon: LayoutDashboard },
+  {
+    id: "userManagement",
+    title: "USER MANAGEMENT",
+    items: [
+      { label: "Investors", to: "/dashboard/investors", icon: Users },
+      {
+        label: "Corporate (Investors)",
+        to: "/dashboard/investors/corporate",
+        icon: Users,
+      },
+      { label: "Partners", to: "/dashboard/partners", icon: Handshake },
+    ],
+  },
+  {
+    id: "propertyManagement",
+    title: "PROPERTY MANAGEMENT",
+    items: [
+      {
+        label: "Listed Property",
+        to: "/dashboard/properties/listed",
+        icon: Home,
+      },
+      {
+        label: "Viewed Property",
+        to: "/dashboard/properties/viewed",
+        icon: Eye,
+      },
+      {
+        label: "Sold Property",
+        to: "/dashboard/properties/sold",
+        icon: HomeIcon,
+      },
+      { label: "New property", to: "/dashboard/properties/new", icon: Plus },
+    ],
+  },
+  {
+    id: "transaction",
+    title: "TRANSACTION",
+    items: [
+      {
+        label: "Receipt",
+        to: "/dashboard/transactions/receipts",
+        icon: Receipt,
+      },
+      {
+        label: "Payments",
+        to: "/dashboard/transactions/payments",
+        icon: CreditCard,
+      },
+    ],
+  },
+  {
+    id: "kyc",
+    title: "KYC",
+    items: [{ label: "KYC", to: "/dashboard/verifications", icon: Receipt }],
+  },
+  { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
+  {
+    label: "SUBSCRIPTIONS",
+    to: "/dashboard/subscriptions",
+    icon: CheckBadgeIcon,
+  },
+  { label: "SETTING", to: "/dashboard/settings", icon: Settings },
+];
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -48,6 +125,7 @@ export function DashboardLayout({
     userManagement: true,
     propertyManagement: true,
     transaction: true,
+    kyc: true,
   });
 
   const toggleSection = (section: string) => {
@@ -79,7 +157,7 @@ export function DashboardLayout({
         onClick={() => setSidebarOpen(false)}
         className={`flex items-center gap-2.5 p-2 rounded-lg transition-colors text-sm ${
           active
-            ? "bg-[var(--color-orange)] text-white"
+            ? "bg-(--color-orange) text-white"
             : "hover:bg-gray-800 text-gray-400"
         } ${className}`}
       >
@@ -120,7 +198,7 @@ export function DashboardLayout({
               }}
             />
             <div className="hidden flex-col">
-              <div className="w-6 h-6 border-2 border-[var(--color-orange)] rounded-t-lg"></div>
+              <div className="w-6 h-6 border-2 border-(--color-orange) rounded-t-lg"></div>
               <h1 className="text-sm font-bold">NEEDHOMES</h1>
               <p className="text-[10px] text-gray-400">PROPERTY & INVESTMENT</p>
             </div>
@@ -135,135 +213,49 @@ export function DashboardLayout({
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {/* Dashboards */}
-          <NavLink to="/dashboard" icon={LayoutDashboard}>
-            Dashboards
-          </NavLink>
+          {NAVIGATION_CONFIG.map((item, index) => {
+            if ("items" in item) {
+              return (
+                <div key={item.id}>
+                  <button
+                    onClick={() => toggleSection(item.id)}
+                    className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
+                  >
+                    <span>{item.title}</span>
+                    {expandedSections[item.id] ? (
+                      <ChevronDown className="w-3 h-3" />
+                    ) : (
+                      <ChevronRight className="w-3 h-3" />
+                    )}
+                  </button>
+                  {expandedSections[item.id] && (
+                    <div className="ml-3 mt-1 space-y-0.5">
+                      {item.items.map((subItem) => (
+                        <NavLink
+                          key={subItem.to}
+                          to={subItem.to}
+                          icon={subItem.icon}
+                        >
+                          {subItem.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <NavLink key={item.to} to={item.to} icon={item.icon}>
+                {item.label}
+              </NavLink>
+            );
+          })}
 
-          {/* User Management */}
-          <div>
-            <button
-              onClick={() => toggleSection("userManagement")}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
-            >
-              <span>USER MANAGEMENT</span>
-              {expandedSections.userManagement ? (
-                <ChevronDown className="w-3 h-3" />
-              ) : (
-                <ChevronRight className="w-3 h-3" />
-              )}
-            </button>
-            {expandedSections.userManagement && (
-              <div className="ml-3 mt-1 space-y-0.5">
-                <NavLink to="/dashboard/investors" icon={Users}>
-                  Investors
-                </NavLink>
-                <NavLink to="/dashboard/investors/corporate" icon={Users}>
-                  Corporate (Investors)
-                </NavLink>
-                <NavLink to="/dashboard/partners" icon={Handshake}>
-                  Partners
-                </NavLink>
-              </div>
-            )}
-          </div>
-
-          {/* Property Management */}
-          <div>
-            <button
-              onClick={() => toggleSection("propertyManagement")}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
-            >
-              <span>PROPERTY MANAGEMENT</span>
-              {expandedSections.propertyManagement ? (
-                <ChevronDown className="w-3 h-3" />
-              ) : (
-                <ChevronRight className="w-3 h-3" />
-              )}
-            </button>
-            {expandedSections.propertyManagement && (
-              <div className="ml-3 mt-1 space-y-0.5">
-                <NavLink to="/dashboard/properties/listed" icon={Home}>
-                  Listed Property
-                </NavLink>
-                <NavLink to="/dashboard/properties/viewed" icon={Eye}>
-                  Viewed Property
-                </NavLink>
-                <NavLink to="/dashboard/properties/sold" icon={HomeIcon}>
-                  Sold Property
-                </NavLink>
-                <NavLink to="/dashboard/properties/new" icon={Plus}>
-                  New property
-                </NavLink>
-              </div>
-            )}
-          </div>
-
-          {/* Transaction */}
-          <div>
-            <button
-              onClick={() => toggleSection("transaction")}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
-            >
-              <span>TRANSACTION</span>
-              {expandedSections.transaction ? (
-                <ChevronDown className="w-3 h-3" />
-              ) : (
-                <ChevronRight className="w-3 h-3" />
-              )}
-            </button>
-            {expandedSections.transaction && (
-              <div className="ml-3 mt-1 space-y-0.5">
-                <NavLink to="/dashboard/transactions/receipts" icon={Receipt}>
-                  Receipt
-                </NavLink>
-                <NavLink
-                  to="/dashboard/transactions/payments"
-                  icon={CreditCard}
-                >
-                  Payments
-                </NavLink>
-              </div>
-            )}
-          </div>
-          {/*kyc*/}
-          <div>
-            <button
-              onClick={() => toggleSection("kyc")}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-800 text-gray-300 text-[10px] font-semibold uppercase"
-            >
-              <span>KYC</span>
-              {expandedSections.transaction ? (
-                <ChevronDown className="w-3 h-3" />
-              ) : (
-                <ChevronRight className="w-3 h-3" />
-              )}
-            </button>
-            {expandedSections.transaction && (
-              <div className="ml-3 mt-1 space-y-0.5">
-                <NavLink to="/dashboard/verifications" icon={Receipt}>
-                  KYC
-                </NavLink>
-              </div>
-            )}
-          </div>
-          {/* Announcement */}
-          <NavLink to="/dashboard/announcements" icon={Megaphone}>
-            ANNOUNCEMENT
-          </NavLink>
-          <NavLink to="/dashboard/subscriptions" icon={CheckBadgeIcon}>
-            SUBSCRIPTIONS
-          </NavLink>
-
-          {/* Setting */}
-          <NavLink to="/dashboard/settings" icon={Settings}>
-            SETTING
-          </NavLink>
           <button
             onClick={() => {
               show_logout();
             }}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${"hover:bg-gray-800 text-gray-400"}`}
+            className="flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors hover:bg-gray-800 text-gray-400 w-full"
           >
             <LogOut className="size-4" /> Logout
           </button>
@@ -277,7 +269,7 @@ export function DashboardLayout({
           <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg flex-shrink-0"
+              className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg shrink-0"
             >
               <Menu className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
             </button>
@@ -292,7 +284,7 @@ export function DashboardLayout({
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
             <div className="hidden lg:block relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input

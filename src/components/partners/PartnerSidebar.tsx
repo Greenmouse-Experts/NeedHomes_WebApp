@@ -1,8 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { List, LogOut, Menu, X } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
-import { show_logout, useAuth } from "@/store/authStore";
-import { useEffect } from "react";
+import {
+  List,
+  LogOut,
+  LayoutDashboard,
+  Building2,
+  Bell,
+  Wallet,
+  Megaphone,
+  Settings,
+} from "lucide-react";
+import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "../investors/ProfileCard";
 
 interface PartnerSidebarProps {
@@ -11,28 +18,70 @@ interface PartnerSidebarProps {
   setIsSidebarOpen: (open: boolean) => void;
 }
 
+const NAV_LINKS = [
+  {
+    to: "/partners",
+    label: "Dashboard",
+    id: "dashboard",
+    icon: LayoutDashboard,
+    exact: true,
+  },
+  {
+    to: "/partners/properties",
+    label: "Properties",
+    id: "properties",
+    icon: Building2,
+  },
+  {
+    to: "/partners/notifications",
+    label: "Notifications",
+    id: "notifications",
+    icon: Bell,
+  },
+  {
+    to: "/partners/transactions",
+    label: "Transaction",
+    id: "transactions",
+    icon: Wallet,
+  },
+  {
+    to: "/partners/announcements",
+    label: "Announcement",
+    id: "announcements",
+    icon: Megaphone,
+  },
+  {
+    to: "/investors/subscriptions",
+    label: "Subscriptions",
+    id: "subscriptions",
+    icon: List,
+  },
+  {
+    to: "/partners/settings",
+    label: "Setting",
+    id: "settings",
+    icon: Settings,
+  },
+];
+
 export function PartnerSidebar({
   activePage,
   setIsSidebarOpen,
 }: PartnerSidebarProps) {
   const [authRecord] = useAuth();
-  const user = authRecord?.user;
 
-  // Close sidebar when clicking outside on mobile
   // Close sidebar when route changes on mobile
   const handleLinkClick = () => {
     const close_div = document.getElementById(
       "my-drawer-3",
     ) as HTMLLabelElement;
-    close_div.click();
+    if (close_div) close_div.click();
   };
+  const [kyc] = useKyc();
+  const isVerified = kyc && kyc.account_verification_status == "VERIFIED";
 
   return (
     <>
-      {/* Mobile Overlay/Backdrop */}
-
-      {/* Mobile Menu Button */}
-
       {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 h-full w-64 bg-[#2A2A2A] text-white flex flex-col transform transition-transform duration-300 z-40`}
@@ -54,230 +103,39 @@ export function PartnerSidebar({
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {/* <Link
-                        to="/partners"
-                        onClick={handleLinkClick}
-                        className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === 'dashboard'
-                                ? 'bg-[var(--color-orange)] text-white'
-                                : 'hover:bg-gray-800 text-gray-400'
-                            }`}
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                        </svg>
-                        <span>Dashboard</span>
-                    </Link> */}
+          {NAV_LINKS.map((link) => {
+            const isRestricted =
+              !isVerified && link.id !== "dashboard" && link.id !== "settings";
 
-          {/* Actual Links */}
-          <Link
-            to="/partners"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "dashboard"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-            activeProps={{
-              className: "bg-[var(--color-orange)] text-white",
-            }}
-            activeOptions={{ exact: true }}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-              />
-            </svg>
-            <span>Dashboard</span>
-          </Link>
+            return (
+              <Link
+                key={link.to}
+                to={isRestricted ? "#" : link.to}
+                onClick={
+                  isRestricted ? (e) => e.preventDefault() : handleLinkClick
+                }
+                disabled={isRestricted}
+                className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+                  activePage === link.id
+                    ? "bg-(--color-orange) text-white"
+                    : "hover:bg-gray-800 text-gray-400"
+                } ${isRestricted ? "opacity-50 cursor-not-allowed" : ""}`}
+                activeProps={{
+                  className: "bg-(--color-orange) text-white",
+                }}
+                activeOptions={{ exact: link.exact }}
+              >
+                <link.icon className="size-4" />
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
 
-          {/* <Link
-                        to="/partners/my-investments"
-                        onClick={handleLinkClick}
-                        className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${activePage === 'my-investments'
-                            ? 'bg-[var(--color-orange)] text-white'
-                            : 'hover:bg-gray-800 text-gray-400'
-                            }`}
-                        activeProps={{
-                            className: 'bg-[var(--color-orange)] text-white'
-                        }}
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>My Investment</span>
-                    </Link> */}
-
-          <Link
-            to="/partners/properties"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "properties"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-            activeProps={{
-              className: "bg-[var(--color-orange)] text-white",
-            }}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-              />
-            </svg>
-            <span>Properties</span>
-          </Link>
-
-          <Link
-            to="/partners/notifications"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "notifications"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-            activeProps={{
-              className: "bg-[var(--color-orange)] text-white",
-            }}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <span>Notifications</span>
-          </Link>
-
-          <Link
-            to="/partners/transactions"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "transactions"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-            activeProps={{
-              className: "bg-[var(--color-orange)] text-white",
-            }}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>Transaction</span>
-          </Link>
-
-          <Link
-            to="/partners/announcements"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "announcements"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-            activeProps={{
-              className: "bg-[var(--color-orange)] text-white",
-            }}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              />
-            </svg>
-            <span>Announcement</span>
-          </Link>
-
-          <Link
-            to="/investors/subscriptions"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "subscriptions"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-          >
-            <List className="size-4" />
-            <span>Subscriptions</span>
-          </Link>
-
-          <Link
-            to="/partners/settings"
-            onClick={handleLinkClick}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === "settings"
-                ? "bg-[var(--color-orange)] text-white"
-                : "hover:bg-gray-800 text-gray-400"
-            }`}
-            activeProps={{
-              className: "bg-[var(--color-orange)] text-white",
-            }}
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            <span>Setting</span>
-          </Link>
           <button
             onClick={() => {
               show_logout();
             }}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${"hover:bg-gray-800 text-gray-400"}`}
+            className={`w-full flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors hover:bg-gray-800 text-gray-400`}
           >
             <LogOut className="size-4" /> Logout
           </button>
