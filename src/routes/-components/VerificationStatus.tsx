@@ -10,22 +10,6 @@ import {
 export default function VerificationStatus() {
   const [kyc] = useKyc();
 
-  useEffect(() => {
-    if (!kyc) {
-      toast.info("Please reauthenticate to receive updates", {
-        duration: Infinity,
-      });
-      return;
-    }
-    const isVerified = kyc.account_verification_status === "VERIFIED";
-    if (!isVerified) {
-      toast.error("Verification Required", {
-        description: "Please complete your verification",
-        duration: Infinity,
-      });
-    }
-  }, [kyc]);
-
   if (!kyc)
     return (
       <div className="flex items-center gap-3 p-4 rounded-box ring bg-info/10 text-info border border-info/20">
@@ -50,12 +34,17 @@ export default function VerificationStatus() {
       ) : (
         <div className="space-y-3">
           <div className="p-3 ring-1 ring-error/20 rounded-box bg-error/5 flex flex-col gap-1">
-            <div className="badge badge-error gap-1.5 py-3 px-3 ring-1 ring-error/30 badge-soft font-medium">
-              <XCircleIcon className="w-3.5 h-3.5" />
-              Not Verified
-            </div>
+            <section className="flex items-center w-full ">
+              <div className="badge badge-error gap-1.5 py-3 px-3 ring-1 ring-error/30 badge-soft font-medium">
+                <XCircleIcon className="w-3.5 h-3.5" />
+                Not Verified
+              </div>
+              <button className="btn btn-sm ml-auto btn-primary btn-soft ring">
+                Complete KYC
+              </button>
+            </section>
             <div className="text-sm text-error/80 font-medium px-1">
-              Please complete your verification
+              Please complete your KYC verification
             </div>
           </div>
         </div>

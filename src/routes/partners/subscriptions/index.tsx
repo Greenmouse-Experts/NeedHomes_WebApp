@@ -1,8 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
-import CustomTable from "@/components/tables/CustomTable";
-import { type Actions } from "@/components/tables/pop-up";
 import { Button } from "@/components/ui/Button";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useAuth } from "@/store/authStore";
@@ -68,35 +66,10 @@ function RouteComponent() {
     }
   };
 
-  const columns = [
-    { key: "name", label: "Name" },
-    { key: "type", label: "Type" },
-    { key: "description", label: "Description" },
-    { key: "price", label: "Price" },
-    { key: "validity", label: "Validity" },
-    {
-      key: "canViewPremiumProperty",
-      label: "Can View Premium Property",
-      render: (value: boolean) => (value ? "Yes" : "No"),
-    },
-    { key: "maxInvestments", label: "Max Investments" },
-    {
-      key: "isActive",
-      label: "Is Active",
-      render: (value: boolean) => (value ? "Yes" : "No"),
-    },
-  ];
-
-  const actions: Actions[] = [
-    {
-      key: "subscribe",
-      label: "Subscribe",
-      action: (item: SUBSCRIPTIONS) => {
-        setSelectedPlan(item);
-        showModal();
-      },
-    },
-  ];
+  const handleSubscribeClick = (plan: SUBSCRIPTIONS) => {
+    setSelectedPlan(plan);
+    showModal();
+  };
 
   return (
     <ThemeProvider className="space-y-6">
@@ -104,14 +77,67 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           return (
-            <div className="space-y-4">
-              <h2 className="text-lg font-bold">Available Plans</h2>
-              <CustomTable
-                data={data.data}
-                columns={columns}
-                ring={true}
-                actions={actions}
-              />
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Available Plans</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {data.data.map((plan) => (
+                  <div
+                    key={plan.id}
+                    className="card  ring fade bg-base-100 shadow-xl border border-base-200"
+                  >
+                    <div className="card-body">
+                      <div className="flex justify-between items-start">
+                        <h2 className="card-title text-xl font-bold">
+                          {plan.name}
+                        </h2>
+                        <div className="badge badge-secondary">{plan.type}</div>
+                      </div>
+                      <p className="text-sm text-gray-500 min-h-[3rem]">
+                        {plan.description}
+                      </p>
+
+                      <div className="my-4">
+                        <span className="text-3xl font-bold">
+                          ${plan.price}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {" "}
+                          / {plan.validity} Days
+                        </span>
+                      </div>
+
+                      <div className="space-y-2 mb-6">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span
+                            className={
+                              plan.canViewPremiumProperty
+                                ? "text-success"
+                                : "text-error"
+                            }
+                          >
+                            {plan.canViewPremiumProperty ? "✓" : "✕"}
+                          </span>
+                          <span>Premium Property Access</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-primary">✓</span>
+                          <span>Max Investments: {plan.maxInvestments}</span>
+                        </div>
+                      </div>
+
+                      <div className="card-actions justify-end mt-auto">
+                        <Button
+                          className="w-full"
+                          disabled={!plan.isActive}
+                          onClick={() => handleSubscribeClick(plan)}
+                        >
+                          {plan.isActive ? "Subscribe Now" : "Unavailable"}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           );
         }}
@@ -245,9 +271,6 @@ const CurrentPlan = () => {
                           limits.
                         </p>
                       </div>
-                      {/*<Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all">
-                        Upgrade Now
-                      </Button>*/}
                     </>
                   )}
                 </div>
