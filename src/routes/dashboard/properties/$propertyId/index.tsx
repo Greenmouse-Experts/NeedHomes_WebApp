@@ -1,17 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  ChevronLeft,
-  MapPin,
-  Calendar,
-  Package,
-  Home,
-  Users,
-} from "lucide-react";
+import { ChevronLeft, MapPin, Calendar, Package, Home } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import type { PROPERTY_TYPE } from "@/types/property";
 import PageLoader from "@/components/layout/PageLoader";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
   component: PropertyDetailsPage,
@@ -20,12 +14,38 @@ export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
 function PropertyDetailsPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["admin-properties", propertyId],
     queryFn: async () => {
       let resp = await apiClient.get("/properties/" + propertyId);
       return resp.data;
+    },
+  });
+
+  const publishMutation = useMutation({
+    mutationFn: async (published: boolean) => {
+      const resp = await apiClient.patch(
+        `/admin/properties/${propertyId}/published`,
+        {
+          published,
+        },
+      );
+      return resp.data;
+    },
+    onSuccess: (_, published) => {
+      queryClient.invalidateQueries({
+        queryKey: ["admin-properties", propertyId],
+      });
+      toast.success(
+        published
+          ? "Property published successfully"
+          : "Property unpublished successfully",
+      );
+    },
+    onError: () => {
+      toast.error("Failed to update property status");
     },
   });
 
@@ -366,19 +386,22 @@ function PropertyDetailsPage() {
                           Edit Property
                         </Button>
                         <Button
-                          variant="outline"
+                          variant={property.published ? "outline" : "primary"}
                           className="w-full text-sm md:text-base"
+                          disabled={publishMutation.isPending}
                           onClick={() => {
-                            if (
-                              confirm(
-                                "Are you sure you want to suspend this property?",
-                              )
-                            ) {
-                              console.log("Suspend property:", propertyId);
-                            }
+                            const action = property.published
+                              ? "unpublish"
+                              : "publish";
+
+                            publishMutation.mutate(!property.published);
                           }}
                         >
-                          Suspend Property
+                          {publishMutation.isPending
+                            ? "Updating..."
+                            : property.published
+                              ? "Unpublish Property"
+                              : "Publish Property"}
                         </Button>
                       </div>
                     </div>
