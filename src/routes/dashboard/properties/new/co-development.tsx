@@ -231,7 +231,9 @@ function RouteComponent() {
         galleryImages: allGallery,
         videos: videoUrl, // Add uploaded video URL to the payload
         totalPrice,
-        completionDate: new Date(data.completionDate).toISOString(),
+        completionDate: data.completionDate
+          ? new Date(data.completionDate).toISOString()
+          : null,
       };
 
       const response = await apiClient.post(
