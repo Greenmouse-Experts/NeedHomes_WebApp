@@ -201,7 +201,7 @@ function PropertyDetailPage() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">
-                                Minimum Shares
+                                Minimum Shares To Buy
                               </p>
                               <p className="text-lg font-semibold text-gray-900">
                                 {property.minimumShares || "N/A"}

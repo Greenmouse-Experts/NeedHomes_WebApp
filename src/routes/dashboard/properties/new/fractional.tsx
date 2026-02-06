@@ -540,7 +540,7 @@ function RouteComponent() {
                       render={({ field }) => (
                         <SimpleInput
                           {...field}
-                          label="Minimum Shares"
+                          label="Minimum Shares To Buy"
                           type="number"
                           onChange={(e) =>
                             field.onChange(Number((e as any).target?.value))
@@ -584,7 +584,7 @@ function RouteComponent() {
                           <option value="MONTHLY">Monthly</option>
                           <option value="QUARTERLY">Quarterly</option>
                           <option value="ANNUALLY">Annually</option>
-                          <option value="NONE">None</option>
+                          <option value="MATURITY">At Maturity</option>
                         </LocalSelect>
                       )}
                     />
