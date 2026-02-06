@@ -43,7 +43,7 @@ function RouteComponent() {
   });
 
   const subscribeMutation = useMutation({
-    mutationFn: async (payload: { planId: string; autorenew: string }) => {
+    mutationFn: async (payload: { planId: string; autoRenew: boolean }) => {
       const resp = await apiClient.post("/subscriptions/subscribe", payload);
       return resp.data;
     },
@@ -61,7 +61,7 @@ function RouteComponent() {
     if (selectedPlan) {
       subscribeMutation.mutate({
         planId: selectedPlan.id,
-        autorenew: autoRenew.toString(),
+        autoRenew: autoRenew,
       });
     }
   };
