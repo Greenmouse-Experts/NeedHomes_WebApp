@@ -6,6 +6,7 @@ import {
   XCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/outline";
+import { Link } from "@tanstack/react-router";
 
 export default function VerificationStatus() {
   const [kyc] = useKyc();
@@ -39,9 +40,12 @@ export default function VerificationStatus() {
                 <XCircleIcon className="w-3.5 h-3.5" />
                 Not Verified
               </div>
-              <button className="btn btn-sm ml-auto btn-primary btn-soft ring">
+              <Link
+                to="settings"
+                className="btn btn-sm ml-auto btn-primary btn-soft ring"
+              >
                 Complete KYC
-              </button>
+              </Link>
             </section>
             <div className="text-sm text-error/80 font-medium px-1">
               Please complete your KYC verification
