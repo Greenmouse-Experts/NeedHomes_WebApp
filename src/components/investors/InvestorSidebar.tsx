@@ -190,7 +190,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       <aside
         className={` bg-[#2A2A2A] text-white flex flex-col justify-between  h-full `}
       >
-        {JSON.stringify(isVerified)}
+        {/*{JSON.stringify(isVerified)}*/}
         <div className="p-4 border-b border-gray-700 ">
           <Link to="/" className="flex items-center gap-2.5">
             <img
