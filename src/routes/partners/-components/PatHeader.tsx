@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
+import SimpleAvatar from "@/simpleComps/SimpleAvatar";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { show_logout, useAuth } from "@/store/authStore";
 import { Link } from "@tanstack/react-router";
@@ -56,10 +57,11 @@ export default function PatHeader({
           <ThemeProvider>
             <div className="dropdown dropdown-end">
               <button className="btn btn-circle">
-                <Avatar className="w-8 h-8 md:w-10 md:h-10">
+                <SimpleAvatar url={img_url} alt={"U"} className="!size-8" />
+                {/*<Avatar className="w-8 h-8 md:w-10 md:h-10">
                   <AvatarImage src={img_url} />
                   <AvatarFallback className="text-xs">AD</AvatarFallback>
-                </Avatar>
+                </Avatar>*/}
               </button>
               <ul className="menu bg-base-100  shadow ring fade rounded-xl p-2 dropdown-content ">
                 <li>
