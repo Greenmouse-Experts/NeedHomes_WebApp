@@ -42,6 +42,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
         </svg>
       ),
       alwaysEnabled: true,
+      activeOptions: { exact: true },
     },
     {
       to: "/investors/properties",
@@ -226,6 +227,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
                 }
                 disabled={isDisabled}
                 className={linkClasses}
+                activeOptions={link.activeOptions}
                 activeProps={{
                   className: "bg-[var(--color-orange)] text-white",
                 }}
