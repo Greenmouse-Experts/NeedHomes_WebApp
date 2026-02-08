@@ -1,8 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { List, LogOut, Menu, X } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
+import { List, LogOut } from "lucide-react";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
-import { useEffect } from "react";
 import ProfileCard from "./ProfileCard";
 
 interface InvestorSidebarProps {
@@ -11,26 +9,14 @@ interface InvestorSidebarProps {
   setIsSidebarOpen: (open: boolean) => void;
 }
 
-export function InvestorSidebar({
-  activePage,
-  isSidebarOpen,
-  setIsSidebarOpen,
-}: InvestorSidebarProps) {
+export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
   const [authRecord] = useAuth();
-  const user = authRecord?.user;
-
-  // Close sidebar when clicking outside on mobile
-
-  // Close sidebar when route changes on mobile
 
   const handleLinkClick = () => {
     const close_div = document.getElementById(
       "my-drawer-3",
     ) as HTMLLabelElement;
-    close_div.click();
-    // if (window.innerWidth < 768) {
-    //   setIsSidebarOpen(false);
-    // }
+    if (close_div) close_div.click();
   };
   const [kyc] = useKyc();
   const isVerified = kyc && kyc.account_verification_status == "VERIFIED";
@@ -200,15 +186,11 @@ export function InvestorSidebar({
 
   return (
     <>
-      {/* Mobile Overlay/Backdrop */}
-
-      {/* Mobile Menu Button */}
-
       {/* Sidebar */}
       <aside
         className={` bg-[#2A2A2A] text-white flex flex-col justify-between  h-full `}
       >
-        {/* Logo */}
+        {JSON.stringify(isVerified)}
         <div className="p-4 border-b border-gray-700 ">
           <Link to="/" className="flex items-center gap-2.5">
             <img
@@ -231,25 +213,22 @@ export function InvestorSidebar({
               activePage === link.activePage
                 ? "bg-[var(--color-orange)] text-white"
                 : isDisabled
-                  ? "text-gray-600 cursor-not-allowed"
+                  ? "text-gray-600 cursor-not-allowed opacity-50"
                   : "hover:bg-gray-800 text-gray-400"
             }`;
-
-            if (isDisabled) {
-              return (
-                <div key={link.to} className={linkClasses}>
-                  {link.icon}
-                  <span>{link.label}</span>
-                </div>
-              );
-            }
 
             return (
               <Link
                 key={link.to}
-                to={link.to}
-                onClick={handleLinkClick}
+                to={isDisabled ? "#" : link.to}
+                onClick={
+                  isDisabled ? (e) => e.preventDefault() : handleLinkClick
+                }
+                disabled={isDisabled}
                 className={linkClasses}
+                activeProps={{
+                  className: "bg-[var(--color-orange)] text-white",
+                }}
               >
                 {link.icon}
                 <span>{link.label}</span>
@@ -261,7 +240,7 @@ export function InvestorSidebar({
             onClick={() => {
               show_logout();
             }}
-            className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${"hover:bg-gray-800 text-gray-400"}`}
+            className={`w-full flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors hover:bg-gray-800 text-gray-400`}
           >
             <LogOut className="size-4" /> Logout
           </button>
