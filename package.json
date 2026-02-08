@@ -28,6 +28,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.1",
+    "react-paystack": "^6.0.0",
     "react-phone-number-input": "^3.4.14",
     "react-popper": "^2.3.0",
     "recharts": "^3.7.0",

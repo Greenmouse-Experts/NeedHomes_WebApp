@@ -70,14 +70,6 @@ function SettingsPage() {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleBankChange = (field: string, value: string) => {
-    setBankData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleKycChange = (field: string, value: string | File | null) => {
-    setKycData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handlePasswordChange = (field: string, value: string) => {
     setPasswordData((prev) => ({ ...prev, [field]: value }));
   };
@@ -85,16 +77,6 @@ function SettingsPage() {
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Profile update:", profileData);
-  };
-
-  const handleBankSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Bank details update:", bankData);
-  };
-
-  const handleKycSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("KYC update:", kycData);
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -108,12 +90,7 @@ function SettingsPage() {
 
   const tabs = [
     { id: "profile" as SettingsTab, label: "Profile", icon: User },
-    {
-      id: "bankDetails" as SettingsTab,
-      label: "Bank Details",
-      icon: CreditCard,
-    },
-    { id: "kyc" as SettingsTab, label: "KYC", icon: FileText },
+
     { id: "security" as SettingsTab, label: "Security", icon: Shield },
   ];
 
@@ -268,221 +245,8 @@ function SettingsPage() {
             )}
 
             {/* Bank Details Tab */}
-            {activeTab === "bankDetails" && (
-              <div>
-                <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
-                    Bank Details
-                  </h3>
-                </div>
-
-                <form onSubmit={handleBankSubmit} className="max-w-2xl">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Account Number */}
-                    <div className="space-y-2">
-                      <Label htmlFor="accountNumber">Account Number</Label>
-                      <Input
-                        id="accountNumber"
-                        value={bankData.accountNumber}
-                        onChange={(e) =>
-                          handleBankChange("accountNumber", e.target.value)
-                        }
-                        placeholder="Enter Acct Number"
-                      />
-                    </div>
-
-                    {/* Bank Name */}
-                    <div className="space-y-2">
-                      <Label htmlFor="bankName">Bank Name</Label>
-                      <select
-                        id="bankName"
-                        value={bankData.bankName}
-                        onChange={(e) =>
-                          handleBankChange("bankName", e.target.value)
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
-                      >
-                        <option value="">Select</option>
-                        <option value="access">Access Bank</option>
-                        <option value="gtb">GTBank</option>
-                        <option value="first">First Bank</option>
-                        <option value="zenith">Zenith Bank</option>
-                        <option value="uba">UBA</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    {/* Account Name */}
-                    <div className="space-y-2">
-                      <Label htmlFor="accountName">Account Name</Label>
-                      <Input
-                        id="accountName"
-                        value={bankData.accountName}
-                        onChange={(e) =>
-                          handleBankChange("accountName", e.target.value)
-                        }
-                        className="bg-red-50"
-                        disabled
-                      />
-                    </div>
-
-                    {/* Account Type */}
-                    <div className="space-y-2">
-                      <Label htmlFor="accountType">Account Type</Label>
-                      <select
-                        id="accountType"
-                        value={bankData.accountType}
-                        onChange={(e) =>
-                          handleBankChange("accountType", e.target.value)
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)] focus:border-transparent"
-                      >
-                        <option value="">Select</option>
-                        <option value="savings">Savings</option>
-                        <option value="current">Current</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-6">
-                    <Button
-                      type="submit"
-                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
 
             {/* KYC Tab */}
-            {activeTab === "kyc" && (
-              <div>
-                <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
-                    KYC
-                  </h3>
-                </div>
-
-                <form onSubmit={handleKycSubmit} className="max-w-2xl">
-                  {/* ID Type */}
-                  <div className="space-y-2 mb-6">
-                    <Label htmlFor="idType">ID Type</Label>
-                    <Input
-                      id="idType"
-                      value={kycData.idType}
-                      onChange={(e) =>
-                        handleKycChange("idType", e.target.value)
-                      }
-                      placeholder="National ID"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {/* Upload Front */}
-                    <div className="space-y-2">
-                      <Label>Upload Front</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
-                        <input
-                          type="file"
-                          onChange={(e) =>
-                            handleKycChange(
-                              "frontUpload",
-                              e.target.files?.[0] || null,
-                            )
-                          }
-                          className="hidden"
-                          id="frontUpload"
-                          accept="image/*"
-                        />
-                        <label htmlFor="frontUpload" className="cursor-pointer">
-                          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm text-[var(--color-orange)]">
-                            View File Upload
-                          </p>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Upload Back */}
-                    <div className="space-y-2">
-                      <Label>Upload Back</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
-                        <input
-                          type="file"
-                          onChange={(e) =>
-                            handleKycChange(
-                              "backUpload",
-                              e.target.files?.[0] || null,
-                            )
-                          }
-                          className="hidden"
-                          id="backUpload"
-                          accept="image/*"
-                        />
-                        <label htmlFor="backUpload" className="cursor-pointer">
-                          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm text-[var(--color-orange)]">
-                            View File Upload
-                          </p>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Utility Bill */}
-                  <div className="space-y-2 mb-6">
-                    <Label>Utility Bill (Proof of Address)</Label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--color-orange)] transition-colors cursor-pointer">
-                      <input
-                        type="file"
-                        onChange={(e) =>
-                          handleKycChange(
-                            "utilityBill",
-                            e.target.files?.[0] || null,
-                          )
-                        }
-                        className="hidden"
-                        id="utilityBill"
-                        accept="image/*,application/pdf"
-                      />
-                      <label htmlFor="utilityBill" className="cursor-pointer">
-                        <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-sm text-[var(--color-orange)]">
-                          View File Upload
-                        </p>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div className="space-y-2 mb-6">
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      id="address"
-                      value={kycData.address}
-                      onChange={(e) =>
-                        handleKycChange("address", e.target.value)
-                      }
-                      placeholder="Zone A 1 Egbi Ewaji St, Wuse, Abuja 900001, Federal Capital Territory, Nigeria"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="pt-6">
-                    <Button
-                      type="submit"
-                      className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white px-12"
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
 
             {/* Security Tab */}
             {activeTab === "security" && (
