@@ -45,13 +45,15 @@ export default function AdminKycForm({ id }: { id: string }) {
       return response.data;
     },
   });
+  const kycData = kycResponse?.data?.verification;
 
+  const kycId = kycData?.id;
   const verifyMutation = useMutation({
     mutationFn: async (status: "APPROVED" | "REJECTED") => {
       const endpoint =
         status === "APPROVED"
-          ? `/admin/verifications/${id}/accept`
-          : `/admin/verifications/${id}/reject`;
+          ? `/admin/verifications/${kycId}/accept`
+          : `/admin/verifications/${kycId}/reject`;
       return apiClient.post(endpoint);
     },
     onSuccess: (_, status) => {
@@ -85,7 +87,6 @@ export default function AdminKycForm({ id }: { id: string }) {
     );
   }
 
-  const kycData = kycResponse?.data?.verification;
   // const isPending = kycData?.status === "PENDING";
   const isPending = true;
   const InfoCard = ({
