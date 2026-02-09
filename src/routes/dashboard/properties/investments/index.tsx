@@ -74,8 +74,8 @@ function RouteComponent() {
 
   return (
     <div className="bg-base-100">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-6">
+      <div className=" border-b ring fade rounded-t-box border-gray-200 shadow">
+        <div className="flex items-center justify-between p-6 border-b fade">
           <h2 className="text-xl font-semibold">Investments</h2>
         </div>
 
@@ -117,15 +117,10 @@ function RouteComponent() {
           return (
             <>
               <CustomTable
+                ring={false}
                 columns={columns}
-                data={investments.length > 0 ? investments : DUMMY_DATA}
-                actions={[
-                  {
-                    label: "View Details",
-                    onClick: (item) => console.log(item),
-                  },
-                  { label: "Edit", onClick: (item) => console.log(item) },
-                ]}
+                data={DUMMY_DATA}
+                actions={[]}
               />
             </>
           );
