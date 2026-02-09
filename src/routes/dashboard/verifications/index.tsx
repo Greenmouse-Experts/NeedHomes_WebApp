@@ -1,4 +1,7 @@
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import apiClient, {
+  type ApiResponse,
+  type ApiResponseV2,
+} from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
@@ -128,7 +131,7 @@ function RouteComponent() {
     null,
   );
 
-  const query = useQuery<ApiResponse<VERIFICATION_REQUEST[]>>({
+  const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
     queryKey: ["verifications-admin"],
     queryFn: async () => {
       let resp = await apiClient.get("admin/verifications");
@@ -282,7 +285,7 @@ function RouteComponent() {
               return (
                 <div className="">
                   <CustomTable
-                    data={resp.data}
+                    data={resp.data.data}
                     columns={columns}
                     actions={actions}
                   />
