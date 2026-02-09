@@ -15,7 +15,10 @@ import {
   Trash2,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import apiClient, {
+  type ApiResponse,
+  type ApiResponseV2,
+} from "@/api/simpleApi";
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, {
@@ -37,7 +40,7 @@ function ListedPropertiesPage() {
   const handleAddProperty = () => {
     navigate({ to: "/dashboard/properties/new" });
   };
-  const query = useQuery<ApiResponse<ADMIN_PROPERTY_LISTING[]>>({
+  const query = useQuery<ApiResponseV2<ADMIN_PROPERTY_LISTING[]>>({
     queryKey: ["listings-admin"],
     queryFn: async () => {
       let url = "admin/properties";

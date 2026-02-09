@@ -10,7 +10,13 @@ export interface ApiResponse<T = any> {
   statusCode: number;
   path: string;
 }
-
+export interface ApiResponseV2<T = any> {
+  message: string;
+  data: { data: T; meta: any };
+  // status: string;
+  statusCode: number;
+  path: string;
+}
 export const new_url = "https://needhomes-backend-staging.onrender.com/";
 const apiClient = axios.create({
   baseURL: new_url,
