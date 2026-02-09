@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
-import type { ApiResponse } from "@/api/simpleApi";
+import type { ApiResponse, ApiResponseV2 } from "@/api/simpleApi";
 import {
   Search,
   Filter,
@@ -34,7 +34,7 @@ function InvestorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const props = usePagination();
-  const { data, isLoading, error } = useQuery<ApiResponse<INVESTOR[]>>({
+  const { data, isLoading, error } = useQuery<ApiResponseV2<INVESTOR[]>>({
     queryKey: ["investors", "corporate", props.page],
     queryFn: async () => {
       const response = await apiClient.get(
@@ -49,7 +49,7 @@ function InvestorsPage() {
     },
   });
 
-  const investorsData = data?.data || [];
+  const investorsData = data?.data.data || [];
 
   const filteredInvestors = investorsData.filter(
     (investor) =>
