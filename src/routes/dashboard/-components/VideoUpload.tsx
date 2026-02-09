@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import { XCircle, UploadCloud } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -12,11 +12,11 @@ export default function VideoUpload({
 
   useEffect(() => {
     return () => {
-      if (videoProps.url) {
+      if (videoProps.url && videoProps.videoFile) {
         URL.revokeObjectURL(videoProps.url);
       }
     };
-  }, [videoProps.url]);
+  }, [videoProps.url, videoProps.videoFile]);
 
   return (
     <div className="flex-1 flex flex-col">
@@ -43,7 +43,7 @@ export default function VideoUpload({
           htmlFor={id}
           className="flex flex-col items-center justify-center text-center cursor-pointer w-full h-full min-h-0 p-4"
         >
-          {videoProps.videoFile && videoProps.url ? (
+          {videoProps.url ? (
             <div className="relative w-full h-full flex items-center justify-center group">
               <video
                 controls
@@ -57,6 +57,7 @@ export default function VideoUpload({
                 onClick={(e) => {
                   e.preventDefault();
                   videoProps.setVideoFile(null);
+                  videoProps.setPrevVideo(null);
                 }}
                 aria-label="Remove selected video"
               >
@@ -80,15 +81,24 @@ export default function VideoUpload({
   );
 }
 
-export const useVideoUpload = () => {
+export const useVideoUpload = (prev?: string) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  let url = videoFile ? URL.createObjectURL(videoFile) : null;
+  const [prevVideo, setPrevVideo] = useState<string | null>(prev ?? null);
+
+  const url = useMemo(() => {
+    if (videoFile) return URL.createObjectURL(videoFile);
+    return prevVideo;
+  }, [videoFile, prevVideo]);
+
   useEffect(() => {
     console.log(url);
   }, [url]);
+
   return {
     videoFile,
     setVideoFile,
+    prevVideo,
+    setPrevVideo,
     url,
   };
 };
