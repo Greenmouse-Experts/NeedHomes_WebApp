@@ -168,7 +168,7 @@ function OutrightForm({ prevValues }) {
     }),
   );
   const selectProps = useSelectImage(prevValues.coverImage);
-  const docUpload = useDocumentUpload();
+  const docUpload = useDocumentUpload(prevValues);
   const videoUpload = useVideoUpload(prevValues.videos);
   const nav = useNavigate();
 

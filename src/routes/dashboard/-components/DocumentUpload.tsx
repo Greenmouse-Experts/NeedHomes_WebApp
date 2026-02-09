@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { UploadCloud, XCircle, FileText } from "lucide-react";
+import { UploadCloud, XCircle, FileText, ExternalLink } from "lucide-react";
 
 interface Documents {
-  certificateOfOwnership?: File;
-  surveyPlan?: File;
-  transferOfOwnershipDocument?: File;
-  brochureFactSheet?: File;
+  certificateOfOwnership?: File | string;
+  surveyPlan?: File | string;
+  transferOfOwnershipDocument?: File | string;
+  brochureFactSheet?: File | string;
 }
 
 export const DocumentUpload = (props: {
@@ -48,21 +48,36 @@ export const DocumentUpload = (props: {
               {getLabel(docType)}:
             </span>
             {documents[docType] ? (
-              <div className="flex items-center  justify-between gap-3 bg-white p-2 rounded-md border">
-                <div className="flex items-center gap-2 flex-grow min-w-0">
-                  <FileText className="h-5 w-5 text-blue-500 flex-shrink-0" />
+              <div className="flex items-center justify-between gap-3 bg-white p-2 rounded-md border">
+                <div className="flex items-center gap-2 grow min-w-0">
+                  <FileText className="h-5 w-5 text-blue-500 shrink-0" />
                   <span className="text-sm text-gray-800 truncate">
-                    {documents[docType]?.name}
+                    {typeof documents[docType] === "string"
+                      ? (documents[docType] as string).split("/").pop()
+                      : (documents[docType] as File).name}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeFile(docType)}
-                  className="p-1 rounded-full text-red-600 hover:bg-red-100 transition-colors duration-200"
-                  aria-label={`Remove ${getLabel(docType)}`}
-                >
-                  <XCircle className="h-5 w-5" />
-                </button>
+                <div className="flex items-center gap-1">
+                  {typeof documents[docType] === "string" && (
+                    <a
+                      href={documents[docType] as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"
+                      title="View existing document"
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => removeFile(docType)}
+                    className="p-1 rounded-full text-red-600 hover:bg-red-100 transition-colors duration-200"
+                    aria-label={`Remove ${getLabel(docType)}`}
+                  >
+                    <XCircle className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             ) : (
               <label className="btn btn-primary btn-soft fade ring">
@@ -84,8 +99,9 @@ export const DocumentUpload = (props: {
   );
 };
 
-export const useDocumentUpload = () => {
-  const [documents, setDocuments] = useState<Documents>({});
+export const useDocumentUpload = (prev?: Documents) => {
+  const [documents, setDocuments] = useState<Documents>(prev || {});
+  const [prevDocs, setPrevDocs] = useState<Documents>(prev || {});
 
   const handleFileChange = (docType: keyof Documents, file?: File) => {
     setDocuments((prev) => ({
@@ -102,5 +118,5 @@ export const useDocumentUpload = () => {
     });
   };
 
-  return { documents, handleFileChange, removeFile };
+  return { documents, prevDocs, setPrevDocs, handleFileChange, removeFile };
 };
