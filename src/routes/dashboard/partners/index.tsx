@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
-import type { ApiResponse } from "@/api/simpleApi";
+import type { ApiResponse, ApiResponseV2 } from "@/api/simpleApi";
 import {
   Search,
   Filter,
@@ -36,7 +36,7 @@ function PartnersPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
-  const { data, isLoading, error } = useQuery<ApiResponse<PARTNER[]>>({
+  const { data, isLoading, error } = useQuery<ApiResponseV2<PARTNER[]>>({
     queryKey: ["partners", props.page],
     queryFn: async () => {
       const response = await apiClient.get("admin/users?accountType=PARTNER", {
@@ -48,7 +48,7 @@ function PartnersPage() {
     },
   });
 
-  const partnersData = data?.data || [];
+  const partnersData = data?.data.data || [];
 
   const filteredPartners = partnersData.filter(
     (partner) =>
