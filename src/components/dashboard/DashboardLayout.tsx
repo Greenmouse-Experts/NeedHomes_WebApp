@@ -66,13 +66,13 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
       {
         label: "Investments",
         to: "/dashboard/properties/investments",
-        icon: Eye,
+        icon: HomeIcon,
       },
-      // {
-      //   label: "Sold Property",
-      //   to: "/dashboard/properties/sold",
-      //   icon: HomeIcon,
-      // },
+      {
+        label: "Promotions",
+        to: "/dashboard/properties/promotions",
+        icon: HomeIcon,
+      },
       { label: "New property", to: "/dashboard/properties/new", icon: Plus },
     ],
   },
