@@ -159,7 +159,14 @@ function OutrightForm({ prevValues }) {
     defaultValues: prevValues,
   });
 
-  const { images, setPrev, newImages, setNew } = useImages([]);
+  const { images, setPrev, newImages, setNew } = useImages(
+    prevValues.galleryImages.map((item) => {
+      return {
+        url: item,
+        path: item,
+      };
+    }),
+  );
   const selectProps = useSelectImage(null as any);
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
