@@ -218,8 +218,10 @@ function ListedPropertiesPage() {
             </div>
           </div>
           {/* Table */}
+
           <CustomTable
-            data={data.data}
+            //@ts-ignore
+            data={data.data.data}
             columns={columns}
             actions={actions}
             ring={false}

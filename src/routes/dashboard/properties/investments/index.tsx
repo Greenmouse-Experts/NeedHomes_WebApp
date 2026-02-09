@@ -1,21 +1,68 @@
 import type { ApiResponse } from "@/api/simpleApi";
 import apiClient from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
-import CustomTable from "@/components/tables/CustomTable";
+import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Filter, Plus, Printer, Search } from "lucide-react";
+import { Filter, Printer, Search } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/dashboard/properties/investments/")({
   component: RouteComponent,
 });
 
-type FilterTab = "all" | "published" | "unpublished";
+const DUMMY_DATA = [
+  {
+    id: 1,
+    property: "Oceanview Apartments",
+    investor: "John Doe",
+    amount: "$50,000",
+    date: "2023-10-15",
+    status: "Completed",
+  },
+  {
+    id: 2,
+    property: "Skyline Tower",
+    investor: "Jane Smith",
+    amount: "$120,000",
+    date: "2023-11-02",
+    status: "Pending",
+  },
+  {
+    id: 3,
+    property: "Green Valley Estate",
+    investor: "Robert Brown",
+    amount: "$75,000",
+    date: "2023-11-20",
+    status: "Completed",
+  },
+];
+
+const columns: columnType[] = [
+  { key: "property", label: "Property Name" },
+  { key: "investor", label: "Investor" },
+  { key: "amount", label: "Amount" },
+  { key: "date", label: "Date" },
+  {
+    key: "status",
+    label: "Status",
+    render: (value) => (
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${
+          value === "Completed"
+            ? "bg-success/20 text-success"
+            : "bg-warning/20 text-warning"
+        }`}
+      >
+        {value}
+      </span>
+    ),
+  },
+];
+
 function RouteComponent() {
-  const [activeTab, setActiveTab] = useState<FilterTab>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const query = useQuery<ApiResponse<[]>>({
     queryKey: ["listings-admin"],
@@ -29,49 +76,8 @@ function RouteComponent() {
     <div className="bg-base-100">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">Invesments </h2>
-          {/*<Button
-            // onClick={handleAddProperty}
-            className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Add a New Properties
-          </Button>*/}
+          <h2 className="text-xl font-semibold">Investments</h2>
         </div>
-
-        {/* Filter Tabs */}
-        {/*<div className="flex gap-2">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-              activeTab === "all"
-                ? "bg-[var(--color-orange)] text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            All Property
-          </button>
-          <button
-            onClick={() => setActiveTab("published")}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-              activeTab === "published"
-                ? "bg-[var(--color-orange)] text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            Publish Properties
-          </button>
-          <button
-            onClick={() => setActiveTab("unpublished")}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-              activeTab === "unpublished"
-                ? "bg-[var(--color-orange)] text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            Unpublished Properties
-          </button>
-        </div>*/}
 
         <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
           <div className="relative flex-1 max-w-md">
@@ -101,19 +107,26 @@ function RouteComponent() {
               <Printer className="w-4 h-4" />
               Print
             </Button>
-            {/* <Button variant="outline" size="sm">
-              Action
-            </Button> */}
           </div>
         </div>
       </div>
       <PageLoader query={query}>
         {(data) => {
           //@ts-ignore
-          const investments = data.data.data;
+          const investments = data.data.data || DUMMY_DATA;
           return (
             <>
-              <CustomTable data={investments} />
+              <CustomTable
+                columns={columns}
+                data={investments.length > 0 ? investments : DUMMY_DATA}
+                actions={[
+                  {
+                    label: "View Details",
+                    onClick: (item) => console.log(item),
+                  },
+                  { label: "Edit", onClick: (item) => console.log(item) },
+                ]}
+              />
             </>
           );
         }}
