@@ -282,7 +282,11 @@ export interface ADMIN_PROPERTY_LISTING {
   id: string;
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
-  investmentModel: "SAVE_TO_OWN" | "RENT_TO_OWN" | "INVESTMENT" | "OUTRIGHT";
+  investmentModel:
+    | "SAVE_TO_OWN"
+    | "FRACTIONAL"
+    | "INVESTMENT"
+    | "OUTRIGHT_PURCHASE";
   location: string;
   description: string;
   developmentStage: "PLANNING" | "FOUNDATION" | "ROOFING" | "FINISHED";

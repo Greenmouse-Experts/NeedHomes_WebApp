@@ -103,7 +103,7 @@ function ListedPropertiesPage() {
       key: "view",
       label: "View Details",
       action: (item: ADMIN_PROPERTY_LISTING, nav) => {
-        nav({
+        return nav({
           to: "/dashboard/properties/$propertyId",
           params: { propertyId: item.id },
         });
@@ -113,10 +113,33 @@ function ListedPropertiesPage() {
       key: "edit",
       label: "Edit",
       action: (item: ADMIN_PROPERTY_LISTING, nav) => {
-        nav({
-          to: "/dashboard/properties/$propertyId/edit",
-          params: { propertyId: item.id },
-        });
+        console.log(item);
+        switch (item.investmentModel) {
+          case "OUTRIGHT_PURCHASE":
+            nav({
+              to: "/dashboard/properties/edit/$propertyId/outright",
+              params: { propertyId: item.id },
+            });
+            break;
+          case "SAVE_TO_OWN":
+            nav({
+              to: "/dashboard/properties/$propertyId",
+              params: { propertyId: item.id },
+            });
+            break;
+          case "INVESTMENT":
+            nav({
+              to: "/dashboard/properties/$propertyId",
+              params: { propertyId: item.id },
+            });
+            break;
+          case "FRACTIONAL":
+            nav({
+              to: "/dashboard/properties/edit/$propertyId/outright",
+              params: { propertyId: item.id },
+            });
+            break;
+        }
       },
     },
     // {

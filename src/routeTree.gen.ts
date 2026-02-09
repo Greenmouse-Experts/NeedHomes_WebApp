@@ -100,6 +100,7 @@ import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/
 import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dashboard/partners/$partnerId/kyc'
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
 import { Route as PartnerRecoverForgotPasswordResetIndexRouteImport } from './routes/partner/recover/forgot-password/reset/index'
+import { Route as DashboardPropertiesEditPropertyIdOutrightRouteImport } from './routes/dashboard/properties/edit/$propertyId/outright'
 
 const VerifyPartnerRoute = VerifyPartnerRouteImport.update({
   id: '/verify-partner',
@@ -594,6 +595,12 @@ const PartnerRecoverForgotPasswordResetIndexRoute =
     path: '/partner/recover/forgot-password/reset/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DashboardPropertiesEditPropertyIdOutrightRoute =
+  DashboardPropertiesEditPropertyIdOutrightRouteImport.update({
+    id: '/edit/$propertyId/outright',
+    path: '/edit/$propertyId/outright',
+    getParentRoute: () => DashboardPropertiesRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -686,6 +693,7 @@ export interface FileRoutesByFullPath {
   '/investors/properties/$propertyId/': typeof InvestorsPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
   '/partners/properties/$propertyId/': typeof PartnersPropertiesPropertyIdIndexRoute
+  '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
 export interface FileRoutesByTo {
@@ -764,6 +772,7 @@ export interface FileRoutesByTo {
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password': typeof PartnerRecoverForgotPasswordIndexRoute
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdIndexRoute
+  '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/partner/recover/forgot-password/reset': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
 export interface FileRoutesById {
@@ -858,6 +867,7 @@ export interface FileRoutesById {
   '/investors/properties/$propertyId/': typeof InvestorsPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
   '/partners/properties/$propertyId/': typeof PartnersPropertiesPropertyIdIndexRoute
+  '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
 export interface FileRouteTypes {
@@ -953,6 +963,7 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId/'
     | '/partner/recover/forgot-password/'
     | '/partners/properties/$propertyId/'
+    | '/dashboard/properties/edit/$propertyId/outright'
     | '/partner/recover/forgot-password/reset/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -1031,6 +1042,7 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId'
     | '/partner/recover/forgot-password'
     | '/partners/properties/$propertyId'
+    | '/dashboard/properties/edit/$propertyId/outright'
     | '/partner/recover/forgot-password/reset'
   id:
     | '__root__'
@@ -1124,6 +1136,7 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId/'
     | '/partner/recover/forgot-password/'
     | '/partners/properties/$propertyId/'
+    | '/dashboard/properties/edit/$propertyId/outright'
     | '/partner/recover/forgot-password/reset/'
   fileRoutesById: FileRoutesById
 }
@@ -1804,6 +1817,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnerRecoverForgotPasswordResetIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/properties/edit/$propertyId/outright': {
+      id: '/dashboard/properties/edit/$propertyId/outright'
+      path: '/edit/$propertyId/outright'
+      fullPath: '/dashboard/properties/edit/$propertyId/outright'
+      preLoaderRoute: typeof DashboardPropertiesEditPropertyIdOutrightRouteImport
+      parentRoute: typeof DashboardPropertiesRouteRoute
+    }
   }
 }
 
@@ -1880,6 +1900,7 @@ interface DashboardPropertiesRouteRouteChildren {
   DashboardPropertiesListedRoute: typeof DashboardPropertiesListedRoute
   DashboardPropertiesInvestmentsIndexRoute: typeof DashboardPropertiesInvestmentsIndexRoute
   DashboardPropertiesPromotionsIndexRoute: typeof DashboardPropertiesPromotionsIndexRoute
+  DashboardPropertiesEditPropertyIdOutrightRoute: typeof DashboardPropertiesEditPropertyIdOutrightRoute
 }
 
 const DashboardPropertiesRouteRouteChildren: DashboardPropertiesRouteRouteChildren =
@@ -1893,6 +1914,8 @@ const DashboardPropertiesRouteRouteChildren: DashboardPropertiesRouteRouteChildr
       DashboardPropertiesInvestmentsIndexRoute,
     DashboardPropertiesPromotionsIndexRoute:
       DashboardPropertiesPromotionsIndexRoute,
+    DashboardPropertiesEditPropertyIdOutrightRoute:
+      DashboardPropertiesEditPropertyIdOutrightRoute,
   }
 
 const DashboardPropertiesRouteRouteWithChildren =
