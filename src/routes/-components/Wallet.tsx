@@ -1,7 +1,4 @@
-import apiClient, {
-  type ApiResponse,
-  type ApiResponseV2,
-} from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { Button } from "@/components/ui/Button";
 import Modal from "@/components/modals/DialogModal";
 import { useAuth } from "@/store/authStore";
@@ -54,37 +51,48 @@ export default function UserWallet() {
     retry: 1,
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data: {
-      type: "deposit" | "withdraw";
-      amount: number;
-    }) => {
-      const endpoint =
-        data.type === "deposit" ? "/wallet/deposit/initialize" : "/withdraw";
-      const resp = await apiClient.post(endpoint, {
-        amount: data.amount * 100,
+  const depositMutation = useMutation({
+    mutationFn: async (amount: number) => {
+      const resp = await apiClient.post("/wallet/deposit/initialize", {
+        amount: amount * 100,
       });
       return resp.data;
     },
     onSuccess: (
       data: ApiResponse<{
         authorization_url?: string;
-        access_code: "ac2fz94jloauakq";
-        reference: "DEP_1770753925040_faf776fa";
+        access_code: string;
+        reference: string;
       }>,
     ) => {
       if (data.data.authorization_url) {
         window.open(data.data.authorization_url, "_blank", "noreferrer");
       }
       queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
-      toast.success(
-        `${modalType.charAt(0).toUpperCase() + modalType.slice(1)} successful`,
-      );
+      toast.success("Deposit initialized");
       closeModal();
       setAmount("");
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Transaction failed");
+      toast.error(err?.response?.data?.message || "Deposit failed");
+    },
+  });
+
+  const withdrawalMutation = useMutation({
+    mutationFn: async (amount: number) => {
+      const resp = await apiClient.post("/withdrawals", {
+        amount: amount * 100,
+      });
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
+      toast.success("Withdrawal successful");
+      closeModal();
+      setAmount("");
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Withdrawal failed");
     },
   });
 
@@ -98,18 +106,21 @@ export default function UserWallet() {
     if (!amount || isNaN(numericAmount)) {
       return toast.error("Please enter a valid amount");
     }
-    toast.promise(
-      mutation.mutateAsync({ type: modalType, amount: numericAmount }),
-      {
-        loading: "Processing transaction...",
-        success: `${modalType.charAt(0).toUpperCase() + modalType.slice(1)} successful`,
-        error: extract_message,
-      },
-    );
+
+    const mutation =
+      modalType === "deposit" ? depositMutation : withdrawalMutation;
+
+    toast.promise(mutation.mutateAsync(numericAmount), {
+      loading: "Processing transaction...",
+      success: `${modalType.charAt(0).toUpperCase() + modalType.slice(1)} processed`,
+      error: extract_message,
+    });
   };
 
   const error = query.error as AxiosError<ApiResponse>;
   const error_status = error?.status == 404;
+
+  const isPending = depositMutation.isPending || withdrawalMutation.isPending;
 
   return (
     <PageLoader customLoading={<WalletSkeleton />} query={query}>
@@ -288,7 +299,7 @@ export default function UserWallet() {
                     Cancel
                   </Button>
                   <Button
-                    disabled={mutation.isPending}
+                    disabled={isPending}
                     className="flex-1 bg-(--color-orange) text-white"
                     onClick={handleSubmit}
                   >
