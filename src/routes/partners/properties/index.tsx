@@ -1,4 +1,7 @@
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import apiClient, {
+  type ApiResponse,
+  type ApiResponseV2,
+} from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_DATA } from "@/types";
@@ -27,7 +30,7 @@ function PartnerPropertiesList() {
     { id: "SAVE_TO_OWN", label: "Save to Own" },
   ];
   const props = usePagination();
-  const query = useQuery<ApiResponse<PROPERTY_DATA[]>>({
+  const query = useQuery<ApiResponseV2<PROPERTY_DATA[]>>({
     queryKey: ["property-list", props.page],
     queryFn: async () => {
       let resp = await apiClient.get("/properties", {
@@ -92,7 +95,7 @@ function PartnerPropertiesList() {
 
       <PageLoader query={query}>
         {(response) => {
-          const properties = response.data || [];
+          const properties = response.data.data || [];
           const filteredProperties =
             selectedPropertyType === "all"
               ? properties
