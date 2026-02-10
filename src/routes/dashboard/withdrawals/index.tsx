@@ -5,6 +5,8 @@ import type { Actions } from "@/components/tables/pop-up";
 import type { withdrawal_reqeust } from "@/types/withdrawals";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import Toolbar from "../-components/ToolBar";
+import ToolbarSec from "../-components/ToolBar";
 
 export const Route = createFileRoute("/dashboard/withdrawals/")({
   component: RouteComponent,
@@ -103,7 +105,17 @@ function RouteComponent() {
         const list = resp.data.data;
         return (
           <>
-            <CustomTable columns={columns} data={list} actions={actions} />
+            <section className="p-6 bg-white rounded-xl ring fade">
+              <div className="mb-6 ">
+                <h1 className="text-xl font-bold">Withdrawal Requests</h1>
+                <p className="text-base-content/60">
+                  Manage and process user withdrawal requests and bank
+                  transfers.
+                </p>
+              </div>
+              <ToolbarSec />
+              <CustomTable columns={columns} data={list} actions={actions} />
+            </section>
           </>
         );
       }}

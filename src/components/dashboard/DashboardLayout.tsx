@@ -90,6 +90,11 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
         to: "/dashboard/transactions/payments",
         icon: CreditCard,
       },
+      {
+        label: "Withdrawals",
+        to: "/dashboard/withdrawals",
+        icon: CreditCard,
+      },
     ],
   },
   {
