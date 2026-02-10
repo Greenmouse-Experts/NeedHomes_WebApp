@@ -267,7 +267,7 @@ function OutrightForm({ prevValues }) {
           <div className="bg-primary p-6 text-primary-content">
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <Home size={24} />
-              New Outright Property
+              Edit Outright Property
             </h1>
             <p className="opacity-80 text-sm">
               List a new property for outright purchase.
