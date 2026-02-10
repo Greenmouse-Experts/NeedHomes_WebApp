@@ -85,7 +85,9 @@ function RouteComponent() {
       key: "view",
       label: "View Details",
       action: (item, nav) => {
-        console.log("Viewing withdrawal", item.id);
+        nav({
+          to: `/dashboard/withdrawals/${item.id}`,
+        });
       },
     },
     {
