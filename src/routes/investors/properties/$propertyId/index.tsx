@@ -1,10 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, MapPin, Percent, CheckCircle2 } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Percent,
+  CheckCircle2,
+  TrendingUp,
+  ChevronLeft,
+} from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import type { PROPERTY_TYPE, AdditionalFee } from "@/types/property";
+import { Button } from "@/components/ui/Button";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/investors/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -12,6 +23,7 @@ export const Route = createFileRoute("/investors/properties/$propertyId/")({
 
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
+  const navigate = useNavigate();
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -25,7 +37,16 @@ function PropertyDetailPage() {
     if (amount === null || amount === undefined) return "N/A";
     return `₦${amount.toLocaleString()}`;
   };
-
+  const mutate = useMutation({
+    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+      let resp = await apiClient.post("/investments", {
+        propertyId: propertyId,
+        amountPaid: data.amountPaid,
+        quantity: data.quantity,
+      });
+      return resp.data;
+    },
+  });
   return (
     <PageLoader query={query}>
       {(data) => {
@@ -41,6 +62,38 @@ function PropertyDetailPage() {
 
         return (
           <>
+            <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <Button
+                variant="outline"
+                leftIcon={<ChevronLeft className="w-5 h-5" />}
+                onClick={() => navigate({ to: "/investors/properties" })}
+                className="w-full sm:w-auto"
+              >
+                Back to Properties
+              </Button>
+
+              <Button
+                variant="primary"
+                rightIcon={<TrendingUp className="w-5 h-5" />}
+                onClick={() => {
+                  toast.promise(
+                    mutate.mutateAsync({
+                      amountPaid: property.totalPrice,
+                      quantity: 1,
+                    }),
+                    {
+                      loading: "Investing...",
+                      success: "Investment successful!",
+                      error: extract_message,
+                    },
+                  );
+                }}
+                disabled={mutate.isPending}
+                className="w-full sm:w-auto"
+              >
+                Invest Now
+              </Button>
+            </div>
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 {/* Media Slider */}

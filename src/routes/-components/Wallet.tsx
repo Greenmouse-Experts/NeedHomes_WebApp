@@ -1,4 +1,7 @@
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import apiClient, {
+  type ApiResponse,
+  type ApiResponseV2,
+} from "@/api/simpleApi";
 import { Button } from "@/components/ui/Button";
 import Modal from "@/components/modals/DialogModal";
 import { useAuth } from "@/store/authStore";
@@ -63,7 +66,16 @@ export default function UserWallet() {
       });
       return resp.data;
     },
-    onSuccess: () => {
+    onSuccess: (
+      data: ApiResponse<{
+        authorization_url?: string;
+        access_code: "ac2fz94jloauakq";
+        reference: "DEP_1770753925040_faf776fa";
+      }>,
+    ) => {
+      if (data.data.authorization_url) {
+        window.open(data.data.authorization_url, "_blank", "noreferrer");
+      }
       queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
       toast.success(
         `${modalType.charAt(0).toUpperCase() + modalType.slice(1)} successful`,
