@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import Toolbar from "../-components/ToolBar";
 import ToolbarSec from "../-components/ToolBar";
+import WithdrawalStats from "./-components/WithdrawalStats";
 
 export const Route = createFileRoute("/dashboard/withdrawals/")({
   component: RouteComponent,
@@ -102,25 +103,28 @@ function RouteComponent() {
   ];
 
   return (
-    <PageLoader query={query}>
-      {(resp) => {
-        const list = resp.data.data;
-        return (
-          <>
-            <section className="p-6 bg-white rounded-xl ring fade">
-              <div className="mb-6 ">
-                <h1 className="text-xl font-bold">Withdrawal Requests</h1>
-                <p className="text-base-content/60">
-                  Manage and process user withdrawal requests and bank
-                  transfers.
-                </p>
-              </div>
-              <ToolbarSec />
-              <CustomTable columns={columns} data={list} actions={actions} />
-            </section>
-          </>
-        );
-      }}
-    </PageLoader>
+    <>
+      <WithdrawalStats />
+      <PageLoader query={query}>
+        {(resp) => {
+          const list = resp.data.data;
+          return (
+            <>
+              <section className="p-6 bg-white rounded-xl ring fade">
+                <div className="mb-6 ">
+                  <h1 className="text-xl font-bold">Withdrawal Requests</h1>
+                  <p className="text-base-content/60">
+                    Manage and process user withdrawal requests and bank
+                    transfers.
+                  </p>
+                </div>
+                <ToolbarSec />
+                <CustomTable columns={columns} data={list} actions={actions} />
+              </section>
+            </>
+          );
+        }}
+      </PageLoader>
+    </>
   );
 }

@@ -73,9 +73,9 @@ function RouteComponent() {
   const form = useForm({
     defaultValues: { otp: "" },
   });
-  useEffect(() => {
-    modalHandle.showModal();
-  }, []);
+  // useEffect(() => {
+  //   modalHandle.showModal();
+  // }, []);
   return (
     <>
       <Modal ref={modalHandle.ref} title="Finalize Transfer">
@@ -279,8 +279,10 @@ function RouteComponent() {
                       <div className="flex flex-col items-center text-center">
                         <div className="relative mb-4">
                           <SimpleAvatar
+                            //@ts-ignore
+                            url={undefined}
                             className="w-24 h-24 ring-4 ring-base-200 ring-offset-2 ring-offset-base-100"
-                            name={`${resp.user.firstName} ${resp.user.lastName}`}
+                            alt={`${resp.user.firstName} ${resp.user.lastName}`}
                           />
                           <div className="absolute bottom-1 right-1 bg-success p-1.5 rounded-full border-4 border-base-100">
                             <ShieldCheck className="w-3 h-3 text-white" />

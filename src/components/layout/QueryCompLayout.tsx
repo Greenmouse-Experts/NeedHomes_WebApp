@@ -1,20 +1,26 @@
 import type { QueryObserverResult } from "@tanstack/react-query";
 import type { PropsWithChildren } from "react";
-import SimpleHeader from "../SimpleHeader";
 import SimpleLoader from "../SimpleLoader";
-import { extract_message } from "@/helpers/auth";
 import type { AxiosError } from "axios";
-import type { ApiResponse } from "@/api/apiClient";
+import type { ApiResponse } from "@/api/simpleApi";
+import { extract_message } from "@/helpers/apihelpers";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
-interface QueryPageLayoutProps extends PropsWithChildren {
-  query: QueryObserverResult;
+interface QueryPageLayoutProps<TData> {
+  query: QueryObserverResult<TData>;
+  children?: React.ReactNode | ((data: TData) => React.ReactNode);
 }
 
-export default function QueryCompLayout(props: QueryPageLayoutProps) {
+export default function QueryCompLayout<TData>(
+  props: QueryPageLayoutProps<TData>,
+) {
+  const { children, query } = props;
   if (props.query.isLoading)
     return (
       <>
-        <SimpleLoader />
+        <ThemeProvider className="flex-1 grid place-items-center bg-red-200">
+          ...loading
+        </ThemeProvider>
       </>
     );
 
@@ -37,5 +43,9 @@ export default function QueryCompLayout(props: QueryPageLayoutProps) {
     );
   }
 
-  if (props.query.isSuccess && props.query.data) return <>{props.children}</>;
+  return (
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+      {typeof children === "function" ? children(query.data) : children}
+    </div>
+  );
 }
