@@ -31,7 +31,7 @@ export default function WithdrawalStats() {
 
   return (
     <div className="mb-6">
-      <h2 className="text-xl font-bold mb-4">Withdrawal Stats</h2>
+      <h2 className="text-2xl font-bold mb-4">Withdrawal Stats</h2>
       <QueryCompLayout query={query}>
         {(data) => {
           const { counts, amounts } = data.data;
@@ -44,18 +44,18 @@ export default function WithdrawalStats() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 divide-y  md:divide-y-0 md:divide-x fade">
                   <div className="p-6 flex flex-col gap-1 hover:bg-base-200/30 fade transition-colors">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    <span className=" font-bold text-gray-400 uppercase tracking-widest">
                       Pending Amount
                     </span>
-                    <span className="text-3xl font-black text-warning">
+                    <span className="text-3xl font-black ">
                       {amounts.pendingNaira}
                     </span>
                   </div>
                   <div className="p-6 flex flex-col gap-1 hover:bg-base-200/30 fade transition-colors">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    <span className=" font-bold text-gray-400 uppercase tracking-widest">
                       Completed Amount
                     </span>
-                    <span className="text-3xl font-black text-success">
+                    <span className="text-3xl font-black ">
                       {amounts.completedNaira}
                     </span>
                   </div>

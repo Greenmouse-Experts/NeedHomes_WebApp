@@ -17,7 +17,7 @@ export default function QueryCompLayout<TData>(
   props: QueryPageLayoutProps<TData>,
 ) {
   const { children, query, loadingText = "Loading resources..." } = props;
-  const loading = true;
+  const loading = query.isLoading;
   if (loading)
     return (
       <>
