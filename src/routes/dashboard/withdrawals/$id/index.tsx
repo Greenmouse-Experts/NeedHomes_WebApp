@@ -137,13 +137,13 @@ function RouteComponent() {
             statusConfig.PENDING;
 
           return (
-            <div className=" space-y-8 pb-12">
+            <div className=" space-y-4 mt-8 pb-12">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-base-200 pb-6">
                 <div className="space-y-1">
                   <h1 className="text-4xl font-black tracking-tight">
-                    Withdrawal
+                    Withdrawal Details
                   </h1>
-                  <p className="text-base-content/50 font-mono text-xs uppercase tracking-widest">
+                  <p className="text-base-content/50 text-xl font-mono  uppercase tracking-widest">
                     ID: {resp.id}
                   </p>
                 </div>
@@ -156,23 +156,24 @@ function RouteComponent() {
                   </span>
                 </div>
               </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Transaction Summary & Bank Details */}
                 <div className="lg:col-span-2 space-y-8">
                   {/* Hero Transaction Card */}
-                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-base-100 to-base-200 border border-base-300 shadow-xl">
+                  <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-base-100 to-base-200 border border-base-300 ring fade">
                     <div className="absolute top-0 right-0 p-8 opacity-5">
                       <Banknote className="w-32 h-32 rotate-12" />
                     </div>
 
-                    <div className="relative p-8 md:p-10">
+                    <div className="relative p-8 ">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                          <p className=" uppercase font-black text-primary/60 tracking-[0.2em] mb-2">
+                          <h2 className="text-2xl font-bold mb-2 ">
                             Total Withdrawal Amount
-                          </p>
+                          </h2>
                           <div className="flex items-baseline gap-2">
-                            <span className="text-5xl font-black tracking-tighter">
+                            <span className="text-5xl font-black  text-primary tracking-tighter">
                               ₦{resp.amount.toLocaleString()}
                             </span>
                             <span className="text-sm font-medium opacity-40">
@@ -181,14 +182,14 @@ function RouteComponent() {
                           </div>
                         </div>
                         <div className="flex flex-col gap-2 md:text-right">
-                          <div className="flex items-center md:justify-end gap-2 text-sm font-medium">
+                          <div className="flex items-center md:justify-end gap-2  font-medium">
                             <Calendar className="w-4 h-4 text-primary" />
                             {new Date(resp.createdAt).toLocaleDateString(
                               undefined,
                               { dateStyle: "full" },
                             )}
                           </div>
-                          <div className="flex items-center md:justify-end gap-2 text-xs opacity-50 font-mono">
+                          <div className="flex items-center md:justify-end gap-2  font-mono">
                             <Clock className="w-3.5 h-3.5" />
                             {new Date(resp.createdAt).toLocaleTimeString()}
                           </div>
@@ -222,16 +223,16 @@ function RouteComponent() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </section>
 
                   {/* Bank Destination Card */}
-                  <div className="card bg-base-100 border border-base-200 shadow-sm overflow-hidden">
-                    <div className="bg-base-200/30 px-6 py-4 border-b border-base-200 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                  <div className="card bg-base-100 border border-base-200 shadow-sm overflow-hidden ring fade">
+                    <div className="bg-base-200/30 px-6 py-4 flex items-center justify-between border-b fade">
+                      <div className="flex items-center gap-3 ">
                         <div className="p-2 bg-primary/10 rounded-lg">
                           <Building2 className="w-5 h-5 text-primary" />
                         </div>
-                        <h2 className="font-bold text-sm tracking-tight">
+                        <h2 className="font-bold text-lg tracking-tight">
                           Destination Bank Account
                         </h2>
                       </div>
@@ -255,16 +256,24 @@ function RouteComponent() {
                           </p>
                         </div>
                       </div>
-                      <div className="bg-base-200/50 rounded-2xl p-6 flex flex-col justify-center border border-base-300/50">
-                        <p className=" card-title">Bank Name</p>
-                        <p className="text-lg font-black">{resp.bankName}</p>
-                        <div className="mt-2 inline-flex items-center gap-2">
-                          <span className="badge badge-neutral font-mono ">
-                            {resp.bankCode}
-                          </span>
-                          <span className=" opacity-40 font-bold uppercase tracking-widest">
-                            Verified Channel
-                          </span>
+
+                      {/*bank details*/}
+                      <div className="bg-base-200/50 rounded-2xl  flex flex-col justify-center border fade">
+                        <p className="p-4 border-b fade font-bold text-lg">
+                          Bank Name
+                        </p>
+                        <div className=" flex flex-col p-6 gap-2">
+                          <p className="text-xl font-black">
+                            {resp.bankName.trim() ? resp.bankName : "Unknown"}
+                          </p>
+                          <div className="flex gap-2">
+                            <span className="badge badge-neutral font-mono ">
+                              {resp.bankCode}
+                            </span>
+                            <span className=" opacity-40 font-bold uppercase tracking-widest">
+                              Verified Channel
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
