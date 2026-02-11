@@ -86,6 +86,9 @@ function RouteComponent() {
             call_api(() => finalize(data));
           })}
         >
+          <h2 className="text-center font-bold text-lg">
+            Enter OTP SENT TO YOUR EMAIL
+          </h2>
           <SimpleInput
             type="number"
             placeholder="Enter OTP..."
@@ -358,7 +361,42 @@ function RouteComponent() {
                           </div>
                         </div>
                       ) : resp.status === "PROCESSING" ? (
-                        <></>
+                        <>
+                          <div className="space-y-6">
+                            <div className="p-4 bg-success/10 border border-success/20 rounded-2xl">
+                              <div className="flex items-center gap-3 mb-2 text-success">
+                                <CheckCircle2 className="w-5 h-5" />
+                                <span className="font-black text-xs uppercase tracking-wider">
+                                  Approved
+                                </span>
+                              </div>
+                              <p className=" opacity-70 uppercase tracking-tighter mb-2">
+                                Transfer Code
+                              </p>
+                              <p className="font-mono text-sm font-bold text-success">
+                                {resp.transferCode || "N/A"}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                modalHandle.showModal();
+                              }}
+                              className="btn btn-xl btn-primary btn-block"
+                            >
+                              Finalize
+                            </button>
+
+                            <div className=" text-sm ring p-4 fade rounded-box space-y-1 opacity-50 uppercase font-bold tracking-widest">
+                              <p>Approved By: {resp.approvedBy}</p>
+                              <p>
+                                Timestamp:{" "}
+                                {resp.approvedAt
+                                  ? new Date(resp.approvedAt).toLocaleString()
+                                  : "N/A"}
+                              </p>
+                            </div>
+                          </div>
+                        </>
                       ) : resp.status === "APPROVED" ? (
                         <div className="space-y-6">
                           <div className="p-4 bg-success/10 border border-success/20 rounded-2xl">
