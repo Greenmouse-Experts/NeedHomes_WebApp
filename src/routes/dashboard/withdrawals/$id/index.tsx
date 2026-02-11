@@ -248,12 +248,10 @@ function RouteComponent() {
                   </div>
 
                   {/* Audit Trail Section */}
-                  <div className="card bg-base-900 text-neutral-content border border-neutral shadow-2xl overflow-hidden">
-                    <div className="p-6 border-b border-white/10 flex items-center gap-2">
+                  <div className="card bg-base-900 ring fade shadow bg-base-100 overflow-hidden">
+                    <div className="p-6 border-b fade flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-primary" />
-                      <h2 className="text-xs font-black uppercase tracking-[0.2em]">
-                        Security Audit
-                      </h2>
+                      <h2 className="card-title">Security Audit</h2>
                     </div>
 
                     <div className="p-6">
