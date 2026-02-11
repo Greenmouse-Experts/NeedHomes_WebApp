@@ -1,8 +1,12 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import Modal from "@/components/modals/DialogModal";
+import { extract_message } from "@/helpers/apihelpers";
+import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleAvatar from "@/simpleComps/SimpleAvatar";
+import { useModal } from "@/store/modals";
 import type { withdrawal_reqeust } from "@/types/withdrawals";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -18,6 +22,9 @@ import {
   User,
   XCircle,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/withdrawals/$id/")({
   component: RouteComponent,
@@ -33,8 +40,65 @@ function RouteComponent() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: (fn: any) => fn(),
+    onSuccess: (data: ApiResponse<withdrawal_reqeust>) => {
+      query.refetch();
+    },
+  });
+
+  const approve = async () => {
+    let resp = await apiClient.post(`admin/withdrawals/${id}/approve`);
+    return resp.data;
+  };
+  const reject = async () => {
+    let resp = await apiClient.post(`admin/withdrawals/${id}/reject`);
+    return resp.data;
+  };
+
+  const finalize = async (data: { otp: string | number }) => {
+    let resp = await apiClient.post(`admin/withdrawals/${id}/finalize`, data);
+    return resp.data;
+  };
+
+  const call_api = (fn: any) => {
+    //@ts-ignore
+    return toast.promise(mutation.mutateAsync(fn), {
+      loading: "loading...",
+      error: extract_message,
+      success: extract_message,
+    });
+  };
+  const modalHandle = useModal();
+  const form = useForm({
+    defaultValues: { otp: "" },
+  });
+  useEffect(() => {
+    modalHandle.showModal();
+  }, []);
   return (
     <>
+      <Modal ref={modalHandle.ref} title="Finalize Transfer">
+        <form
+          className="px-4 space-y-4"
+          onSubmit={form.handleSubmit((data) => {
+            console.log(data.otp);
+            call_api(() => finalize(data));
+          })}
+        >
+          <SimpleInput
+            type="number"
+            placeholder="Enter OTP..."
+            {...form.register("otp", { required: "OTP is required" })}
+          />
+          <button
+            disabled={mutation.isPending}
+            className="btn btn-block btn-lg btn-primary"
+          >
+            Finalize Transfer
+          </button>
+        </form>
+      </Modal>
       {/* Header Navigation */}
       <div className="flex flex-col gap-6 mb-4">
         <Link
@@ -60,6 +124,10 @@ function RouteComponent() {
             },
             PENDING: {
               badge: "badge-warning",
+              icon: <Clock className="w-4 h-4" />,
+            },
+            PROCESSING: {
+              badge: "badge-info",
               icon: <Clock className="w-4 h-4" />,
             },
           };
@@ -278,6 +346,8 @@ function RouteComponent() {
                             </p>
                           </div>
                         </div>
+                      ) : resp.status === "PROCESSING" ? (
+                        <></>
                       ) : resp.status === "APPROVED" ? (
                         <div className="space-y-6">
                           <div className="p-4 bg-success/10 border border-success/20 rounded-2xl">
@@ -312,9 +382,26 @@ function RouteComponent() {
                           <p className="font-black text-xs uppercase tracking-widest text-warning mb-2">
                             Pending Review
                           </p>
-                          <p className=" opacity-50 leading-relaxed max-w-[180px]">
+                          <p className=" opacity-50 leading-relaxed max-w-[180px] mb-6">
                             This transaction is currently in the security queue.
                           </p>
+                          <div className="flex flex-col w-full gap-2">
+                            <button
+                              disabled={mutation.isPending}
+                              onClick={() => call_api(approve)}
+                              className="btn btn-success btn-lg w-full"
+                            >
+                              <CheckCircle2 className="w-4 h-4" /> Approve
+                              Withdrawal
+                            </button>
+                            <button
+                              disabled={mutation.isPending}
+                              onClick={() => call_api(reject)}
+                              className="btn btn-error btn-lg btn-outline w-full"
+                            >
+                              <XCircle className="w-4 h-4" /> Reject Withdrawal
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
