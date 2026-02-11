@@ -261,10 +261,35 @@ function RouteComponent() {
   );
 }
 
+interface CurrentPlan {
+  id: string;
+  userId: string;
+  planId: string;
+  startDate: string;
+  endDate: string;
+  autoRenew: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  plan: {
+    id: string;
+    type: string;
+    description: string;
+    price: number;
+    validity: number;
+    canViewPremiumProperty: boolean;
+    maxInvestments: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  };
+}
 const CurrentPlan = () => {
   const [auth] = useAuth();
   const user = auth?.user;
-  const query = useQuery<ApiResponse<any>>({
+  const query = useQuery<ApiResponse<CurrentPlan>>({
     queryKey: ["subscriptions", user],
     queryFn: async () => {
       let resp = await apiClient.get("subscriptions/my-subscription");
@@ -289,26 +314,62 @@ const CurrentPlan = () => {
             {(data) => {
               const sub_data = data.data;
               return (
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-xl  bg-card p-6 shadow-sm">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-xl bg-card p-6 shadow-sm">
                   {sub_data ? (
                     <>
-                      <div className="space-y-1">
-                        <div className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                          Active Plan
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                            Active Plan
+                          </span>
+                          {sub_data.autoRenew && (
+                            <span className="inline-flex items-center rounded-full bg-success/10 px-3 py-1 text-sm font-semibold text-success">
+                              Auto-renew On
+                            </span>
+                          )}
                         </div>
                         <h3 className="text-2xl font-bold text-foreground">
-                          {sub_data.plan?.name || "Premium Plan"}
+                          {sub_data.plan?.type} Plan
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                          Renews on{" "}
-                          {new Date(sub_data.expiryDate).toLocaleDateString()}
+                          {sub_data.autoRenew
+                            ? `Renews automatically on ${new Date(
+                                sub_data.endDate,
+                              ).toLocaleDateString()}`
+                            : `Expires on ${new Date(
+                                sub_data.endDate,
+                              ).toLocaleDateString()}`}
+                          . Started on{" "}
+                          {new Date(sub_data.startDate).toLocaleDateString()}
                         </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted-foreground mt-4">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={
+                                sub_data.plan?.canViewPremiumProperty
+                                  ? "text-success"
+                                  : "text-error"
+                              }
+                            >
+                              {sub_data.plan?.canViewPremiumProperty
+                                ? "✓"
+                                : "✕"}
+                            </span>
+                            <span>Premium Property Access</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-primary">✓</span>
+                            <span>
+                              Max Investments: {sub_data.plan?.maxInvestments}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-start md:items-end gap-2">
-                        <span className="text-3xl font-bold">
+                      <div className="flex flex-col items-start md:items-end gap-3">
+                        <span className="text-4xl font-extrabold text-primary">
                           ${sub_data.plan?.price || "0"}
-                          <span className="text-sm font-normal text-muted-foreground">
-                            /mo
+                          <span className="text-base font-normal text-muted-foreground">
+                            / {sub_data.plan?.validity} Days
                           </span>
                         </span>
                         <Button variant="outline" size="sm">
@@ -318,8 +379,8 @@ const CurrentPlan = () => {
                     </>
                   ) : (
                     <>
-                      <div className="space-y-1">
-                        <div className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+                      <div className="space-y-2">
+                        <div className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm font-semibold text-muted-foreground">
                           Free Tier
                         </div>
                         <h3 className="text-2xl font-bold text-foreground">
@@ -327,7 +388,7 @@ const CurrentPlan = () => {
                         </h3>
                         <p className="text-sm text-muted-foreground">
                           Upgrade to unlock premium properties and higher
-                          limits.
+                          investment limits.
                         </p>
                       </div>
                       {/*<Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-md transition-all">
