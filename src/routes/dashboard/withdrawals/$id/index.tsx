@@ -35,6 +35,16 @@ function RouteComponent() {
 
   return (
     <>
+      {/* Header Navigation */}
+      <div className="flex flex-col gap-6 mb-4">
+        <Link
+          to="/dashboard/withdrawals"
+          className="btn btn-primary btn-soft  w-fit ring fade"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to Withdrawals
+        </Link>
+      </div>
+
       <PageLoader query={query}>
         {(data) => {
           const resp = data.data as withdrawal_reqeust;
@@ -59,191 +69,257 @@ function RouteComponent() {
             statusConfig.PENDING;
 
           return (
-            <div className="space-y-6  mx-auto">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-4">
-                  <Link
-                    to="/dashboard/withdrawals"
-                    className="btn btn-primary btn-soft ring fade gap-2 "
-                  >
-                    <ArrowLeft className="w-4 h-4" /> Back to Withdrawals
-                  </Link>
-                  <h1 className="text-3xl font-bold">Withdrawal Details</h1>
-                  <p className="text-base-content/60 text-sm font-mono">
-                    {resp.id}
+            <div className=" space-y-8 pb-12">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-base-200 pb-6">
+                <div className="space-y-1">
+                  <h1 className="text-4xl font-black tracking-tight">
+                    Withdrawal
+                  </h1>
+                  <p className="text-base-content/50 font-mono text-xs uppercase tracking-widest">
+                    ID: {resp.id}
                   </p>
                 </div>
                 <div
-                  className={`badge ${config.badge} badge-lg gap-2 py-4 px-6 font-bold`}
+                  className={`badge ${config.badge} badge-lg py-5 px-6 gap-2 font-bold shadow-sm`}
                 >
                   {config.icon}
-                  {resp.status}
+                  <span className="tracking-wide uppercase text-xs">
+                    {resp.status}
+                  </span>
                 </div>
               </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Left Column: Transaction Summary & Bank Details */}
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Hero Transaction Card */}
+                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-base-100 to-base-200 border border-base-300 shadow-xl">
+                    <div className="absolute top-0 right-0 p-8 opacity-5">
+                      <Banknote className="w-32 h-32 rotate-12" />
+                    </div>
 
-              <div className="flex flex-col gap-8">
-                {/* Transaction Info */}
-                <div className="card bg-base-100 shadow-xl border border-base-200">
-                  <div className="card-body">
-                    <h2 className="card-title text-primary mb-4">
-                      <Banknote className="w-5 h-5" /> Transaction Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="stats shadow bg-primary text-primary-content">
-                        <div className="stat">
-                          <div className="stat-title text-primary-content/70">
-                            Amount
+                    <div className="relative p-8 md:p-10">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                          <p className=" uppercase font-black text-primary/60 tracking-[0.2em] mb-2">
+                            Total Withdrawal Amount
+                          </p>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-5xl font-black tracking-tighter">
+                              ₦{resp.amount.toLocaleString()}
+                            </span>
+                            <span className="text-sm font-medium opacity-40">
+                              NGN
+                            </span>
                           </div>
-                          <div className="stat-value text-2xl">
-                            ₦{resp.amount.toLocaleString()}
+                        </div>
+                        <div className="flex flex-col gap-2 md:text-right">
+                          <div className="flex items-center md:justify-end gap-2 text-sm font-medium">
+                            <Calendar className="w-4 h-4 text-primary" />
+                            {new Date(resp.createdAt).toLocaleDateString(
+                              undefined,
+                              { dateStyle: "full" },
+                            )}
+                          </div>
+                          <div className="flex items-center md:justify-end gap-2 text-xs opacity-50 font-mono">
+                            <Clock className="w-3.5 h-3.5" />
+                            {new Date(resp.createdAt).toLocaleTimeString()}
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <Hash className="w-5 h-5 text-base-content/40 mt-1" />
-                          <div>
-                            <p className="text-xs uppercase font-bold text-base-content/50">
-                              Reference
-                            </p>
-                            <p className="font-mono text-sm break-all">
+
+                      <div className="mt-10 pt-8 border-t border-base-300/50 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <div className="group">
+                          <p className=" uppercase font-bold text-base-content/40 tracking-widest mb-2 group-hover:text-primary transition-colors">
+                            Transfer Reference
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Hash className="w-4 h-4 opacity-30" />
+                            <code className="text-sm font-bold bg-base-300/30 px-2 py-1 rounded">
                               {resp.transferReference}
-                            </p>
+                            </code>
                           </div>
                         </div>
-                        <div className="flex items-start gap-3">
-                          <Calendar className="w-5 h-5 text-base-content/40 mt-1" />
-                          <div>
-                            <p className="text-xs uppercase font-bold text-base-content/50">
-                              Date Created
-                            </p>
-                            <p>{new Date(resp.createdAt).toLocaleString()}</p>
+                        <div>
+                          <p className=" uppercase font-bold text-base-content/40 tracking-widest mb-2">
+                            System Status
+                          </p>
+                          <div
+                            // @ts-ignore
+                            className={`badge ${statusConfig[resp.status as any].badge} ring badge-soft`}
+                          >
+                            {/*@ts-ignore*/}
+                            {statusConfig[resp.status as any].icon}{" "}
+                            {resp.status}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Bank Info */}
-                <div className="card bg-base-100 shadow-xl border border-base-200">
-                  <div className="card-body">
-                    <h2 className="card-title text-primary mb-4">
-                      <Building2 className="w-5 h-5" /> Bank Destination
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="form-control">
-                        <label className="label text-xs uppercase font-bold text-base-content/50">
-                          Account Name
-                        </label>
-                        <p className="font-semibold">{resp.accountName}</p>
+                  {/* Bank Destination Card */}
+                  <div className="card bg-base-100 border border-base-200 shadow-sm overflow-hidden">
+                    <div className="bg-base-200/30 px-6 py-4 border-b border-base-200 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Building2 className="w-5 h-5 text-primary" />
+                        </div>
+                        <h2 className="font-bold text-sm tracking-tight">
+                          Destination Bank Account
+                        </h2>
                       </div>
-                      <div className="form-control">
-                        <label className="label text-xs uppercase font-bold text-base-content/50">
-                          Account Number
-                        </label>
-                        <p className="font-mono text-lg tracking-wider">
-                          {resp.accountNumber}
-                        </p>
+                    </div>
+                    <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <div className="space-y-6">
+                        <div>
+                          <label className=" uppercase font-bold text-base-content/40 block mb-1">
+                            Recipient Name
+                          </label>
+                          <p className="text-xl font-bold tracking-tight">
+                            {resp.accountName}
+                          </p>
+                        </div>
+                        <div>
+                          <label className=" uppercase font-bold text-base-content/40 block mb-1">
+                            Account Number
+                          </label>
+                          <p className="text-2xl font-mono tracking-widest text-primary">
+                            {resp.accountNumber}
+                          </p>
+                        </div>
                       </div>
-                      <div className="form-control">
-                        <label className="label text-xs uppercase font-bold text-base-content/50">
-                          Bank
-                        </label>
-                        <p>
-                          {resp.bankName}{" "}
-                          <span className="badge badge-ghost badge-sm">
+                      <div className="bg-base-200/50 rounded-2xl p-6 flex flex-col justify-center border border-base-300/50">
+                        <p className=" card-title">Bank Name</p>
+                        <p className="text-lg font-black">{resp.bankName}</p>
+                        <div className="mt-2 inline-flex items-center gap-2">
+                          <span className="badge badge-neutral font-mono ">
                             {resp.bankCode}
                           </span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* User Profile */}
-                <div className="card bg-base-100 shadow-xl border border-base-200">
-                  <div className="card-body">
-                    <h2 className="card-title text-primary mb-4">
-                      <User className="w-5 h-5" /> User Profile
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex items-center gap-3">
-                        <SimpleAvatar user={null} alt={resp.user.firstName} />
-                        <div>
-                          <p className="font-bold text-lg">
-                            {resp.user.firstName} {resp.user.lastName}
-                          </p>
-                          {/*<p className="badge badge-outline badge-sm uppercase">
-                            {resp.user.accountType}
-                          </p>*/}
-                        </div>
-                      </div>
-                      <div className="flex flex-col justify-center gap-2">
-                        <div className="flex items-center gap-3 text-sm">
-                          <Mail className="w-4 h-4 text-base-content/40" />
-                          <span className="truncate">{resp.user.email}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm">
-                          <Phone className="w-4 h-4 text-base-content/40" />
-                          <span>{resp.user.phone}</span>
+                          <span className=" opacity-40 font-bold uppercase tracking-widest">
+                            Verified Channel
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Audit Trail */}
-                <div className="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
-                  <div
-                    className={`h-2 ${resp.status === "APPROVED" ? "bg-success" : resp.status === "REJECTED" ? "bg-error" : "bg-warning"}`}
-                  />
-                  <div className="card-body">
-                    <h2 className="card-title text-primary mb-4">
-                      <ShieldCheck className="w-5 h-5" /> Audit Trail
-                    </h2>
-                    {resp.status === "REJECTED" ? (
-                      <div className="alert alert-error bg-error/10 border-error/20 text-error items-start">
-                        <div className="space-y-1 w-full">
-                          <p className="font-bold">Reason for Rejection:</p>
-                          <p className="text-sm italic">
-                            "{resp.rejectionReason}"
-                          </p>
-                          <div className="pt-2 text-[10px] opacity-70 uppercase border-t border-error/10 mt-2">
-                            By: {resp.rejectedBy} •{" "}
-                            {resp.rejectedAt
-                              ? new Date(resp.rejectedAt).toLocaleString()
-                              : "N/A"}
+                {/* Right Column: User Profile & Audit */}
+                <div className="space-y-8">
+                  {/* User Profile Card */}
+                  <div className="card bg-base-100 border border-base-200 shadow-sm">
+                    <div className="p-6">
+                      <div className="flex flex-col items-center text-center">
+                        <div className="relative mb-4">
+                          <SimpleAvatar
+                            className="w-24 h-24 ring-4 ring-base-200 ring-offset-2 ring-offset-base-100"
+                            name={`${resp.user.firstName} ${resp.user.lastName}`}
+                          />
+                          <div className="absolute bottom-1 right-1 bg-success p-1.5 rounded-full border-4 border-base-100">
+                            <ShieldCheck className="w-3 h-3 text-white" />
                           </div>
                         </div>
-                      </div>
-                    ) : resp.status === "APPROVED" ? (
-                      <div className="alert alert-success bg-success/10 border-success/20 text-success items-start">
-                        <div className="space-y-1 w-full">
-                          <p className="font-bold">Approval Details</p>
-                          <p className="text-sm">
-                            Transfer Code:{" "}
-                            <span className="font-mono">
-                              {resp.transferCode || "N/A"}
+                        <h3 className="text-xl font-black tracking-tight">
+                          {resp.user.firstName} {resp.user.lastName}
+                        </h3>
+                        <p className="text-xs font-medium text-base-content/40 uppercase tracking-widest mt-1">
+                          Verified Customer
+                        </p>
+
+                        <div className="w-full mt-8 space-y-3">
+                          <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-xl hover:bg-base-200 transition-colors cursor-pointer">
+                            <div className="p-2 bg-base-100 rounded-lg shadow-sm">
+                              <Mail className="w-4 h-4 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium truncate">
+                              {resp.user.email}
                             </span>
-                          </p>
-                          <div className="pt-2 text-[10px] opacity-70 uppercase border-t border-success/10 mt-2">
-                            By: {resp.approvedBy} •{" "}
-                            {resp.approvedAt
-                              ? new Date(resp.approvedAt).toLocaleString()
-                              : "N/A"}
+                          </div>
+                          <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-xl hover:bg-base-200 transition-colors cursor-pointer">
+                            <div className="p-2 bg-base-100 rounded-lg shadow-sm">
+                              <Phone className="w-4 h-4 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium">
+                              {resp.user.phone}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    ) : (
-                      <div className="flex flex-col items-center py-6 text-center space-y-2">
-                        <Clock className="w-8 h-8 text-warning animate-pulse" />
-                        <p className="text-sm text-base-content/60 italic">
-                          This request is currently awaiting review by an
-                          administrator.
-                        </p>
-                      </div>
-                    )}
+                    </div>
+                  </div>
+
+                  {/* Audit Trail Section */}
+                  <div className="card bg-base-900 text-neutral-content border border-neutral shadow-2xl overflow-hidden">
+                    <div className="p-6 border-b border-white/10 flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-primary" />
+                      <h2 className="text-xs font-black uppercase tracking-[0.2em]">
+                        Security Audit
+                      </h2>
+                    </div>
+
+                    <div className="p-6">
+                      {resp.status === "REJECTED" ? (
+                        <div className="space-y-6">
+                          <div className="p-4 bg-error/10 border border-error/20 rounded-2xl">
+                            <div className="flex items-center gap-3 mb-2 text-error">
+                              <XCircle className="w-5 h-5" />
+                              <span className="font-black text-xs uppercase tracking-wider">
+                                Declined
+                              </span>
+                            </div>
+                            <p className="text-sm italic opacity-80 leading-relaxed">
+                              "{resp.rejectionReason}"
+                            </p>
+                          </div>
+                          <div className=" space-y-1 opacity-50 uppercase font-bold tracking-widest">
+                            <p>Reviewer: {resp.rejectedBy}</p>
+                            <p>
+                              Timestamp:{" "}
+                              {resp.rejectedAt
+                                ? new Date(resp.rejectedAt).toLocaleString()
+                                : "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      ) : resp.status === "APPROVED" ? (
+                        <div className="space-y-6">
+                          <div className="p-4 bg-success/10 border border-success/20 rounded-2xl">
+                            <div className="flex items-center gap-3 mb-2 text-success">
+                              <CheckCircle2 className="w-5 h-5" />
+                              <span className="font-black text-xs uppercase tracking-wider">
+                                Disbursed
+                              </span>
+                            </div>
+                            <p className=" opacity-70 uppercase tracking-tighter mb-2">
+                              Transfer Code
+                            </p>
+                            <p className="font-mono text-sm font-bold text-success">
+                              {resp.transferCode || "N/A"}
+                            </p>
+                          </div>
+                          <div className=" space-y-1 opacity-50 uppercase font-bold tracking-widest">
+                            <p>Approved By: {resp.approvedBy}</p>
+                            <p>
+                              Timestamp:{" "}
+                              {resp.approvedAt
+                                ? new Date(resp.approvedAt).toLocaleString()
+                                : "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center py-6 text-center">
+                          <div className="relative mb-4">
+                            <Clock className="w-10 h-10 text-warning animate-[spin_4s_linear_infinite]" />
+                          </div>
+                          <p className="font-black text-xs uppercase tracking-widest text-warning mb-2">
+                            Pending Review
+                          </p>
+                          <p className=" opacity-50 leading-relaxed max-w-[180px]">
+                            This transaction is currently in the security queue.
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
