@@ -117,7 +117,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-      const uploadedDocUrls = get_docs(docUploadProps);
+      const uploadedDocUrls = await get_docs(docUploadProps);
 
       const totalPrice =
         Number(data.basePrice) +
@@ -139,7 +139,6 @@ function RouteComponent() {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
-
       const response = await apiClient.post(
         "/admin/properties/save-to-own",
         payload,
