@@ -42,6 +42,7 @@ import VideoUpload, {
 } from "@/routes/dashboard/-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
 import { get_docs } from "./fractional";
+import { uploadFile } from "@/api/fileApi";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
