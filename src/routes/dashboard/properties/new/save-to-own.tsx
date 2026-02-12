@@ -21,35 +21,17 @@ import { useDocumentUpload } from "../../-components/DocumentUpload";
 import { Home, Clock, Layers } from "lucide-react";
 import DefaultForm from "../-components/DefaultForm";
 import { useNavigate } from "@tanstack/react-router";
+import type { DocProps } from "@/types/form";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
   component: RouteComponent,
 });
 
-interface SaveToOwnFormValues {
-  propertyTitle: string;
-  propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
-  location: string;
-  description: string;
-  developmentStage:
-    | "PLANNING"
-    | "OFF_PLAN"
-    | "UNDER_CONSTRUCTION"
-    | "COMPLETED";
-  completionDate: string;
+interface SaveToOwnFormValues extends DocProps {
   targetPropertyPrice: number;
   minimumSavingsAmount: number;
-  availableUnits: number;
   savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
   savingsDuration: number;
-  additionalFees: { label: string; amount: number }[];
-  coverImage: string;
-  galleryImages: string[];
-  certificate: string;
-  surveyPlanDocument: string;
-  transferDocument: string;
-  brochure: string;
-  videos: string;
 }
 
 function RouteComponent() {
@@ -86,17 +68,18 @@ function RouteComponent() {
   //@ts-ignore
   const selectImageProps = useSelectImage(null);
   const mutation = useMutation({
-    mutationFn: async (data: SaveToOwnFormValues) => {
+    mutationFn: async (data: OutrightPropertyFormValues) => {
       let coverImageUrl = "";
-
+      const selectProps = selectImageProps;
+      const { newImages, images } = useImageProps;
+      const docUploadProps = docUpload;
+      const videoProps = videoUpload;
       if (selectProps.image) {
         const uploaded = await uploadImage(selectProps.image);
-        coverImageUrl = uploaded.data.url;
+        coverImageUrl = uploaded.data?.url || "";
       } else if (selectProps.prev) {
         coverImageUrl = selectProps.prev;
       }
-
-      if (!coverImageUrl) throw new Error("A cover image is required.");
 
       const uploadedGalleryUrls: string[] = [];
       if (newImages && newImages.length > 0) {
@@ -106,41 +89,49 @@ function RouteComponent() {
         }
       }
 
+      if (!coverImageUrl && images && images.length > 0) {
+        coverImageUrl = images[0].url;
+      }
+
+      if (!coverImageUrl && uploadedGalleryUrls.length > 0) {
+        coverImageUrl = uploadedGalleryUrls[0];
+      }
+
+      if (!coverImageUrl && data.coverImage) {
+        coverImageUrl = data.coverImage;
+      }
+
+      if (!coverImageUrl) throw new Error("A cover image is required.");
+
+      let videoUrl = "";
+      if (videoProps.videoFile) {
+        try {
+          const url = await uploadFile(videoProps.videoFile);
+          videoUrl = url || "";
+        } catch (e) {}
+      }
+
       const allGallery = [
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-
-      const uploadedDocUrls: Record<string, string> = {};
-      for (const [key, file] of Object.entries(docUpload.documents)) {
-        if (file) {
-          const uploaded = await uploadImage(file);
-          uploadedDocUrls[key] = uploaded.data.url;
-        }
-      }
-
-      let videoUrl = "";
-      if (videoUpload.videoFile) {
-        const uploaded = await uploadImage(videoUpload.videoFile);
-        videoUrl = uploaded.data.url;
-      }
+      const uploadedDocUrls = get_docs(docUploadProps);
 
       const totalPrice =
-        Number(data.targetPropertyPrice) +
-        (data.additionalFees?.reduce(
-          (acc, fee) => acc + (Number(fee.amount) || 0),
-          0,
-        ) || 0);
+        Number(data.basePrice) +
+        (data.additionalFees
+          ? data.additionalFees.reduce(
+              (acc, fee) => acc + (Number(fee.amount) || 0),
+              0,
+            )
+          : 0);
 
       const payload = {
         ...data,
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        certificate: uploadedDocUrls.certificateOfOwnership || "",
-        surveyPlanDocument: uploadedDocUrls.surveyPlan || "",
-        transferDocument: uploadedDocUrls.transferOfOwnershipDocument || "",
-        brochure: uploadedDocUrls.brochureFactSheet || "",
         totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
@@ -153,6 +144,9 @@ function RouteComponent() {
       );
       return response.data;
     },
+    onSuccess: () => {
+      nav({ to: "/partners/properties" });
+    },
   });
 
   const onSubmit = (data: SaveToOwnFormValues) => {
@@ -162,7 +156,6 @@ function RouteComponent() {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
-  const disable_completion = methods.watch("developmentStage") === "COMPLETED";
 
   return (
     <ThemeProvider>
