@@ -16,23 +16,9 @@ import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
-import SelectImage from "@/components/images/SelectImage";
-import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
-import {
-  DocumentUpload,
-  useDocumentUpload,
-} from "../../-components/DocumentUpload";
-import {
-  Plus,
-  Home,
-  MapPin,
-  DollarSign,
-  Calendar,
-  Clock,
-  Repeat,
-  Trash2,
-  Layers,
-} from "lucide-react";
+import { useVideoUpload } from "../../-components/VideoUpload";
+import { useDocumentUpload } from "../../-components/DocumentUpload";
+import { Home, Clock, Layers } from "lucide-react";
 import DefaultForm from "../-components/DefaultForm";
 import { useNavigate } from "@tanstack/react-router";
 
