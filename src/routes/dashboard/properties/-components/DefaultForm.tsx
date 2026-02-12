@@ -301,7 +301,7 @@ export default function DefaultForm<T = any>({
             </div>
             <AdditionalFeesManager />
           </section>
-          <section className="space-y-6">{children}</section>
+          <section className="space-y-6 ">{children}</section>
           <PublishButton mutation={mutation} title="Publish" />
           {/* 4. Investment-Specific Details */}
         </form>

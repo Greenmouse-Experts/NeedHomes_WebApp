@@ -162,7 +162,7 @@ function RouteComponent() {
               4. Investment-Specific Details
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2  gap-4">
             <Controller
               name="profitSharingRatio"
               control={form.control}
