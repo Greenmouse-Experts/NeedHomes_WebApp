@@ -42,10 +42,7 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (data: ChargeSettings) => {
-      const resp = await apiClient.put(
-        `admin/settings/charges/${data.id}`,
-        data,
-      );
+      const resp = await apiClient.put(`admin/settings/charges/`, data);
       return resp.data;
     },
     onSuccess: () => {
