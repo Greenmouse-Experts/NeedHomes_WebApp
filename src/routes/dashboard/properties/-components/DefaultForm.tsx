@@ -107,6 +107,7 @@ export default function DefaultForm<T = any>({
   useImagesProps: ReturnType<typeof useImages>;
   selectImageProps: ReturnType<typeof useSelectImage>;
   mutation: ReturnType<typeof useMutation<any>>;
+  children: React.ReactNode;
 }) {
   const methods = form;
 
@@ -247,6 +248,9 @@ export default function DefaultForm<T = any>({
               </div>
             </div>
             <VideoUpload videoProps={videoUpload} />
+            <section>
+              <DocumentUpload useDocUpload={docUpload} />
+            </section>
           </section>
 
           {/* 3. Pricing & Availability */}
@@ -296,27 +300,31 @@ export default function DefaultForm<T = any>({
             </div>
             <AdditionalFeesManager />
           </section>
-
+          <PublishButton mutation={mutation} title="Publish" />
           {/* 4. Investment-Specific Details */}
-
-          <section>
-            <DocumentUpload useDocUpload={docUpload} />
-          </section>
-
-          <div className="pt-8 border-t border-base-200">
-            <button
-              type="submit"
-              className={`btn btn-primary  h-14 text-base shadow-lg ${mutation.isPending ? "loading" : ""}`}
-              disabled={mutation.isPending}
-            >
-              {!mutation.isPending && <Plus size={20} className="mr-2" />}
-              {mutation.isPending
-                ? "Processing..."
-                : "Publish Co-Development Property"}
-            </button>
-          </div>
         </form>
       </FormProvider>
     </ThemeProvider>
   );
 }
+
+const PublishButton = ({
+  mutation,
+  title,
+}: {
+  mutation: any;
+  title: string;
+}) => {
+  return (
+    <div className="pt-8 border-t border-base-200">
+      <button
+        type="submit"
+        className={`btn btn-primary  h-14 text-base shadow-lg ${mutation.isPending ? "loading" : ""}`}
+        disabled={mutation.isPending}
+      >
+        {!mutation.isPending && <Plus size={20} className="mr-2" />}
+        {mutation.isPending ? "Processing..." : (title ?? "Publish")}
+      </button>
+    </div>
+  );
+};

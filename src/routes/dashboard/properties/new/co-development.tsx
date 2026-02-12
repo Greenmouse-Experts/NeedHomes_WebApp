@@ -138,7 +138,7 @@ function RouteComponent() {
   //@ts-ignore
   const selectImageProps = useSelectImage(null);
   return (
-    <ThemeProvider className="space-y-4 bg-white">
+    <ThemeProvider className="space-y-4 bg-white ">
       <div className="bg-primary p-6 text-primary-content">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Home size={24} />
@@ -154,59 +154,64 @@ function RouteComponent() {
         selectImageProps={selectImageProps as any}
         mutation={mutation as any}
         onSubmit={onSubmit}
-      />
-      <section className="space-y-6 p-6">
-        <div className="flex items-center gap-2 border-b border-base-200 pb-2">
-          <TrendingUp className="text-primary" size={20} />
-          <h2 className="text-lg font-bold">4. Investment-Specific Details</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Controller
-            name="profitSharingRatio"
-            control={form.control}
-            render={({ field }) => (
-              <SimpleInput
-                {...field}
-                label="Profit Ratio (0-100)%"
-                type="number"
-                step="0.01"
-                onChange={(e) => field.onChange(e.target.valueAsNumber)}
-              />
-            )}
-          />
-          <Controller
-            name="projectDuration"
-            control={form.control}
-            render={({ field }) => (
-              <SimpleInput
-                {...field}
-                label="Duration (Months)"
-                type="number"
-                onChange={(e) => field.onChange(e.target.valueAsNumber)}
-              />
-            )}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Controller
-            name="exitRule"
-            control={form.control}
-            render={({ field }) => (
-              <LocalSelect {...field} label="Exit Strategy">
-                <option value="ANYTIME">Anytime (Liquid)</option>
-                <option value="AFTER_LOCK_IN_PERIOD">
-                  After Lock-in Period
-                </option>
-                <option value="AFTER_PROJECT_COMPLETION">
-                  After Project Completion
-                </option>
-                <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
-                <option value="NOT_ALLOWED">Not Allowed</option>
-              </LocalSelect>
-            )}
-          />
-        </div>
-      </section>
+      >
+        <section className="">
+          <div className="flex items-center gap-2 border-b border-base-200 pb-2">
+            <TrendingUp className="text-primary" size={20} />
+            <h2 className="text-lg font-bold">
+              4. Investment-Specific Details
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Controller
+              name="profitSharingRatio"
+              control={form.control}
+              render={({ field }) => (
+                <SimpleInput
+                  {...field}
+                  label="Profit Ratio (0-100)%"
+                  type="number"
+                  step="0.01"
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
+              )}
+            />
+            <Controller
+              name="projectDuration"
+              control={form.control}
+              render={({ field }) => (
+                <SimpleInput
+                  {...field}
+                  label="Duration (Months)"
+                  type="number"
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Controller
+              name="exitRule"
+              control={form.control}
+              render={({ field }) => (
+                <LocalSelect {...field} label="Exit Strategy">
+                  <option value="ANYTIME">Anytime (Liquid)</option>
+                  <option value="AFTER_LOCK_IN_PERIOD">
+                    After Lock-in Period
+                  </option>
+                  <option value="AFTER_PROJECT_COMPLETION">
+                    After Project Completion
+                  </option>
+                  <option value="AT_EXIT_WINDOW_ONLY">
+                    At Exit Window Only
+                  </option>
+                  <option value="NOT_ALLOWED">Not Allowed</option>
+                </LocalSelect>
+              )}
+            />
+          </div>
+        </section>
+      </DefaultForm>
     </ThemeProvider>
   );
 }
