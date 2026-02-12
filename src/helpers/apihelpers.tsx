@@ -6,5 +6,8 @@ export const extract_message = (data: AxiosError<ApiResponse>) => {
   if (!api_error) {
     return data.message;
   }
+  if (Array.isArray(api_error)) {
+    return api_error.join(", ");
+  }
   return api_error;
 };

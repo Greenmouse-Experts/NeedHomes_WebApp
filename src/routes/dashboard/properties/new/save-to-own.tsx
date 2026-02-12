@@ -22,6 +22,8 @@ import { Home, Clock, Layers } from "lucide-react";
 import DefaultForm from "../-components/DefaultForm";
 import { useNavigate } from "@tanstack/react-router";
 import type { DocProps } from "@/types/form";
+import { uploadFile } from "@/api/fileApi";
+import { get_docs } from "./fractional";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
   component: RouteComponent,
