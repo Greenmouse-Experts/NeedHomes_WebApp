@@ -359,17 +359,7 @@ function RouteComponent() {
                   />
                 )}
               />
-              name="completionDate" disabled={disable_completion}
-              control={methods.control}
-              render=
-              {({ field }) => (
-                <SimpleInput
-                  {...field}
-                  label="Completion Date"
-                  type="date"
-                  icon={<Calendar size={16} />}
-                />
-              )}
+
               <div className="md:col-span-2 flex items-end pb-1">
                 <div className="flex items-center gap-4 p-3 border  fade rounded-lg w-full bg-base-200/20">
                   <Controller
