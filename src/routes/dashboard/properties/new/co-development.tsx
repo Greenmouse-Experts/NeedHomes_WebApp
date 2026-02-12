@@ -13,6 +13,9 @@ import apiClient from "@/api/simpleApi";
 import { Home, TrendingUp } from "lucide-react";
 import DefaultForm from "../-components/DefaultForm";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import { useVideoUpload } from "../../-components/VideoUpload";
+import { useDocumentUpload } from "../../-components/DocumentUpload";
+import type { DocProps } from "@/types/form";
 
 export const Route = createFileRoute(
   "/dashboard/properties/new/co-development",
@@ -26,7 +29,6 @@ type ExitRuleType =
   | "AT_EXIT_WINDOW_ONLY"
   | "NOT_ALLOWED";
 
-//@ts-expect-error
 interface CoDevelopmentFormValues extends DocProps {
   minimumInvestment: number;
   profitSharingRatio: number;
@@ -36,29 +38,41 @@ interface CoDevelopmentFormValues extends DocProps {
 }
 
 function RouteComponent() {
+  const docUpload = useDocumentUpload();
+  const videoUpload = useVideoUpload();
+  const useImageProps = useImages();
+  const form = useForm<CoDevelopmentFormValues>({
+    defaultValues: {
+      exitRule: "ANYTIME",
+      propertyType: "RESIDENTIAL",
+      developmentStage: "PLANNING",
+    },
+  });
+  //@ts-ignore
+  const selectImageProps = useSelectImage(null);
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
       let coverImageUrl = "";
 
       // Handle Cover Image Upload
-      if (selectProps.image) {
-        const uploaded = await uploadImage(selectProps.image);
+      if (selectImageProps.image) {
+        const uploaded = await uploadImage(selectImageProps.image);
         coverImageUrl = uploaded.data.url;
-      } else if (selectProps.prev) {
-        coverImageUrl = selectProps.prev;
+      } else if (selectImageProps.prev) {
+        coverImageUrl = selectImageProps.prev;
       }
 
       if (!coverImageUrl) throw new Error("A cover image is required.");
 
       // Handle Gallery Uploads
       const uploadedGalleryUrls: string[] = [];
+      const { newImages, images } = useImageProps;
       if (newImages && newImages.length > 0) {
         for (const img of newImages) {
           const uploaded = await uploadImage(img);
           if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
         }
       }
-
       const allGallery = [
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
@@ -102,10 +116,12 @@ function RouteComponent() {
 
       const totalPrice =
         Number(data.basePrice) +
-        data.additionalFees.reduce(
-          (acc, fee) => acc + (Number(fee.amount) || 0),
-          0,
-        );
+        (data.additionalFees
+          ? data.additionalFees.reduce(
+              (acc, fee) => acc + (Number(fee.amount) || 0),
+              0,
+            )
+          : 0);
 
       const payload = {
         ...data,
@@ -133,10 +149,7 @@ function RouteComponent() {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
-  const useImageProps = useImages();
-  const form = useForm();
-  //@ts-ignore
-  const selectImageProps = useSelectImage(null);
+
   return (
     <ThemeProvider className="space-y-4 bg-white ">
       <div className="bg-primary p-6 text-primary-content">
@@ -149,6 +162,8 @@ function RouteComponent() {
         </p>
       </div>
       <DefaultForm
+        docUpload={docUpload}
+        videoUpload={videoUpload}
         useImagesProps={useImageProps}
         form={form}
         selectImageProps={selectImageProps as any}

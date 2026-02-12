@@ -101,6 +101,8 @@ export default function DefaultForm<T = any>({
   selectImageProps,
   mutation,
   children,
+  videoUpload,
+  docUpload,
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -109,13 +111,14 @@ export default function DefaultForm<T = any>({
   selectImageProps: ReturnType<typeof useSelectImage>;
   mutation: ReturnType<typeof useMutation<any>>;
   children: React.ReactNode;
+  videoUpload: ReturnType<typeof useVideoUpload>;
+  docUpload: ReturnType<typeof useDocumentUpload>;
 }) {
   const methods = form;
 
   const { images, setPrev, newImages, setNew } = useImagesProps;
   const selectProps = selectImageProps;
-  const docUpload = useDocumentUpload();
-  const videoUpload = useVideoUpload();
+  //
   const disable_completionn = methods.watch("developmentStage") === "COMPLETED";
   return (
     <ThemeProvider className="space-y-4 bg-white p-6">

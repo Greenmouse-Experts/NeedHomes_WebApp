@@ -8,4 +8,10 @@ export interface DocProps {
   ExpectedCompletionDate: string;
   location: string;
   description: string;
+  basePrice: string;
+  completionDate: any;
+  propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
+  developmentStage: "PLANNING" | "ONGOING" | "COMPLETED";
+  additionalFees: { label: string; amount: number }[];
+  [key: string]: any;
 }
