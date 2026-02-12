@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import { extract_message } from "@/helpers/apihelpers";
 
 interface ChargeSettings {
   id: string;
@@ -48,16 +49,18 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
       return resp.data;
     },
     onSuccess: () => {
-      toast.success("Charges updated successfully");
       queryClient.invalidateQueries({ queryKey: ["charges"] });
     },
     onError: () => {
       toast.error("Failed to update charges");
-    },
   });
 
   const onSubmit = (data: ChargeSettings) => {
-    mutation.mutate(data);
+    toast.promise(mutation.mutateAsync(data), {
+      loading: "Updating charges...",
+      success: "Charges updated successfully",
+      error: extract_message",
+    });
   };
   const methods = useForm<ChargeSettings>({
     defaultValues: {
@@ -68,9 +71,9 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
   const { register } = methods;
 
   return (
-    <ThemeProvider className="space-y-5">
+    <ThemeProvider>
       <FormProvider {...methods}>
-        <form>
+        <form className="space-y-5" onSubmit={methods.handleSubmit(onSubmit)}>
           <SimpleInput
             label="Platform Charge Percentage (%)"
             type="number"
