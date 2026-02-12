@@ -199,7 +199,7 @@ function RouteComponent() {
   // });
 
   const mutation = useMutation({
-    mutationFn: async (data: OutrightPropertyFormValues) => {
+    mutationFn: async (data: LandBankingProperty) => {
       let coverImageUrl = "";
       const selectProps = selectImageProps;
       const { newImages, images } = useImageProps;
@@ -359,21 +359,19 @@ function RouteComponent() {
                   />
                 )}
               />
-              <Controller
-                name="completionDate"
-                disabled={disable_completion}
-                control={methods.control}
-                render={({ field }) => (
-                  <SimpleInput
-                    {...field}
-                    label="Completion Date"
-                    type="date"
-                    icon={<Calendar size={16} />}
-                  />
-                )}
-              />
+              name="completionDate" disabled={disable_completion}
+              control={methods.control}
+              render=
+              {({ field }) => (
+                <SimpleInput
+                  {...field}
+                  label="Completion Date"
+                  type="date"
+                  icon={<Calendar size={16} />}
+                />
+              )}
               <div className="md:col-span-2 flex items-end pb-1">
-                <div className="flex items-center gap-4 p-3 border rounded-lg w-full bg-base-200/20">
+                <div className="flex items-center gap-4 p-3 border  fade rounded-lg w-full bg-base-200/20">
                   <Controller
                     name="buyBackOption"
                     control={methods.control}
