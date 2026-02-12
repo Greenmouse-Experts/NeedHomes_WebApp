@@ -6,8 +6,7 @@ export const docPropsSchema = z
     description: z.string().min(1, "Description is required"),
     ExpectedCompletionDate: z.string().optional(),
     location: z.string().min(1, "Location is required"),
-
-    basePrice: z.string().min(1, "Base price is required"),
+    basePrice: z.number().min(1, "Base price is required"),
     completionDate: z.any(),
     propertyType: z.enum(["RESIDENTIAL", "COMMERCIAL", "LAND"]),
     developmentStage: z.enum(["PLANNING", "ONGOING", "COMPLETED"]),
