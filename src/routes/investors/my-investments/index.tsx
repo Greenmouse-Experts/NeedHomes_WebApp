@@ -71,7 +71,7 @@ function RouteComponent() {
   const query = useQuery({
     queryKey: ["investments"],
     queryFn: async () => {
-      let resp = await apiClient.get("/investments/");
+      let resp = await apiClient.get("investments/my-investments");
       return resp.data;
     },
   });
