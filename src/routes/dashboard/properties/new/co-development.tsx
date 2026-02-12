@@ -202,6 +202,18 @@ function RouteComponent() {
                 />
               )}
             />
+            <Controller
+              name="minimumInvestment"
+              control={form.control}
+              render={({ field }) => (
+                <SimpleInput
+                  {...field}
+                  label="Min. Investment"
+                  type="number"
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
+              )}
+            />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Controller

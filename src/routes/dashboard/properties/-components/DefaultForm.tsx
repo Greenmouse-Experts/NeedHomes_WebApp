@@ -263,7 +263,7 @@ export default function DefaultForm<T = any>({
               <Wallet className="text-primary" size={20} />
               <h2 className="text-lg font-bold">3. Pricing & Availability</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Controller
                 name="basePrice"
                 control={methods.control}
@@ -284,18 +284,6 @@ export default function DefaultForm<T = any>({
                   <SimpleInput
                     {...field}
                     label="Units Available"
-                    type="number"
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
-                )}
-              />
-              <Controller
-                name="minimumInvestment"
-                control={methods.control}
-                render={({ field }) => (
-                  <SimpleInput
-                    {...field}
-                    label="Min. Investment"
                     type="number"
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />

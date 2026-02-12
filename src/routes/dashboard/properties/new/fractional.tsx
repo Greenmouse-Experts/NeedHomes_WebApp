@@ -38,9 +38,13 @@ interface FractionalPropertyFormValues extends DocProps {
   exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "MATURITY";
   minimumShares: number;
 }
-
 function RouteComponent() {
-  const methods = useForm<FractionalPropertyFormValues>({});
+  const methods = useForm<FractionalPropertyFormValues>({
+    defaultValues: {
+      propertyType: "RESIDENTIAL",
+      developmentStage: "PLANNING",
+    },
+  });
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
   const useImageProps = useImages();
@@ -49,7 +53,10 @@ function RouteComponent() {
   const mutation = useMutation({
     mutationFn: async (data: FractionalPropertyFormValues) => {
       let coverImageUrl = "";
-
+      const selectProps = selectImageProps;
+      const { newImages, images } = useImageProps;
+      const docUploadProps = docUpload;
+      const videoProps = videoUpload;
       if (selectProps.image) {
         const uploaded = await uploadImage(selectProps.image);
         coverImageUrl = uploaded.data?.url || "";
