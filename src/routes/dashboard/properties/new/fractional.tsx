@@ -17,26 +17,11 @@ import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
-import SelectImage from "@/components/images/SelectImage";
-import VideoUpload, {
-  useVideoUpload,
-} from "@/routes/dashboard/-components/VideoUpload";
-import {
-  DocumentUpload,
-  useDocumentUpload,
-} from "@/routes/dashboard/-components/DocumentUpload";
-import {
-  Plus,
-  Trash2,
-  Home,
-  MapPin,
-  DollarSign,
-  Calendar,
-  Image as ImageIcon,
-  Briefcase,
-  Layers,
-} from "lucide-react";
+import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
+import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
+import { Trash2, Home, Image as ImageIcon, Layers } from "lucide-react";
 import type { DocProps } from "@/types/form";
+import DefaultForm from "../-components/DefaultForm";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
   component: RouteComponent,
@@ -48,119 +33,19 @@ interface AdditionalFee {
 }
 
 interface FractionalPropertyFormValues extends DocProps {
-  propertyTitle: string;
-  propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
-  location: string;
-  description: string;
-  developmentStage: "PLANNING" | "UNDER_CONSTRUCTION" | "COMPLETED" | "ONGOING";
-  completionDate: string;
-  coverImage: string;
-  galleryImages: string[];
-  basePrice: number;
-  additionalFees: AdditionalFee[];
-  availableUnits: number;
-  totalPrice: number;
   totalShares: number;
   pricePerShare: number;
+  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "MATURITY";
   minimumShares: number;
-  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "NONE";
-}
-
-function AdditionalFeesManager() {
-  const { control, register } = useFormContext<FractionalPropertyFormValues>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "additionalFees",
-  });
-  return (
-    <div className="space-y-4 bg-base-200/30 p-4 rounded-lg border border-base-300">
-      <div className="flex justify-between items-center">
-        <h3 className="text-sm font-bold uppercase tracking-wider opacity-70">
-          Additional Fees
-        </h3>
-        <button
-          type="button"
-          onClick={() => append({ label: "", amount: 0 })}
-          className="btn btn-ghost btn-xs text-primary gap-1"
-        >
-          <Plus size={14} /> Add Fee
-        </button>
-      </div>
-
-      {fields.map((field, index) => (
-        <div
-          key={field.id}
-          className="flex gap-2 items-end animate-in fade-in slide-in-from-top-1"
-        >
-          <div className="flex-1">
-            <SimpleInput
-              label={index === 0 ? "Fee Label" : ""}
-              {...register(`additionalFees.${index}.label` as const)}
-              placeholder="e.g. Legal Fee"
-            />
-          </div>
-          <div className="flex-1">
-            <SimpleInput
-              label={index === 0 ? "Amount" : ""}
-              type="number"
-              {...register(`additionalFees.${index}.amount` as const, {
-                valueAsNumber: true,
-              })}
-              placeholder="0.00"
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() => remove(index)}
-            className="btn btn-square btn-ghost text-error mb-1"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
-      ))}
-
-      {fields.length === 0 && (
-        <p className="text-xs italic opacity-50 text-center py-2">
-          No additional fees added.
-        </p>
-      )}
-    </div>
-  );
 }
 
 function RouteComponent() {
-  const methods = useForm<FractionalPropertyFormValues>({
-    defaultValues: {
-      propertyTitle: "Urban Co-Living",
-      propertyType: "RESIDENTIAL",
-      location: "Yaba, Lagos",
-      description: "Fractional shares in co-living units",
-      developmentStage: "ONGOING",
-      completionDate: "2027-09-01T00:00:00.000Z",
-      coverImage: "https://example.com/images/cover3.jpg",
-      galleryImages: [],
-      basePrice: 200000000,
-      additionalFees: [],
-      availableUnits: 50,
-      totalPrice: 200000000,
-      totalShares: 10000,
-      pricePerShare: 20000,
-      minimumShares: 10,
-      exitWindow: "MONTHLY",
-      certificate: "",
-      surveyPlanDocument: "",
-      transferDocument: "",
-      brochure: "",
-      videos: "",
-    },
-  });
-  const disable_completion = methods.watch("developmentStage") === "COMPLETED";
-
-  const { images, setPrev, newImages, setNew } = useImages([]);
-  const selectProps = useSelectImage(null as any);
-  const videoProps = useVideoUpload();
-  const docUploadProps = useDocumentUpload();
-
+  const methods = useForm<FractionalPropertyFormValues>({});
+  const docUpload = useDocumentUpload();
+  const videoUpload = useVideoUpload();
+  const useImageProps = useImages();
+  //@ts-ignore
+  const selectImageProps = useSelectImage(null);
   const mutation = useMutation({
     mutationFn: async (data: FractionalPropertyFormValues) => {
       let coverImageUrl = "";
@@ -302,310 +187,88 @@ function RouteComponent() {
             </p>
           </div>
 
-          <div className="p-6 md:p-8">
-            <FormProvider {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-                className="space-y-10"
-              >
-                {/* 1. Basic Property Information */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                      <Home size={20} />
-                    </div>
-                    <h2 className="text-lg font-bold">
-                      1. Basic Property Information
-                    </h2>
+          <DefaultForm
+            docUpload={docUpload}
+            videoUpload={videoUpload}
+            useImagesProps={useImageProps}
+            form={methods as any}
+            selectImageProps={selectImageProps as any}
+            mutation={mutation as any}
+            onSubmit={onSubmit}
+          >
+            <>
+              {/* 4. Fractional Share Details */}
+              <section className="space-y-6">
+                <div className="flex items-center gap-2 pb-2 border-b border-base-200">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Layers size={20} />
                   </div>
+                  <h2 className="text-lg font-bold">
+                    4. Fractional Share Details
+                  </h2>
+                </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <Controller
-                      name="propertyTitle"
-                      control={methods.control}
-                      rules={{ required: "Title is required" }}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Property Title"
-                          placeholder="e.g. Riverside Estate"
-                          required
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="location"
-                      control={methods.control}
-                      rules={{ required: "Location is required" }}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Location"
-                          placeholder="Banana Island, Lagos"
-                          required
-                          icon={<MapPin size={16} />}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="propertyType"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Property Type">
-                          <option value="RESIDENTIAL">Residential</option>
-                          <option value="COMMERCIAL">Commercial</option>
-                          <option value="LAND">Land</option>
-                        </LocalSelect>
-                      )}
-                    />
-                    <Controller
-                      name="developmentStage"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Development Stage">
-                          <option value="PLANNING">Planning</option>
-                          <option value="UNDER_CONSTRUCTION">
-                            Under Construction
-                          </option>
-                          <option value="COMPLETED">Completed</option>
-                          <option value="ONGOING">Ongoing</option>
-                        </LocalSelect>
-                      )}
-                    />
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Controller
-                    name="description"
+                    name="totalShares"
                     control={methods.control}
                     render={({ field }) => (
-                      <SimpleTextArea
+                      <SimpleInput
                         {...field}
-                        label="Project Description"
-                        placeholder="Provide details, ROI expectations and infrastructure notes..."
-                        rows={4}
+                        label="Total Shares"
+                        type="number"
+                        onChange={(e) =>
+                          field.onChange(Number((e as any).target?.value))
+                        }
                       />
                     )}
                   />
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-primary"
-                      {...methods.register("premiumProperty")}
-                    />
-                    <span className="label-text font-bold">
-                      Premium Property
-                    </span>
-                  </div>
-                </section>
-
-                {/* 2. Media & Documents */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                      <ImageIcon size={20} />
-                    </div>
-                    <h2 className="text-lg font-bold">2. Media & Documents</h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="flex flex-col">
-                      <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                        Primary Cover
-                      </label>
-                      <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
-                        <SelectImage {...selectProps} title="Select Cover" />
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                        Gallery Images
-                      </label>
-                      <UpdateImages
-                        images={images || []}
-                        setPrev={setPrev}
-                        setNew={setNew}
+                  <Controller
+                    name="pricePerShare"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        label="Price Per Share"
+                        type="number"
+                        icon={<span>₦</span>}
+                        onChange={(e) =>
+                          field.onChange(Number((e as any).target?.value))
+                        }
                       />
-                    </div>
-                  </div>
-
-                  <div className="mt-4 space-y-4">
-                    <VideoUpload videoProps={videoProps} />
-                    <DocumentUpload useDocUpload={docUploadProps} />
-                  </div>
-                </section>
-
-                {/* 3. Pricing & Availability */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                      <DollarSign size={20} />
-                    </div>
-                    <h2 className="text-lg font-bold">
-                      3. Pricing & Availability
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Controller
-                      name="basePrice"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Base Price"
-                          type="number"
-                          icon={<span>₦</span>}
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="totalPrice"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Total Price"
-                          type="number"
-                          icon={<span>₦</span>}
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="availableUnits"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Units Available"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                  </div>
-                  <AdditionalFeesManager />
-                </section>
-
-                {/* 4. Fractional Share Details */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                      <Layers size={20} />
-                    </div>
-                    <h2 className="text-lg font-bold">
-                      4. Fractional Share Details
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Controller
-                      name="totalShares"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Total Shares"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="pricePerShare"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Price Per Share"
-                          type="number"
-                          icon={<span>₦</span>}
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="minimumShares"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Minimum Shares To Buy"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                  </div>
-                </section>
-
-                {/* 5. Investment-Specific Details */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                      <Briefcase size={20} />
-                    </div>
-                    <h2 className="text-lg font-bold">
-                      5. Investment-Specific Details
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Controller
-                      name="completionDate"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          disabled={disable_completion}
-                          label="Completion Date"
-                          type="date"
-                          icon={<Calendar size={16} />}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="exitWindow"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Exit Window">
-                          <option value="MONTHLY">Monthly</option>
-                          <option value="QUARTERLY">Quarterly</option>
-                          <option value="ANNUALLY">Annually</option>
-                          <option value="MATURITY">At Maturity</option>
-                        </LocalSelect>
-                      )}
-                    />
-                  </div>
-                </section>
-
-                <div className="pt-8">
-                  <button
-                    type="submit"
-                    className={`btn btn-primary btn-block h-14 text-lg shadow-lg ${mutation.isPending ? "loading" : ""}`}
-                    disabled={mutation.isPending}
-                  >
-                    {!mutation.isPending && <Plus size={20} className="mr-2" />}
-                    {mutation.isPending
-                      ? "Processing..."
-                      : "Publish Fractional Property"}
-                  </button>
+                    )}
+                  />
+                  <Controller
+                    name="minimumShares"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        label="Minimum Shares To Buy"
+                        type="number"
+                        onChange={(e) =>
+                          field.onChange(Number((e as any).target?.value))
+                        }
+                      />
+                    )}
+                  />
                 </div>
-              </form>
-            </FormProvider>
-          </div>
+                <Controller
+                  name="exitWindow"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <LocalSelect {...field} label="Exit Window">
+                      <option value="MONTHLY">Monthly</option>
+                      <option value="QUARTERLY">Quarterly</option>
+                      <option value="ANNUALLY">Annually</option>
+                      <option value="MATURITY">At Maturity</option>
+                    </LocalSelect>
+                  )}
+                />
+              </section>
+              {/* 5. Investment-Specific Details */}
+            </>
+          </DefaultForm>
         </div>
       </div>
     </ThemeProvider>

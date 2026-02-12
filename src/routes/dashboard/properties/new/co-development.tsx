@@ -41,6 +41,9 @@ function RouteComponent() {
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
   const useImageProps = useImages();
+  //@ts-ignore
+
+  const selectImageProps = useSelectImage(null);
   const form = useForm<CoDevelopmentFormValues>({
     defaultValues: {
       exitRule: "ANYTIME",
@@ -48,12 +51,10 @@ function RouteComponent() {
       developmentStage: "PLANNING",
     },
   });
-  //@ts-ignore
-  const selectImageProps = useSelectImage(null);
+
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
       let coverImageUrl = "";
-
       // Handle Cover Image Upload
       if (selectImageProps.image) {
         const uploaded = await uploadImage(selectImageProps.image);
@@ -61,9 +62,7 @@ function RouteComponent() {
       } else if (selectImageProps.prev) {
         coverImageUrl = selectImageProps.prev;
       }
-
       if (!coverImageUrl) throw new Error("A cover image is required.");
-
       // Handle Gallery Uploads
       const uploadedGalleryUrls: string[] = [];
       const { newImages, images } = useImageProps;
@@ -84,7 +83,7 @@ function RouteComponent() {
         const file =
           docUpload.documents[docType as keyof typeof docUpload.documents];
         if (file) {
-          const uploaded = await uploadImage(file); // Assuming uploadImage can handle any file type and returns a URL
+          const uploaded = await uploadImage(file as any); // Assuming uploadImage can handle any file type and returns a URL
           if (uploaded.data?.url) {
             // Map the document type from useDocumentUpload to DocProps keys
             switch (docType) {
@@ -165,7 +164,7 @@ function RouteComponent() {
         docUpload={docUpload}
         videoUpload={videoUpload}
         useImagesProps={useImageProps}
-        form={form}
+        form={form as any}
         selectImageProps={selectImageProps as any}
         mutation={mutation as any}
         onSubmit={onSubmit}
