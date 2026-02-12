@@ -63,9 +63,7 @@ function RouteComponent() {
     },
   });
 
-  const { images, setPrev, newImages, setNew } = useImages([]);
   const selectProps = useSelectImage(null as any);
-
   const nav = useNavigate();
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
@@ -74,7 +72,6 @@ function RouteComponent() {
   const selectImageProps = useSelectImage(null);
   const mutation = useMutation({
     mutationFn: async (data: OutrightPropertyFormValues) => {
-      // 1. Upload Cover Image
       let coverImageUrl = "";
       const selectProps = selectImageProps;
       const { newImages, images } = useImageProps;
@@ -200,6 +197,7 @@ function RouteComponent() {
                     name="installmentDuration"
                     control={methods.control}
                     render={({ field }) => (
+                      //@ts-ignore
                       <SimpleInput
                         {...field}
                         type="number"

@@ -40,6 +40,8 @@ import {
 import VideoUpload, {
   useVideoUpload,
 } from "@/routes/dashboard/-components/VideoUpload";
+import DefaultForm from "../-components/DefaultForm";
+import { get_docs } from "./fractional";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
@@ -51,88 +53,10 @@ interface AdditionalFee {
 }
 
 interface LandBankingProperty extends DocProps {
-  propertyTitle: string;
-  propertyType: "LAND" | "RESIDENTIAL" | "COMMERCIAL";
-  location: string;
-  description: string;
-  developmentStage:
-    | "PLANNING"
-    | "OFF_PLAN"
-    | "UNDER_CONSTRUCTION"
-    | "COMPLETED";
-  completionDate: string;
-  coverImage: string;
-  galleryImages: string[];
-  basePrice: number;
-  additionalFees: AdditionalFee[];
-  availableUnits: number;
-  totalPrice: number;
   plotSize: number;
   pricePerPlot: number;
   holdingPeriod: number;
   buyBackOption: boolean;
-}
-
-function AdditionalFeesManager() {
-  const { control, register } = useFormContext<LandBankingProperty>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "additionalFees",
-  });
-
-  return (
-    <div className="space-y-4 bg-base-200/30 p-4 rounded-lg border border-base-300">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xs font-bold uppercase tracking-wider opacity-70">
-          Additional Fees
-        </h3>
-        <button
-          type="button"
-          onClick={() => append({ label: "", amount: 0 })}
-          className="btn btn-ghost btn-xs text-primary gap-1"
-        >
-          <Plus size={14} /> Add Fee
-        </button>
-      </div>
-
-      {fields.map((field, index) => (
-        <div
-          key={field.id}
-          className="flex gap-2 items-end animate-in fade-in slide-in-from-top-1"
-        >
-          <div className="flex-1">
-            <SimpleInput
-              label={index === 0 ? "Fee Label" : ""}
-              {...register(`additionalFees.${index}.label` as const)}
-              placeholder="e.g. Survey Fee"
-            />
-          </div>
-          <div className="flex-1">
-            <SimpleInput
-              label={index === 0 ? "Amount" : ""}
-              type="number"
-              {...register(`additionalFees.${index}.amount` as const, {
-                valueAsNumber: true,
-              })}
-              placeholder="0.00"
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() => remove(index)}
-            className="btn btn-square btn-ghost text-error mb-1"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
-      ))}
-      {fields.length === 0 && (
-        <p className="text-xs italic opacity-50 text-center py-2">
-          No additional fees added.
-        </p>
-      )}
-    </div>
-  );
 }
 
 function RouteComponent() {
@@ -144,7 +68,6 @@ function RouteComponent() {
       description: "",
       developmentStage: "PLANNING",
       completionDate: "",
-      basePrice: 0,
       availableUnits: 1,
       plotSize: 0,
       pricePerPlot: 0,
@@ -162,25 +85,132 @@ function RouteComponent() {
       videos: "",
     },
   });
-
-  const { images, setPrev, newImages, setNew } = useImages([]);
-  const selectProps = useSelectImage(null as any);
-  const useDocUpload = useDocumentUpload();
-  const useVideoUploadProps = useVideoUpload();
+  const docUpload = useDocumentUpload();
+  const videoUpload = useVideoUpload();
+  const useImageProps = useImages();
+  //@ts-ignore
+  const selectImageProps = useSelectImage(null);
   const nav = useNavigate();
 
-  const mutation = useMutation({
-    mutationFn: async (data: LandBankingProperty) => {
-      let coverImageUrl = "";
+  // const mutation = useMutation({
+  //   mutationFn: async (data: LandBankingProperty) => {
+  //     let coverImageUrl = "";
 
+  //     if (selectProps.image) {
+  //       const uploaded = await uploadImage(selectProps.image);
+  //       coverImageUrl = uploaded.data.url;
+  //     } else if (selectProps.prev) {
+  //       coverImageUrl = selectProps.prev;
+  //     }
+
+  //     if (!coverImageUrl) throw new Error("A cover image is required.");
+
+  //     const uploadedGalleryUrls: string[] = [];
+  //     if (newImages && newImages.length > 0) {
+  //       for (const img of newImages) {
+  //         const uploaded = await uploadImage(img);
+  //         if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
+  //       }
+  //     }
+
+  //     const allGallery = [
+  //       ...(images || []).map((img) => img.url),
+  //       ...uploadedGalleryUrls,
+  //     ];
+
+  //     const feesTotal = (data.additionalFees || []).reduce(
+  //       (acc: number, fee: AdditionalFee) => acc + Number(fee.amount || 0),
+  //       0,
+  //     );
+
+  //     const totalPrice = Number(data.basePrice || 0) + feesTotal;
+
+  //     // Upload documents
+  //     const uploadedDocUrls: DocProps = {
+  //       certificate: "",
+  //       surveyPlanDocument: "",
+  //       transferDocument: "",
+  //       brochure: "",
+  //       videos: "",
+  //     };
+
+  //     if (useDocUpload.documents.certificateOfOwnership) {
+  //       const uploaded = await apiClient.post(
+  //         "/admin/upload-file",
+  //         { file: useDocUpload.documents.certificateOfOwnership },
+  //         { headers: { "Content-Type": "multipart/form-data" } },
+  //       );
+  //       uploadedDocUrls.certificate = uploaded.data.url;
+  //     }
+  //     if (useDocUpload.documents.surveyPlan) {
+  //       const uploaded = await apiClient.post(
+  //         "/admin/upload-file",
+  //         { file: useDocUpload.documents.surveyPlan },
+  //         { headers: { "Content-Type": "multipart/form-data" } },
+  //       );
+  //       uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
+  //     }
+  //     if (useDocUpload.documents.transferOfOwnershipDocument) {
+  //       const uploaded = await apiClient.post(
+  //         "/admin/upload-file",
+  //         { file: useDocUpload.documents.transferOfOwnershipDocument },
+  //         { headers: { "Content-Type": "multipart/form-data" } },
+  //       );
+  //       uploadedDocUrls.transferDocument = uploaded.data.url;
+  //     }
+  //     if (useDocUpload.documents.brochureFactSheet) {
+  //       const uploaded = await apiClient.post(
+  //         "/admin/upload-file",
+  //         { file: useDocUpload.documents.brochureFactSheet },
+  //         { headers: { "Content-Type": "multipart/form-data" } },
+  //       );
+  //       uploadedDocUrls.brochure = uploaded.data.url;
+  //     }
+
+  //     // Upload video
+  //     if (useVideoUploadProps.videoFile) {
+  //       const uploaded = await apiClient.post(
+  //         "/admin/upload-file",
+  //         { file: useVideoUploadProps.videoFile },
+  //         { headers: { "Content-Type": "multipart/form-data" } },
+  //       );
+  //       uploadedDocUrls.videos = uploaded.data.url;
+  //     }
+
+  //     const payload = {
+  //       ...data,
+  //       coverImage: coverImageUrl,
+  //       galleryImages: allGallery,
+  //       totalPrice,
+  //       ...uploadedDocUrls,
+  //     };
+
+  //     const response = await apiClient.post(
+  //       "/admin/properties/land-banking",
+  //       payload,
+  //     );
+  //     return response.data;
+  //   },
+  //   onSuccess: () => {
+  //     nav({
+  //       to: "/partners/properties",
+  //     });
+  //   },
+  // });
+
+  const mutation = useMutation({
+    mutationFn: async (data: OutrightPropertyFormValues) => {
+      let coverImageUrl = "";
+      const selectProps = selectImageProps;
+      const { newImages, images } = useImageProps;
+      const docUploadProps = docUpload;
+      const videoProps = videoUpload;
       if (selectProps.image) {
         const uploaded = await uploadImage(selectProps.image);
-        coverImageUrl = uploaded.data.url;
+        coverImageUrl = uploaded.data?.url || "";
       } else if (selectProps.prev) {
         coverImageUrl = selectProps.prev;
       }
-
-      if (!coverImageUrl) throw new Error("A cover image is required.");
 
       const uploadedGalleryUrls: string[] = [];
       if (newImages && newImages.length > 0) {
@@ -190,76 +220,53 @@ function RouteComponent() {
         }
       }
 
+      if (!coverImageUrl && images && images.length > 0) {
+        coverImageUrl = images[0].url;
+      }
+
+      if (!coverImageUrl && uploadedGalleryUrls.length > 0) {
+        coverImageUrl = uploadedGalleryUrls[0];
+      }
+
+      if (!coverImageUrl && data.coverImage) {
+        coverImageUrl = data.coverImage;
+      }
+
+      if (!coverImageUrl) throw new Error("A cover image is required.");
+
+      let videoUrl = "";
+      if (videoProps.videoFile) {
+        try {
+          const url = await uploadFile(videoProps.videoFile);
+          videoUrl = url || "";
+        } catch (e) {}
+      }
+
       const allGallery = [
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
+      const uploadedDocUrls = get_docs(docUploadProps);
 
-      const feesTotal = (data.additionalFees || []).reduce(
-        (acc: number, fee: AdditionalFee) => acc + Number(fee.amount || 0),
-        0,
-      );
-
-      const totalPrice = Number(data.basePrice || 0) + feesTotal;
-
-      // Upload documents
-      const uploadedDocUrls: DocProps = {
-        certificate: "",
-        surveyPlanDocument: "",
-        transferDocument: "",
-        brochure: "",
-        videos: "",
-      };
-
-      if (useDocUpload.documents.certificateOfOwnership) {
-        const uploaded = await apiClient.post(
-          "/admin/upload-file",
-          { file: useDocUpload.documents.certificateOfOwnership },
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-        uploadedDocUrls.certificate = uploaded.data.url;
-      }
-      if (useDocUpload.documents.surveyPlan) {
-        const uploaded = await apiClient.post(
-          "/admin/upload-file",
-          { file: useDocUpload.documents.surveyPlan },
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-        uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
-      }
-      if (useDocUpload.documents.transferOfOwnershipDocument) {
-        const uploaded = await apiClient.post(
-          "/admin/upload-file",
-          { file: useDocUpload.documents.transferOfOwnershipDocument },
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-        uploadedDocUrls.transferDocument = uploaded.data.url;
-      }
-      if (useDocUpload.documents.brochureFactSheet) {
-        const uploaded = await apiClient.post(
-          "/admin/upload-file",
-          { file: useDocUpload.documents.brochureFactSheet },
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-        uploadedDocUrls.brochure = uploaded.data.url;
-      }
-
-      // Upload video
-      if (useVideoUploadProps.videoFile) {
-        const uploaded = await apiClient.post(
-          "/admin/upload-file",
-          { file: useVideoUploadProps.videoFile },
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-        uploadedDocUrls.videos = uploaded.data.url;
-      }
+      const totalPrice =
+        Number(data.basePrice) +
+        (data.additionalFees
+          ? data.additionalFees.reduce(
+              (acc, fee) => acc + (Number(fee.amount) || 0),
+              0,
+            )
+          : 0);
 
       const payload = {
         ...data,
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
+        videos: videoUrl,
         totalPrice,
-        ...uploadedDocUrls,
+        completionDate: data.completionDate
+          ? new Date(data.completionDate).toISOString()
+          : null,
       };
 
       const response = await apiClient.post(
@@ -269,12 +276,9 @@ function RouteComponent() {
       return response.data;
     },
     onSuccess: () => {
-      nav({
-        to: "/partners/properties",
-      });
+      nav({ to: "/dashboard/properties" });
     },
   });
-
   const onSubmit = (data: LandBankingProperty) => {
     toast.promise(mutation.mutateAsync(data), {
       loading: "Submitting...",
@@ -286,18 +290,10 @@ function RouteComponent() {
     });
   };
 
-  const computeDisplayedTotal = () => {
-    const vals = methods.getValues();
-    const feesTotal = (vals.additionalFees || []).reduce(
-      (acc, f) => acc + Number(f.amount || 0),
-      0,
-    );
-    return Number(vals.basePrice || 0) + feesTotal;
-  };
   const disable_completion = methods.watch("developmentStage") === "COMPLETED";
   return (
     <ThemeProvider>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto ">
         <div className="bg-base-100 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
           <div className="bg-primary p-6 text-primary-content">
             <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -308,288 +304,98 @@ function RouteComponent() {
               Fill in the details to list a new land banking investment.
             </p>
           </div>
-
-          <div className="p-6 md:p-8">
-            <FormProvider {...methods}>
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-                className="space-y-12"
-              >
-                {/* 1. Basic Property Information */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 border-b pb-2">
-                    <Info className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">
-                      1. Basic Property Information
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <Controller
-                      name="propertyTitle"
-                      control={methods.control}
-                      rules={{ required: "Title is required" }}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Property Title"
-                          placeholder="e.g. Green Acres"
-                          required
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="location"
-                      control={methods.control}
-                      rules={{ required: "Location is required" }}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Location"
-                          placeholder="Ibeju-Lekki, Lagos"
-                          required
-                          icon={<MapPin size={16} />}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="propertyType"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Property Type">
-                          <option value="LAND">Land</option>
-                          <option value="RESIDENTIAL">Residential</option>
-                          <option value="COMMERCIAL">Commercial</option>
-                        </LocalSelect>
-                      )}
-                    />
-                    <Controller
-                      name="developmentStage"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Development Stage">
-                          <option value="PLANNING">Planning</option>
-                          <option value="OFF_PLAN">Off Plan</option>
-                          <option value="UNDER_CONSTRUCTION">
-                            Under Construction
-                          </option>
-                          <option value="COMPLETED">Completed</option>
-                        </LocalSelect>
-                      )}
-                    />
-                    <div className="md:col-span-2">
-                      <Controller
-                        name="description"
-                        control={methods.control}
-                        render={({ field }) => (
-                          <SimpleTextArea
-                            {...field}
-                            label="Description"
-                            placeholder="Describe the land banking opportunity..."
-                            rows={4}
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-primary"
-                        {...methods.register("premiumProperty")}
-                      />
-                      <span className="label-text font-bold">
-                        Premium Property
-                      </span>
-                    </div>
-                  </div>
-                </section>
-
-                {/* 2. Media & Documents */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 border-b pb-2">
-                    <ImageIcon className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">2. Media & Documents</h2>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="flex flex-col">
-                      <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                        Primary Cover
-                      </label>
-                      <div className="h-64 flex w-full rounded-xl overflow-hidden ring-2 ring-base-200 ring-offset-2">
-                        <SelectImage {...selectProps} title="Select Cover" />
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                        Gallery Images
-                      </label>
-                      <UpdateImages
-                        images={images || []}
-                        setPrev={setPrev}
-                        setNew={setNew}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1  gap-8">
-                    <VideoUpload videoProps={useVideoUploadProps} />
-                    <DocumentUpload useDocUpload={useDocUpload} />
-                  </div>
-                </section>
-
-                {/* 3. Pricing & Availability */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 border-b pb-2">
-                    <DollarSign className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">
-                      3. Pricing & Availability
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Controller
-                      name="basePrice"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Base Price"
-                          type="number"
-                          icon={<span>₦</span>}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="availableUnits"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Available Units"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <div>
-                      <label className="label font-semibold text-sm">
-                        Total Price (computed)
-                      </label>
-                      <div className="input input-bordered w-full flex items-center bg-base-200/50 font-bold">
-                        ₦{computeDisplayedTotal().toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-                  <AdditionalFeesManager />
-                </section>
-
-                {/* 4. Investment-Specific Details */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-2 border-b pb-2">
-                    <Briefcase className="text-primary" size={20} />
-                    <h2 className="text-lg font-bold">
-                      4. Investment-Specific Details
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Controller
-                      name="plotSize"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Plot Size (sqm)"
-                          type="number"
-                          step="0.01"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="pricePerPlot"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Price Per Plot"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="holdingPeriod"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Holding Period (Months)"
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="completionDate"
-                      disabled={disable_completion}
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label="Completion Date"
-                          type="date"
-                          icon={<Calendar size={16} />}
-                        />
-                      )}
-                    />
-                    <div className="md:col-span-2 flex items-end pb-1">
-                      <div className="flex items-center gap-4 p-3 border rounded-lg w-full bg-base-200/20">
-                        <Controller
-                          name="buyBackOption"
-                          control={methods.control}
-                          render={({ field }) => (
-                            <>
-                              <input
-                                type="checkbox"
-                                checked={field.value}
-                                onChange={field.onChange}
-                                className="checkbox checkbox-primary"
-                              />
-                              <span className="text-sm font-medium">
-                                Include Buy-Back Option (Guaranteed Exit)
-                              </span>
-                            </>
-                          )}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <div className="pt-8">
-                  <button
-                    type="submit"
-                    className={`btn btn-primary btn-block h-14 text-lg shadow-lg ${mutation.isPending ? "loading" : ""}`}
-                    disabled={mutation.isPending}
-                  >
-                    {!mutation.isPending && <Plus size={20} className="mr-2" />}
-                    {mutation.isPending
-                      ? "Creating..."
-                      : "Create Land Banking Property"}
-                  </button>
-                </div>
-              </form>
-            </FormProvider>
-          </div>
         </div>
+        <DefaultForm
+          docUpload={docUpload}
+          videoUpload={videoUpload}
+          useImagesProps={useImageProps}
+          form={methods as any}
+          selectImageProps={selectImageProps as any}
+          mutation={mutation as any}
+          onSubmit={onSubmit}
+        >
+          <section className="space-y-6">
+            <div className="flex items-center gap-2  fade border-b pb-2">
+              <Briefcase className="text-primary" size={20} />
+              <h2 className="text-lg font-bold">
+                4. Investment-Specific Details
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Controller
+                name="plotSize"
+                control={methods.control}
+                render={({ field }) => (
+                  <SimpleInput
+                    {...field}
+                    label="Plot Size (sqm)"
+                    type="number"
+                    step="0.01"
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
+                )}
+              />
+              <Controller
+                name="pricePerPlot"
+                control={methods.control}
+                render={({ field }) => (
+                  <SimpleInput
+                    {...field}
+                    label="Price Per Plot"
+                    type="number"
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
+                )}
+              />
+              <Controller
+                name="holdingPeriod"
+                control={methods.control}
+                render={({ field }) => (
+                  <SimpleInput
+                    {...field}
+                    label="Holding Period (Months)"
+                    type="number"
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
+                )}
+              />
+              <Controller
+                name="completionDate"
+                disabled={disable_completion}
+                control={methods.control}
+                render={({ field }) => (
+                  <SimpleInput
+                    {...field}
+                    label="Completion Date"
+                    type="date"
+                    icon={<Calendar size={16} />}
+                  />
+                )}
+              />
+              <div className="md:col-span-2 flex items-end pb-1">
+                <div className="flex items-center gap-4 p-3 border rounded-lg w-full bg-base-200/20">
+                  <Controller
+                    name="buyBackOption"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          type="checkbox"
+                          checked={field.value}
+                          onChange={field.onChange}
+                          className="checkbox checkbox-primary"
+                        />
+                        <span className="text-sm font-medium">
+                          Include Buy-Back Option (Guaranteed Exit)
+                        </span>
+                      </>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+        </DefaultForm>
       </div>
     </ThemeProvider>
   );
