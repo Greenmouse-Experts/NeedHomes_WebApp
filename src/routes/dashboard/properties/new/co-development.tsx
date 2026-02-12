@@ -16,6 +16,7 @@ import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { useVideoUpload } from "../../-components/VideoUpload";
 import { useDocumentUpload } from "../../-components/DocumentUpload";
 import type { DocProps } from "@/types/form";
+import { docPropsResolver } from "../-components/formresolver";
 
 export const Route = createFileRoute(
   "/dashboard/properties/new/co-development",
@@ -45,10 +46,13 @@ function RouteComponent() {
 
   const selectImageProps = useSelectImage(null);
   const form = useForm<CoDevelopmentFormValues>({
+    resolver: docPropsResolver as any,
     defaultValues: {
       exitRule: "ANYTIME",
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
+      premiumProperty: false,
+      additionalFees: [],
     },
   });
 

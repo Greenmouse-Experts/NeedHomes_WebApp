@@ -40,10 +40,10 @@ function RouteComponent() {
   const methods = useForm<SaveToOwnFormValues>({
     defaultValues: {
       propertyTitle: "",
-      propertyType: "RESIDENTIAL",
       location: "",
-      description: "",
+      propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
+      premiumProperty: false,
       completionDate: "",
       targetPropertyPrice: 0,
       minimumSavingsAmount: 0,

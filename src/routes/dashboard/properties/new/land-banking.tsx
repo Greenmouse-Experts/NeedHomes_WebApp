@@ -64,9 +64,8 @@ function RouteComponent() {
   const methods = useForm<LandBankingProperty>({
     defaultValues: {
       propertyTitle: "",
-      propertyType: "LAND",
       location: "",
-      description: "",
+      propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
       completionDate: "",
       availableUnits: 1,
