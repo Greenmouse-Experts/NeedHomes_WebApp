@@ -53,13 +53,13 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
     },
     onError: () => {
       toast.error("Failed to update charges");
+    },
   });
-
   const onSubmit = (data: ChargeSettings) => {
     toast.promise(mutation.mutateAsync(data), {
       loading: "Updating charges...",
       success: "Charges updated successfully",
-      error: extract_message
+      error: extract_message,
     });
   };
   const methods = useForm<ChargeSettings>({
