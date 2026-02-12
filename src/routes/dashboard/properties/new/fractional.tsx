@@ -44,6 +44,7 @@ function RouteComponent() {
     defaultValues: {
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
+      premiumProperty: false,
     },
   });
   const docUpload = useDocumentUpload();

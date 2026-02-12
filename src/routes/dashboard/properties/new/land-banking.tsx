@@ -67,6 +67,7 @@ function RouteComponent() {
       location: "",
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
+      premiumProperty: false,
       completionDate: "",
       availableUnits: 1,
       plotSize: 0,
@@ -81,7 +82,6 @@ function RouteComponent() {
       surveyPlanDocument: "",
       transferDocument: "",
       brochure: "",
-      premiumProperty: false,
       videos: "",
     },
   });

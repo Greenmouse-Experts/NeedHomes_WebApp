@@ -14,12 +14,13 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
+import Charges from "./-components/Charges";
 
-export const Route = createFileRoute("/dashboard/settings")({
+export const Route = createFileRoute("/dashboard/settings/")({
   component: SettingsPage,
 });
 
-type SettingsTab = "profile" | "bankDetails" | "kyc" | "security";
+type SettingsTab = "profile" | "bankDetails" | "Charges" | "security";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
@@ -92,6 +93,7 @@ function SettingsPage() {
     { id: "profile" as SettingsTab, label: "Profile", icon: User },
 
     { id: "security" as SettingsTab, label: "Security", icon: Shield },
+    { id: "Charges" as SettingsTab, label: "Charges", icon: Shield },
   ];
 
   return (
@@ -249,6 +251,7 @@ function SettingsPage() {
             {/* KYC Tab */}
 
             {/* Security Tab */}
+            {activeTab === "Charges" && <Charges />}
             {activeTab === "security" && (
               <div>
                 <div className="mb-6">
