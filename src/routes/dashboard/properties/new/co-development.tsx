@@ -155,7 +155,7 @@ function RouteComponent() {
         mutation={mutation as any}
         onSubmit={onSubmit}
       >
-        <section className="">
+        <>
           <div className="flex items-center gap-2 border-b border-base-200 pb-2">
             <TrendingUp className="text-primary" size={20} />
             <h2 className="text-lg font-bold">
@@ -210,7 +210,7 @@ function RouteComponent() {
               )}
             />
           </div>
-        </section>
+        </>
       </DefaultForm>
     </ThemeProvider>
   );
