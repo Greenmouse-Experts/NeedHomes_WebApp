@@ -263,21 +263,6 @@ function RouteComponent() {
                   )}
                 />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
-                  name="availableUnits"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <SimpleInput
-                      {...field}
-                      label="Units Available"
-                      type="number"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
-                />
-              </div>
             </section>
           </DefaultForm>
         </div>
