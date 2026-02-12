@@ -87,38 +87,6 @@ function RouteComponent() {
 
       if (!coverImageUrl) throw new Error("A cover image is required.");
 
-      const uploadedDocUrls: Partial<DocProps> = {};
-      const docFiles = docUploadProps.documents;
-      console.log(docFiles);
-
-      if (docFiles.certificateOfOwnership) {
-        try {
-          const url = await uploadFile(docFiles.certificateOfOwnership);
-          if (url) uploadedDocUrls.certificate = url;
-        } catch (e) {}
-      }
-
-      if (docFiles.surveyPlan) {
-        try {
-          const url = await uploadFile(docFiles.surveyPlan);
-          if (url) uploadedDocUrls.surveyPlanDocument = url;
-        } catch (e) {}
-      }
-
-      if (docFiles.transferOfOwnershipDocument) {
-        try {
-          const url = await uploadFile(docFiles.transferOfOwnershipDocument);
-          if (url) uploadedDocUrls.transferDocument = url;
-        } catch (e) {}
-      }
-
-      if (docFiles.brochureFactSheet) {
-        try {
-          const url = await uploadFile(docFiles.brochureFactSheet);
-          if (url) uploadedDocUrls.brochure = url;
-        } catch (e) {}
-      }
-
       let videoUrl = "";
       if (videoProps.videoFile) {
         try {
@@ -131,6 +99,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
+      const uploadedDocUrls = get_docs(docUploadProps);
       console.log("Uploaded Doc URLs:", uploadedDocUrls);
 
       const payload: any = {
@@ -140,12 +109,6 @@ function RouteComponent() {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        // certificate: uploadedDocUrls.certificate || data.certificate,
-        // surveyPlanDocument:
-        //   uploadedDocUrls.surveyPlanDocument || data.surveyPlanDocument,
-        // transferDocument:
-        //   uploadedDocUrls.transferDocument || data.transferDocument,
-        // brochure: uploadedDocUrls.brochure || data.brochure,
         videos: videoUrl || data.videos,
         ...uploadedDocUrls,
       };
@@ -156,7 +119,6 @@ function RouteComponent() {
       payload.pricePerShare = Number(payload.pricePerShare) || 0;
       payload.minimumShares = Number(payload.minimumShares) || 0;
       payload.totalPrice = Number(payload.totalPrice) || 0;
-
       const response = await apiClient.post(
         "/admin/properties/fractional",
         payload,
@@ -274,3 +236,48 @@ function RouteComponent() {
     </ThemeProvider>
   );
 }
+
+export const get_docs = async (
+  docUploadProps: ReturnType<typeof useDocumentUpload>,
+) => {
+  const uploadedDocUrls: Partial<DocProps> = {};
+  const docFiles = docUploadProps.documents;
+  console.log(docFiles);
+
+  if (docFiles.certificateOfOwnership) {
+    try {
+      // @ts-expect-error
+
+      const url = await uploadFile(docFiles.certificateOfOwnership);
+      if (url) uploadedDocUrls.certificate = url;
+    } catch (e) {}
+  }
+
+  if (docFiles.surveyPlan) {
+    try {
+      // @ts-expect-error
+
+      const url = await uploadFile(docFiles.surveyPlan);
+      if (url) uploadedDocUrls.surveyPlanDocument = url;
+    } catch (e) {}
+  }
+
+  if (docFiles.transferOfOwnershipDocument) {
+    try {
+      // @ts-expect-error
+
+      const url = await uploadFile(docFiles.transferOfOwnershipDocument);
+      if (url) uploadedDocUrls.transferDocument = url;
+    } catch (e) {}
+  }
+
+  if (docFiles.brochureFactSheet) {
+    try {
+      // @ts-expect-error
+
+      const url = await uploadFile(docFiles.brochureFactSheet);
+      if (url) uploadedDocUrls.brochure = url;
+    } catch (e) {}
+  }
+  return uploadedDocUrls;
+};

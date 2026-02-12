@@ -36,6 +36,8 @@ import {
 } from "../../-components/DocumentUpload";
 import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
+import { get_docs } from "./fractional";
+import { uploadFile } from "@/api/fileApi";
 
 export const Route = createFileRoute("/dashboard/properties/new/outright")({
   component: RouteComponent,
@@ -74,16 +76,17 @@ function RouteComponent() {
     mutationFn: async (data: OutrightPropertyFormValues) => {
       // 1. Upload Cover Image
       let coverImageUrl = "";
+      const selectProps = selectImageProps;
+      const { newImages, images } = useImageProps;
+      const docUploadProps = docUpload;
+      const videoProps = videoUpload;
       if (selectProps.image) {
         const uploaded = await uploadImage(selectProps.image);
-        coverImageUrl = uploaded.data.url;
+        coverImageUrl = uploaded.data?.url || "";
       } else if (selectProps.prev) {
         coverImageUrl = selectProps.prev;
       }
 
-      if (!coverImageUrl) throw new Error("A cover image is required.");
-
-      // 2. Upload Gallery Images
       const uploadedGalleryUrls: string[] = [];
       if (newImages && newImages.length > 0) {
         for (const img of newImages) {
@@ -92,44 +95,46 @@ function RouteComponent() {
         }
       }
 
+      if (!coverImageUrl && images && images.length > 0) {
+        coverImageUrl = images[0].url;
+      }
+
+      if (!coverImageUrl && uploadedGalleryUrls.length > 0) {
+        coverImageUrl = uploadedGalleryUrls[0];
+      }
+
+      if (!coverImageUrl && data.coverImage) {
+        coverImageUrl = data.coverImage;
+      }
+
+      if (!coverImageUrl) throw new Error("A cover image is required.");
+
+      let videoUrl = "";
+      if (videoProps.videoFile) {
+        try {
+          const url = await uploadFile(videoProps.videoFile);
+          videoUrl = url || "";
+        } catch (e) {}
+      }
+
       const allGallery = [
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
+      const uploadedDocUrls = get_docs(docUploadProps);
 
-      // 3. Upload Documents
-      const docUrls: Partial<DocProps> = {};
-      const docEntries = Object.entries(docUpload.documents);
-      for (const [key, file] of docEntries) {
-        if (file) {
-          const uploaded = await uploadImage(file);
-          const map: Record<string, keyof DocProps> = {
-            certificateOfOwnership: "certificate",
-            surveyPlan: "surveyPlanDocument",
-            transferOfOwnershipDocument: "transferDocument",
-            brochureFactSheet: "brochure",
-          };
-          const apiKey = map[key];
-          if (apiKey) docUrls[apiKey] = uploaded.data.url;
-        }
-      }
-
-      // 4. Upload Video
-      let videoUrl = "";
-      if (videoUpload.videoFile) {
-        const uploaded = await uploadImage(videoUpload.videoFile);
-        videoUrl = uploaded.data.url;
-      }
-
-      const feesTotal = (data.additionalFees || []).reduce(
-        (acc, fee) => acc + Number(fee.amount || 0),
-        0,
-      );
-      const totalPrice = Number(data.basePrice || 0) + feesTotal;
+      const totalPrice =
+        Number(data.basePrice) +
+        (data.additionalFees
+          ? data.additionalFees.reduce(
+              (acc, fee) => acc + (Number(fee.amount) || 0),
+              0,
+            )
+          : 0);
 
       const payload = {
         ...data,
-        ...docUrls,
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
@@ -197,7 +202,9 @@ function RouteComponent() {
                     render={({ field }) => (
                       <SimpleInput
                         {...field}
+                        type="number"
                         label="Installment Duration (Months)"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
                     )}
                   />
