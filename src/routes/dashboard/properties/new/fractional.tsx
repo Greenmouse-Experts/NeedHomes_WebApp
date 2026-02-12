@@ -22,6 +22,7 @@ import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload
 import { Trash2, Home, Image as ImageIcon, Layers } from "lucide-react";
 import type { DocProps } from "@/types/form";
 import DefaultForm from "../-components/DefaultForm";
+import { uploadFile } from "@/api/fileApi";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
   component: RouteComponent,
@@ -86,19 +87,9 @@ function RouteComponent() {
 
       if (!coverImageUrl) throw new Error("A cover image is required.");
 
-      const uploadFile = async (file: File) => {
-        const fd = new FormData();
-        fd.append("file", file);
-        const resp = await apiClient.post("/admin/uploads", fd, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        return resp.data?.url || "";
-      };
-
       const uploadedDocUrls: Partial<DocProps> = {};
       const docFiles = docUploadProps.documents;
+      console.log(docFiles);
 
       if (docFiles.certificateOfOwnership) {
         try {
@@ -140,6 +131,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
+      console.log("Uploaded Doc URLs:", uploadedDocUrls);
 
       const payload: any = {
         ...data,
@@ -148,13 +140,14 @@ function RouteComponent() {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        certificate: uploadedDocUrls.certificate || data.certificate,
-        surveyPlanDocument:
-          uploadedDocUrls.surveyPlanDocument || data.surveyPlanDocument,
-        transferDocument:
-          uploadedDocUrls.transferDocument || data.transferDocument,
-        brochure: uploadedDocUrls.brochure || data.brochure,
+        // certificate: uploadedDocUrls.certificate || data.certificate,
+        // surveyPlanDocument:
+        //   uploadedDocUrls.surveyPlanDocument || data.surveyPlanDocument,
+        // transferDocument:
+        //   uploadedDocUrls.transferDocument || data.transferDocument,
+        // brochure: uploadedDocUrls.brochure || data.brochure,
         videos: videoUrl || data.videos,
+        ...uploadedDocUrls,
       };
 
       payload.basePrice = Number(payload.basePrice) || 0;
