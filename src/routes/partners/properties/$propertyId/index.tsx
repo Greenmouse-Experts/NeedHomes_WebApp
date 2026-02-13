@@ -234,14 +234,14 @@ function PropertyDetailPage() {
                               {property.systemCharges.platformChargePercentage}%
                             </p>
                           </div>
-                          <div>
+                          {/*<div>
                             <p className="text-sm text-gray-600">
                               Partner Charge
                             </p>
                             <p className="text-lg font-semibold text-gray-900">
                               {property.systemCharges.partnerChargePercentage}%
                             </p>
-                          </div>
+                          </div>*/}
                         </div>
                       </div>
 

@@ -54,7 +54,7 @@ export function MediaSlider({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-6">
       {/* Main Display */}
       <div className="relative h-96 bg-gray-200 rounded-lg overflow-hidden group">
         {currentMedia?.type === "image" ? (
@@ -118,7 +118,7 @@ export function MediaSlider({
 
       {/* Thumbnails */}
       {uniqueMedia.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-2 ">
           {uniqueMedia.map((media, index) => (
             <button
               key={index}
