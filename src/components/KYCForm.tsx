@@ -70,7 +70,7 @@ export default function KYCForm() {
     if (kycData?.data.verification) {
       const verification = kycData.data.verification;
       console.log(verification);
-      setkyc(kyc.data);
+      // setkyc(kyc.);
       reset({
         idType: (verification.idType as KycFormData["idType"]) || "",
         address: verification.address || "",
