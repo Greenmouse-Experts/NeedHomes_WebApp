@@ -120,6 +120,17 @@ function RouteComponent() {
                       toast.success("Link copied to clipboard");
                     },
                   },
+                  {
+                    key: "view",
+                    label: "View Property",
+                    action: (item: Promotion, nav) => {
+                      nav({
+                        to: `/partners/properties/${item.propertyId}`,
+                      });
+                      // navigator.clipboard.writeText(item.promotionLink);
+                      // toast.success("Link copied to clipboard");
+                    },
+                  },
                 ]}
               />
             </div>

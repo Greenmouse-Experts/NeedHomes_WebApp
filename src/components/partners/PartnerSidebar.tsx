@@ -33,6 +33,12 @@ const NAV_LINKS = [
     icon: Building2,
   },
   {
+    to: "/partners/promotions",
+    label: "Promotions",
+    id: "promotions",
+    icon: List,
+  },
+  {
     to: "/partners/notifications",
     label: "Notifications",
     id: "notifications",
@@ -50,12 +56,7 @@ const NAV_LINKS = [
     id: "announcements",
     icon: Megaphone,
   },
-  {
-    to: "/investors/promotions",
-    label: "Promotions",
-    id: "promotions",
-    icon: List,
-  },
+
   {
     to: "/partners/settings",
     label: "Setting",

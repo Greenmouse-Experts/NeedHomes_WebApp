@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import type { AdditionalFee, PROPERTY_TYPE } from "@/types/property";
+import AdditionalFees from "../../-components/Additionalfees";
 
 export const Route = createFileRoute("/partners/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -247,44 +248,7 @@ function PropertyDetailPage() {
                       {/* Additional Fees */}
                       {property.additionalFees &&
                         property.additionalFees.length > 0 && (
-                          <div>
-                            <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                              Additional Fees
-                            </h2>
-                            <div className="bg-gray-50 rounded-lg p-4">
-                              <div className="space-y-2">
-                                {property.additionalFees.map(
-                                  (fee: AdditionalFee, index: number) => (
-                                    <div
-                                      key={index}
-                                      className="flex justify-between py-2"
-                                    >
-                                      <span className="text-gray-600">
-                                        {fee.label}
-                                      </span>
-                                      <span className="font-semibold text-gray-900">
-                                        {formatCurrency(fee.amount)}
-                                      </span>
-                                    </div>
-                                  ),
-                                )}
-                                <div className="flex justify-between py-3 border-t-2 border-gray-300 mt-3">
-                                  <span className="font-semibold text-gray-900">
-                                    Total Additional Fees:
-                                  </span>
-                                  <span className="font-bold text-lg text-(--color-orange)">
-                                    {formatCurrency(
-                                      property.additionalFees.reduce(
-                                        (sum: number, fee: AdditionalFee) =>
-                                          sum + fee.amount,
-                                        0,
-                                      ),
-                                    )}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                          <AdditionalFees fees={property.additionalFees} />
                         )}
                     </div>
 
