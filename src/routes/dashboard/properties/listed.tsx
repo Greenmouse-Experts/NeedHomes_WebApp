@@ -25,6 +25,8 @@ import CustomTable, {
   type columnType,
   type Actions,
 } from "@/components/tables/CustomTable";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
 
 export const Route = createFileRoute("/dashboard/properties/listed")({
   component: ListedPropertiesPage,
@@ -140,6 +142,26 @@ function ListedPropertiesPage() {
             });
             break;
         }
+      },
+    },
+    {
+      key: "delete",
+      label: "Delete",
+      action: (item: ADMIN_PROPERTY_LISTING, nav) => {
+        toast.promise(
+          async () => {
+            let resp = await apiClient.delete(`/properties/${item.id}`);
+            return resp.data;
+          },
+          {
+            loading: "Deleting...",
+            success: (data) => {
+              query.refetch();
+              return "Property deleted successfully";
+            },
+            error: extract_message,
+          },
+        );
       },
     },
     // {
