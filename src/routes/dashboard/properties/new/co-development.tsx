@@ -147,6 +147,14 @@ function RouteComponent() {
       );
       return response.data;
     },
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      nav({
+        to: "/dashboard/properties/$propertyId",
+        params: {
+          propertyId: data.data.id,
+        },
+      });
+    },
   });
   //
   // const mutation = useMutation({
