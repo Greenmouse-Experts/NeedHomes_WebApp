@@ -75,13 +75,13 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       icon: <Megaphone className="size-4" />,
       alwaysEnabled: false,
     },
-    // {
-    //   to: "/investors/subscriptions",
-    //   activePage: "subscriptions",
-    //   label: "Subscriptions",
-    //   icon: <List className="size-4" />,
-    //   alwaysEnabled: false,
-    // },
+    {
+      to: "/investors/subscriptions",
+      activePage: "subscriptions",
+      label: "Subscriptions",
+      icon: <List className="size-4" />,
+      alwaysEnabled: false,
+    },
     {
       to: "/investors/settings",
       activePage: "settings",
