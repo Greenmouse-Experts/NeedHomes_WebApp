@@ -50,12 +50,12 @@ const NAV_LINKS = [
     id: "announcements",
     icon: Megaphone,
   },
-  // {
-  //   to: "/investors/subscriptions",
-  //   label: "Subscriptions",
-  //   id: "subscriptions",
-  //   icon: List,
-  // },
+  {
+    to: "/investors/promotions",
+    label: "Promotions",
+    id: "promotions",
+    icon: List,
+  },
   {
     to: "/partners/settings",
     label: "Setting",
