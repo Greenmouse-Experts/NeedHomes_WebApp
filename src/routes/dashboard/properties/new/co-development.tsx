@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm, Controller } from "react-hook-form";
 import { MutationCache, useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
@@ -9,7 +9,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { Home, TrendingUp } from "lucide-react";
 import DefaultForm from "../-components/DefaultForm";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
@@ -17,6 +17,8 @@ import { useVideoUpload } from "../../-components/VideoUpload";
 import { useDocumentUpload } from "../../-components/DocumentUpload";
 import type { DocProps } from "@/types/form";
 import { docPropsResolver } from "../-components/formresolver";
+import { get_docs } from "./fractional";
+import { uploadFile } from "@/api/fileApi";
 
 export const Route = createFileRoute(
   "/dashboard/properties/new/co-development",
@@ -41,12 +43,13 @@ interface CoDevelopmentFormValues extends DocProps {
 function RouteComponent() {
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
+  const nav = useNavigate();
   const useImageProps = useImages();
   //@ts-ignore
 
   const selectImageProps = useSelectImage(null);
   const form = useForm<CoDevelopmentFormValues>({
-    resolver: docPropsResolver as any,
+    // resolver: docPropsResolver as any,
     defaultValues: {
       exitRule: "ANYTIME",
       propertyType: "RESIDENTIAL",
@@ -145,7 +148,95 @@ function RouteComponent() {
       return response.data;
     },
   });
+  //
+  // const mutation = useMutation({
+  //   mutationFn: async (data: CoDevelopmentFormValues) => {
+  //     let coverImageUrl = "";
+  //     const selectProps = selectImageProps;
+  //     const { newImages, images } = useImageProps;
+  //     const docUploadProps = docUpload;
+  //     const videoProps = videoUpload;
+  //     if (selectProps.image) {
+  //       const uploaded = await uploadImage(selectProps.image);
+  //       coverImageUrl = uploaded.data?.url || "";
+  //     } else if (selectProps.prev) {
+  //       coverImageUrl = selectProps.prev;
+  //     }
+
+  //     const uploadedGalleryUrls: string[] = [];
+  //     if (newImages && newImages.length > 0) {
+  //       for (const img of newImages) {
+  //         const uploaded = await uploadImage(img);
+  //         if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
+  //       }
+  //     }
+
+  //     if (!coverImageUrl && images && images.length > 0) {
+  //       coverImageUrl = images[0].url;
+  //     }
+
+  //     if (!coverImageUrl && uploadedGalleryUrls.length > 0) {
+  //       coverImageUrl = uploadedGalleryUrls[0];
+  //     }
+
+  //     if (!coverImageUrl && data.coverImage) {
+  //       coverImageUrl = data.coverImage;
+  //     }
+
+  //     if (!coverImageUrl) throw new Error("A cover image is required.");
+
+  //     let videoUrl = "";
+  //     if (videoProps.videoFile) {
+  //       try {
+  //         const url = await uploadFile(videoProps.videoFile);
+  //         videoUrl = url || "";
+  //       } catch (e) {}
+  //     }
+
+  //     const allGallery = [
+  //       ...(images || []).map((img) => img.url),
+  //       ...uploadedGalleryUrls,
+  //     ];
+  //     const uploadedDocUrls = await get_docs(docUploadProps);
+
+  //     const totalPrice =
+  //       Number(data.basePrice) +
+  //       (data.additionalFees
+  //         ? data.additionalFees.reduce(
+  //             (acc, fee) => acc + (Number(fee.amount) || 0),
+  //             0,
+  //           )
+  //         : 0);
+
+  //     const payload = {
+  //       ...data,
+  //       ...uploadedDocUrls,
+  //       coverImage: coverImageUrl,
+  //       galleryImages: allGallery,
+  //       videos: videoUrl,
+  //       totalPrice,
+  //       completionDate: data.completionDate
+  //         ? new Date(data.completionDate).toISOString()
+  //         : null,
+  //     };
+
+  //     const response = await apiClient.post(
+  //       "/admin/properties/land-banking",
+  //       payload,
+  //     );
+  //     return response.data;
+  //   },
+  //   onSuccess: (data: ApiResponse<{ id: string }>) => {
+  //     nav({
+  //       to: "/dashboard/properties/$propertyId",
+  //       params: {
+  //         propertyId: data.data.id,
+  //       },
+  //     });
+  //   },
+  // });
   const onSubmit = (data: CoDevelopmentFormValues) => {
+    console.log(data);
     toast.promise(mutation.mutateAsync(data), {
       loading: "Creating property listing...",
       success: extract_message,
@@ -187,6 +278,7 @@ function RouteComponent() {
               render={({ field }) => (
                 <SimpleInput
                   {...field}
+                  value={field.value ?? ""}
                   label="Profit Ratio (0-100)%"
                   type="number"
                   step="0.01"
@@ -200,6 +292,7 @@ function RouteComponent() {
               render={({ field }) => (
                 <SimpleInput
                   {...field}
+                  value={field.value ?? ""}
                   label="Duration (Months)"
                   type="number"
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -212,6 +305,7 @@ function RouteComponent() {
               render={({ field }) => (
                 <SimpleInput
                   {...field}
+                  value={field.value ?? ""}
                   label="Min. Investment"
                   type="number"
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -220,25 +314,19 @@ function RouteComponent() {
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Controller
-              name="exitRule"
-              control={form.control}
-              render={({ field }) => (
-                <LocalSelect {...field} label="Exit Strategy">
-                  <option value="ANYTIME">Anytime (Liquid)</option>
-                  <option value="AFTER_LOCK_IN_PERIOD">
-                    After Lock-in Period
-                  </option>
-                  <option value="AFTER_PROJECT_COMPLETION">
-                    After Project Completion
-                  </option>
-                  <option value="AT_EXIT_WINDOW_ONLY">
-                    At Exit Window Only
-                  </option>
-                  <option value="NOT_ALLOWED">Not Allowed</option>
-                </LocalSelect>
-              )}
-            />
+            <LocalSelect
+              {...form.register("exitRule")}
+              label="Exit Strategy"
+              value={form.watch("exitRule") ?? ""}
+            >
+              <option value="ANYTIME">Anytime (Liquid)</option>
+              <option value="AFTER_LOCK_IN_PERIOD">After Lock-in Period</option>
+              <option value="AFTER_PROJECT_COMPLETION">
+                After Project Completion
+              </option>
+              <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
+              <option value="NOT_ALLOWED">Not Allowed</option>
+            </LocalSelect>
           </div>
         </>
       </DefaultForm>
