@@ -8,10 +8,6 @@ import {
 } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
-import UpdateImages from "@/components/images/UpdateImages";
-import SelectImage from "@/components/images/SelectImage";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useNavigate } from "@tanstack/react-router";
