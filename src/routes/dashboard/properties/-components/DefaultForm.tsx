@@ -180,9 +180,7 @@ export default function DefaultForm<T = any>({
                 render={({ field }) => (
                   <LocalSelect {...field} label="Development Stage">
                     <option value="PLANNING">Planning</option>
-                    <option value="UNDER_CONSTRUCTION">
-                      Under Construction
-                    </option>
+                    <option value="ONGOING">Under Construction</option>
                     <option value="COMPLETED">Completed</option>
                   </LocalSelect>
                 )}

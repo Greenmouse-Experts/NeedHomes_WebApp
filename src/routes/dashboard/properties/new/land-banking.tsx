@@ -16,7 +16,7 @@ import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useNavigate } from "@tanstack/react-router";
 import { uploadImage } from "@/api/imageApi";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import {
@@ -275,8 +275,13 @@ function RouteComponent() {
       );
       return response.data;
     },
-    onSuccess: () => {
-      nav({ to: "/dashboard/properties" });
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      nav({
+        to: "/dashboard/properties/$propertyId",
+        params: {
+          propertyId: data.data.id,
+        },
+      });
     },
   });
   const onSubmit = (data: LandBankingProperty) => {

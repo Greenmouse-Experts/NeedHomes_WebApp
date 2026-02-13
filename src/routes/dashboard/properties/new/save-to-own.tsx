@@ -145,8 +145,13 @@ function RouteComponent() {
       );
       return response.data;
     },
-    onSuccess: () => {
-      nav({ to: "/partners/properties" });
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      nav({
+        to: "/dashboard/properties/$propertyId",
+        params: {
+          propertyId: data.data.id,
+        },
+      });
     },
   });
 

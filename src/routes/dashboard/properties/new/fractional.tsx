@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   useForm,
   FormProvider,
@@ -15,7 +15,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
@@ -47,6 +47,7 @@ function RouteComponent() {
       premiumProperty: false,
     },
   });
+  const nav = useNavigate();
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
   const useImageProps = useImages();
@@ -100,7 +101,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-      const uploadedDocUrls = get_docs(docUploadProps);
+      const uploadedDocUrls = await get_docs(docUploadProps);
       console.log("Uploaded Doc URLs:", uploadedDocUrls);
 
       const payload: any = {
@@ -126,9 +127,18 @@ function RouteComponent() {
       );
       return response.data;
     },
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      nav({
+        to: "/dashboard/properties/$propertyId",
+        params: {
+          propertyId: data.data.id,
+        },
+      });
+    },
   });
 
   const onSubmit = (data: FractionalPropertyFormValues) => {
+    //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
       loading: "Creating fractional property...",
       success: extract_message,
@@ -222,9 +232,9 @@ function RouteComponent() {
                   render={({ field }) => (
                     <LocalSelect {...field} label="Exit Window">
                       <option value="MONTHLY">Monthly</option>
-                      <option value="QUARTERLY">Quarterly</option>
+                      <option value="QUATERLY">Quaterly</option>
                       <option value="ANNUALLY">Annually</option>
-                      <option value="MATURITY">At Maturity</option>
+                      <option value="AT_MATURITY">At Maturity</option>
                     </LocalSelect>
                   )}
                 />

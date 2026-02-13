@@ -17,17 +17,7 @@ import { extract_message } from "@/helpers/apihelpers";
 import apiClient from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SelectImage from "@/components/images/SelectImage";
-import {
-  Plus,
-  Trash2,
-  Home,
-  MapPin,
-  DollarSign,
-  Calendar,
-  FileText,
-  Video,
-  Layers,
-} from "lucide-react";
+import { Trash2, Layers } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import type { DocProps } from "@/types/form";
 import {
@@ -147,8 +137,13 @@ function RouteComponent() {
       );
       return response.data;
     },
-    onSuccess: () => {
-      nav({ to: "/partners/properties" });
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      nav({
+        to: "/dashboard/properties/$propertyId",
+        params: {
+          propertyId: data.data.id,
+        },
+      });
     },
   });
 
