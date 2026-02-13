@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi"; // Adjust path as needed
 import { toast } from "sonner";
-import { useAuth } from "@/store/authStore";
+import { useAuth, useKyc } from "@/store/authStore";
 import { useEffect } from "react";
 import SelectImage from "@/components/images/SelectImage";
 import { useSelectImage } from "@/helpers/images";
@@ -31,6 +31,7 @@ interface KycFormData {
 export default function KYCForm() {
   const [auth] = useAuth();
   const accountType = auth?.user?.accountType || "INDIVIDUAL";
+  const [kyc, setKyc] = useKyc();
 
   const {
     register,
@@ -69,6 +70,7 @@ export default function KYCForm() {
     if (kycData?.data.verification) {
       const verification = kycData.data.verification;
       console.log(verification);
+      setkyc(kyc.data);
       reset({
         idType: (verification.idType as KycFormData["idType"]) || "",
         address: verification.address || "",

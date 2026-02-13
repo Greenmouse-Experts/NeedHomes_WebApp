@@ -1,29 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  useForm,
-  FormProvider,
-  useFieldArray,
-  Controller,
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
-import UpdateImages from "@/components/images/UpdateImages";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
-import SelectImage from "@/components/images/SelectImage";
-import { Trash2, Layers } from "lucide-react";
+import { Trash2, Layers, Home } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import type { DocProps } from "@/types/form";
-import {
-  DocumentUpload,
-  useDocumentUpload,
-} from "../../-components/DocumentUpload";
+import { useDocumentUpload } from "../../-components/DocumentUpload";
 import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
 import { get_docs } from "./fractional";
