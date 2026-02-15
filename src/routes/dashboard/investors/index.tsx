@@ -192,7 +192,9 @@ function InvestorsPage() {
                     </div>
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        //@ts-ignore
                         investor.account_verification_status === "ACTIVE" ||
+                        //@ts-ignore
                         investor.account_verification_status === "VERIFIED"
                           ? "bg-green-50 text-green-700 border border-green-100"
                           : "bg-yellow-50 text-yellow-700 border border-yellow-100"
