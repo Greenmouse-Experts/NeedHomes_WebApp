@@ -6,6 +6,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import type { PROPERTY_TYPE } from "@/types/property";
 import PageLoader from "@/components/layout/PageLoader";
 import { toast } from "sonner";
+import type { ADMIN_PROPERTY_LISTING } from "@/types";
 
 export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
   component: PropertyDetailsPage,
@@ -14,9 +15,10 @@ export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
 function PropertyDetailsPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
+  const nav = navigate;
   const queryClient = useQueryClient();
 
-  const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
+  const query = useQuery<ApiResponse<ADMIN_PROPERTY_LISTING>>({
     queryKey: ["admin-properties", propertyId],
     queryFn: async () => {
       let resp = await apiClient.get("/properties/" + propertyId);
@@ -369,6 +371,7 @@ function PropertyDetailsPage() {
                               Platform Charge:
                             </span>
                             <span className="text-sm font-medium text-gray-900">
+                              {/*//@ts-ignore*/}
                               {property.systemCharges.platformChargePercentage}%
                             </span>
                           </div>
@@ -379,9 +382,42 @@ function PropertyDetailsPage() {
                         <Button
                           variant="primary"
                           className="w-full text-sm md:text-base"
-                          onClick={() =>
-                            navigate({ to: "/dashboard/properties/listed" })
-                          }
+                          onClick={() => {
+                            const item = property;
+
+                            switch (item.investmentModel) {
+                              case "CO_DEVELOPMENT":
+                                nav({
+                                  to: "/dashboard/properties/edit/$propertyId/co-dev",
+                                  params: { propertyId: item.id },
+                                });
+                                break;
+                              case "OUTRIGHT_PURCHASE":
+                                nav({
+                                  to: "/dashboard/properties/edit/$propertyId/outright",
+                                  params: { propertyId: item.id },
+                                });
+                                break;
+                              case "SAVE_TO_OWN":
+                                nav({
+                                  to: "/dashboard/properties/edit/$propertyId/save-to-own",
+                                  params: { propertyId: item.id },
+                                });
+                                break;
+                              case "LAND_BANKING":
+                                nav({
+                                  to: "/dashboard/properties/edit/$propertyId/land-bank",
+                                  params: { propertyId: item.id },
+                                });
+                                break;
+                              case "FRACTIONAL_OWNERSHIP":
+                                nav({
+                                  to: "/dashboard/properties/edit/$propertyId/fractional",
+                                  params: { propertyId: item.id },
+                                });
+                                break;
+                            }
+                          }}
                         >
                           Edit Property
                         </Button>
