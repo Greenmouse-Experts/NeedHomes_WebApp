@@ -24,6 +24,7 @@ import DefaultForm from "../../-components/DefaultForm";
 import {
   strip_fractional,
   strip_land_banking,
+  strip_save_to_own,
 } from "@/routes/dashboard/-components/form_cleaners";
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/save-to-own",
@@ -112,9 +113,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
-      const new_payload = strip_fractional(payload);
+      const new_payload = strip_save_to_own(payload);
       const response = await apiClient.patch(
-        `/admin/properties/${data.id}/fractional`,
+        `/admin/properties/${data.id}/save-to-own`,
         new_payload,
       );
       return response.data;
@@ -132,7 +133,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   const onSubmit = (data: SaveToOwnFormValues) => {
     //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
-      loading: "Creating fractional property...",
+      loading: "editing save-to-own property...",
       success: extract_message,
       error: (err) => extract_message(err) || "An error occurred.",
     });
