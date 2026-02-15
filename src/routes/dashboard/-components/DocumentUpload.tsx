@@ -1,34 +1,41 @@
 import { useState } from "react";
-import { UploadCloud, XCircle, FileText, ExternalLink } from "lucide-react";
+import {
+  UploadCloud,
+  XCircle,
+  FileText,
+  ExternalLink,
+  Eye,
+} from "lucide-react";
 
-interface Documents {
-  certificateOfOwnership?: File | string;
-  surveyPlan?: File | string;
-  transferOfOwnershipDocument?: File | string;
-  brochureFactSheet?: File | string;
+interface Documents<T = any> {
+  certificateOfOwnership?: T | File | string;
+  surveyPlanDocument?: T | File | string;
+  transferOfOwnershipDocument?: T | File | string;
+  brochure?: T | File | string;
 }
 
 export const DocumentUpload = (props: {
   useDocUpload: ReturnType<typeof useDocumentUpload>;
 }) => {
-  const { documents, handleFileChange, removeFile } = props.useDocUpload;
+  const { documents, handleFileChange, removeFile, prevDocs } =
+    props.useDocUpload;
 
   const documentTypes: Array<keyof Documents> = [
     "certificateOfOwnership",
-    "surveyPlan",
+    "surveyPlanDocument",
     "transferOfOwnershipDocument",
-    "brochureFactSheet",
+    "brochure",
   ];
 
   const getLabel = (docType: keyof Documents) => {
     switch (docType) {
       case "certificateOfOwnership":
         return "Certificate of Ownership";
-      case "surveyPlan":
-        return "Survey Plan";
+      case "surveyPlanDocument":
+        return "Survey Plan Document";
       case "transferOfOwnershipDocument":
         return "Transfer of Ownership Document";
-      case "brochureFactSheet":
+      case "brochure":
         return "Brochure / Fact Sheet";
       default:
         return "";
@@ -38,19 +45,34 @@ export const DocumentUpload = (props: {
   return (
     <div className="flex flex-col gap-6 fade p-6 border rounded-lg shadow-md bg-white">
       <h3 className="text-xl font-bold text-gray-800">Upload Documents</h3>
+      {/*{JSON.stringify(prevDocs.surveyPlanDocument)}*/}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {documentTypes.map((docType) => (
           <div
             key={docType}
             className="flex flex-col gap-2 p-3 fade border rounded-md bg-gray-50"
           >
-            <span className="text-sm font-medium text-gray-700">
-              {getLabel(docType)}:
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">
+                {getLabel(docType)}:
+              </span>
+              {prevDocs[docType] && (
+                <a
+                  href={prevDocs[docType] as string}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline"
+                >
+                  <Eye className="h-3.5 w-3.5" />
+                  Preview Previous
+                </a>
+              )}
+            </div>
             {documents[docType] ? (
               <div className="flex items-center justify-between gap-3 bg-white p-2 rounded-md border">
                 <div className="flex items-center gap-2 grow min-w-0">
                   <FileText className="h-5 w-5 text-blue-500 shrink-0" />
+
                   <span className="text-sm text-gray-800 truncate">
                     {typeof documents[docType] === "string"
                       ? (documents[docType] as string).split("/").pop()
@@ -101,7 +123,7 @@ export const DocumentUpload = (props: {
 
 export const useDocumentUpload = (prev?: Documents) => {
   const [documents, setDocuments] = useState<Documents>(prev || {});
-  const [prevDocs, setPrevDocs] = useState<Documents>(prev || {});
+  const [prevDocs, setPrevDocs] = useState<Documents<string>>(prev || {});
 
   const handleFileChange = (docType: keyof Documents, file?: File) => {
     setDocuments((prev) => ({
