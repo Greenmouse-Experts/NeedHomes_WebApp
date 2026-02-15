@@ -93,6 +93,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
+      console.log("data_received", structuredClone(data));
       let coverImageUrl = await get_cover_image(selectImageProps);
       if (!coverImageUrl) throw new Error("A cover image is required.");
       const uploadedGalleryUrls: string[] = [];
@@ -128,10 +129,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
               0,
             )
           : 0);
-
+      console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
       const payload = {
         ...data,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        // ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl, // Add uploaded video URL to the payload
@@ -140,8 +141,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+      console.log("payload", payload);
       const new_payload = strip_co_dev(payload);
-
+      console.log("new_payload", new_payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/codevelopment`,
         new_payload,
@@ -160,7 +162,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   const onSubmit = (data: CoDevelopmentFormValues) => {
     console.log(data);
     //@ts-ignore
-    toast.promise(mutation.mutateAsync(data), {
+    toast.promise(async () => await mutation.mutateAsync(data), {
       loading: "Creating property listing...",
       success: extract_message,
       error: (err) => extract_message(err) || "An error occurred.",

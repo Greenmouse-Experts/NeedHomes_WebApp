@@ -26,7 +26,6 @@ export const doc_helper = async (
   >;
 
   const uploaded_docs: Record<string, string> = {};
-
   for (const key of doc_keys) {
     const current_doc = documents[key];
     const old_doc = prevDocs[key];
@@ -42,18 +41,25 @@ export const doc_helper = async (
     }
   }
 
-  return uploaded_docs;
+  return {
+    certificateOfOwnership: uploaded_docs.certificateOfOwnership,
+    surveyPlan: uploaded_docs.surveyPlan,
+    transferOfOwnershipDocument: uploaded_docs.transferOfOwnershipDocument,
+    brochureFactSheet: uploaded_docs.brochureFactSheet,
+  };
 };
 
 export const stripped_unneeded = (data: Record<string, any>) => {
-  delete data.id;
-  delete data.createdAt;
-  delete data.updatedAt;
-  return data;
+  const copy = { ...data };
+  delete copy.id;
+  delete copy.createdAt;
+  delete copy.updatedAt;
+  return copy;
 };
 
 export const strip_co_dev = (data: Record<string, any>) => {
-  const cleaned = stripped_unneeded(data);
+  const cleaned = stripped_unneeded({ ...data });
+
   delete cleaned.investmentModel;
   delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
@@ -72,5 +78,6 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
   delete cleaned.coDevelopmentProgress;
+
   return cleaned;
 };
