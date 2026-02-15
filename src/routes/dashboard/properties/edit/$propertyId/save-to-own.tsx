@@ -2,16 +2,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
-import { Home, Image as Layers } from "lucide-react";
+import { Clock, Home, Image as Layers } from "lucide-react";
 import type { DocProps } from "@/types/form";
-import { uploadFile } from "@/api/fileApi";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_TYPE } from "@/types/property";
@@ -27,9 +25,8 @@ import {
   strip_fractional,
   strip_land_banking,
 } from "@/routes/dashboard/-components/form_cleaners";
-
 export const Route = createFileRoute(
-  "/dashboard/properties/edit/$propertyId/fractional",
+  "/dashboard/properties/edit/$propertyId/save-to-own",
 )({
   component: RouteComponent,
 });
@@ -37,21 +34,20 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { propertyId } = Route.useParams();
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
-    queryKey: ["admin-properties", propertyId],
+    queryKey: ["edit", propertyId],
     queryFn: async () => {
       let resp = await apiClient.get("/properties/" + propertyId);
       return resp.data;
     },
   });
-
   return (
     <>
       <PageLoader query={query}>
         {(data) => {
-          const form_data = data.data;
+          const formData = data.data;
           return (
             <>
-              <FormField defaultValue={form_data} />
+              <FormField defaultValue={formData} />
             </>
           );
         }}
@@ -60,12 +56,13 @@ function RouteComponent() {
   );
 }
 
-interface FractionalPropertyFormValues extends DocProps {
-  totalShares: number;
-  pricePerShare: number;
-  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "MATURITY";
-  minimumShares: number;
+interface SaveToOwnFormValues extends DocProps {
+  targetPropertyPrice: number;
+  // minimumSavingsAmount: number;
+  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  savingsDuration: number;
 }
+
 function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   const docUpload = useDocumentUpload(defaultValue as any);
   const videoUpload = useVideoUpload(defaultValue.videos);
@@ -87,7 +84,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     },
   });
   const mutation = useMutation({
-    mutationFn: async (data: FractionalPropertyFormValues) => {
+    mutationFn: async (data: SaveToOwnFormValues) => {
       let coverImageUrl = await get_cover_image(selectImageProps);
       if (!coverImageUrl) throw new Error("A cover image is required.");
       const allGallery = await gallery_helper(useImageProps);
@@ -132,7 +129,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     },
   });
 
-  const onSubmit = (data: FractionalPropertyFormValues) => {
+  const onSubmit = (data: SaveToOwnFormValues) => {
     //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
       loading: "Creating fractional property...",
@@ -140,18 +137,17 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
-
   return (
     <ThemeProvider>
-      <div className="mx-auto ">
-        <div className="bg-base-100 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
-          <div className="bg-primary p-6 text-primary-content">
+      <div className="mx-auto">
+        <div className="bg-base-200 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
+          <div className="bg-primary p-6 text-secondary-content">
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <Home size={24} />
-              Edit Fractional Ownership Property
+              Edit Save-to-Own Property
             </h1>
             <p className="opacity-80 text-sm">
-              Fill in details to list a fractional ownership offering.
+              Create a structured savings plan for prospective homeowners.
             </p>
           </div>
 
@@ -164,122 +160,59 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             mutation={mutation as any}
             onSubmit={onSubmit}
           >
-            <>
-              {/* 4. Fractional Share Details */}
-              <section className="space-y-6">
-                <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                    <Layers size={20} />
-                  </div>
-                  <h2 className="text-lg font-bold">
-                    4. Fractional Share Details
-                  </h2>
+            <section className="space-y-6">
+              <div className="flex items-center gap-2 pb-2 border-b border-base-200">
+                <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                  <Layers size={20} />
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Controller
-                    name="totalShares"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <SimpleInput
-                        {...field}
-                        label="Total Shares"
-                        type="number"
-                        onChange={(e) =>
-                          field.onChange(Number((e as any).target?.value))
-                        }
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="pricePerShare"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <SimpleInput
-                        {...field}
-                        label="Price Per Share"
-                        type="number"
-                        icon={<span>₦</span>}
-                        onChange={(e) =>
-                          field.onChange(Number((e as any).target?.value))
-                        }
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="minimumShares"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <SimpleInput
-                        {...field}
-                        label="Minimum Shares To Buy"
-                        type="number"
-                        onChange={(e) =>
-                          field.onChange(Number((e as any).target?.value))
-                        }
-                      />
-                    )}
-                  />
-                </div>
+                <h2 className="text-lg font-bold">4. Save To Own Details</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Controller
-                  name="exitWindow"
+                  name="targetPropertyPrice"
                   control={methods.control}
                   render={({ field }) => (
-                    <LocalSelect {...field} label="Exit Window">
+                    <SimpleInput
+                      {...field}
+                      label="Target Property Price"
+                      type="number"
+                      icon={<span>₦</span>}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  )}
+                />
+                <Controller
+                  name="savingsFrequency"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <LocalSelect {...field} label="Savings Frequency">
+                      <option value="DAILY">Daily</option>
+                      <option value="WEEKLY">Weekly</option>
                       <option value="MONTHLY">Monthly</option>
-                      <option value="QUATERLY">Quaterly</option>
-                      <option value="ANNUALLY">Annually</option>
-                      <option value="AT_MATURITY">At Maturity</option>
                     </LocalSelect>
                   )}
                 />
-              </section>
-              {/* 5. Investment-Specific Details */}
-            </>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Controller
+                  name="savingsDuration"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <SimpleInput
+                      {...field}
+                      label="Savings Duration (Months)"
+                      type="number"
+                      icon={<Clock size={16} />}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  )}
+                />
+              </div>
+            </section>
           </DefaultForm>
         </div>
       </div>
     </ThemeProvider>
   );
 }
-
-export const get_docs = async (
-  docUploadProps: ReturnType<typeof useDocumentUpload>,
-) => {
-  const uploadedDocUrls: Partial<DocProps> = {};
-  const docFiles = docUploadProps.documents;
-  console.log(docFiles);
-
-  if (docFiles.certificateOfOwnership) {
-    try {
-      const url = await uploadFile(docFiles.certificateOfOwnership);
-      if (url) uploadedDocUrls.certificate = url;
-    } catch (e) {}
-  }
-
-  if (docFiles.surveyPlanDocument) {
-    try {
-      // @ts-expect-error
-
-      const url = await uploadFile(docFiles.surveyPlan);
-      if (url) uploadedDocUrls.surveyPlanDocument = url;
-    } catch (e) {}
-  }
-
-  if (docFiles.transferOfOwnershipDocument) {
-    try {
-      const url = await uploadFile(docFiles.transferOfOwnershipDocument);
-      if (url) uploadedDocUrls.transferDocument = url;
-    } catch (e) {}
-  }
-
-  if (docFiles.brochure) {
-    try {
-      // @ts-expect-error
-
-      const url = await uploadFile(docFiles.brochureFactSheet);
-      if (url) uploadedDocUrls.brochure = url;
-    } catch (e) {}
-  }
-  return uploadedDocUrls;
-};
