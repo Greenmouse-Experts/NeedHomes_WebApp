@@ -1,17 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  useForm,
-  FormProvider,
-  useFieldArray,
-  Controller,
-  useFormContext,
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
-import UpdateImages from "@/components/images/UpdateImages";
-import { useImages, useSelectImage } from "@/helpers/images";
-import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
@@ -19,19 +9,16 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
-import { Trash2, Home, Image as ImageIcon, Layers } from "lucide-react";
+import { Home, Image as Layers } from "lucide-react";
 import type { DocProps } from "@/types/form";
 import DefaultForm from "../-components/DefaultForm";
 import { uploadFile } from "@/api/fileApi";
+import { useImages } from "@/helpers/images";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
   component: RouteComponent,
 });
-
-interface AdditionalFee {
-  label: string;
-  amount: number;
-}
 
 interface FractionalPropertyFormValues extends DocProps {
   totalShares: number;
@@ -264,7 +251,7 @@ export const get_docs = async (
     } catch (e) {}
   }
 
-  if (docFiles.surveyPlan) {
+  if (docFiles.surveyPlanDocument) {
     try {
       // @ts-expect-error
 
@@ -276,13 +263,12 @@ export const get_docs = async (
   if (docFiles.transferOfOwnershipDocument) {
     try {
       // @ts-expect-error
-
       const url = await uploadFile(docFiles.transferOfOwnershipDocument);
       if (url) uploadedDocUrls.transferDocument = url;
     } catch (e) {}
   }
 
-  if (docFiles.brochureFactSheet) {
+  if (docFiles.brochure) {
     try {
       // @ts-expect-error
 

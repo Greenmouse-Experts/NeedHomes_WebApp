@@ -106,6 +106,7 @@ import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/da
 import { Route as PartnerRecoverForgotPasswordResetIndexRouteImport } from './routes/partner/recover/forgot-password/reset/index'
 import { Route as DashboardPropertiesEditPropertyIdOutrightRouteImport } from './routes/dashboard/properties/edit/$propertyId/outright'
 import { Route as DashboardPropertiesEditPropertyIdLandBankRouteImport } from './routes/dashboard/properties/edit/$propertyId/land-bank'
+import { Route as DashboardPropertiesEditPropertyIdFractionalRouteImport } from './routes/dashboard/properties/edit/$propertyId/fractional'
 import { Route as DashboardPropertiesEditPropertyIdCoDevRouteImport } from './routes/dashboard/properties/edit/$propertyId/co-dev'
 
 const VerifyPartnerRoute = VerifyPartnerRouteImport.update({
@@ -636,6 +637,12 @@ const DashboardPropertiesEditPropertyIdLandBankRoute =
     path: '/edit/$propertyId/land-bank',
     getParentRoute: () => DashboardPropertiesRouteRoute,
   } as any)
+const DashboardPropertiesEditPropertyIdFractionalRoute =
+  DashboardPropertiesEditPropertyIdFractionalRouteImport.update({
+    id: '/edit/$propertyId/fractional',
+    path: '/edit/$propertyId/fractional',
+    getParentRoute: () => DashboardPropertiesRouteRoute,
+  } as any)
 const DashboardPropertiesEditPropertyIdCoDevRoute =
   DashboardPropertiesEditPropertyIdCoDevRouteImport.update({
     id: '/edit/$propertyId/co-dev',
@@ -739,6 +746,7 @@ export interface FileRoutesByFullPath {
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
   '/partners/properties/$propertyId/': typeof PartnersPropertiesPropertyIdIndexRoute
   '/dashboard/properties/edit/$propertyId/co-dev': typeof DashboardPropertiesEditPropertyIdCoDevRoute
+  '/dashboard/properties/edit/$propertyId/fractional': typeof DashboardPropertiesEditPropertyIdFractionalRoute
   '/dashboard/properties/edit/$propertyId/land-bank': typeof DashboardPropertiesEditPropertyIdLandBankRoute
   '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
@@ -823,6 +831,7 @@ export interface FileRoutesByTo {
   '/partner/recover/forgot-password': typeof PartnerRecoverForgotPasswordIndexRoute
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdIndexRoute
   '/dashboard/properties/edit/$propertyId/co-dev': typeof DashboardPropertiesEditPropertyIdCoDevRoute
+  '/dashboard/properties/edit/$propertyId/fractional': typeof DashboardPropertiesEditPropertyIdFractionalRoute
   '/dashboard/properties/edit/$propertyId/land-bank': typeof DashboardPropertiesEditPropertyIdLandBankRoute
   '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/partner/recover/forgot-password/reset': typeof PartnerRecoverForgotPasswordResetIndexRoute
@@ -924,6 +933,7 @@ export interface FileRoutesById {
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
   '/partners/properties/$propertyId/': typeof PartnersPropertiesPropertyIdIndexRoute
   '/dashboard/properties/edit/$propertyId/co-dev': typeof DashboardPropertiesEditPropertyIdCoDevRoute
+  '/dashboard/properties/edit/$propertyId/fractional': typeof DashboardPropertiesEditPropertyIdFractionalRoute
   '/dashboard/properties/edit/$propertyId/land-bank': typeof DashboardPropertiesEditPropertyIdLandBankRoute
   '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
@@ -1026,6 +1036,7 @@ export interface FileRouteTypes {
     | '/partner/recover/forgot-password/'
     | '/partners/properties/$propertyId/'
     | '/dashboard/properties/edit/$propertyId/co-dev'
+    | '/dashboard/properties/edit/$propertyId/fractional'
     | '/dashboard/properties/edit/$propertyId/land-bank'
     | '/dashboard/properties/edit/$propertyId/outright'
     | '/partner/recover/forgot-password/reset/'
@@ -1110,6 +1121,7 @@ export interface FileRouteTypes {
     | '/partner/recover/forgot-password'
     | '/partners/properties/$propertyId'
     | '/dashboard/properties/edit/$propertyId/co-dev'
+    | '/dashboard/properties/edit/$propertyId/fractional'
     | '/dashboard/properties/edit/$propertyId/land-bank'
     | '/dashboard/properties/edit/$propertyId/outright'
     | '/partner/recover/forgot-password/reset'
@@ -1210,6 +1222,7 @@ export interface FileRouteTypes {
     | '/partner/recover/forgot-password/'
     | '/partners/properties/$propertyId/'
     | '/dashboard/properties/edit/$propertyId/co-dev'
+    | '/dashboard/properties/edit/$propertyId/fractional'
     | '/dashboard/properties/edit/$propertyId/land-bank'
     | '/dashboard/properties/edit/$propertyId/outright'
     | '/partner/recover/forgot-password/reset/'
@@ -1934,6 +1947,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPropertiesEditPropertyIdLandBankRouteImport
       parentRoute: typeof DashboardPropertiesRouteRoute
     }
+    '/dashboard/properties/edit/$propertyId/fractional': {
+      id: '/dashboard/properties/edit/$propertyId/fractional'
+      path: '/edit/$propertyId/fractional'
+      fullPath: '/dashboard/properties/edit/$propertyId/fractional'
+      preLoaderRoute: typeof DashboardPropertiesEditPropertyIdFractionalRouteImport
+      parentRoute: typeof DashboardPropertiesRouteRoute
+    }
     '/dashboard/properties/edit/$propertyId/co-dev': {
       id: '/dashboard/properties/edit/$propertyId/co-dev'
       path: '/edit/$propertyId/co-dev'
@@ -2018,6 +2038,7 @@ interface DashboardPropertiesRouteRouteChildren {
   DashboardPropertiesInvestmentsIndexRoute: typeof DashboardPropertiesInvestmentsIndexRoute
   DashboardPropertiesPromotionsIndexRoute: typeof DashboardPropertiesPromotionsIndexRoute
   DashboardPropertiesEditPropertyIdCoDevRoute: typeof DashboardPropertiesEditPropertyIdCoDevRoute
+  DashboardPropertiesEditPropertyIdFractionalRoute: typeof DashboardPropertiesEditPropertyIdFractionalRoute
   DashboardPropertiesEditPropertyIdLandBankRoute: typeof DashboardPropertiesEditPropertyIdLandBankRoute
   DashboardPropertiesEditPropertyIdOutrightRoute: typeof DashboardPropertiesEditPropertyIdOutrightRoute
 }
@@ -2035,6 +2056,8 @@ const DashboardPropertiesRouteRouteChildren: DashboardPropertiesRouteRouteChildr
       DashboardPropertiesPromotionsIndexRoute,
     DashboardPropertiesEditPropertyIdCoDevRoute:
       DashboardPropertiesEditPropertyIdCoDevRoute,
+    DashboardPropertiesEditPropertyIdFractionalRoute:
+      DashboardPropertiesEditPropertyIdFractionalRoute,
     DashboardPropertiesEditPropertyIdLandBankRoute:
       DashboardPropertiesEditPropertyIdLandBankRoute,
     DashboardPropertiesEditPropertyIdOutrightRoute:
