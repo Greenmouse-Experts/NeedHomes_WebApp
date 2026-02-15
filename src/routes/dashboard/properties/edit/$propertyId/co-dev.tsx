@@ -68,14 +68,21 @@ function RouteComponent() {
 }
 
 function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
-  const docUpload = useDocumentUpload();
-  const videoUpload = useVideoUpload();
+  const docUpload = useDocumentUpload(defaultValue as any);
+  const videoUpload = useVideoUpload(defaultValue.videos);
   const nav = useNavigate();
-  const useImageProps = useImages();
+  const useImageProps = useImages(
+    defaultValue.galleryImages.map((url) => {
+      return {
+        url: url,
+        path: url,
+      };
+    }),
+  );
   //@ts-ignore
 
   const selectImageProps = useSelectImage(null);
-  const form = useForm<CoDevelopmentFormValues>({
+  const form = useForm<any>({
     defaultValues: {
       ...defaultValue,
     },
