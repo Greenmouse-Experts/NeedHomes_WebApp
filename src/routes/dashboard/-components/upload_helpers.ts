@@ -3,6 +3,7 @@ import type { useImages, useSelectImage } from "@/helpers/images";
 import type { useDocumentUpload } from "./DocumentUpload";
 import { uploadFile } from "@/api/fileApi";
 import type { useVideoUpload } from "./VideoUpload";
+import type { DocProps } from "@/types/form";
 
 export const get_cover_image = async (
   selectImageProps: ReturnType<typeof useSelectImage>,
@@ -51,36 +52,19 @@ export const doc_helper = async (
 };
 
 export const stripped_unneeded = (data: Record<string, any>) => {
-  const copy = { ...data };
+  const copy = { ...data } as DocProps;
   delete copy.id;
   delete copy.createdAt;
   delete copy.updatedAt;
+  const new_add_fees = copy.additionalFees.map((item) => {
+    return {
+      label: item.label,
+      amount: item.amount,
+    };
+  });
+  copy.additionalFees = new_add_fees;
+  console.log(copy, "copy");
   return copy;
-};
-
-export const strip_co_dev = (data: Record<string, any>) => {
-  const cleaned = stripped_unneeded({ ...data });
-
-  delete cleaned.investmentModel;
-  delete cleaned.paymentOption;
-  delete cleaned.installmentDuration;
-  delete cleaned.totalShares;
-  delete cleaned.pricePerShare;
-  delete cleaned.minimumShares;
-  delete cleaned.exitWindow;
-  delete cleaned.plotSize;
-  delete cleaned.pricePerPlot;
-  delete cleaned.holdingPeriod;
-  delete cleaned.buyBackOption;
-  delete cleaned.targetPropertyPrice;
-  delete cleaned.savingsFrequency;
-  delete cleaned.savingsDuration;
-  delete cleaned.published;
-  delete cleaned.deletedAt;
-  delete cleaned.systemCharges;
-  delete cleaned.coDevelopmentProgress;
-
-  return cleaned;
 };
 
 export const video_helper = async (

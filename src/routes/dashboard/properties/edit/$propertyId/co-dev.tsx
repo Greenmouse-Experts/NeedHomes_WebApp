@@ -22,10 +22,9 @@ import {
   doc_helper,
   gallery_helper,
   get_cover_image,
-  strip_co_dev,
-  stripped_unneeded,
   video_helper,
 } from "@/routes/dashboard/-components/upload_helpers";
+import { strip_co_dev } from "@/routes/dashboard/-components/form_cleaners";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/co-dev",
@@ -97,15 +96,11 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     mutationFn: async (data: CoDevelopmentFormValues) => {
       let coverImageUrl = await get_cover_image(selectImageProps);
       if (!coverImageUrl) throw new Error("A cover image is required.");
-
-      const uploadedGalleryUrls = gallery_helper(useImageProps);
-
+      const allGallery = await gallery_helper(useImageProps);
       // Handle Document Uploads
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
-
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-
       const totalPrice =
         Number(data.basePrice) +
         (data.additionalFees
