@@ -51,11 +51,17 @@ apiClient.interceptors.response.use(
         });
 
         const newAccessToken = data.data.accessToken;
-        if (!newAccessToken) {
+        const newRefreshToken = data.data.refreshToken;
+
+        if (!newAccessToken || !newRefreshToken) {
           throw new Error("New access token not received.");
         }
 
-        set_user_value({ ...user, accessToken: newAccessToken });
+        set_user_value({
+          ...user,
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        });
 
         // Update header and retry
         original.headers.Authorization = `Bearer ${newAccessToken}`;
