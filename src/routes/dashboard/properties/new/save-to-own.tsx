@@ -1,10 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  useForm,
-  FormProvider,
-  Controller,
-  useFieldArray,
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
@@ -14,7 +9,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { useVideoUpload } from "../../-components/VideoUpload";
 import { useDocumentUpload } from "../../-components/DocumentUpload";
@@ -31,7 +26,7 @@ export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
 
 interface SaveToOwnFormValues extends DocProps {
   targetPropertyPrice: number;
-  minimumSavingsAmount: number;
+  // minimumSavingsAmount: number;
   savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
   savingsDuration: number;
 }
@@ -46,7 +41,6 @@ function RouteComponent() {
       premiumProperty: false,
       completionDate: "",
       targetPropertyPrice: 0,
-      minimumSavingsAmount: 0,
       availableUnits: 1,
       savingsFrequency: "MONTHLY",
       savingsDuration: 12,
@@ -60,9 +54,6 @@ function RouteComponent() {
       videos: "",
     },
   });
-
-  const { images, setPrev, newImages, setNew } = useImages([]);
-  const selectProps = useSelectImage(null as any);
   const nav = useNavigate();
   const docUpload = useDocumentUpload();
   const videoUpload = useVideoUpload();
@@ -70,7 +61,7 @@ function RouteComponent() {
   //@ts-ignore
   const selectImageProps = useSelectImage(null);
   const mutation = useMutation({
-    mutationFn: async (data: OutrightPropertyFormValues) => {
+    mutationFn: async (data: SaveToOwnFormValues) => {
       let coverImageUrl = "";
       const selectProps = selectImageProps;
       const { newImages, images } = useImageProps;
@@ -156,6 +147,7 @@ function RouteComponent() {
   });
 
   const onSubmit = (data: SaveToOwnFormValues) => {
+    //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
       loading: "Creating save-to-own listing...",
       success: extract_message,
@@ -208,22 +200,6 @@ function RouteComponent() {
                   )}
                 />
                 <Controller
-                  name="minimumSavingsAmount"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <SimpleInput
-                      {...field}
-                      label="Minimum Savings Amount"
-                      type="number"
-                      icon={<span>₦</span>}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
                   name="savingsFrequency"
                   control={methods.control}
                   render={({ field }) => (
@@ -234,6 +210,9 @@ function RouteComponent() {
                     </LocalSelect>
                   )}
                 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Controller
                   name="savingsDuration"
                   control={methods.control}
