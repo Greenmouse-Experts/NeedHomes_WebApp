@@ -3,17 +3,7 @@ import { useState } from "react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import {
-  Search,
-  Plus,
-  Filter,
-  Printer,
-  Eye,
-  Edit,
-  Upload,
-  Download,
-  Trash2,
-} from "lucide-react";
+import { Search, Plus, Filter, Printer } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, {
   type ApiResponse,
@@ -141,7 +131,7 @@ function ListedPropertiesPage() {
               params: { propertyId: item.id },
             });
             break;
-          case "FRACTIONAL":
+          case "FRACTIONAL_OWNERSHIP":
             nav({
               to: "/dashboard/properties/edit/$propertyId/fractional",
               params: { propertyId: item.id },
