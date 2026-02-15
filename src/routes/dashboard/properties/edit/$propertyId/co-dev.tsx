@@ -20,9 +20,11 @@ import type { PROPERTY_TYPE } from "@/types/property";
 import PageLoader from "@/components/layout/PageLoader";
 import {
   doc_helper,
+  gallery_helper,
   get_cover_image,
   strip_co_dev,
   stripped_unneeded,
+  video_helper,
 } from "@/routes/dashboard/-components/upload_helpers";
 
 export const Route = createFileRoute(
@@ -93,33 +95,16 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
-      console.log("data_received", structuredClone(data));
       let coverImageUrl = await get_cover_image(selectImageProps);
       if (!coverImageUrl) throw new Error("A cover image is required.");
-      const uploadedGalleryUrls: string[] = [];
-      const { newImages, images } = useImageProps;
-      if (newImages && newImages.length > 0) {
-        for (const img of newImages) {
-          const uploaded = await uploadImage(img);
-          if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
-        }
-      }
-      const allGallery = [
-        ...(images || []).map((img) => img.url),
-        ...uploadedGalleryUrls,
-      ];
+
+      const uploadedGalleryUrls = gallery_helper(useImageProps);
 
       // Handle Document Uploads
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
 
       // Handle Video Upload
-      let videoUrl = "";
-      if (videoUpload.videoFile) {
-        const uploaded = await uploadImage(videoUpload.videoFile); // Assuming uploadImage can handle video files
-        if (uploaded.data?.url) {
-          videoUrl = uploaded.data.url;
-        }
-      }
+      let videoUrl = await video_helper(videoUpload);
 
       const totalPrice =
         Number(data.basePrice) +
@@ -132,18 +117,16 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
       const payload = {
         ...data,
-        // ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        videos: videoUrl, // Add uploaded video URL to the payload
+        videos: videoUrl,
         totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
       };
-      console.log("payload", payload);
       const new_payload = strip_co_dev(payload);
-      console.log("new_payload", new_payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/codevelopment`,
         new_payload,

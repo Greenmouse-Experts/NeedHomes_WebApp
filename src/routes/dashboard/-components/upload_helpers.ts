@@ -1,7 +1,8 @@
 import { uploadImage } from "@/api/imageApi";
-import type { useSelectImage } from "@/helpers/images";
+import type { useImages, useSelectImage } from "@/helpers/images";
 import type { useDocumentUpload } from "./DocumentUpload";
 import { uploadFile } from "@/api/fileApi";
+import type { useVideoUpload } from "./VideoUpload";
 
 export const get_cover_image = async (
   selectImageProps: ReturnType<typeof useSelectImage>,
@@ -80,4 +81,35 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.coDevelopmentProgress;
 
   return cleaned;
+};
+
+export const video_helper = async (
+  videoUpload: ReturnType<typeof useVideoUpload>,
+) => {
+  let videoUrl;
+  if (videoUpload.videoFile) {
+    const uploaded = await uploadImage(videoUpload.videoFile); // Assuming uploadImage can handle video files
+    if (uploaded.data?.url) {
+      return (videoUrl = uploaded.data.url);
+    }
+  }
+  return videoUrl;
+};
+
+export const gallery_helper = async (
+  useImageProps: ReturnType<typeof useImages>,
+) => {
+  let uploadedGalleryUrls: string[] = [];
+  const { newImages, images } = useImageProps;
+  if (newImages && newImages.length > 0) {
+    for (const img of newImages) {
+      const uploaded = await uploadImage(img);
+      if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
+    }
+  }
+  const allGallery = [
+    ...(images || []).map((img) => img.url),
+    ...uploadedGalleryUrls,
+  ];
+  return allGallery;
 };
