@@ -44,3 +44,33 @@ export const doc_helper = async (
 
   return uploaded_docs;
 };
+
+export const stripped_unneeded = (data: Record<string, any>) => {
+  delete data.id;
+  delete data.createdAt;
+  delete data.updatedAt;
+  return data;
+};
+
+export const strip_co_dev = (data: Record<string, any>) => {
+  const cleaned = stripped_unneeded(data);
+  delete cleaned.investmentModel;
+  delete cleaned.paymentOption;
+  delete cleaned.installmentDuration;
+  delete cleaned.totalShares;
+  delete cleaned.pricePerShare;
+  delete cleaned.minimumShares;
+  delete cleaned.exitWindow;
+  delete cleaned.plotSize;
+  delete cleaned.pricePerPlot;
+  delete cleaned.holdingPeriod;
+  delete cleaned.buyBackOption;
+  delete cleaned.targetPropertyPrice;
+  delete cleaned.savingsFrequency;
+  delete cleaned.savingsDuration;
+  delete cleaned.published;
+  delete cleaned.deletedAt;
+  delete cleaned.systemCharges;
+  delete cleaned.coDevelopmentProgress;
+  return cleaned;
+};

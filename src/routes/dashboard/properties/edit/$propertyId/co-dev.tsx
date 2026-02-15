@@ -21,6 +21,8 @@ import PageLoader from "@/components/layout/PageLoader";
 import {
   doc_helper,
   get_cover_image,
+  strip_co_dev,
+  stripped_unneeded,
 } from "@/routes/dashboard/-components/upload_helpers";
 
 export const Route = createFileRoute(
@@ -138,10 +140,11 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+      const new_payload = strip_co_dev(payload);
 
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/codevelopment`,
-        payload,
+        new_payload,
       );
       return response.data;
     },
