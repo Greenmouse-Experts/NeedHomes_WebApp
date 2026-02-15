@@ -1,3 +1,21 @@
+import type { DocProps } from "@/types/form";
+
+export const stripped_unneeded = (data: Record<string, any>) => {
+  const copy = { ...data } as DocProps;
+  delete copy.id;
+  delete copy.createdAt;
+  delete copy.updatedAt;
+  const new_add_fees = copy.additionalFees.map((item) => {
+    return {
+      label: item.label,
+      amount: item.amount,
+    };
+  });
+  copy.additionalFees = new_add_fees;
+  console.log(copy, "copy");
+  return copy;
+};
+
 export const strip_co_dev = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
 
