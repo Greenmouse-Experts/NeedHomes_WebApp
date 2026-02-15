@@ -117,6 +117,12 @@ function ListedPropertiesPage() {
       action: (item: ADMIN_PROPERTY_LISTING, nav) => {
         console.log(item);
         switch (item.investmentModel) {
+          case "CO_DEVELOPMENT":
+            nav({
+              to: "/dashboard/properties/edit/$propertyId/co-dev",
+              params: { propertyId: item.id },
+            });
+            break;
           case "OUTRIGHT_PURCHASE":
             nav({
               to: "/dashboard/properties/edit/$propertyId/outright",
@@ -125,19 +131,19 @@ function ListedPropertiesPage() {
             break;
           case "SAVE_TO_OWN":
             nav({
-              to: "/dashboard/properties/$propertyId",
+              to: "/dashboard/properties/edit/$propertyId/save-to-own",
               params: { propertyId: item.id },
             });
             break;
-          case "INVESTMENT":
+          case "LAND_BANKING":
             nav({
-              to: "/dashboard/properties/$propertyId",
+              to: "/dashboard/properties/edit/$propertyId/land-bank",
               params: { propertyId: item.id },
             });
             break;
           case "FRACTIONAL":
             nav({
-              to: "/dashboard/properties/edit/$propertyId/outright",
+              to: "/dashboard/properties/edit/$propertyId/fractional",
               params: { propertyId: item.id },
             });
             break;
