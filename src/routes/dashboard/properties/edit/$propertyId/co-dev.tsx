@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { useForm, Controller } from "react-hook-form";
-import { MutationCache, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
-import UpdateImages from "@/components/images/UpdateImages";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { uploadImage } from "@/api/imageApi";
@@ -14,13 +12,16 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { Home, TrendingUp } from "lucide-react";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import type { DocProps } from "@/types/form";
-import { uploadFile } from "@/api/fileApi";
 import { useNavigate } from "@tanstack/react-router";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import DefaultForm from "../../-components/DefaultForm";
 import type { PROPERTY_TYPE } from "@/types/property";
 import PageLoader from "@/components/layout/PageLoader";
+import {
+  doc_helper,
+  get_cover_image,
+} from "@/routes/dashboard/-components/upload_helpers";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/co-dev",
@@ -81,7 +82,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   );
   //@ts-ignore
 
-  const selectImageProps = useSelectImage(null);
+  const selectImageProps = useSelectImage(defaultValue.coverImage);
   const form = useForm<any>({
     defaultValues: {
       ...defaultValue,
@@ -90,16 +91,8 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
-      let coverImageUrl = "";
-      // Handle Cover Image Upload
-      if (selectImageProps.image) {
-        const uploaded = await uploadImage(selectImageProps.image);
-        coverImageUrl = uploaded.data.url;
-      } else if (selectImageProps.prev) {
-        coverImageUrl = selectImageProps.prev;
-      }
+      let coverImageUrl = await get_cover_image(selectImageProps);
       if (!coverImageUrl) throw new Error("A cover image is required.");
-      // Handle Gallery Uploads
       const uploadedGalleryUrls: string[] = [];
       const { newImages, images } = useImageProps;
       if (newImages && newImages.length > 0) {
@@ -114,31 +107,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       ];
 
       // Handle Document Uploads
-      const uploadedDocUrls: Partial<DocProps> = {};
-      for (const docType in docUpload.documents) {
-        const file =
-          docUpload.documents[docType as keyof typeof docUpload.documents];
-        if (file) {
-          const uploaded = await uploadImage(file as any); // Assuming uploadImage can handle any file type and returns a URL
-          if (uploaded.data?.url) {
-            // Map the document type from useDocumentUpload to DocProps keys
-            switch (docType) {
-              case "certificateOfOwnership":
-                uploadedDocUrls.certificate = uploaded.data.url;
-                break;
-              case "surveyPlan":
-                uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
-                break;
-              case "transferOfOwnershipDocument":
-                uploadedDocUrls.transferDocument = uploaded.data.url;
-                break;
-              case "brochureFactSheet":
-                uploadedDocUrls.brochure = uploaded.data.url;
-                break;
-            }
-          }
-        }
-      }
+      const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
 
       // Handle Video Upload
       let videoUrl = "";
@@ -170,8 +139,8 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           : null,
       };
 
-      const response = await apiClient.post(
-        "/admin/properties/codevelopment",
+      const response = await apiClient.patch(
+        `/admin/properties/${data.id}/codevelopment`,
         payload,
       );
       return response.data;
@@ -187,6 +156,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   });
   const onSubmit = (data: CoDevelopmentFormValues) => {
     console.log(data);
+    //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
       loading: "Creating property listing...",
       success: extract_message,
