@@ -92,7 +92,7 @@ function ListedPropertiesPage() {
     {
       key: "createdAt",
       label: "Date Created",
-      render: (value) => <span>value</span>,
+      render: (value) => <span>{new Date(value).toLocaleString()}</span>,
     },
   ];
 
