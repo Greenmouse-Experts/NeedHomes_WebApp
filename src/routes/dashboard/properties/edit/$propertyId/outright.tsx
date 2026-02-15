@@ -3,7 +3,10 @@ import PageLoader from "@/components/layout/PageLoader";
 import { extract_message } from "@/helpers/apihelpers";
 import { useImages, useSelectImage } from "@/helpers/images";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
-import { strip_fractional } from "@/routes/dashboard/-components/form_cleaners";
+import {
+  strip_fractional,
+  strip_outright,
+} from "@/routes/dashboard/-components/form_cleaners";
 import {
   doc_helper,
   gallery_helper,
@@ -135,7 +138,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
-      const new_payload = strip_fractional(payload);
+      const new_payload = strip_outright(payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/outright`,
         new_payload,
