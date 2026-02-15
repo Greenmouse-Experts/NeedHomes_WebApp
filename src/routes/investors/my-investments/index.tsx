@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { TrendingUp, Filter, ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
+import InvStatistics from "./-components/InvStatistics";
 
 export const Route = createFileRoute("/investors/my-investments/")({
   component: RouteComponent,
@@ -196,6 +197,7 @@ function RouteComponent() {
           Add Investment
         </button>
       </div>
+      <InvStatistics />
 
       {/* Investments Table */}
       <PageLoader query={query}>

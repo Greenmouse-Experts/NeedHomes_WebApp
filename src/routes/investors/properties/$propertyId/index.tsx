@@ -60,8 +60,14 @@ function PropertyDetailPage() {
       });
       return resp.data;
     },
-    onSuccess: () => {
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
       closeModal();
+      navigate({
+        to: "/investors/my-investments/$investmentId",
+        params: {
+          investmentId: data.data.id,
+        },
+      });
     },
   });
 
@@ -148,7 +154,10 @@ function PropertyDetailPage() {
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
                 onClick={() => {
-                  methods.setValue("amountPaid", totalPrice);
+                  methods.setValue(
+                    "amountPaid",
+                    property.minimumInvestment || totalPrice,
+                  );
                   showModal();
                 }}
                 disabled={mutate.isPending}
