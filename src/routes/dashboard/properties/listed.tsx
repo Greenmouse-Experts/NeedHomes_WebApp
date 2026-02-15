@@ -17,6 +17,7 @@ import CustomTable, {
 } from "@/components/tables/CustomTable";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/dashboard/properties/listed")({
   component: ListedPropertiesPage,
@@ -28,12 +29,13 @@ function ListedPropertiesPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const props = usePagination();
 
   const handleAddProperty = () => {
     navigate({ to: "/dashboard/properties/new" });
   };
   const query = useQuery<ApiResponseV2<ADMIN_PROPERTY_LISTING[]>>({
-    queryKey: ["listings-admin"],
+    queryKey: ["listings-admin", props.page],
     queryFn: async () => {
       let url = "admin/properties";
       if (activeTab === "published") {
@@ -41,7 +43,11 @@ function ListedPropertiesPage() {
       } else if (activeTab === "unpublished") {
         url += "?published=false";
       }
-      let resp = await apiClient.get(url);
+      let resp = await apiClient.get(url, {
+        params: {
+          page: props.page,
+        },
+      });
       return resp.data;
     },
   });
@@ -176,102 +182,108 @@ function ListedPropertiesPage() {
   ];
 
   return (
-    <PageLoader query={query}>
-      {(data) => (
-        <div className="bg-white rounded-lg shadow-sm">
-          {/* Header Section */}
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">Listed Properties</h2>
-              <Button
-                onClick={handleAddProperty}
-                className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Add a New Properties
-              </Button>
-            </div>
-
-            {/* Filter Tabs */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setActiveTab("all")}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                  activeTab === "all"
-                    ? "bg-[var(--color-orange)] text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                All Property
-              </button>
-              <button
-                onClick={() => setActiveTab("published")}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                  activeTab === "published"
-                    ? "bg-[var(--color-orange)] text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                Publish Properties
-              </button>
-              <button
-                onClick={() => setActiveTab("unpublished")}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                  activeTab === "unpublished"
-                    ? "bg-[var(--color-orange)] text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                Unpublished Properties
-              </button>
-            </div>
+    <>
+      <section className="bg-base-100 ring fade shadow rounded-t-box">
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold">Listed Properties</h2>
+            <Button
+              onClick={handleAddProperty}
+              className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add a New Properties
+            </Button>
           </div>
 
-          {/* Controls Bar */}
-          <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <Filter className="w-4 h-4" />
-                Filter
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <Printer className="w-4 h-4" />
-                Print
-              </Button>
-              {/* <Button variant="outline" size="sm">
-                Action
-              </Button> */}
-            </div>
+          {/* Filter Tabs */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setActiveTab("all")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                activeTab === "all"
+                  ? "bg-[var(--color-orange)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              All Property
+            </button>
+            <button
+              onClick={() => setActiveTab("published")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                activeTab === "published"
+                  ? "bg-[var(--color-orange)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Publish Properties
+            </button>
+            <button
+              onClick={() => setActiveTab("unpublished")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                activeTab === "unpublished"
+                  ? "bg-[var(--color-orange)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Unpublished Properties
+            </button>
           </div>
-          {/* Table */}
-
-          <CustomTable
-            //@ts-ignore
-            data={data.data.data}
-            columns={columns}
-            actions={actions}
-            ring={false}
-          />
         </div>
-      )}
-    </PageLoader>
+
+        {/* Controls Bar */}
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Filter className="w-4 h-4" />
+              Filter
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Printer className="w-4 h-4" />
+              Print
+            </Button>
+            {/* <Button variant="outline" size="sm">
+              Action
+            </Button> */}
+          </div>
+        </div>
+      </section>
+      <PageLoader query={query}>
+        {(data) => (
+          <div className="bg-white rounded-lg shadow-sm">
+            {/* Header Section */}
+
+            {/* Table */}
+
+            <CustomTable
+              //@ts-ignore
+              data={data.data.data}
+              columns={columns}
+              actions={actions}
+              ring={false}
+              paginationProps={props}
+            />
+          </div>
+        )}
+      </PageLoader>
+    </>
   );
 }
