@@ -251,8 +251,6 @@ export const get_docs = async (
 
   if (docFiles.certificateOfOwnership) {
     try {
-      // @ts-expect-error
-
       const url = await uploadFile(docFiles.certificateOfOwnership);
       if (url) uploadedDocUrls.certificate = url;
     } catch (e) {}
@@ -269,7 +267,6 @@ export const get_docs = async (
 
   if (docFiles.transferOfOwnershipDocument) {
     try {
-      // @ts-expect-error
       const url = await uploadFile(docFiles.transferOfOwnershipDocument);
       if (url) uploadedDocUrls.transferDocument = url;
     } catch (e) {}

@@ -1,46 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  useForm,
-  FormProvider,
-  useFormContext,
-  useFieldArray,
-  Controller,
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useNavigate } from "@tanstack/react-router";
-import { uploadImage } from "@/api/imageApi";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
-import {
-  Plus,
-  Trash2,
-  MapPin,
-  DollarSign,
-  Calendar,
-  Home,
-  Image as ImageIcon,
-  Briefcase,
-  Info,
-  FileText,
-  Video,
-} from "lucide-react";
+import { Home, Image as ImageIcon, Briefcase } from "lucide-react";
 import type { DocProps } from "@/types/form";
-import {
-  DocumentUpload,
-  useDocumentUpload,
-} from "@/routes/dashboard/-components/DocumentUpload";
-import VideoUpload, {
-  useVideoUpload,
-} from "@/routes/dashboard/-components/VideoUpload";
-import { uploadFile } from "@/api/fileApi";
+import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
+import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import type { PROPERTY_TYPE } from "@/types/property";
 import PageLoader from "@/components/layout/PageLoader";
 import DefaultForm from "../../-components/DefaultForm";
-import { get_docs } from "../../new/fractional";
 import {
   doc_helper,
   gallery_helper,
