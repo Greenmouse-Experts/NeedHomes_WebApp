@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Select } from "@/components/ui/Select";
 import AdminKycForm from "@/components/AdminKycForm";
+import AdminBankDetails from "@/components/AdminBankDetails";
 
 export const Route = createFileRoute("/dashboard/investors/$investorId/kyc")({
   component: InvestorKYCPage,
@@ -125,68 +126,9 @@ function InvestorKYCPage() {
 
       {/* Bank Details Tab */}
       {activeTab === "bank" && (
-        <div className="max-w-3xl">
-          <h2 className="text-xl font-semibold mb-6">Bank Details</h2>
-
-          <div className="space-y-6">
-            {/* Account Number */}
-            <div className="space-y-2">
-              <Label htmlFor="accountNumber">Account Number</Label>
-              <Input
-                id="accountNumber"
-                value={bankDetails.accountNumber}
-                readOnly
-                className="bg-gray-50"
-              />
-            </div>
-
-            {/* Account Name */}
-            <div className="space-y-2">
-              <Label htmlFor="accountName">Account Name</Label>
-              <Input
-                id="accountName"
-                value={bankDetails.accountName}
-                readOnly
-                className="bg-gray-50"
-              />
-            </div>
-
-            {/* Bank Name */}
-            <div className="space-y-2">
-              <Label htmlFor="bankName">Bank Name</Label>
-              <Select
-                id="bankName"
-                options={bankOptions}
-                value={bankDetails.bankName}
-                onChange={(e) =>
-                  setBankDetails((prev) => ({
-                    ...prev,
-                    bankName: e.target.value,
-                  }))
-                }
-                className="bg-gray-50"
-              />
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-4 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                className="px-12"
-                onClick={() =>
-                  navigate({
-                    to: "/dashboard/investors/$investorId",
-                    params: { investorId },
-                  })
-                }
-              >
-                Back
-              </Button>
-            </div>
-          </div>
-        </div>
+        <>
+          <AdminBankDetails id={investorId} />
+        </>
       )}
     </div>
   );
