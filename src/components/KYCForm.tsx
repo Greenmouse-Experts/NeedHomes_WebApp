@@ -109,7 +109,8 @@ export default function KYCForm() {
     },
     onError: (error) => {
       toast.error(
-        extract_message(error) || "Failed to submit KYC. Please try again.",
+        extract_message(error as any) ||
+          "Failed to submit KYC. Please try again.",
       );
     },
   });
