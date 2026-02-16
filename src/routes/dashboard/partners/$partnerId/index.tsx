@@ -124,11 +124,11 @@ function PartnerDetailsPage() {
                             </button>
                           }
                         >
-                          <DropdownMenuItem>Edit Partner</DropdownMenuItem>
+                          {/*<DropdownMenuItem>Edit Partner</DropdownMenuItem>*/}
                           <DropdownMenuItem>Suspend Partner</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
+                          {/*<DropdownMenuItem className="text-red-600">
                             Delete Partner
-                          </DropdownMenuItem>
+                          </DropdownMenuItem>*/}
                         </DropdownMenu>
                       </div>
                     </div>
