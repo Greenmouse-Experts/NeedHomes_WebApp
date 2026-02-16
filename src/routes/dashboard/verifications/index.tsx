@@ -7,6 +7,7 @@ import Modal from "@/components/modals/DialogModal";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
 import { extract_message } from "@/helpers/apihelpers";
+import SearchBar from "@/routes/-components/Searchbar";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
 import type { VERIFICATION_REQUEST } from "@/types";
@@ -134,7 +135,11 @@ function RouteComponent() {
   const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
     queryKey: ["verifications-admin"],
     queryFn: async () => {
-      let resp = await apiClient.get("admin/verifications");
+      let resp = await apiClient.get("admin/verifications", {
+        params: {
+          search: "desto4",
+        },
+      });
       return resp.data;
     },
   });
@@ -279,6 +284,9 @@ function RouteComponent() {
             <p className="text-base-content/60">
               Manage and review user identity verification submissions.
             </p>
+          </div>
+          <div>
+            <SearchBar />
           </div>
           <PageLoader query={query}>
             {(resp) => {
