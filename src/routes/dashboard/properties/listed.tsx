@@ -66,7 +66,9 @@ function ListedPropertiesPage() {
       );
     },
     onError: (error) => {
-      toast.error(extract_message(error) || "Failed to update property status");
+      toast.error(
+        extract_message(error as any) || "Failed to update property status",
+      );
     },
   });
 
