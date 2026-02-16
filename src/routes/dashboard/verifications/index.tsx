@@ -132,12 +132,13 @@ function RouteComponent() {
     null,
   );
 
+  const [search, setSearch] = useState<null | string>("");
   const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
-    queryKey: ["verifications-admin"],
+    queryKey: ["verifications-admin", search],
     queryFn: async () => {
       let resp = await apiClient.get("admin/verifications", {
         params: {
-          search: "desto4",
+          search: search,
         },
       });
       return resp.data;
@@ -286,7 +287,7 @@ function RouteComponent() {
             </p>
           </div>
           <div>
-            <SearchBar />
+            <SearchBar value={search} onChange={setSearch} />
           </div>
           <PageLoader query={query}>
             {(resp) => {

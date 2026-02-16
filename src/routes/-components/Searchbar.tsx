@@ -12,17 +12,18 @@ export default function SearchBar({ value, onChange }: any) {
   return (
     <ThemeProvider className=" mb-4">
       <form
+        className="flex"
         onSubmit={form.handleSubmit((data) => {
           onChange(data.search);
         })}
       >
         <input
-          className="input input-lg"
+          className="input md:input-lg"
           {...form.register("search")}
           placeholder="search email..."
         />
         <button
-          className="btn ml-2 btn-primary btn-lg btn-square"
+          className="btn ml-2 btn-primary md:btn-lg btn-square"
           type="submit"
         >
           <SearchIcon />
