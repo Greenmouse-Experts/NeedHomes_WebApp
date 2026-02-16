@@ -177,6 +177,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             </p>
           </div>
           <DefaultForm
+            update
             docUpload={docUpload}
             videoUpload={videoUpload}
             useImagesProps={useImageProps}
