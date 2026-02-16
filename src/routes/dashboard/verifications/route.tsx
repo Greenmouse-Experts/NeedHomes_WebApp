@@ -8,7 +8,7 @@ export const Route = createFileRoute("/dashboard/verifications")({
 function RouteComponent() {
   return (
     //@ts-ignore
-    <DashboardLayout>
+    <DashboardLayout title="Super Admin Dashboard">
       <Outlet />
     </DashboardLayout>
   );
