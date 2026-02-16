@@ -1,20 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Search, Plus, Filter, Printer } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import apiClient, {
-  type ApiResponse,
-  type ApiResponseV2,
-} from "@/api/simpleApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
 import PageLoader from "@/components/layout/PageLoader";
-import CustomTable, {
-  type columnType,
-  type Actions,
-} from "@/components/tables/CustomTable";
+import CustomTable, { type columnType } from "@/components/tables/CustomTable";
+import type { Actions } from "@/components/tables/pop-up";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { usePagination } from "@/helpers/pagination";
@@ -34,21 +28,45 @@ function ListedPropertiesPage() {
   const handleAddProperty = () => {
     navigate({ to: "/dashboard/properties/new" });
   };
+
   const query = useQuery<ApiResponseV2<ADMIN_PROPERTY_LISTING[]>>({
-    queryKey: ["listings-admin", props.page],
+    queryKey: ["listings-admin", props.page, activeTab],
     queryFn: async () => {
       let url = "admin/properties/all";
+      const params: any = { page: props.page };
       if (activeTab === "published") {
-        url += "?published=true";
+        params.published = true;
       } else if (activeTab === "unpublished") {
-        url += "?published=false";
+        params.published = false;
       }
-      let resp = await apiClient.get(url, {
-        params: {
-          page: props.page,
-        },
+      let resp = await apiClient.get(url, { params });
+      return resp.data;
+    },
+  });
+
+  const publishMutation = useMutation({
+    mutationFn: async ({
+      id,
+      published,
+    }: {
+      id: string;
+      published: boolean;
+    }) => {
+      const resp = await apiClient.patch(`/admin/properties/${id}/published`, {
+        published,
       });
       return resp.data;
+    },
+    onSuccess: (_, variables) => {
+      query.refetch();
+      toast.success(
+        variables.published
+          ? "Property published successfully"
+          : "Property unpublished successfully",
+      );
+    },
+    onError: (error) => {
+      toast.error(extract_message(error) || "Failed to update property status");
     },
   });
 
@@ -110,8 +128,7 @@ function ListedPropertiesPage() {
     {
       key: "edit",
       label: "Edit",
-      action: (item: ADMIN_PROPERTY_LISTING, nav) => {
-        console.log(item);
+      action: (item: ADMIN_PROPERTY_LISTING, nav: any) => {
         switch (item.investmentModel) {
           case "CO_DEVELOPMENT":
             nav({
@@ -147,9 +164,28 @@ function ListedPropertiesPage() {
       },
     },
     {
+      key: "toggle_publish",
+      label: "Toggle Publish",
+      action: (item: ADMIN_PROPERTY_LISTING) => {
+        //@ts-ignore
+        toast.promise(
+          //@ts-ignore
+          publishMutation.mutateAsync({
+            id: item.id,
+            published: !item.published,
+          }),
+          {
+            loading: "Changing status...",
+            success: extract_message,
+            error: extract_message,
+          },
+        );
+      },
+    },
+    {
       key: "delete",
       label: "Delete",
-      action: (item: ADMIN_PROPERTY_LISTING, nav) => {
+      action: (item: ADMIN_PROPERTY_LISTING) => {
         toast.promise(
           async () => {
             let resp = await apiClient.delete(`/properties/${item.id}`);
@@ -157,7 +193,7 @@ function ListedPropertiesPage() {
           },
           {
             loading: "Deleting...",
-            success: (data) => {
+            success: () => {
               query.refetch();
               return "Property deleted successfully";
             },
@@ -166,19 +202,6 @@ function ListedPropertiesPage() {
         );
       },
     },
-    // {
-    //   key: "toggle_publish",
-    //   label: "Toggle Publish",
-    //   action: (item: ADMIN_PROPERTY_LISTING, nav) => {
-    //     const action = item.published ? "unpublish" : "publish";
-    //     if (
-    //       confirm(`Are you sure you want to ${action} "${item.propertyTitle}"?`)
-    //     ) {
-    //       console.log(`${action} property:`, item.id);
-    //       // TODO: Implement actual publish/unpublish logic
-    //     }
-    //   },
-    // },
   ];
 
   return (
@@ -189,20 +212,19 @@ function ListedPropertiesPage() {
             <h2 className="text-xl font-semibold">Listed Properties</h2>
             <Button
               onClick={handleAddProperty}
-              className="bg-[var(--color-orange)] hover:bg-[var(--color-orange-dark)] text-white flex items-center gap-2"
+              className="bg-(--color-orange) hover:bg-(--color-orange-dark) text-white flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add a New Properties
             </Button>
           </div>
 
-          {/* Filter Tabs */}
           <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("all")}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 activeTab === "all"
-                  ? "bg-[var(--color-orange)] text-white"
+                  ? "bg-(--color-orange) text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -212,7 +234,7 @@ function ListedPropertiesPage() {
               onClick={() => setActiveTab("published")}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 activeTab === "published"
-                  ? "bg-[var(--color-orange)] text-white"
+                  ? "bg-(--color-orange) text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -222,7 +244,7 @@ function ListedPropertiesPage() {
               onClick={() => setActiveTab("unpublished")}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 activeTab === "unpublished"
-                  ? "bg-[var(--color-orange)] text-white"
+                  ? "bg-(--color-orange) text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -231,7 +253,6 @@ function ListedPropertiesPage() {
           </div>
         </div>
 
-        {/* Controls Bar */}
         <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -260,19 +281,12 @@ function ListedPropertiesPage() {
               <Printer className="w-4 h-4" />
               Print
             </Button>
-            {/* <Button variant="outline" size="sm">
-              Action
-            </Button> */}
           </div>
         </div>
       </section>
       <PageLoader query={query}>
         {(data) => (
           <div className="bg-white rounded-lg shadow-sm">
-            {/* Header Section */}
-
-            {/* Table */}
-
             <CustomTable
               //@ts-ignore
               data={data.data.data}
