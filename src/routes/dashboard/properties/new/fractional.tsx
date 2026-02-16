@@ -13,7 +13,7 @@ import { Home, Image as Layers } from "lucide-react";
 import type { DocProps } from "@/types/form";
 import DefaultForm from "../-components/DefaultForm";
 import { uploadFile } from "@/api/fileApi";
-import { useImages } from "@/helpers/images";
+import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
