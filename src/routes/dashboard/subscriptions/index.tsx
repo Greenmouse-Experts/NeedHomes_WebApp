@@ -115,7 +115,6 @@ function RouteComponent() {
   ];
 
   const columns = [
-    { key: "name", label: "Name" },
     { key: "type", label: "Type" },
     { key: "price", label: "Price" },
     { key: "validity", label: "Validity (Months)" },
