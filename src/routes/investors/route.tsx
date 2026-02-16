@@ -4,9 +4,17 @@ import { useState } from "react";
 import { useLocation } from "@tanstack/react-router";
 import InvHeader from "./-components/InvHeader";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import { get_kyc_value, refresh_kyc } from "@/store/authStore";
 
 export const Route = createFileRoute("/investors")({
   component: LayoutComponent,
+  beforeLoad: () => {
+    const val = get_kyc_value();
+    if (!val) return;
+    if (val.account_verification_status != "VERIFIED") {
+      refresh_kyc();
+    }
+  },
 });
 
 function LayoutComponent() {

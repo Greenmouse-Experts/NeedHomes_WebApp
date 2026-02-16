@@ -2,9 +2,10 @@ import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai/react";
 import { getDefaultStore } from "jotai/vanilla";
 import type { USER, USER_KYC } from "@/types";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import { set } from "zod";
 
 export interface AUTHRECORD {
   user: USER;
@@ -82,6 +83,11 @@ const auth_logout = async () => {
   return resp.data;
 };
 
+export const refresh_kyc = async () => {
+  let resp = await apiClient.get<ApiResponse>("/users/profile");
+  set_kyc_value(resp.data.data as any);
+  return resp.data;
+};
 export const logout = () => {
   toast.promise(auth_logout, {
     loading: "loading",

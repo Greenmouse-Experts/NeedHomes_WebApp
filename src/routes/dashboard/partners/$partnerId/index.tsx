@@ -427,6 +427,7 @@ function PartnerDetailsPage() {
                       <TableBody>
                         <TableRow>
                           <TableCell
+                            //@ts-ignore
                             colSpan={8}
                             className="text-center py-8 text-gray-500 text-xs"
                           >
