@@ -4,6 +4,7 @@ import {
   FormProvider,
   useFieldArray,
   useForm,
+  useFormContext,
   type UseFormProps,
 } from "react-hook-form";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
@@ -32,10 +33,9 @@ import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import UpdateImages from "@/simpleComps/inputs/UpdateImages";
 import type { useMutation } from "@tanstack/react-query";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+
 function AdditionalFeesManager() {
-  const { control, register } = useForm({
-    /* This is just to satisfy the context if needed, but we use the parent context */
-  });
+  const { control, register } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "additionalFees",
