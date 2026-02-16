@@ -130,10 +130,10 @@ function RouteComponent() {
   //       videos: "",
   //     };
 
-  //     if (useDocUpload.documents.certificateOfOwnership) {
+  //     if (useDocUpload.documents.certificate) {
   //       const uploaded = await apiClient.post(
   //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.certificateOfOwnership },
+  //         { file: useDocUpload.documents.certificate },
   //         { headers: { "Content-Type": "multipart/form-data" } },
   //       );
   //       uploadedDocUrls.certificate = uploaded.data.url;

@@ -94,7 +94,7 @@ function RouteComponent() {
           if (uploaded.data?.url) {
             // Map the document type from useDocumentUpload to DocProps keys
             switch (docType) {
-              case "certificateOfOwnership":
+              case "certificate":
                 uploadedDocUrls.certificate = uploaded.data.url;
                 break;
               case "surveyPlan":

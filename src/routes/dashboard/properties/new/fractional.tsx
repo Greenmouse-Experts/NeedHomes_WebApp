@@ -242,9 +242,9 @@ export const get_docs = async (
   const docFiles = docUploadProps.documents;
   console.log(docFiles);
 
-  if (docFiles.certificateOfOwnership) {
+  if (docFiles.certificate) {
     try {
-      const url = await uploadFile(docFiles.certificateOfOwnership);
+      const url = await uploadFile(docFiles.certificate);
       if (url) uploadedDocUrls.certificate = url;
     } catch (e) {}
   }

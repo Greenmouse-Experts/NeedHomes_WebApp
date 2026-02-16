@@ -44,7 +44,7 @@ export const doc_helper = async (
   }
 
   return {
-    certificateOfOwnership: uploaded_docs.certificateOfOwnership,
+    certificate: uploaded_docs.certificate,
     surveyPlan: uploaded_docs.surveyPlan,
     transferOfOwnershipDocument: uploaded_docs.transferOfOwnershipDocument,
     brochureFactSheet: uploaded_docs.brochureFactSheet,

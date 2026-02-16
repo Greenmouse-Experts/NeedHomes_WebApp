@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 interface Documents<T = any> {
-  certificateOfOwnership?: T | File | string;
+  certificate?: T | File | string;
   surveyPlanDocument?: T | File | string;
   transferOfOwnershipDocument?: T | File | string;
   brochure?: T | File | string;
@@ -21,7 +21,7 @@ export const DocumentUpload = (props: {
     props.useDocUpload;
 
   const documentTypes: Array<keyof Documents> = [
-    "certificateOfOwnership",
+    "certificate",
     "surveyPlanDocument",
     "transferOfOwnershipDocument",
     "brochure",
@@ -29,7 +29,7 @@ export const DocumentUpload = (props: {
 
   const getLabel = (docType: keyof Documents) => {
     switch (docType) {
-      case "certificateOfOwnership":
+      case "certificate":
         return "Certificate of Ownership";
       case "surveyPlanDocument":
         return "Survey Plan Document";
