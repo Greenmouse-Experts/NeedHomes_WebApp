@@ -37,7 +37,7 @@ function ListedPropertiesPage() {
   const query = useQuery<ApiResponseV2<ADMIN_PROPERTY_LISTING[]>>({
     queryKey: ["listings-admin", props.page],
     queryFn: async () => {
-      let url = "admin/properties";
+      let url = "admin/properties/all";
       if (activeTab === "published") {
         url += "?published=true";
       } else if (activeTab === "unpublished") {
