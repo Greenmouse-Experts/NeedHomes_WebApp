@@ -11,6 +11,7 @@ export const Route = createFileRoute("/investors")({
   beforeLoad: () => {
     const val = get_kyc_value();
     if (!val) return;
+
     if (val.account_verification_status != "VERIFIED") {
       refresh_kyc();
     }

@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { show_logout, useAuth } from "@/store/authStore";
+import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import { Link } from "@tanstack/react-router";
 import { Bell, CheckCircle2, Clock, Menu, XCircle } from "lucide-react";
 
@@ -98,8 +98,8 @@ export default function InvHeader({
 }
 
 const VerifiedPill = () => {
-  const [user] = useAuth();
-  const verificationStatus = user?.user.account_verification_status;
+  const [kyc] = useKyc();
+  const verificationStatus = kyc?.account_verification_status;
   if (!verificationStatus || verificationStatus != "VERIFIED") {
     return (
       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 badge whitespace-nowrap badge-error badge-xs badge-soft ring z-10">

@@ -85,7 +85,7 @@ const auth_logout = async () => {
 
 export const refresh_kyc = async () => {
   let resp = await apiClient.get<ApiResponse>("/users/profile");
-  set_kyc_value(resp.data.data as any);
+  set_kyc_value(resp.data.data);
   return resp.data;
 };
 export const logout = () => {
