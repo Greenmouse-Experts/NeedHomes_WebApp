@@ -42,9 +42,9 @@ export default function PartnerListCard({ item }: { item: PARTNER }) {
           >
             View Details
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+          {/*<DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
             Edit
-          </DropdownMenuItem>
+          </DropdownMenuItem>*/}
           {/*<DropdownMenuItem className="hover:bg-gray-100 cursor-pointer text-red-600">
             Delete
           </DropdownMenuItem>*/}
