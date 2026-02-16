@@ -39,34 +39,29 @@ export default function PatHeader({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 shrink-0">
-          {/*<div className="hidden lg:block relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Inpu
-              placeholder="Enter keyword"
-              className="pl-10 w-64 border-gray-300 text-sm"
-            />
-          </div>*/}
+        <div className="flex pr-3 items-center gap-2 md:gap-3 shrink-0">
           <div className="relative">
-            <Link to="/investors/notifications">
+            <Link to="/partners/notifications">
               {" "}
               <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
               <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0"></Badge>
             </Link>
           </div>
           <ThemeProvider>
-            <div className="dropdown dropdown-end">
-              <button className="btn btn-circle">
-                <SimpleAvatar url={img_url} alt={"U"} className="!size-8" />
-                {/*<Avatar className="w-8 h-8 md:w-10 md:h-10">
-                  <AvatarImage src={img_url} />
-                  <AvatarFallback className="text-xs">AD</AvatarFallback>
-                </Avatar>*/}
+            <div className="dropdown dropdown-end ">
+              <button className="btn btn-circle  p-0 overflow-visible">
+                <div className="relative flex justify-center">
+                  <Avatar className="w-8 h-8 md:w-10 md:h-10">
+                    <AvatarImage src={img_url} />
+                  </Avatar>
+                  <VerifiedPill />
+                </div>
               </button>
-              <ul className="menu bg-base-100  shadow ring fade rounded-xl p-2 dropdown-content ">
+              <ul className="menu bg-base-100 shadow ring fade rounded-xl p-2 dropdown-content">
                 <li>
                   <Link to="/partners/settings">Profile</Link>
                 </li>
+
                 <li
                   onMouseDown={() => {
                     show_logout();
@@ -82,3 +77,14 @@ export default function PatHeader({
     </>
   );
 }
+
+const VerifiedPill = () => {
+  const [user] = useAuth();
+  const verificationStatus = user?.user.account_verification_status;
+
+  return (
+    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 badge whitespace-nowrap badge-success badge-xs badge-soft ring z-10">
+      {verificationStatus === "VERIFIED" ? "Verified" : "Not Verified"}
+    </div>
+  );
+};

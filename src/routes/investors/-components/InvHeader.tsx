@@ -37,7 +37,7 @@ export default function InvHeader({
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200 p-2.5 md:p-3 lg:p-4 lg:py-3 flex items-center justify-between sticky top-0">
+      <header className="bg-white border-b border-gray-200 p-3 flex items-center justify-between sticky top-0">
         <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
           <button className="lg:hidden p-1.5 md:p-2 hover:bg-gray-100 rounded-lg shrink-0">
             <label
@@ -58,7 +58,7 @@ export default function InvHeader({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="flex pr-3 items-center gap-2 md:gap-3 shrink-0">
           <div className="relative">
             <Link to="/investors/notifications">
               {" "}
@@ -67,15 +67,13 @@ export default function InvHeader({
             </Link>
           </div>
           <ThemeProvider>
-            <div className="dropdown dropdown-end">
-              <button className="btn btn-circle relative p-0 overflow-visible">
-                <Avatar className="w-8 h-8 md:w-10 md:h-10">
-                  <AvatarImage src={img_url} />
-                </Avatar>
-                <div className="absolute -bottom-1 -right-1 bg-white rounded-full">
-                  {getStatusIcon()}
-
-                  {user?.user.isEmailVerified}
+            <div className="dropdown dropdown-end ">
+              <button className="btn btn-circle  p-0 overflow-visible">
+                <div className="relative flex justify-center">
+                  <Avatar className="w-8 h-8 md:w-10 md:h-10">
+                    <AvatarImage src={img_url} />
+                  </Avatar>
+                  <VerifiedPill />
                 </div>
               </button>
               <ul className="menu bg-base-100 shadow ring fade rounded-xl p-2 dropdown-content">
@@ -98,3 +96,14 @@ export default function InvHeader({
     </>
   );
 }
+
+const VerifiedPill = () => {
+  const [user] = useAuth();
+  const verificationStatus = user?.user.account_verification_status;
+
+  return (
+    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 badge whitespace-nowrap badge-success badge-xs badge-soft ring z-10">
+      {verificationStatus === "VERIFIED" ? "Verified" : "Not Verified"}
+    </div>
+  );
+};
