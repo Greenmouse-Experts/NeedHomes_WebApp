@@ -1,7 +1,4 @@
-import apiClient, {
-  type ApiResponse,
-  type ApiResponseV2,
-} from "@/api/simpleApi";
+import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
@@ -131,13 +128,14 @@ function RouteComponent() {
   const [selectedKyc, setSelectedKyc] = useState<VERIFICATION_REQUEST | null>(
     null,
   );
-
+  const [status, setStatus] = useState<string | null>(null);
   const [search, setSearch] = useState<null | string>("");
   const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
-    queryKey: ["verifications-admin", search],
+    queryKey: ["verifications-admin", search, status],
     queryFn: async () => {
       let resp = await apiClient.get("admin/verifications", {
         params: {
+          status: status,
           search: search,
         },
       });
@@ -276,6 +274,13 @@ function RouteComponent() {
     },
   ];
 
+  const tabs = [
+    { label: "All", value: null },
+    { label: "Pending", value: "PENDING" },
+    { label: "Verified", value: "VERIFIED" },
+    { label: "Rejected", value: "REJECTED" },
+  ];
+
   return (
     <ThemeProvider>
       <>
@@ -286,8 +291,21 @@ function RouteComponent() {
               Manage and review user identity verification submissions.
             </p>
           </div>
-          <div>
-            <SearchBar value={search} onChange={setSearch} />
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div className="tabs tabs-boxed w-fit">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.label}
+                  className={`tab ${status === tab.value ? "tab-active" : ""}`}
+                  onClick={() => setStatus(tab.value)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <div className="w-full md:w-72">
+              <SearchBar value={search} onChange={setSearch} />
+            </div>
           </div>
           <PageLoader query={query}>
             {(resp) => {
