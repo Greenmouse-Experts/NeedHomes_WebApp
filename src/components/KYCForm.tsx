@@ -103,7 +103,8 @@ export default function KYCForm() {
       apiClient
         .post(`kyc/submit?accountType=${accountType}`, data)
         .then((res) => res.data),
-    onSuccess: (data) => {
+    onSuccess: (data: ApiResponse) => {
+      setKyc(data.data.verification);
       toast.success(data.message || "KYC submitted successfully!");
     },
     onError: (error) => {
