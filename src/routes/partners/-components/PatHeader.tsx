@@ -81,7 +81,13 @@ export default function PatHeader({
 const VerifiedPill = () => {
   const [user] = useAuth();
   const verificationStatus = user?.user.account_verification_status;
-
+  if (!verificationStatus || verificationStatus != "VERIFIED") {
+    return (
+      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 badge whitespace-nowrap badge-error badge-xs badge-soft ring z-10">
+        {verificationStatus === "VERIFIED" ? "Verified" : "Not Verified"}
+      </div>
+    );
+  }
   return (
     <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 badge whitespace-nowrap badge-success badge-xs badge-soft ring z-10">
       {verificationStatus === "VERIFIED" ? "Verified" : "Not Verified"}
