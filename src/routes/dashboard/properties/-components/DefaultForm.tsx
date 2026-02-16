@@ -103,6 +103,7 @@ export default function DefaultForm<T = any>({
   children,
   videoUpload,
   docUpload,
+  update,
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -113,6 +114,7 @@ export default function DefaultForm<T = any>({
   children: React.ReactNode;
   videoUpload: ReturnType<typeof useVideoUpload>;
   docUpload: ReturnType<typeof useDocumentUpload>;
+  update?: boolean;
 }) {
   const methods = form;
 
@@ -291,7 +293,10 @@ export default function DefaultForm<T = any>({
             <AdditionalFeesManager />
           </section>
           <section className="space-y-6 ">{children}</section>
-          <PublishButton mutation={mutation} title="Publish" />
+          <PublishButton
+            mutation={mutation}
+            title={`${update ? "Update" : "Publish"}`}
+          />
           {/* 4. Investment-Specific Details */}
         </form>
       </FormProvider>
