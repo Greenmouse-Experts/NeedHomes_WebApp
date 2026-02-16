@@ -260,7 +260,7 @@ export default function AdminKycForm({ id }: { id: string }) {
                 className="bg-brand-orange hover:bg-brand-orange/90 text-white px-8 font-bold shadow-lg shadow-brand-orange/20"
                 disabled={
                   verifyMutation.isPending ||
-                  kycResponse?.data.kycStatus === "VERIFIED"
+                  kycResponse?.data.verification.status === "VERIFIED"
                 }
                 onClick={() => verifyMutation.mutate("APPROVED")}
               >
