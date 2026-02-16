@@ -134,7 +134,7 @@ function InvestorDetailsPage() {
                           </button>
                         }
                       >
-                        <DropdownMenuItem>Edit Investor</DropdownMenuItem>
+                        {/*<DropdownMenuItem>Edit Investor</DropdownMenuItem>*/}
                         <DropdownMenuItem>Suspend Investor</DropdownMenuItem>
                       </DropdownMenu>
                     </div>
