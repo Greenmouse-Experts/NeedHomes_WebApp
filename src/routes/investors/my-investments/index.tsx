@@ -8,6 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TrendingUp, Filter, ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
 import InvStatistics from "./-components/InvStatistics";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/investors/my-investments/")({
   component: RouteComponent,
@@ -192,10 +193,14 @@ function RouteComponent() {
           )}
         </div>
 
-        <button className="flex items-center gap-2 px-4 py-2 bg-(--color-orange) text-white rounded-lg hover:bg-orange-600 transition-colors">
+        <Link
+          to="/investors/properties"
+          viewTransition
+          className="flex items-center gap-2 px-4 py-2 bg-(--color-orange) text-white rounded-lg hover:bg-orange-600 transition-colors"
+        >
           <Plus className="w-4 h-4" />
           Add Investment
-        </button>
+        </Link>
       </div>
       <InvStatistics />
 
