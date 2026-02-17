@@ -1,18 +1,18 @@
 import { Menu } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 import { usePopper } from "react-popper";
 import Portal from "./Portal";
 import { useNavigate } from "@tanstack/react-router"; // Import useNavigate
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-export type Actions = {
+export type Actions<T = any> = {
   key: string;
   label: string;
-  action: (item: any, nav: ReturnType<typeof useNavigate>) => any;
+  action: (item: T, nav: ReturnType<typeof useNavigate>) => any;
+  render?: (item: T) => ReactNode | string;
 };
 type currentIndex = number;
-type item = any;
-export default function PopUp(props: {
-  actions: Actions[];
+export default function PopUp<T>(props: {
+  actions: Actions<T>[];
   item: any;
   currentIndex: currentIndex | null;
   setIndex: (index: number | null) => void;
@@ -103,7 +103,7 @@ export default function PopUp(props: {
                     onClick={() => action.action(props.item, nav)}
                     className="text-xs"
                   >
-                    {action.label}
+                    {action.render ? action.render(props.item) : action.label}
                   </a>
                 </li>
               ))}

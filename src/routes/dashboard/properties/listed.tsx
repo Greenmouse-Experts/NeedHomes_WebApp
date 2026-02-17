@@ -183,6 +183,9 @@ function ListedPropertiesPage() {
           },
         );
       },
+      render: (item: ADMIN_PROPERTY_LISTING) => {
+        return <>{item.published ? "Publish" : "Unpublish"}</>;
+      },
     },
     {
       key: "delete",

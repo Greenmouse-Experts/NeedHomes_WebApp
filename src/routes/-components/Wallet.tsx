@@ -10,7 +10,8 @@ import WalletSkeleton from "./WalletSkeleton";
 import { useModal } from "@/store/modals";
 import PageLoader from "@/components/layout/PageLoader";
 import { extract_message } from "@/helpers/apihelpers";
-
+import { PaystackButton } from "react-paystack";
+import { usePaystackPayment } from "react-paystack";
 interface WalletTransaction {
   id: string;
   walletId: string;
@@ -34,6 +35,24 @@ interface WalletData {
 }
 
 export default function UserWallet() {
+  const onSuccess = (reference) => {
+    toast.success("Payment successful");
+    // Implementation for whatever you want to do with reference and after success call.
+    console.log(reference);
+  };
+
+  // you can call this function anything
+  const onClose = () => {
+    console.log("closed");
+  };
+  const config = {
+    reference: new Date().getTime().toString(),
+    email: "user@example.com",
+    amount: 20000, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    publicKey: "pk_test_dsdfghuytfd2345678gvxxxxxxxxxx",
+  };
+  const payStack_key = import.meta.env.VITE_PAYSTACK_KEY;
+  const initializePayment = usePaystackPayment({} as any);
   const [auth] = useAuth();
   const queryClient = useQueryClient();
   const userID = auth?.user?.id;
@@ -66,6 +85,8 @@ export default function UserWallet() {
       }>,
     ) => {
       if (data.data.authorization_url) {
+        //@paystack checkout
+        //
         window.open(data.data.authorization_url, "_blank", "noreferrer");
       }
       queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
