@@ -9,7 +9,7 @@ export const Route = createFileRoute("/dashboard")({
     if (!user) {
       throw redirect({ to: "/login" });
     }
-    const isAdmin = !!user.user.roles.find((item) => item == "ADMIN");
+    const isAdmin = !!user.user.roles.find((item) => item == "SUPER_ADMIN");
     if (!isAdmin) {
       throw redirect({ to: "/investors" });
     }
