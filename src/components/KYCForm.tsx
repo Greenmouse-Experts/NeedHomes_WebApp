@@ -13,6 +13,7 @@ import { uploadImage } from "@/api/imageApi";
 import { extract_message } from "@/helpers/apihelpers";
 import type { VERIFICATION_REQUEST } from "@/types";
 import type { AxiosError } from "axios";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 interface KycFormData {
   idType:
@@ -173,51 +174,72 @@ export default function KYCForm() {
   }
 
   return (
-    <>
-      {/*{isError && error.status == 404 && (
-        <>
-          <div className="" data-theme="nh-light info info-error">
-            D
+    <div className=" mx-auto">
+      {kycData?.data.verification.status === "REJECTED" && (
+        <ThemeProvider className="mb-8">
+          <div className="bg-red-50 border border-red-200 rounded-xl overflow-hidden">
+            <div className="bg-red-100 px-4 py-2 border-b border-red-200">
+              <h2 className="text-sm font-bold text-red-700 uppercase tracking-wider">
+                Rejection Reason
+              </h2>
+            </div>
+            <div className="p-4">
+              <p className="text-red-600 font-medium leading-relaxed">
+                {kycData?.data.verification.RejectionReason}
+              </p>
+            </div>
           </div>
-        </>
-      )}*/}
-      {/*{kycData?.data.verification}*/}
-      <div>
-        <div className="mb-4s md:mb-6">
-          <h3 className="text-xs md:text-sm font-semibold text-gray-500 uppercase mb-3 md:mb-4">
-            KYC
+        </ThemeProvider>
+      )}
+
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 md:p-8">
+        <div className="mb-8 border-b border-gray-100 pb-4">
+          <h3 className="text-lg font-bold text-gray-900">
+            Identity Verification
           </h3>
+          <p className="text-sm text-gray-500 mt-1">
+            Please provide valid government-issued identification and proof of
+            address.
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* ID Type */}
-          <div className="space-y-2 mb-4 md:mb-6">
-            <Label htmlFor="idType" className="text-sm">
-              ID Type
+          <div className="space-y-2">
+            <Label
+              htmlFor="idType"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Document Type
             </Label>
             <select
               id="idType"
-              {...register("idType", { required: "ID Type is required" })}
-              className="flex w-full rounded-xl border-2 border-gray-200 bg-white px-3 md:px-4 py-2 md:py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange transition-all duration-300"
+              {...register("idType", { required: "Please select an ID type" })}
+              className="flex w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200 appearance-none cursor-pointer"
             >
               <option value="">Select ID Type</option>
-              <option value="NIN">NIN</option>
-              <option value="national-id">National ID</option>
+              <option value="NIN">NIN (National Identification Number)</option>
+              <option value="national-id">National ID Card</option>
               <option value="drivers-license">Driver's License</option>
               <option value="passport">International Passport</option>
               <option value="voters-card">Voter's Card</option>
             </select>
             {errors.idType && (
-              <p className="text-red-500 text-xs">{errors.idType.message}</p>
+              <p className="text-red-500 text-xs font-medium mt-1">
+                {errors.idType.message}
+              </p>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Upload Front */}
             <div className="space-y-2">
-              <SelectImage title="Upload Front" {...frontImage} />
+              <Label className="text-sm font-semibold text-gray-700">
+                Front View
+              </Label>
+              <SelectImage title="Click to upload front" {...frontImage} />
               {errors.frontPage && (
-                <p className="text-red-500 text-xs">
+                <p className="text-red-500 text-xs font-medium mt-1">
                   {errors.frontPage.message}
                 </p>
               )}
@@ -225,9 +247,12 @@ export default function KYCForm() {
 
             {/* Upload Back */}
             <div className="space-y-2">
-              <SelectImage title="Upload Back" {...backImage} />
+              <Label className="text-sm font-semibold text-gray-700">
+                Back View
+              </Label>
+              <SelectImage title="Click to upload back" {...backImage} />
               {errors.backPage && (
-                <p className="text-red-500 text-xs">
+                <p className="text-red-500 text-xs font-medium mt-1">
                   {errors.backPage.message}
                 </p>
               )}
@@ -235,46 +260,63 @@ export default function KYCForm() {
           </div>
 
           {/* Utility Bill */}
-          <div className="space-y-2 mb-4 md:mb-6">
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-gray-700">
+              Proof of Address
+            </Label>
             <SelectImage
-              title="Utility Bill (Proof of Address)"
+              title="Upload Utility Bill (Electricity, Water, etc.)"
               {...utilityImage}
             />
             {errors.utilityBill && (
-              <p className="text-red-500 text-xs">
+              <p className="text-red-500 text-xs font-medium mt-1">
                 {errors.utilityBill.message}
               </p>
             )}
           </div>
 
           {/* Address */}
-          <div className="space-y-2 mb-4 md:mb-6">
-            <Label htmlFor="address" className="text-sm">
-              Address
+          <div className="space-y-2">
+            <Label
+              htmlFor="address"
+              className="text-sm font-semibold text-gray-700"
+            >
+              Residential Address
             </Label>
             <Input
               id="address"
-              {...register("address", { required: "Address is required" })}
-              placeholder="Zone A 1 Egbi Ewaji St, Wuse, Abuja 900001, Federal Capital Territory, Nigeria"
-              className="text-sm md:text-base"
+              {...register("address", {
+                required: "Full residential address is required",
+              })}
+              placeholder="House Number, Street Name, City, State"
+              className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
             />
             {errors.address && (
-              <p className="text-red-500 text-xs">{errors.address.message}</p>
+              <p className="text-red-500 text-xs font-medium mt-1">
+                {errors.address.message}
+              </p>
             )}
           </div>
 
           {/* Submit Button */}
-          <div className="pt-4 md:pt-6">
+          <div className="pt-6">
             <Button
               type="submit"
-              className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
+              className="bg-brand-orange hover:bg-brand-orange-dark text-white h-12 px-12 text-base font-bold w-full md:w-auto rounded-xl shadow-lg shadow-brand-orange/20 transition-all active:scale-[0.98]"
               disabled={kycMutation.isPending}
             >
-              {kycMutation.isPending ? "Submitting..." : "Submit"}
+              {kycMutation.isPending ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 animate-spin border-2 border-white/30 border-t-white rounded-full" />
+                  Processing...
+                </span>
+              ) : (
+                "Submit Verification"
+              )}
             </Button>
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }
