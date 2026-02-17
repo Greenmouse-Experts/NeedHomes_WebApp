@@ -45,6 +45,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     id: "userManagement",
     title: "USER MANAGEMENT",
     items: [
+      { label: "Sub-admins", to: "/dashboard/sub-admins", icon: Users },
       { label: "Investors", to: "/dashboard/investors", icon: Users },
       {
         label: "Corporate (Investors)",

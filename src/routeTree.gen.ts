@@ -60,6 +60,7 @@ import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/a
 import { Route as DashboardWithdrawalsRouteRouteImport } from './routes/dashboard/withdrawals/route'
 import { Route as DashboardVerificationsRouteRouteImport } from './routes/dashboard/verifications/route'
 import { Route as DashboardSubscriptionsRouteRouteImport } from './routes/dashboard/subscriptions/route'
+import { Route as DashboardSubAdminsRouteRouteImport } from './routes/dashboard/sub-admins/route'
 import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard/properties/route'
 import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
 import { Route as PartnersSubscriptionsIndexRouteImport } from './routes/partners/subscriptions/index'
@@ -72,6 +73,7 @@ import { Route as ForgotPasswordResetIndexRouteImport } from './routes/forgot-pa
 import { Route as DashboardWithdrawalsIndexRouteImport } from './routes/dashboard/withdrawals/index'
 import { Route as DashboardVerificationsIndexRouteImport } from './routes/dashboard/verifications/index'
 import { Route as DashboardSubscriptionsIndexRouteImport } from './routes/dashboard/subscriptions/index'
+import { Route as DashboardSubAdminsIndexRouteImport } from './routes/dashboard/sub-admins/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/partners/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
@@ -370,6 +372,11 @@ const DashboardSubscriptionsRouteRoute =
     path: '/subscriptions',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const DashboardSubAdminsRouteRoute = DashboardSubAdminsRouteRouteImport.update({
+  id: '/sub-admins',
+  path: '/sub-admins',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardPropertiesRouteRoute =
   DashboardPropertiesRouteRouteImport.update({
     id: '/properties',
@@ -439,6 +446,11 @@ const DashboardSubscriptionsIndexRoute =
     path: '/',
     getParentRoute: () => DashboardSubscriptionsRouteRoute,
   } as any)
+const DashboardSubAdminsIndexRoute = DashboardSubAdminsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardSubAdminsRouteRoute,
+} as any)
 const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -703,6 +715,7 @@ export interface FileRoutesByFullPath {
   '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
+  '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
   '/dashboard/subscriptions': typeof DashboardSubscriptionsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/withdrawals': typeof DashboardWithdrawalsRouteRouteWithChildren
@@ -738,6 +751,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/dashboard/sub-admins/': typeof DashboardSubAdminsIndexRoute
   '/dashboard/subscriptions/': typeof DashboardSubscriptionsIndexRoute
   '/dashboard/verifications/': typeof DashboardVerificationsIndexRoute
   '/dashboard/withdrawals/': typeof DashboardWithdrawalsIndexRoute
@@ -826,6 +840,7 @@ export interface FileRoutesByTo {
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners': typeof DashboardPartnersIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
+  '/dashboard/sub-admins': typeof DashboardSubAdminsIndexRoute
   '/dashboard/subscriptions': typeof DashboardSubscriptionsIndexRoute
   '/dashboard/verifications': typeof DashboardVerificationsIndexRoute
   '/dashboard/withdrawals': typeof DashboardWithdrawalsIndexRoute
@@ -896,6 +911,7 @@ export interface FileRoutesById {
   '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
+  '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
   '/dashboard/subscriptions': typeof DashboardSubscriptionsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/withdrawals': typeof DashboardWithdrawalsRouteRouteWithChildren
@@ -931,6 +947,7 @@ export interface FileRoutesById {
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/dashboard/sub-admins/': typeof DashboardSubAdminsIndexRoute
   '/dashboard/subscriptions/': typeof DashboardSubscriptionsIndexRoute
   '/dashboard/verifications/': typeof DashboardVerificationsIndexRoute
   '/dashboard/withdrawals/': typeof DashboardWithdrawalsIndexRoute
@@ -1002,6 +1019,7 @@ export interface FileRouteTypes {
     | '/verify-partner'
     | '/dashboard/investors'
     | '/dashboard/properties'
+    | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
     | '/dashboard/verifications'
     | '/dashboard/withdrawals'
@@ -1037,6 +1055,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/'
     | '/dashboard/partners/'
     | '/dashboard/settings/'
+    | '/dashboard/sub-admins/'
     | '/dashboard/subscriptions/'
     | '/dashboard/verifications/'
     | '/dashboard/withdrawals/'
@@ -1125,6 +1144,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors'
     | '/dashboard/partners'
     | '/dashboard/settings'
+    | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
     | '/dashboard/verifications'
     | '/dashboard/withdrawals'
@@ -1194,6 +1214,7 @@ export interface FileRouteTypes {
     | '/verify-partner'
     | '/dashboard/investors'
     | '/dashboard/properties'
+    | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
     | '/dashboard/verifications'
     | '/dashboard/withdrawals'
@@ -1229,6 +1250,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/'
     | '/dashboard/partners/'
     | '/dashboard/settings/'
+    | '/dashboard/sub-admins/'
     | '/dashboard/subscriptions/'
     | '/dashboard/verifications/'
     | '/dashboard/withdrawals/'
@@ -1664,6 +1686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSubscriptionsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/sub-admins': {
+      id: '/dashboard/sub-admins'
+      path: '/sub-admins'
+      fullPath: '/dashboard/sub-admins'
+      preLoaderRoute: typeof DashboardSubAdminsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/properties': {
       id: '/dashboard/properties'
       path: '/properties'
@@ -1747,6 +1776,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/subscriptions/'
       preLoaderRoute: typeof DashboardSubscriptionsIndexRouteImport
       parentRoute: typeof DashboardSubscriptionsRouteRoute
+    }
+    '/dashboard/sub-admins/': {
+      id: '/dashboard/sub-admins/'
+      path: '/'
+      fullPath: '/dashboard/sub-admins/'
+      preLoaderRoute: typeof DashboardSubAdminsIndexRouteImport
+      parentRoute: typeof DashboardSubAdminsRouteRoute
     }
     '/dashboard/settings/': {
       id: '/dashboard/settings/'
@@ -2150,6 +2186,20 @@ const DashboardPropertiesRouteRouteWithChildren =
     DashboardPropertiesRouteRouteChildren,
   )
 
+interface DashboardSubAdminsRouteRouteChildren {
+  DashboardSubAdminsIndexRoute: typeof DashboardSubAdminsIndexRoute
+}
+
+const DashboardSubAdminsRouteRouteChildren: DashboardSubAdminsRouteRouteChildren =
+  {
+    DashboardSubAdminsIndexRoute: DashboardSubAdminsIndexRoute,
+  }
+
+const DashboardSubAdminsRouteRouteWithChildren =
+  DashboardSubAdminsRouteRoute._addFileChildren(
+    DashboardSubAdminsRouteRouteChildren,
+  )
+
 interface DashboardSubscriptionsRouteRouteChildren {
   DashboardSubscriptionsIndexRoute: typeof DashboardSubscriptionsIndexRoute
 }
@@ -2226,6 +2276,7 @@ const DashboardPartnersRouteWithChildren =
 interface DashboardRouteRouteChildren {
   DashboardInvestorsRouteRoute: typeof DashboardInvestorsRouteRouteWithChildren
   DashboardPropertiesRouteRoute: typeof DashboardPropertiesRouteRouteWithChildren
+  DashboardSubAdminsRouteRoute: typeof DashboardSubAdminsRouteRouteWithChildren
   DashboardSubscriptionsRouteRoute: typeof DashboardSubscriptionsRouteRouteWithChildren
   DashboardVerificationsRouteRoute: typeof DashboardVerificationsRouteRouteWithChildren
   DashboardWithdrawalsRouteRoute: typeof DashboardWithdrawalsRouteRouteWithChildren
@@ -2240,6 +2291,7 @@ interface DashboardRouteRouteChildren {
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardInvestorsRouteRoute: DashboardInvestorsRouteRouteWithChildren,
   DashboardPropertiesRouteRoute: DashboardPropertiesRouteRouteWithChildren,
+  DashboardSubAdminsRouteRoute: DashboardSubAdminsRouteRouteWithChildren,
   DashboardSubscriptionsRouteRoute:
     DashboardSubscriptionsRouteRouteWithChildren,
   DashboardVerificationsRouteRoute:
