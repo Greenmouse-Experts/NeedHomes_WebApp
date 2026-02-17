@@ -25,6 +25,7 @@ import type { ADMIN_KYC_RESPONSE } from "@/types";
 import { cn } from "@/lib/utils";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import { useForm, FormProvider } from "react-hook-form";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export default function AdminKycForm({ id }: { id: string }) {
   const navigate = useNavigate();
@@ -221,7 +222,7 @@ export default function AdminKycForm({ id }: { id: string }) {
         }
       >
         <FormProvider {...methods}>
-          <div className="space-y-4">
+          <ThemeProvider className="space-y-4">
             <p className="text-sm text-gray-500">
               Please provide a reason for rejecting this KYC submission. This
               will be visible to the user.
@@ -234,7 +235,7 @@ export default function AdminKycForm({ id }: { id: string }) {
                 required: "Reason is required",
               })}
             />
-          </div>
+          </ThemeProvider>
         </FormProvider>
       </Modal>
 
@@ -320,7 +321,10 @@ export default function AdminKycForm({ id }: { id: string }) {
               <Button
                 variant="ghost"
                 className="text-red-600 hover:bg-red-100 hover:text-red-700 font-bold"
-                disabled={verifyMutation.isPending}
+                disabled={
+                  verifyMutation.isPending ||
+                  kycResponse?.data.verification.status == "REJECTED"
+                }
                 onClick={showRejectModal}
               >
                 <XCircle className="w-4 h-4 mr-2" /> Reject
