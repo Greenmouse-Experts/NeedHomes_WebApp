@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import { useForm, FormProvider } from "react-hook-form";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import BackButton from "./BackButton";
 
 export default function AdminKycForm({ id }: { id: string }) {
   const navigate = useNavigate();
@@ -179,7 +180,7 @@ export default function AdminKycForm({ id }: { id: string }) {
   );
 
   return (
-    <div className="max-w-5xl mx-auto pb-20">
+    <div className="pb-20">
       <Modal ref={modalRef} title={selectedImage?.title}>
         {selectedImage && (
           <div className="space-y-4">
@@ -239,18 +240,8 @@ export default function AdminKycForm({ id }: { id: string }) {
         </FormProvider>
       </Modal>
 
-      <div className="flex items-center justify-between mb-8">
-        <Button
-          variant="ghost"
-          onClick={() =>
-            navigate({
-              to: "/dashboard/investors/$investorId",
-              params: { investorId: id },
-            })
-          }
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Profile
-        </Button>
+      <ThemeProvider className="flex items-center justify-between mb-8">
+        <BackButton />
         <div
           className={cn(
             "px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border",
@@ -263,7 +254,7 @@ export default function AdminKycForm({ id }: { id: string }) {
         >
           {kycData?.status}
         </div>
-      </div>
+      </ThemeProvider>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-4">
