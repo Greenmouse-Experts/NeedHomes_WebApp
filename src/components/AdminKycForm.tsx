@@ -23,11 +23,25 @@ import { useState } from "react";
 import { useModal } from "@/store/modals";
 import type { ADMIN_KYC_RESPONSE } from "@/types";
 import { cn } from "@/lib/utils";
+import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
+import { useForm, FormProvider } from "react-hook-form";
 
 export default function AdminKycForm({ id }: { id: string }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { ref: modalRef, showModal } = useModal();
+  const { ref: modalRef, showModal, closeModal } = useModal();
+  const {
+    ref: rejectModalRef,
+    showModal: showRejectModal,
+    closeModal: closeRejectModal,
+  } = useModal();
+
+  const methods = useForm({
+    defaultValues: {
+      reason: "",
+    },
+  });
+
   const [selectedImage, setSelectedImage] = useState<{
     url: string;
     title: string;
@@ -49,18 +63,25 @@ export default function AdminKycForm({ id }: { id: string }) {
 
   const kycId = kycData?.id;
   const verifyMutation = useMutation({
-    mutationFn: async (status: "APPROVED" | "REJECTED") => {
+    mutationFn: async ({
+      status,
+      reason,
+    }: {
+      status: "APPROVED" | "REJECTED";
+      reason?: string;
+    }) => {
       const endpoint =
         status === "APPROVED"
           ? `/admin/verifications/${kycId}/accept`
           : `/admin/verifications/${kycId}/reject`;
-      return apiClient.post(endpoint);
+      return apiClient.post(endpoint, status === "REJECTED" ? { reason } : {});
     },
-    onSuccess: (_, status) => {
+    onSuccess: (_, { status }) => {
       toast.success(
         `KYC ${status === "APPROVED" ? "Approved" : "Rejected"} successfully`,
       );
       queryClient.invalidateQueries({ queryKey: ["kyc-verification", id] });
+      closeRejectModal();
       navigate({
         to: "/dashboard/investors/$investorId",
         params: { investorId: id },
@@ -74,6 +95,14 @@ export default function AdminKycForm({ id }: { id: string }) {
   const handleViewImage = (url: string, title: string) => {
     setSelectedImage({ url, title });
     showModal();
+  };
+
+  const onRejectSubmit = (data: { reason: string }) => {
+    if (!data.reason) {
+      toast.error("Please provide a reason for rejection");
+      return;
+    }
+    verifyMutation.mutate({ status: "REJECTED", reason: data.reason });
   };
 
   if (isLoading) {
@@ -169,6 +198,46 @@ export default function AdminKycForm({ id }: { id: string }) {
         )}
       </Modal>
 
+      <Modal
+        ref={rejectModalRef}
+        title="Reject KYC Submission"
+        actions={
+          <div className="flex gap-3">
+            <Button variant="ghost" onClick={closeRejectModal}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={methods.handleSubmit(onRejectSubmit)}
+              disabled={verifyMutation.isPending}
+            >
+              {verifyMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Confirm Rejection"
+              )}
+            </Button>
+          </div>
+        }
+      >
+        <FormProvider {...methods}>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-500">
+              Please provide a reason for rejecting this KYC submission. This
+              will be visible to the user.
+            </p>
+            <SimpleTextArea
+              label="Rejection Reason"
+              name="reason"
+              placeholder="e.g. Document is expired or blurry"
+              {...methods.register("reason", {
+                required: "Reason is required",
+              })}
+            />
+          </div>
+        </FormProvider>
+      </Modal>
+
       <div className="flex items-center justify-between mb-8">
         <Button
           variant="ghost"
@@ -252,7 +321,7 @@ export default function AdminKycForm({ id }: { id: string }) {
                 variant="ghost"
                 className="text-red-600 hover:bg-red-100 hover:text-red-700 font-bold"
                 disabled={verifyMutation.isPending}
-                onClick={() => verifyMutation.mutate("REJECTED")}
+                onClick={showRejectModal}
               >
                 <XCircle className="w-4 h-4 mr-2" /> Reject
               </Button>
@@ -260,9 +329,10 @@ export default function AdminKycForm({ id }: { id: string }) {
                 className="bg-brand-orange hover:bg-brand-orange/90 text-white px-8 font-bold shadow-lg shadow-brand-orange/20"
                 disabled={
                   verifyMutation.isPending ||
+                  kycResponse?.data.verification.status == "REJECTED" ||
                   kycResponse?.data.verification.status === "VERIFIED"
                 }
-                onClick={() => verifyMutation.mutate("APPROVED")}
+                onClick={() => verifyMutation.mutate({ status: "APPROVED" })}
               >
                 {verifyMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
