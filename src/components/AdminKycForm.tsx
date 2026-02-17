@@ -332,6 +332,7 @@ export default function AdminKycForm({ id }: { id: string }) {
               <Button
                 className="bg-brand-orange hover:bg-brand-orange/90 text-white px-8 font-bold shadow-lg shadow-brand-orange/20"
                 disabled={
+                  !kycResponse?.data?.verification ||
                   verifyMutation.isPending ||
                   kycResponse?.data.verification.status == "REJECTED" ||
                   kycResponse?.data.verification.status === "VERIFIED"
