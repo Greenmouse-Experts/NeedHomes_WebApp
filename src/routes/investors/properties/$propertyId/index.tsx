@@ -249,58 +249,8 @@ function PropertyDetailPage() {
                       </div>
 
                       {/* Amenities */}
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                          Amenities
-                        </h2>
-                        {(property as any).amenities &&
-                        (property as any).amenities.length > 0 ? (
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            {(property as any).amenities.map(
-                              (amenity: any, index: number) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-2 text-gray-600"
-                                >
-                                  <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
-                                  <span className="text-sm">{amenity}</span>
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        ) : (
-                          <p className="text-gray-400 italic text-sm">
-                            No amenities listed
-                          </p>
-                        )}
-                      </div>
 
                       {/* Features */}
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                          Features
-                        </h2>
-                        {(property as any).features &&
-                        (property as any).features.length > 0 ? (
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            {(property as any).features.map(
-                              (feature: any, index: number) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-2 text-gray-600"
-                                >
-                                  <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
-                                  <span className="text-sm">{feature}</span>
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        ) : (
-                          <p className="text-gray-400 italic text-sm">
-                            No features listed
-                          </p>
-                        )}
-                      </div>
 
                       {/* Investment Model Specific Information */}
                       {property.investmentModel === "FRACTIONAL_OWNERSHIP" && (
