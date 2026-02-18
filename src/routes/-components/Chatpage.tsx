@@ -1,14 +1,16 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
-import PageLoader from "@/components/layout/PageLoader";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Conversations from "./Conversations";
-import { toast } from "sonner";
-import { extract_message } from "@/helpers/apihelpers";
 import ChatInputBar from "./chat-comps/ChatInputBar";
+import { useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
+import { get_user_value } from "@/store/authStore";
 
 export default function ChatPage() {
+  const queryClient = useQueryClient();
+  const auth = get_user_value();
+
   const query = useQuery<ApiResponse>({
     queryKey: ["chat"],
     queryFn: async () => {
@@ -16,20 +18,50 @@ export default function ChatPage() {
       return resp.data;
     },
   });
-  const { convoId } = useParams({
-    strict: false,
-  });
-  const mutation = useMutation({
-    mutationFn: async () => {
-      let resp = await apiClient.post("/chat/conversations", {
-        message: "Hello nice ",
-      });
-      return resp.data;
-    },
-    onSuccess: (data) => {
-      query.refetch();
-    },
-  });
+
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: {
+          token: auth.accessToken,
+        },
+        extraHeaders: {
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5,
+      },
+    );
+
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket");
+    });
+
+    socket.on("new_message", () => {
+      queryClient.invalidateQueries({ queryKey: ["chat"] });
+    });
+
+    socket.on("connected", (data) => {
+      console.log("User data:", data);
+    });
+
+    // ✅ DISCONNECT ON UNMOUNT
+    return () => {
+      console.log("❌ Disconnecting socket...");
+      socket.disconnect();
+    };
+  }, [auth?.accessToken]);
+
   return (
     <>
       <div className="ring fade rounded-box">
@@ -37,9 +69,6 @@ export default function ChatPage() {
           <h2 className="text-xl font-bold">Chat</h2>
         </div>
         <div className="">
-          <h2 className="p-4 text-lg font-bold border-b fade">
-            My Conversations
-          </h2>
           <section className="p-4 ">
             <QueryCompLayout query={query}>
               {(data) => {
@@ -47,7 +76,8 @@ export default function ChatPage() {
 
                 return (
                   <>
-                    <ChatInputBar />
+                    <Conversations convos={convos} />
+                    <ChatInputBar convos={convos} socket={socketRef} />
                   </>
                 );
               }}
