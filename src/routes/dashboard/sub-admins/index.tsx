@@ -1,6 +1,7 @@
 import apiClient from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
+import { extract_message } from "@/helpers/apihelpers";
 import SearchBar from "@/routes/-components/Searchbar";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
@@ -11,6 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Phone } from "lucide-react";
 import { useState } from "react";
 import { Controller, Form, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/sub-admins/")({
   component: RouteComponent,
@@ -33,7 +35,13 @@ function RouteComponent() {
 
 })
   const dialog = useModal();
-  const onSubmit = () => {};
+  const onSubmit = (data) => {
+    toast.promise(mutation.mutateAsync(data), {
+      loading: 'Creating sub-admin...',
+      success: 'Sub-admin created successfully!',
+      error:extract_message
+    })
+  };
   return (
     <ThemeProvider className="">
       <Modal ref={dialog.ref} title="Create Sub-Admin">
