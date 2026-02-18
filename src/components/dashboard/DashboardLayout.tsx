@@ -60,7 +60,11 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     items: [
       { label: "Sub-admins", to: "/dashboard/sub-admins", icon: Users },
       { label: "Roles", to: "/dashboard/sub-admins/roles", icon: Users },
-      { label: "Roles", to: "/dashboard/sub-admins/permissions", icon: Users },
+      {
+        label: "Permissions",
+        to: "/dashboard/sub-admins/permissions",
+        icon: Users,
+      },
     ],
   },
   {
