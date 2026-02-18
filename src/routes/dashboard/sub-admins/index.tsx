@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type Actions } from "@/components/tables/pop-up";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/dashboard/sub-admins/")({
   component: RouteComponent,
@@ -29,10 +30,17 @@ interface SubAdmin {
 }
 function RouteComponent() {
   const [search, setSearch] = useState("");
+  const props = usePagination();
+
   const query = useQuery<ApiResponseV2<SubAdmin[]>>({
-    queryKey: ["sub-admins"],
+    queryKey: ["sub-admins", props.page, search],
     queryFn: async () => {
-      let resp = await apiClient.get("/admin/sub-admins");
+      let resp = await apiClient.get("/admin/sub-admins", {
+        params: {
+          page: props.page,
+          search,
+        },
+      });
       return resp.data;
     },
   });
@@ -148,7 +156,12 @@ function RouteComponent() {
           {(data) => {
             const list = data.data.data;
             return (
-              <CustomTable data={list} columns={columns} actions={actions} />
+              <CustomTable
+                pagination={props}
+                data={list}
+                columns={columns}
+                actions={actions}
+              />
             );
           }}
         </PageLoader>
