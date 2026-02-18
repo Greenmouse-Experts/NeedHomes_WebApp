@@ -145,10 +145,7 @@ function RouteComponent() {
         <section className="bg-base-100 fade ring shadow  rounded-box ">
           <div className="p-4 border-b font-bold text-xl fade flex items-center justify-between">
             Roles{" "}
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={openAddRoleModal}
-            >
+            <button className="btn btn-primary " onClick={openAddRoleModal}>
               Add Role
             </button>
           </div>
