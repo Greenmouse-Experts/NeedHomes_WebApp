@@ -1,6 +1,3 @@
-export default function Conversations({ convoId }: { convoId: string }) {
-  if (!convoId) {
-    return <div>No conversation selected</div>;
-  }
+export default function Conversations({ convos }: { convos: any }) {
   return <div></div>;
 }

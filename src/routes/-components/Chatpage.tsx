@@ -6,6 +6,7 @@ import { useParams } from "@tanstack/react-router";
 import Conversations from "./Conversations";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import ChatInputBar from "./chat-comps/ChatInputBar";
 
 export default function ChatPage() {
   const query = useQuery<ApiResponse>({
@@ -43,40 +44,10 @@ export default function ChatPage() {
             <QueryCompLayout query={query}>
               {(data) => {
                 const convos = data.data;
-                // if (convos) {
-                //   return (
-                //     <div className="p-4 grid place-items-center bg-info/10 m-4 ring ring-info/50  rounded-box font-bold ">
-                //       <div>
-                //         <h2 className="text-info">No Conversations Started</h2>
-                //         <button
-                //           onClick={() => {
-                //             toast.promise(mutation.mutateAsync, {
-                //               loading: "loading",
-                //               success: "success",
-                //               error: extract_message,
-                //             });
-                //           }}
-                //           disabled={mutation.isPending}
-                //           className="btn btn-block btn-primary mt-4 btn-soft ring fade"
-                //         >
-                //           Start Conversation
-                //         </button>
-                //       </div>
-                //     </div>
-                //   );
-                // }
+
                 return (
                   <>
-                    {JSON.stringify(convos)}
-                    <ul className="menu">
-                      <li>
-                        <a>Sidebar Item 1</a>
-                      </li>
-                      <li>
-                        <a>Sidebar Item 2</a>
-                      </li>
-                    </ul>
-                    ;
+                    <ChatInputBar />
                   </>
                 );
               }}
