@@ -1,6 +1,7 @@
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
+import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { extract_message } from "@/helpers/apihelpers";
 import SearchBar from "@/routes/-components/Searchbar";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
@@ -9,18 +10,26 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone } from "lucide-react";
 import { useState } from "react";
-import { Controller, Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { type Actions } from "@/components/tables/pop-up";
 
 export const Route = createFileRoute("/dashboard/sub-admins/")({
   component: RouteComponent,
 });
-
+interface SubAdmin {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  roles: { id: string; name: string }[];
+}
 function RouteComponent() {
   const [search, setSearch] = useState("");
-  const query = useQuery({
+  const query = useQuery<ApiResponseV2<SubAdmin[]>>({
     queryKey: ["sub-admins"],
     queryFn: async () => {
       let resp = await apiClient.get("/admin/sub-admins");
@@ -46,6 +55,44 @@ function RouteComponent() {
       error: extract_message,
     });
   };
+
+  const columns: columnType<SubAdmin>[] = [
+    { key: "firstName", label: "First Name" },
+    { key: "lastName", label: "Last Name" },
+    { key: "email", label: "Email" },
+    { key: "phone", label: "Phone" },
+    {
+      key: "roles",
+      label: "Roles",
+      render: (value: { name: string }[]) =>
+        value.map((role) => role.name).join(", "),
+    },
+    {
+      key: "createdAt",
+      label: "Created At",
+      render: (value) => new Date(value).toLocaleString(),
+    },
+  ];
+
+  const actions: Actions<SubAdmin>[] = [
+    {
+      key: "edit",
+      label: "Edit",
+      action: (item, nav) => {
+        // Handle edit action, e.g., navigate to edit page or open edit modal
+        toast.info(`Editing sub-admin: ${item.firstName} ${item.lastName}`);
+      },
+    },
+    {
+      key: "delete",
+      label: "Delete",
+      action: (item, nav) => {
+        // Handle delete action
+        toast.error(`Deleting sub-admin: ${item.firstName} ${item.lastName}`);
+      },
+    },
+  ];
+
   return (
     <ThemeProvider className="">
       <Modal ref={dialog.ref} title="Create Sub-Admin">
@@ -69,7 +116,7 @@ function RouteComponent() {
                     {...field}
                     label="Role"
                     route="/admin/roles"
-                    render={(item) => {
+                    render={(item: { id: string; name: string }) => {
                       return <option value={item.id}>{item.name}</option>;
                     }}
                   ></SimpleSelect>
@@ -99,7 +146,10 @@ function RouteComponent() {
       <section className="my-4">
         <PageLoader query={query}>
           {(data) => {
-            return <></>;
+            const list = data.data.data;
+            return (
+              <CustomTable data={list} columns={columns} actions={actions} />
+            );
           }}
         </PageLoader>
       </section>
