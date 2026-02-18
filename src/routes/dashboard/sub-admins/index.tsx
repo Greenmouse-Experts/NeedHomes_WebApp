@@ -157,7 +157,7 @@ function RouteComponent() {
             const list = data.data.data;
             return (
               <CustomTable
-                pagination={props}
+                paginationProps={props}
                 data={list}
                 columns={columns}
                 actions={actions}
