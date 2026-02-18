@@ -15,11 +15,18 @@ export const Route = createFileRoute("/dashboard/sub-admins/permissions")({
   component: RouteComponent,
 });
 
+interface PERMISSIONS {
+  key: string;
+  description: string;
+  type: string;
+}
 function RouteComponent() {
   const [search, setSearch] = useState("");
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [selectedPermissions, setSelectedPermissions] = useState<PERMISSIONS[]>(
+    [],
+  );
   const query = useQuery<
-    ApiResponse<{ category: string; permissions: string[] }[]>
+    ApiResponse<{ category: string; permissions: PERMISSIONS[] }[]>
   >({
     queryKey: ["sub-admins"],
     queryFn: async () => {
@@ -56,7 +63,7 @@ function RouteComponent() {
     {
       key: "permissions",
       label: "Permissions",
-      render: (value: string[]) => (
+      render: (value: PERMISSIONS[]) => (
         <span className="badge badge-primary badge-soft ring fade">
           {value.length} permissions
         </span>
@@ -68,7 +75,7 @@ function RouteComponent() {
     {
       key: "view-permissions",
       label: "View Permissions",
-      action: (item: { category: string; permissions: string[] }) => {
+      action: (item: { category: string; permissions: PERMISSIONS[] }) => {
         setSelectedPermissions(item.permissions);
         viewPermissionsDialog.showModal();
       },
@@ -80,12 +87,6 @@ function RouteComponent() {
       <section className="bg-base-100 fade ring shadow  rounded-box ">
         <div className="p-4 border-b font-bold text-xl fade flex items-center">
           Permissions{" "}
-          <button
-            className="btn btn-primary ml-auto"
-            onClick={createSubAdminDialog.showModal}
-          >
-            Create Sub Admin
-          </button>
         </div>
         <div className="p-4">
           <SearchBar value={search} onChange={setSearch} />
@@ -124,7 +125,7 @@ function RouteComponent() {
           {selectedPermissions.length > 0 ? (
             selectedPermissions.map((permission, index) => (
               <span key={index} className="badge badge-outline badge-primary">
-                {permission}
+                {permission.key}
               </span>
             ))
           ) : (
