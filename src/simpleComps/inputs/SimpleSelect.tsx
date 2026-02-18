@@ -114,7 +114,9 @@ export default function SimpleSelect<T extends RecordModel>(
         id={`select-${route}`}
         name={name || `select-${route}`}
       >
-        <option value="null">All</option>
+        <option value="null" disabled>
+          None
+        </option>
         {items.map((item, idx) => render(item, idx))}
       </select>
       {error && (

@@ -29,18 +29,22 @@ function RouteComponent() {
   });
   const methods = useForm({});
   const mutation = useMutation({
-    mutationFn: async (data:any) => {
-      let resp = await apiClient.post("admin/sub-admins", data)
-      return resp.data
-
-})
+    mutationFn: async (data: any) => {
+      let resp = await apiClient.post("admin/sub-admins", data);
+      return resp.data;
+    },
+    onSuccess: () => {
+      dialog.closeModal();
+      query.refetch();
+    },
+  });
   const dialog = useModal();
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     toast.promise(mutation.mutateAsync(data), {
-      loading: 'Creating sub-admin...',
-      success: 'Sub-admin created successfully!',
-      error:extract_message
-    })
+      loading: "Creating sub-admin...",
+      success: "Sub-admin created successfully!",
+      error: extract_message,
+    });
   };
   return (
     <ThemeProvider className="">
@@ -57,12 +61,13 @@ function RouteComponent() {
           <SimpleInput label="Phone Number" {...methods.register("phone")} />
           <Controller
             control={methods.control}
-            name="role"
+            name="roleId"
             render={({ field }) => {
               return (
                 <>
                   <SimpleSelect
                     {...field}
+                    label="Role"
                     route="/admin/roles"
                     render={(item) => {
                       return <option value={item.id}>{item.name}</option>;
