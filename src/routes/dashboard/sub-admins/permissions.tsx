@@ -25,6 +25,7 @@ function RouteComponent() {
   const [selectedPermissions, setSelectedPermissions] = useState<PERMISSIONS[]>(
     [],
   );
+  const [selectedTitle, setSelectedTitle] = useState("");
   const query = useQuery<
     ApiResponse<{ category: string; permissions: PERMISSIONS[] }[]>
   >({
@@ -76,6 +77,7 @@ function RouteComponent() {
       key: "view-permissions",
       label: "View Permissions",
       action: (item: { category: string; permissions: PERMISSIONS[] }) => {
+        setSelectedTitle(item.category);
         setSelectedPermissions(item.permissions);
         viewPermissionsDialog.showModal();
       },
@@ -120,7 +122,10 @@ function RouteComponent() {
         </button>
       </Modal>
 
-      <Modal ref={viewPermissionsDialog.ref} title="Role Permissions">
+      <Modal
+        ref={viewPermissionsDialog.ref}
+        title={`Role Permissions: ${selectedTitle.toLocaleUpperCase()}`}
+      >
         <div className="flex flex-wrap gap-2">
           {selectedPermissions.length > 0 ? (
             selectedPermissions.map((permission, index) => (
