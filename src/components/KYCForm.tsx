@@ -221,7 +221,7 @@ export default function KYCForm() {
             >
               <option value="">Select ID Type</option>
               <option value="NIN">NIN (National Identification Number)</option>
-              <option value="national-id">National ID Card</option>
+              {/*<option value="national-id">National ID Card</option>*/}
               <option value="drivers-license">Driver's License</option>
               <option value="passport">International Passport</option>
               <option value="voters-card">Voter's Card</option>

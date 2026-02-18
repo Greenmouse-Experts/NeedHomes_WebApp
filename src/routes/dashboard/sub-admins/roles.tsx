@@ -12,6 +12,10 @@ import Modal from "@/components/modals/DialogModal";
 import { useForm, FormProvider } from "react-hook-form";
 import { toast } from "sonner";
 import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
+import SimpleMultiSelect from "@/simpleComps/inputs/SimpleMultiSelect";
+import ModalSelector from "@/simpleComps/inputs/ModalSelector";
+import useSelect from "@/helpers/selectors";
+import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 
 export const Route = createFileRoute("/dashboard/sub-admins/roles")({
   component: RouteComponent,
@@ -19,11 +23,13 @@ export const Route = createFileRoute("/dashboard/sub-admins/roles")({
 
 interface RoleFormInputs {
   name: string;
-  permissions: string[];
+  permissionKeys: string[];
+  description: string;
 }
 
 function RouteComponent() {
   const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
   const {
     ref: addRoleModalRef,
@@ -32,7 +38,13 @@ function RouteComponent() {
   } = useModal();
   const queryClient = useQueryClient();
 
-  const methods = useForm<RoleFormInputs>();
+  const methods = useForm<RoleFormInputs>({
+    defaultValues: {
+      name: "",
+      permissionKeys: [],
+      description: "",
+    },
+  });
   const {
     handleSubmit,
     register,
@@ -73,7 +85,12 @@ function RouteComponent() {
   });
 
   const onSubmit = (data: RoleFormInputs) => {
-    addRoleMutation.mutate(data);
+    if (props.mapped.length > 0) {
+      data["permissionKeys"] = props.mapped;
+      addRoleMutation.mutate(data);
+    } else {
+      toast.error("Please select at least one permission!");
+    }
   };
 
   const columns: columnType<{
@@ -120,6 +137,7 @@ function RouteComponent() {
       },
     },
   ];
+  const props = useSelect();
 
   return (
     <>
@@ -172,16 +190,70 @@ function RouteComponent() {
                   </p>
                 )}
               </div>
-              <div>
-                <SimpleSelect
+              <SimpleTextArea
+                label="Description"
+                {...register("description", {
+                  required: "Description is required",
+                })}
+              />
+              <div className="ring  fade rounded-box">
+                <h2 className="p-4 border-b fade font-bold ">Permissions</h2>
+                <ModalSelector
                   route="admin/roles/permissions"
-                  label="Permissions"
-                  name="permissions"
-                  render={(item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.category}
-                    </option>
-                  )}
+                  render={(item) => {
+                    const item_array = item.permissions as {
+                      key: string;
+                      description: string;
+                      type: string;
+                    }[];
+                    return (
+                      <ul className="flex flex-col gap-2">
+                        {item_array.map((perm) => {
+                          const isSelected =
+                            props.selected && props.selected[perm.key];
+                          if (isSelected) {
+                            return (
+                              <>
+                                <li
+                                  key={perm.key}
+                                  onClick={() => {
+                                    if (isSelected) {
+                                      props.remove(perm.key);
+                                    } else {
+                                      props.add_to({ id: perm.key });
+                                    }
+                                  }}
+                                >
+                                  <span className="badge badge-primary cursor-pointer badge-lg ring fade">
+                                    {perm.key}
+                                  </span>
+                                </li>
+                              </>
+                            );
+                          }
+                          return (
+                            <>
+                              <li
+                                key={perm.key}
+                                onClick={() => {
+                                  if (isSelected) {
+                                    props.remove(perm.key);
+                                  } else {
+                                    props.add_to({ id: perm.key });
+                                  }
+                                }}
+                              >
+                                <span className="badge badge-primary badge-soft cursor-pointer badge-lg ring fade">
+                                  {perm.key}
+                                </span>
+                              </li>
+                            </>
+                          );
+                        })}
+                      </ul>
+                    );
+                    return <></>;
+                  }}
                 />
                 {errors.permissions && (
                   <p className="text-error text-sm mt-1">

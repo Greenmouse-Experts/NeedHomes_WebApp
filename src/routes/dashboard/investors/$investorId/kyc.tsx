@@ -39,7 +39,7 @@ function InvestorKYCPage() {
   });
 
   const idTypeOptions = [
-    { value: "national-id", label: "National ID" },
+    // { value: "national-id", label: "National ID" },
     { value: "drivers-license", label: "Driver's License" },
     { value: "passport", label: "International Passport" },
   ];
