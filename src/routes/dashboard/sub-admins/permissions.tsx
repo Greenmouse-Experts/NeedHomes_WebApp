@@ -79,7 +79,7 @@ function RouteComponent() {
     <ThemeProvider className="">
       <section className="bg-base-100 fade ring shadow  rounded-box ">
         <div className="p-4 border-b font-bold text-xl fade flex items-center">
-          Sub-admins{" "}
+          Permissions{" "}
           <button
             className="btn btn-primary ml-auto"
             onClick={createSubAdminDialog.showModal}
