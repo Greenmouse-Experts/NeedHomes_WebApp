@@ -45,7 +45,6 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     id: "userManagement",
     title: "USER MANAGEMENT",
     items: [
-      { label: "Sub-admins", to: "/dashboard/sub-admins", icon: Users },
       { label: "Investors", to: "/dashboard/investors", icon: Users },
       {
         label: "Corporate (Investors)",
@@ -53,6 +52,15 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
         icon: Users,
       },
       { label: "Partners", to: "/dashboard/partners", icon: Handshake },
+    ],
+  },
+  {
+    id: "subAdmins",
+    title: "SUB-ADMIN MANAGEMENT",
+    items: [
+      { label: "Sub-admins", to: "/dashboard/sub-admins", icon: Users },
+      { label: "Roles", to: "/dashboard/sub-admins/roles", icon: Users },
+      { label: "Roles", to: "/dashboard/sub-admins/permissions", icon: Users },
     ],
   },
   {
