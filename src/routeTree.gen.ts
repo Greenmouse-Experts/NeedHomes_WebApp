@@ -83,6 +83,7 @@ import { Route as InvestorsMyInvestmentsInvestmentIdRouteImport } from './routes
 import { Route as DashboardTransactionsReceiptsRouteImport } from './routes/dashboard/transactions/receipts'
 import { Route as DashboardTransactionsPaymentsRouteImport } from './routes/dashboard/transactions/payments'
 import { Route as DashboardSubAdminsRolesRouteImport } from './routes/dashboard/sub-admins/roles'
+import { Route as DashboardSubAdminsPermissionsRouteImport } from './routes/dashboard/sub-admins/permissions'
 import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
 import { Route as DashboardPropertiesPropertyIdRouteImport } from './routes/dashboard/properties/$propertyId'
 import { Route as DashboardPartnersPartnerIdRouteImport } from './routes/dashboard/partners/$partnerId'
@@ -502,6 +503,12 @@ const DashboardSubAdminsRolesRoute = DashboardSubAdminsRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => DashboardSubAdminsRouteRoute,
 } as any)
+const DashboardSubAdminsPermissionsRoute =
+  DashboardSubAdminsPermissionsRouteImport.update({
+    id: '/permissions',
+    path: '/permissions',
+    getParentRoute: () => DashboardSubAdminsRouteRoute,
+  } as any)
 const DashboardPropertiesListedRoute =
   DashboardPropertiesListedRouteImport.update({
     id: '/listed',
@@ -749,6 +756,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
+  '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
   '/dashboard/sub-admins/roles': typeof DashboardSubAdminsRolesRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
@@ -841,6 +849,7 @@ export interface FileRoutesByTo {
   '/recover-password': typeof RecoverPasswordIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
+  '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
   '/dashboard/sub-admins/roles': typeof DashboardSubAdminsRolesRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
@@ -947,6 +956,7 @@ export interface FileRoutesById {
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
+  '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
   '/dashboard/sub-admins/roles': typeof DashboardSubAdminsRolesRoute
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
@@ -1056,6 +1066,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
+    | '/dashboard/sub-admins/permissions'
     | '/dashboard/sub-admins/roles'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
@@ -1148,6 +1159,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/listed'
+    | '/dashboard/sub-admins/permissions'
     | '/dashboard/sub-admins/roles'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
@@ -1253,6 +1265,7 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
+    | '/dashboard/sub-admins/permissions'
     | '/dashboard/sub-admins/roles'
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
@@ -1859,6 +1872,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSubAdminsRolesRouteImport
       parentRoute: typeof DashboardSubAdminsRouteRoute
     }
+    '/dashboard/sub-admins/permissions': {
+      id: '/dashboard/sub-admins/permissions'
+      path: '/permissions'
+      fullPath: '/dashboard/sub-admins/permissions'
+      preLoaderRoute: typeof DashboardSubAdminsPermissionsRouteImport
+      parentRoute: typeof DashboardSubAdminsRouteRoute
+    }
     '/dashboard/properties/listed': {
       id: '/dashboard/properties/listed'
       path: '/listed'
@@ -2206,12 +2226,14 @@ const DashboardPropertiesRouteRouteWithChildren =
   )
 
 interface DashboardSubAdminsRouteRouteChildren {
+  DashboardSubAdminsPermissionsRoute: typeof DashboardSubAdminsPermissionsRoute
   DashboardSubAdminsRolesRoute: typeof DashboardSubAdminsRolesRoute
   DashboardSubAdminsIndexRoute: typeof DashboardSubAdminsIndexRoute
 }
 
 const DashboardSubAdminsRouteRouteChildren: DashboardSubAdminsRouteRouteChildren =
   {
+    DashboardSubAdminsPermissionsRoute: DashboardSubAdminsPermissionsRoute,
     DashboardSubAdminsRolesRoute: DashboardSubAdminsRolesRoute,
     DashboardSubAdminsIndexRoute: DashboardSubAdminsIndexRoute,
   }
