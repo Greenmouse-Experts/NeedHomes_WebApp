@@ -1,10 +1,10 @@
-import { pb } from "@/api/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import type { RecordModel } from "pocketbase";
 import { useFormContext } from "react-hook-form";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 
-interface SimpleSelectProps<T extends RecordModel> extends PropsWithChildren {
+interface SimpleSelectProps<T = any> extends PropsWithChildren {
   route: string;
   value?: string | null;
   onChange?: (value: string | null) => void;
@@ -32,9 +32,12 @@ export default function SimpleSelect<T extends RecordModel>(
     value ?? null,
   );
 
-  const query = useQuery<T[]>({
+  const query = useQuery<ApiResponse<T[]>>({
     queryKey: ["select", route],
-    queryFn: () => pb.collection(route).getFullList<T>(),
+    queryFn: async () => {
+      let resp = await apiClient.get(route);
+      return resp.data;
+    },
   });
 
   useEffect(() => {
@@ -70,7 +73,6 @@ export default function SimpleSelect<T extends RecordModel>(
         </select>
       </div>
     );
-
   if (query.isError)
     return (
       <div className="w-full">
@@ -93,7 +95,7 @@ export default function SimpleSelect<T extends RecordModel>(
       </div>
     );
 
-  const items: T[] = query.data ?? [];
+  const items: T[] = query.data?.data ?? [];
 
   return (
     <div className="w-full space-y-2">
