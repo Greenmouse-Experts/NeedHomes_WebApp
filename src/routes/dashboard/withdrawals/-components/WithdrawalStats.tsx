@@ -107,14 +107,26 @@ export default function WithdrawalStats() {
                   ].map((item) => (
                     <div
                       key={item.label}
-                      className="flex flex-col items-center justify-center p-4 bg-base-200/30 rounded-xl border border-base-300 transition-all hover:bg-base-200/50"
+                      className="relative flex flex-col p-6 bg-white rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md"
                     >
-                      <span className="font-bold uppercase tracking-widest opacity-60 mb-2">
-                        {item.label}
-                      </span>
-                      <span className={`text-4xl font-black  ${item.color}`}>
-                        {item.value.toLocaleString()}
-                      </span>
+                      <div className="flex justify-between items-start mb-4">
+                        <span className=" font-bold uppercase tracking-widest text-slate-500">
+                          {item.label}
+                        </span>
+                        {/*<div className="p-2 bg-orange-50 rounded-xl">
+                          <span className="text-orange-500 font-bold ">$</span>
+                        </div>*/}
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span
+                          className={`stat-value font-black text-slate-900`}
+                        >
+                          {item.value.toLocaleString()}
+                        </span>
+                        <span className=" text-slate-400 font-medium">
+                          This Month
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>

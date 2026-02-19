@@ -1,6 +1,7 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import { Handshake, Home, Users } from "lucide-react";
@@ -38,7 +39,47 @@ export default function AdminDashStats() {
     },
   });
   return (
-    <QueryCompLayout query={query}>
+    <QueryCompLayout
+      query={query}
+      customLoading={
+        <>
+          <ThemeProvider className="grid skeleton grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-4 md:mb-6">
+            <Card className="skeleton">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  ... Investors
+                </CardTitle>
+                <Users className="w-5 h-5 text-[var(--color-orange)]" />
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  ... Partners
+                </CardTitle>
+                <Handshake className="w-5 h-5 text-[var(--color-orange)]" />
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  ... Successful
+                </CardTitle>
+                <HomeIcon className="w-5 h-5 text-[var(--color-orange)]" />
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  ... Total Transactions
+                </CardTitle>
+                <Home className="w-5 h-5 text-[var(--color-orange)]" />
+              </CardHeader>
+            </Card>
+          </ThemeProvider>
+        </>
+      }
+    >
       {(data) => {
         const stats = data.data;
         return (
