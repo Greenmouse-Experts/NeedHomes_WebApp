@@ -35,15 +35,19 @@ function DashboardIndexPage() {
         <CardContent className="p-4 md:p-6">
           <div className="flex items-center gap-2 mb-2">
             <Calendar className="w-4 h-4" />
-            <span className="text-xs md:text-sm">July 14, 2025</span>
+            <span className="text-xs md:text-sm">
+              {new Date().toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
           </div>
           <h2 className="text-xl md:text-2xl font-bold mb-1">
             Welcome, Admin 👋
           </h2>
           {/*<>{JSON.stringify(user)}</>*/}
-          <p className="text-sm md:text-base text-gray-200">
-            Have a great day!
-          </p>
+
           <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
             <div className="absolute top-10 right-10 w-4 h-4 bg-white rounded-full"></div>
             <div className="absolute top-20 right-20 w-2 h-2 bg-white rounded-full"></div>
