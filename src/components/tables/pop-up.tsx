@@ -9,7 +9,7 @@ export type Actions<T = any> = {
   label: string;
   action: (item: T, nav: ReturnType<typeof useNavigate>) => any;
   render?: (item: T) => ReactNode | string;
-  disabled?: boolean;
+  disabled?: (item: T) => boolean;
 };
 type currentIndex = number;
 export default function PopUp<T>(props: {
@@ -99,7 +99,7 @@ export default function PopUp<T>(props: {
           >
             <div className="menu w-full">
               {props?.actions?.map((action) => {
-                if (action.disabled) {
+                if (action.disabled(props.item)) {
                   return null;
                 }
                 return (
