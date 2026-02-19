@@ -215,14 +215,14 @@ export default function DefaultForm<T = any>({
                 />
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            {/*<div className="flex items-center gap-2">
               <input
                 type="checkbox"
                 className="checkbox checkbox-primary"
                 {...methods.register("premiumProperty")}
               />
               <span className="label-text font-bold">Premium Property</span>
-            </div>
+            </div>*/}
           </section>
 
           {/* 2. Media & Documents */}
