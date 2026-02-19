@@ -11,14 +11,23 @@ interface QueryPageLayoutProps<TData> {
   query: QueryObserverResult<TData>;
   children?: React.ReactNode | ((data: TData) => React.ReactNode);
   loadingText?: string;
+  customLoading?: React.ReactNode;
 }
 
 export default function QueryCompLayout<TData>(
   props: QueryPageLayoutProps<TData>,
 ) {
-  const { children, query, loadingText = "Loading resources..." } = props;
+  const {
+    children,
+    customLoading,
+    query,
+    loadingText = "Loading resources...",
+  } = props;
   const loading = query.isLoading;
-  if (loading)
+  if (loading) {
+    if (customLoading) {
+      return customLoading;
+    }
     return (
       <>
         <ThemeProvider className="flex-1 w-full min-h-52  bg-white fade ring rounded-box grid place-items-center  flex-col items-center justify-center p-8 animate-in fade-in duration-700">
@@ -47,7 +56,7 @@ export default function QueryCompLayout<TData>(
         </ThemeProvider>
       </>
     );
-
+  }
   if (props.query.error) {
     const error = extract_message(props.query.error as AxiosError<ApiResponse>);
     return (
