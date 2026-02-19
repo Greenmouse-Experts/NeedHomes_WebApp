@@ -271,6 +271,21 @@ function RouteComponent() {
           error: (err) => extract_message(err as any) || "An error occurred.",
         });
       },
+      render: (item) => {
+        return (
+          <button
+            className="btn btn-error btn-outline"
+            disabled={selectedKyc && selectedKyc.status !== "PENDING"}
+            onClick={() => {
+              if (selectedKyc && selectedKyc.status === "PENDING") {
+                rejectMutation.mutate(selectedKyc.id);
+              }
+            }}
+          >
+            Reject
+          </button>
+        );
+      },
     },
   ];
 

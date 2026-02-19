@@ -97,16 +97,25 @@ export default function PopUp<T>(props: {
             {...attributes.popper}
           >
             <div className="menu w-full">
-              {props?.actions?.map((action) => (
-                <li key={action.key}>
-                  <a
-                    onClick={() => action.action(props.item, nav)}
-                    className="text-xs"
-                  >
-                    {action.render ? action.render(props.item) : action.label}
-                  </a>
-                </li>
-              ))}
+              {props?.actions?.map((action) => {
+                if (action.render) {
+                  return action.render(props.item);
+                }
+
+                return (
+                  <>
+                    <li key={action.key}>
+                      <a
+                        onClick={() => action.action(props.item, nav)}
+                        className="text-xs"
+                      >
+                        {action.label}
+                      </a>
+                    </li>
+                    ;
+                  </>
+                );
+              })}
             </div>
           </div>
         )}
