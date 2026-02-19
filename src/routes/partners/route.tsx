@@ -1,4 +1,4 @@
-import { get_user_value } from "@/store/authStore";
+import { get_kyc_value, get_user_value, refresh_kyc } from "@/store/authStore";
 import {
   createFileRoute,
   Outlet,
@@ -18,6 +18,14 @@ export const Route = createFileRoute("/partners")({
       // return redirect({
       //   to: "",
       // });
+    }
+  },
+  beforeLoad: () => {
+    const val = get_kyc_value();
+    if (!val) return;
+
+    if (val.account_verification_status != "VERIFIED") {
+      refresh_kyc();
     }
   },
 });
