@@ -257,28 +257,12 @@ function RouteComponent() {
           error: (err) => extract_message(err as any) || "An error occurred.",
         });
       },
-      render: (item) => {
-        if (item.status === "PENDING")
-          return (
-            <>
-              <li>
-                <span
-                  onClick={() => {
-                    if (selectedKyc && selectedKyc.status === "PENDING") {
-                      rejectMutation.mutate(selectedKyc.id);
-                    }
-                  }}
-                >
-                  Reject
-                </span>
-              </li>
-            </>
-          );
-      },
+      disabled: (item) => item.status != "PENDING",
     },
     {
       key: "reject",
       label: "Reject KYC",
+      disabled: (item) => item.status != "PENDING",
       action: (item) => {
         if (item.status !== "PENDING") {
           toast.error("Only pending verifications can be rejected.");
@@ -289,24 +273,6 @@ function RouteComponent() {
           success: "KYC rejected successfully.",
           error: (err) => extract_message(err as any) || "An error occurred.",
         });
-      },
-      render: (item) => {
-        if (item.status === "PENDING")
-          return (
-            <>
-              <li>
-                <span
-                  onClick={() => {
-                    if (selectedKyc && selectedKyc.status === "PENDING") {
-                      rejectMutation.mutate(selectedKyc.id);
-                    }
-                  }}
-                >
-                  Reject
-                </span>
-              </li>
-            </>
-          );
       },
     },
   ];
