@@ -60,7 +60,7 @@ export default function KYCForm() {
     isLoading: isLoadingKyc,
     isError,
     error,
-    reload,
+    refetch,
   } = useQuery<ApiResponse<{ bank: any; verification: VERIFICATION_REQUEST }>>({
     queryKey: ["kyc-status", accountType],
     queryFn: () => apiClient.get(`kyc`).then((res) => res.data),
@@ -107,7 +107,7 @@ export default function KYCForm() {
         .then((res) => res.data),
     onSuccess: (data: ApiResponse) => {
       setKyc(data.data.verification);
-      reload();
+      refetch();
       toast.success(data.message || "KYC submitted successfully!");
     },
     onError: (error) => {
