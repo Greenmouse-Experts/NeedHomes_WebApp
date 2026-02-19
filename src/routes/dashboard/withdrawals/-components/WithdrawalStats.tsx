@@ -38,26 +38,34 @@ export default function WithdrawalStats() {
           return (
             <div className="grid gap-6">
               {/* Amounts Section */}
-              <section className="bg-base-100 ring fade rounded-box ">
-                <h3 className="text-sm font-semibold uppercase p-4 tracking-wider text-gray-500 border-b fade">
-                  Financial Overview
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 divide-y  md:divide-y-0 md:divide-x fade">
-                  <div className="p-6 flex flex-col gap-1 hover:bg-base-200/30 fade transition-colors">
-                    <span className=" font-bold text-gray-400 uppercase tracking-widest">
-                      Pending Amount
-                    </span>
-                    <span className="text-3xl font-black ">
+              <section className="card bg-base-100 shadow-sm ring fade overflow-hidden">
+                <div className="px-6 py-4 border-b fade bg-base-50/50">
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/60">
+                    Financial Overview
+                  </h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                  <div className="p-6 flex flex-col gap-2 border-b md:border-b-0 md:border-r border-base-200 hover:bg-base-200/20 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-warning"></div>
+                      <span className="text-xs font-bold text-base-content/50 uppercase tracking-tighter">
+                        Pending Amount
+                      </span>
+                    </div>
+                    <div className="stat-value text-3xl text-warning">
                       {amounts.pendingNaira}
-                    </span>
+                    </div>
                   </div>
-                  <div className="p-6 flex flex-col gap-1 hover:bg-base-200/30 fade transition-colors">
-                    <span className=" font-bold text-gray-400 uppercase tracking-widest">
-                      Completed Amount
-                    </span>
-                    <span className="text-3xl font-black ">
+                  <div className="p-6 flex flex-col gap-2 hover:bg-base-200/20 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-success"></div>
+                      <span className="text-xs font-bold text-base-content/50 uppercase tracking-tighter">
+                        Completed Amount
+                      </span>
+                    </div>
+                    <div className="stat-value text-3xl text-success">
                       {amounts.completedNaira}
-                    </span>
+                    </div>
                   </div>
                 </div>
               </section>
