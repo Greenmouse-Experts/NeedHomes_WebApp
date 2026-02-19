@@ -10,6 +10,7 @@ import { useModal } from "@/store/modals";
 import type { VERIFICATION_REQUEST } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { Library } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -256,6 +257,24 @@ function RouteComponent() {
           error: (err) => extract_message(err as any) || "An error occurred.",
         });
       },
+      render: (item) => {
+        if (item.status === "PENDING")
+          return (
+            <>
+              <li>
+                <span
+                  onClick={() => {
+                    if (selectedKyc && selectedKyc.status === "PENDING") {
+                      rejectMutation.mutate(selectedKyc.id);
+                    }
+                  }}
+                >
+                  Reject
+                </span>
+              </li>
+            </>
+          );
+      },
     },
     {
       key: "reject",
@@ -272,19 +291,22 @@ function RouteComponent() {
         });
       },
       render: (item) => {
-        return (
-          <button
-            className="btn btn-error btn-outline"
-            disabled={selectedKyc && selectedKyc.status !== "PENDING"}
-            onClick={() => {
-              if (selectedKyc && selectedKyc.status === "PENDING") {
-                rejectMutation.mutate(selectedKyc.id);
-              }
-            }}
-          >
-            Reject
-          </button>
-        );
+        if (item.status === "PENDING")
+          return (
+            <>
+              <li>
+                <span
+                  onClick={() => {
+                    if (selectedKyc && selectedKyc.status === "PENDING") {
+                      rejectMutation.mutate(selectedKyc.id);
+                    }
+                  }}
+                >
+                  Reject
+                </span>
+              </li>
+            </>
+          );
       },
     },
   ];
