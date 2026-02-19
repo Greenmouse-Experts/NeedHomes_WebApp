@@ -329,6 +329,7 @@ function RouteComponent() {
             <div className="flex gap-2">
               <button
                 className="btn btn-error btn-outline"
+                disabled={selectedKyc && selectedKyc.status !== "PENDING"}
                 onClick={() => {
                   if (selectedKyc && selectedKyc.status === "PENDING") {
                     rejectMutation.mutate(selectedKyc.id);
@@ -341,6 +342,7 @@ function RouteComponent() {
               </button>
               <button
                 className="btn btn-primary"
+                disabled={selectedKyc && selectedKyc.status !== "PENDING"}
                 onClick={() => {
                   if (selectedKyc && selectedKyc.status === "PENDING") {
                     approveMutation.mutate(selectedKyc.id);
