@@ -108,7 +108,7 @@ export default function KYCForm() {
     onSuccess: (data: ApiResponse) => {
       setKyc(data.data.verification);
       refetch();
-      toast.success(data.message || "KYC submitted successfully!");
+      // toast.success(data.message || "KYC submitted successfully!");
     },
     onError: (error) => {
       toast.error(
