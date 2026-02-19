@@ -63,6 +63,7 @@ import { Route as DashboardSubscriptionsRouteRouteImport } from './routes/dashbo
 import { Route as DashboardSubAdminsRouteRouteImport } from './routes/dashboard/sub-admins/route'
 import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard/properties/route'
 import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
+import { Route as DashboardChatRouteRouteImport } from './routes/dashboard/chat/route'
 import { Route as PartnersSubscriptionsIndexRouteImport } from './routes/partners/subscriptions/index'
 import { Route as PartnersPropertiesIndexRouteImport } from './routes/partners/properties/index'
 import { Route as PartnersPromotionsIndexRouteImport } from './routes/partners/promotions/index'
@@ -79,6 +80,7 @@ import { Route as DashboardSubAdminsIndexRouteImport } from './routes/dashboard/
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/partners/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
+import { Route as DashboardChatIndexRouteImport } from './routes/dashboard/chat/index'
 import { Route as PartnersPropertiesPropertyIdRouteImport } from './routes/partners/properties/$propertyId'
 import { Route as InvestorsPropertiesPropertyIdRouteImport } from './routes/investors/properties/$propertyId'
 import { Route as InvestorsMyInvestmentsInvestmentIdRouteImport } from './routes/investors/my-investments/$investmentId'
@@ -393,6 +395,11 @@ const DashboardInvestorsRouteRoute = DashboardInvestorsRouteRouteImport.update({
   path: '/investors',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardChatRouteRoute = DashboardChatRouteRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const PartnersSubscriptionsIndexRoute =
   PartnersSubscriptionsIndexRouteImport.update({
     id: '/subscriptions/',
@@ -480,6 +487,11 @@ const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardInvestorsRouteRoute,
+} as any)
+const DashboardChatIndexRoute = DashboardChatIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardChatRouteRoute,
 } as any)
 const PartnersPropertiesPropertyIdRoute =
   PartnersPropertiesPropertyIdRouteImport.update({
@@ -745,6 +757,7 @@ export interface FileRoutesByFullPath {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
@@ -782,6 +795,7 @@ export interface FileRoutesByFullPath {
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRouteWithChildren
+  '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -876,6 +890,7 @@ export interface FileRoutesByTo {
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
+  '/dashboard/chat': typeof DashboardChatIndexRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners': typeof DashboardPartnersIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
@@ -951,6 +966,7 @@ export interface FileRoutesById {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
@@ -988,6 +1004,7 @@ export interface FileRoutesById {
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRouteWithChildren
+  '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -1064,6 +1081,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/chat'
     | '/dashboard/investors'
     | '/dashboard/properties'
     | '/dashboard/sub-admins'
@@ -1101,6 +1119,7 @@ export interface FileRouteTypes {
     | '/investors/my-investments/$investmentId'
     | '/investors/properties/$propertyId'
     | '/partners/properties/$propertyId'
+    | '/dashboard/chat/'
     | '/dashboard/investors/'
     | '/dashboard/partners/'
     | '/dashboard/settings/'
@@ -1195,6 +1214,7 @@ export interface FileRouteTypes {
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/my-investments/$investmentId'
+    | '/dashboard/chat'
     | '/dashboard/investors'
     | '/dashboard/partners'
     | '/dashboard/settings'
@@ -1269,6 +1289,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/chat'
     | '/dashboard/investors'
     | '/dashboard/properties'
     | '/dashboard/sub-admins'
@@ -1306,6 +1327,7 @@ export interface FileRouteTypes {
     | '/investors/my-investments/$investmentId'
     | '/investors/properties/$propertyId'
     | '/partners/properties/$propertyId'
+    | '/dashboard/chat/'
     | '/dashboard/investors/'
     | '/dashboard/partners/'
     | '/dashboard/settings/'
@@ -1769,6 +1791,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/chat': {
+      id: '/dashboard/chat'
+      path: '/chat'
+      fullPath: '/dashboard/chat'
+      preLoaderRoute: typeof DashboardChatRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/partners/subscriptions/': {
       id: '/partners/subscriptions/'
       path: '/subscriptions'
@@ -1880,6 +1909,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/investors/'
       preLoaderRoute: typeof DashboardInvestorsIndexRouteImport
       parentRoute: typeof DashboardInvestorsRouteRoute
+    }
+    '/dashboard/chat/': {
+      id: '/dashboard/chat/'
+      path: '/'
+      fullPath: '/dashboard/chat/'
+      preLoaderRoute: typeof DashboardChatIndexRouteImport
+      parentRoute: typeof DashboardChatRouteRoute
     }
     '/partners/properties/$propertyId': {
       id: '/partners/properties/$propertyId'
@@ -2157,6 +2193,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardChatRouteRouteChildren {
+  DashboardChatIndexRoute: typeof DashboardChatIndexRoute
+}
+
+const DashboardChatRouteRouteChildren: DashboardChatRouteRouteChildren = {
+  DashboardChatIndexRoute: DashboardChatIndexRoute,
+}
+
+const DashboardChatRouteRouteWithChildren =
+  DashboardChatRouteRoute._addFileChildren(DashboardChatRouteRouteChildren)
+
 interface DashboardInvestorsRouteRouteChildren {
   DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
   DashboardInvestorsInvestorIdKycRoute: typeof DashboardInvestorsInvestorIdKycRoute
@@ -2378,6 +2425,7 @@ const DashboardPartnersRouteWithChildren =
   DashboardPartnersRoute._addFileChildren(DashboardPartnersRouteChildren)
 
 interface DashboardRouteRouteChildren {
+  DashboardChatRouteRoute: typeof DashboardChatRouteRouteWithChildren
   DashboardInvestorsRouteRoute: typeof DashboardInvestorsRouteRouteWithChildren
   DashboardPropertiesRouteRoute: typeof DashboardPropertiesRouteRouteWithChildren
   DashboardSubAdminsRouteRoute: typeof DashboardSubAdminsRouteRouteWithChildren
@@ -2393,6 +2441,7 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardChatRouteRoute: DashboardChatRouteRouteWithChildren,
   DashboardInvestorsRouteRoute: DashboardInvestorsRouteRouteWithChildren,
   DashboardPropertiesRouteRoute: DashboardPropertiesRouteRouteWithChildren,
   DashboardSubAdminsRouteRoute: DashboardSubAdminsRouteRouteWithChildren,
