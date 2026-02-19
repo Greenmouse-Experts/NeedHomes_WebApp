@@ -314,7 +314,8 @@ export default function AdminKycForm({ id }: { id: string }) {
                 className="text-red-600 hover:bg-red-100 hover:text-red-700 font-bold"
                 disabled={
                   verifyMutation.isPending ||
-                  kycResponse?.data.verification.status == "REJECTED"
+                  kycResponse?.data.verification.status == "REJECTED" ||
+                  kycResponse?.data.verification.status === "VERIFIED"
                 }
                 onClick={showRejectModal}
               >
