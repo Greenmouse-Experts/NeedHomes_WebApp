@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Separator } from "@/components/ui/Separator";
 import { useAuth } from "@/store/authStore";
+import AdminDashStats from "./-components/AdminDashStats";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
@@ -27,41 +28,8 @@ function DashboardIndexPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard">
       {/* Stats Cards */}
+      <AdminDashStats />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-4 md:mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              74 Investors
-            </CardTitle>
-            <Users className="w-5 h-5 text-[var(--color-orange)]" />
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              96 Partners
-            </CardTitle>
-            <Handshake className="w-5 h-5 text-[var(--color-orange)]" />
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              67 Building
-            </CardTitle>
-            <HomeIcon className="w-5 h-5 text-[var(--color-orange)]" />
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              24 Units
-            </CardTitle>
-            <Home className="w-5 h-5 text-[var(--color-orange)]" />
-          </CardHeader>
-        </Card>
-      </div>
       {/* Welcome Banner */}
       <Card className="mb-4 md:mb-6 bg-gradient-to-r from-gray-800 to-[var(--color-orange)] text-white relative overflow-hidden">
         <CardContent className="p-4 md:p-6">
