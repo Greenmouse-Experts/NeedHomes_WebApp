@@ -112,6 +112,7 @@ import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dash
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
 import { Route as PartnerRecoverForgotPasswordResetIndexRouteImport } from './routes/partner/recover/forgot-password/reset/index'
 import { Route as DashboardPropertiesInvestmentsIdIndexRouteImport } from './routes/dashboard/properties/investments/$id/index'
+import { Route as DashboardPartnersPartnerIdPromotionsIndexRouteImport } from './routes/dashboard/partners/$partnerId/promotions/index'
 import { Route as DashboardPropertiesEditPropertyIdSaveToOwnRouteImport } from './routes/dashboard/properties/edit/$propertyId/save-to-own'
 import { Route as DashboardPropertiesEditPropertyIdOutrightRouteImport } from './routes/dashboard/properties/edit/$propertyId/outright'
 import { Route as DashboardPropertiesEditPropertyIdLandBankRouteImport } from './routes/dashboard/properties/edit/$propertyId/land-bank'
@@ -677,6 +678,12 @@ const DashboardPropertiesInvestmentsIdIndexRoute =
     path: '/investments/$id/',
     getParentRoute: () => DashboardPropertiesRouteRoute,
   } as any)
+const DashboardPartnersPartnerIdPromotionsIndexRoute =
+  DashboardPartnersPartnerIdPromotionsIndexRouteImport.update({
+    id: '/promotions/',
+    path: '/promotions/',
+    getParentRoute: () => DashboardPartnersPartnerIdRoute,
+  } as any)
 const DashboardPropertiesEditPropertyIdSaveToOwnRoute =
   DashboardPropertiesEditPropertyIdSaveToOwnRouteImport.update({
     id: '/$propertyId/save-to-own',
@@ -815,6 +822,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/edit/$propertyId/land-bank': typeof DashboardPropertiesEditPropertyIdLandBankRoute
   '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/dashboard/properties/edit/$propertyId/save-to-own': typeof DashboardPropertiesEditPropertyIdSaveToOwnRoute
+  '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
@@ -908,6 +916,7 @@ export interface FileRoutesByTo {
   '/dashboard/properties/edit/$propertyId/land-bank': typeof DashboardPropertiesEditPropertyIdLandBankRoute
   '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/dashboard/properties/edit/$propertyId/save-to-own': typeof DashboardPropertiesEditPropertyIdSaveToOwnRoute
+  '/dashboard/partners/$partnerId/promotions': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id': typeof DashboardPropertiesInvestmentsIdIndexRoute
   '/partner/recover/forgot-password/reset': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
@@ -1019,6 +1028,7 @@ export interface FileRoutesById {
   '/dashboard/properties/edit/$propertyId/land-bank': typeof DashboardPropertiesEditPropertyIdLandBankRoute
   '/dashboard/properties/edit/$propertyId/outright': typeof DashboardPropertiesEditPropertyIdOutrightRoute
   '/dashboard/properties/edit/$propertyId/save-to-own': typeof DashboardPropertiesEditPropertyIdSaveToOwnRoute
+  '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
@@ -1131,6 +1141,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/edit/$propertyId/land-bank'
     | '/dashboard/properties/edit/$propertyId/outright'
     | '/dashboard/properties/edit/$propertyId/save-to-own'
+    | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
     | '/partner/recover/forgot-password/reset/'
   fileRoutesByTo: FileRoutesByTo
@@ -1224,6 +1235,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/edit/$propertyId/land-bank'
     | '/dashboard/properties/edit/$propertyId/outright'
     | '/dashboard/properties/edit/$propertyId/save-to-own'
+    | '/dashboard/partners/$partnerId/promotions'
     | '/dashboard/properties/investments/$id'
     | '/partner/recover/forgot-password/reset'
   id:
@@ -1334,6 +1346,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/edit/$propertyId/land-bank'
     | '/dashboard/properties/edit/$propertyId/outright'
     | '/dashboard/properties/edit/$propertyId/save-to-own'
+    | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
     | '/partner/recover/forgot-password/reset/'
   fileRoutesById: FileRoutesById
@@ -2099,6 +2112,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPropertiesInvestmentsIdIndexRouteImport
       parentRoute: typeof DashboardPropertiesRouteRoute
     }
+    '/dashboard/partners/$partnerId/promotions/': {
+      id: '/dashboard/partners/$partnerId/promotions/'
+      path: '/promotions'
+      fullPath: '/dashboard/partners/$partnerId/promotions/'
+      preLoaderRoute: typeof DashboardPartnersPartnerIdPromotionsIndexRouteImport
+      parentRoute: typeof DashboardPartnersPartnerIdRoute
+    }
     '/dashboard/properties/edit/$propertyId/save-to-own': {
       id: '/dashboard/properties/edit/$propertyId/save-to-own'
       path: '/$propertyId/save-to-own'
@@ -2328,12 +2348,15 @@ const DashboardWithdrawalsRouteRouteWithChildren =
 interface DashboardPartnersPartnerIdRouteChildren {
   DashboardPartnersPartnerIdKycRoute: typeof DashboardPartnersPartnerIdKycRoute
   DashboardPartnersPartnerIdIndexRoute: typeof DashboardPartnersPartnerIdIndexRoute
+  DashboardPartnersPartnerIdPromotionsIndexRoute: typeof DashboardPartnersPartnerIdPromotionsIndexRoute
 }
 
 const DashboardPartnersPartnerIdRouteChildren: DashboardPartnersPartnerIdRouteChildren =
   {
     DashboardPartnersPartnerIdKycRoute: DashboardPartnersPartnerIdKycRoute,
     DashboardPartnersPartnerIdIndexRoute: DashboardPartnersPartnerIdIndexRoute,
+    DashboardPartnersPartnerIdPromotionsIndexRoute:
+      DashboardPartnersPartnerIdPromotionsIndexRoute,
   }
 
 const DashboardPartnersPartnerIdRouteWithChildren =

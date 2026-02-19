@@ -28,6 +28,7 @@ import apiClient from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import SimpleAvatar from "@/simpleComps/SimpleAvatar";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import PromotedProps from "./-components/PromotedProps";
 
 export const Route = createFileRoute("/dashboard/partners/$partnerId/")({
   component: PartnerDetailsPage,
@@ -221,7 +222,7 @@ function PartnerDetailsPage() {
                     >
                       Overview
                     </button>
-                    <button
+                    {/*<button
                       onClick={() => setActiveTab("properties")}
                       className={`pb-4 px-1 font-medium text-sm transition-colors relative ${
                         activeTab === "properties"
@@ -230,7 +231,7 @@ function PartnerDetailsPage() {
                       }`}
                     >
                       Promoted Properties
-                    </button>
+                    </button>*/}
                   </div>
                 </div>
 
@@ -330,115 +331,12 @@ function PartnerDetailsPage() {
                       </div>
                     </div>
                   )}
-
-                  {activeTab === "properties" && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Promoted Properties
-                      </h3>
-                      <div className="text-center py-12 bg-gray-50 rounded-lg">
-                        <p className="text-gray-500">
-                          Property promotion tracking coming soon.
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
 
               {/* Promoted Properties Table Placeholder */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Promoted Properties
-                  </h3>
-
-                  {/* Tabs */}
-                  <div className="flex gap-2 mb-6">
-                    <button className="px-4 py-2 bg-brand-orange text-white rounded-lg text-sm font-medium">
-                      All Properties
-                    </button>
-                    <button className="px-4 py-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg text-sm font-medium">
-                      Completed Properties
-                    </button>
-                    <button className="px-4 py-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg text-sm font-medium">
-                      Uncompleted Properties
-                    </button>
-                  </div>
-
-                  {/* Search and Export */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="relative flex-1 max-w-md">
-                      <svg
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                      </svg>
-                      <input
-                        type="text"
-                        placeholder="Search"
-                        className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm w-full focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange"
-                      />
-                    </div>
-                    <Button variant="outline" size="sm" className="ml-4">
-                      Export As
-                    </Button>
-                  </div>
-
-                  {/* Table */}
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-gray-50">
-                          <TableHead className="font-semibold text-xs">
-                            SKU
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Property Description
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Package
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Image
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Price
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Quantity
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Status
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs">
-                            Action
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell
-                            //@ts-ignore
-                            colSpan={8}
-                            className="text-center py-8 text-gray-500 text-xs"
-                          >
-                            No promoted properties data available for this
-                            partner.
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
+                <PromotedProps id={partnerId} />
               </div>
             </div>
           );
