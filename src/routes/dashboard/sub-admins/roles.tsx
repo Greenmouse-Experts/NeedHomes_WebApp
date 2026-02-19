@@ -204,11 +204,35 @@ function RouteComponent() {
                       type: string;
                     }[];
                     return (
-                      <ul className="flex flex-col gap-2">
-                        {item_array.map((perm) => {
-                          const isSelected =
-                            props.selected && props.selected[perm.key];
-                          if (isSelected) {
+                      <div className="flex flex-col gap-2 bg-base-100 ring rounded-box fade  ">
+                        <h2 className="p-2 m-2 border-b font-bold text-current/80 fade">
+                          {item.category}
+                        </h2>
+
+                        <ul className="p-2 flex-col gap-4 flex">
+                          {item_array.map((perm) => {
+                            const isSelected =
+                              props.selected && props.selected[perm.key];
+                            if (isSelected) {
+                              return (
+                                <>
+                                  <li
+                                    key={perm.key}
+                                    onClick={() => {
+                                      if (isSelected) {
+                                        props.remove(perm.key);
+                                      } else {
+                                        props.add_to({ id: perm.key });
+                                      }
+                                    }}
+                                  >
+                                    <span className="badge badge-primary cursor-pointer badge-lg ring fade">
+                                      {perm.key}
+                                    </span>
+                                  </li>
+                                </>
+                              );
+                            }
                             return (
                               <>
                                 <li
@@ -221,33 +245,15 @@ function RouteComponent() {
                                     }
                                   }}
                                 >
-                                  <span className="badge badge-primary cursor-pointer badge-lg ring fade">
+                                  <span className="badge badge-primary badge-soft cursor-pointer badge-lg ring fade">
                                     {perm.key}
                                   </span>
                                 </li>
                               </>
                             );
-                          }
-                          return (
-                            <>
-                              <li
-                                key={perm.key}
-                                onClick={() => {
-                                  if (isSelected) {
-                                    props.remove(perm.key);
-                                  } else {
-                                    props.add_to({ id: perm.key });
-                                  }
-                                }}
-                              >
-                                <span className="badge badge-primary badge-soft cursor-pointer badge-lg ring fade">
-                                  {perm.key}
-                                </span>
-                              </li>
-                            </>
-                          );
-                        })}
-                      </ul>
+                          })}
+                        </ul>
+                      </div>
                     );
                     return <></>;
                   }}
