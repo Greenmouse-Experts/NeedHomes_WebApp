@@ -87,6 +87,7 @@ function RouteComponent() {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
+        //@ts-ignore
         basePrice: data.basePrice * 100,
         totalPrice: totalPrice * 100,
         completionDate: data.completionDate
@@ -94,8 +95,8 @@ function RouteComponent() {
           : null,
       };
       const new_payload = strip_outright(payload);
-      const response = await apiClient.patch(
-        `/admin/properties/${data.id}/outright`,
+      const response = await apiClient.post(
+        `/admin/properties/outright`,
         new_payload,
       );
       return response.data;
