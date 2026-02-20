@@ -303,13 +303,6 @@ export function DashboardLayout({
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
-            <div className="hidden lg:block relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Enter keyword"
-                className="pl-10 w-64 border-gray-300 text-sm"
-              />
-            </div>
             <div className="relative">
               <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
               <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0">
