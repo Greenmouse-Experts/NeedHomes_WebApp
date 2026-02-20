@@ -304,12 +304,16 @@ export function DashboardLayout({
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
-            <div className="relative">
+            <Link
+              to="/dashboard/notifications"
+              viewTransition
+              className="relative"
+            >
               <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
               <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0">
                 6
               </Badge>
-            </div>
+            </Link>
             <ThemeProvider>
               <div className="dropdown dropdown-end">
                 <button className="btn btn-circle">
