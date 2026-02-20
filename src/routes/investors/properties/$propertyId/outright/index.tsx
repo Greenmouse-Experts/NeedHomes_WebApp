@@ -123,7 +123,7 @@ function PropertyDetailPage() {
         };
 
         if (property.paymentOption === "INSTALLMENT") {
-          breakdown.installmentAmount = property.minimumInvestmentAmount;
+          breakdown.installmentAmount = property.minimumInstallmentAmount;
           //@ts-ignore
           breakdown.installmentDuration = property.installmentDuration;
         }
