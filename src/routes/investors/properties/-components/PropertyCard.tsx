@@ -1,5 +1,5 @@
 import type { PROPERTY_DATA } from "@/types";
-import { Link } from "@tanstack/react-router";
+import { Link, type UseNavigateResult } from "@tanstack/react-router";
 import { MapPin, Home, TrendingUp, Calendar, ArrowRight } from "lucide-react";
 
 export default function PropertyCard({
@@ -14,10 +14,22 @@ export default function PropertyCard({
       maximumFractionDigits: 0,
     }).format(amount);
   };
+  const route = (propType: typeof property.investmentModel) => {
+    switch (propType) {
+      //@ts-ignore
+      case "OUTRIGHT_PURCHASE":
+        return "/investors/properties/$propertyId/outright";
+
+        return "/investors/properties";
+    }
+  };
 
   return (
     <Link
-      to="/investors/properties/$propertyId"
+      //@ts-ignore
+      to={route(property.investmentModel)}
+      //@ts-ignore
+
       params={{ propertyId: property.id }}
       className="card card-compact bg-base-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
     >
