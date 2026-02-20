@@ -64,6 +64,29 @@ function PropertyDetailPage() {
     },
   });
 
+  const mutateIns = useMutation({
+    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+      let resp = await apiClient.post(
+        "/investments/installments/:paymentId/pay",
+        {
+          propertyId: propertyId,
+          amountPaid: data.amountPaid,
+          quantity: data.quantity,
+        },
+      );
+      return resp.data;
+    },
+    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      closeModal();
+      navigate({
+        to: "/investors/my-investments/$investmentId",
+        params: {
+          investmentId: data.data.id,
+        },
+      });
+    },
+  });
+
   const onSubmit = (data: { amountPaid: number; quantity: number }) => {
     toast.promise(mutate.mutateAsync(data), {
       loading: "Investing...",
@@ -73,7 +96,7 @@ function PropertyDetailPage() {
   };
   interface OUTRIGHTDATA {
     paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
-    minimumInvestmentAmount?: number;
+    minimumInstallmentAmount?: number;
     installmentDuraion?: number;
   }
   return (
@@ -104,6 +127,7 @@ function PropertyDetailPage() {
           //@ts-ignore
           breakdown.installmentDuration = property.installmentDuration;
         }
+        const payOption = property.paymentOption;
 
         return (
           <>
@@ -118,9 +142,22 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
+                      if (payOption == "INSTALLMENT") {
+                        return toast.promise(
+                          mutate.mutateAsync({
+                            amountPaid: property.minimumInstallmentAmount,
+                            quantity: 1,
+                          }),
+                          {
+                            loading: "Processing payment...",
+                            success: "Payment successful!",
+                            error: extract_message,
+                          },
+                        );
+                      }
                       toast.promise(
                         mutate.mutateAsync({
-                          amountPaid: parseInt(breakdown.totalPrice),
+                          amountPaid: breakdown.totalPrice,
                           quantity: 1,
                         }),
                         {
@@ -132,7 +169,10 @@ function PropertyDetailPage() {
                     }}
                     disabled={mutate.isPending}
                   >
-                    Confirm & Pay {formatCurrency(breakdown.totalPrice)}
+                    Confirm & Pay{" "}
+                    {payOption == "INSTALLMENT"
+                      ? property.minimumInstallmentAmount?.toLocaleString()
+                      : breakdown.totalPrice.toLocaleString()}
                   </Button>
                 </div>
               }
@@ -182,7 +222,7 @@ function PropertyDetailPage() {
                     <p className="text-xs text-blue-700">
                       You are paying the minimum installment of{" "}
                       <span className="font-bold">
-                        {formatCurrency(property.minimumInvestmentAmount)}
+                        {property.minimumInstallmentAmount?.toLocaleString()}
                       </span>
                       . Remaining balance will be spread over{" "}
                       {property.installmentDuration} months.
