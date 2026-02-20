@@ -8,7 +8,7 @@ export const Route = createFileRoute("/dashboard/notifications")({
 function RouteComponent() {
   return (
     <>
-      <DashboardLayout title="Super Admin dashboard">
+      <DashboardLayout title="Super Admin dashboard" subtitle="Notification">
         <Outlet />
       </DashboardLayout>
     </>
