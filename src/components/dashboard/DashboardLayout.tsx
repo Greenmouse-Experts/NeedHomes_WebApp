@@ -116,6 +116,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     items: [{ label: "KYC", to: "/dashboard/verifications", icon: Receipt }],
   },
   { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
+  { label: "NOTIFICATIONS", to: "/dashboard/notifications", icon: Bell },
   // {
   //   label: "SUBSCRIPTIONS",
   //   to: "/dashboard/subscriptions",
