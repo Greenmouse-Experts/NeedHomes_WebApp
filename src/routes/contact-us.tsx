@@ -25,7 +25,7 @@ function RouteComponent() {
             <div className="flex items-center gap-2 text-muted-foreground mb-8">
               <Clock className="h-5 w-5 text-orange-500" />
               <p>
-                Our offices are open Monday to Friday, from 8:00 AM to 5:00 PM,
+                Our offices are open Monday to Friday, 24 hours / 7 days a week,
                 excluding public holidays.
               </p>
             </div>

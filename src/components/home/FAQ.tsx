@@ -94,7 +94,14 @@ export default function FAQ() {
                 NeedHomes
               </p>
               <div>
-                <Button onClick={() => { navigate({ to: '/contact-us' }) }} variant="primary">Contact Us</Button>
+                <Button
+                  onClick={() => {
+                    navigate({ to: "/contact-us" });
+                  }}
+                  variant="primary"
+                >
+                  Contact Us
+                </Button>
               </div>
             </div>
           </FlexInfo>
@@ -193,7 +200,7 @@ export default function FAQ() {
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-sm text-gray-600">
                   <p className="font-semibold">Have More Questions?</p>
-                  <p>📩 support@needhomes.com.ng | 📞 +234 702 500 5857</p>
+                  <p>📩 support@needhomes.com| 📞 +234 702 500 5857</p>
                 </div>
                 <Button variant="primary" onClick={() => setModalOpen(false)}>
                   Close
