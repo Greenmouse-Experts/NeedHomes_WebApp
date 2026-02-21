@@ -8,9 +8,9 @@ import {
   MapPin,
   Calendar,
   TrendingUp,
+  Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import {
   Table,
   TableBody,
@@ -82,19 +82,7 @@ function InvestorDetailsPage() {
               {/* Header Section */}
               <div className="bg-linear-to-r from-orange-50 to-orange-100 p-6 md:p-8">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                  {/* Avatar */}
-                  {/*<Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
-                    <AvatarImage
-                      src={investor.profilePicture || ""}
-                      // alt={`${investor.firstName} ${investor.lastName}`}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="text-2xl font-bold">
-                      {investor.firstName?.[0]}
-                      {investor.lastName?.[0]}
-                    </AvatarFallback>
-                  </Avatar>*/}
-                  <ThemeProvider className="!flex-0 ">
+                  <ThemeProvider className="flex-0! ">
                     <SimpleAvatar
                       url={investor.profilePicture || ""}
                       alt={investor.firstName}
@@ -134,7 +122,6 @@ function InvestorDetailsPage() {
                           </button>
                         }
                       >
-                        {/*<DropdownMenuItem>Edit Investor</DropdownMenuItem>*/}
                         <DropdownMenuItem>Suspend Investor</DropdownMenuItem>
                       </DropdownMenu>
                     </div>
@@ -285,6 +272,19 @@ function InvestorDetailsPage() {
                             <p className="text-xs text-gray-500">Address</p>
                             <p className="text-sm font-medium text-gray-900">
                               {investor.verification_document?.address || "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="p-2 bg-orange-100 rounded-lg">
+                            <Share2 className="w-4 h-4 text-orange-600" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">
+                              Referral Source
+                            </p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {investor.referral_source || "N/A"}
                             </p>
                           </div>
                         </div>

@@ -8,18 +8,10 @@ import {
   MapPin,
   Calendar,
   TrendingUp,
+  Share2,
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/Table";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import { useQuery } from "@tanstack/react-query";
 import type { ApiResponse } from "@/api/simpleApi";
@@ -71,23 +63,12 @@ function PartnerDetailsPage() {
                 <div className="bg-linear-to-r from-orange-50 to-orange-100 p-6 md:p-8">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                     {/* Avatar */}
-                    <ThemeProvider className="!flex-0 ">
+                    <ThemeProvider className="flex-0!">
                       <SimpleAvatar
                         url={partner.profilePicture || ""}
                         alt={partner.firstName}
                       />
                     </ThemeProvider>
-                    {/*<Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-white shadow-lg">
-                      <AvatarImage
-                        src={partner.profilePicture || ""}
-                        // alt={`${partner.firstName} ${partner.lastName}`}
-                        className="object-cover"
-                      />
-                      <AvatarFallback className="text-2xl font-bold">
-                        {partner.firstName[0]}
-                        {partner.lastName[0]}
-                      </AvatarFallback>
-                    </Avatar>*/}
 
                     {/* Partner Info */}
                     <div className="flex-1">
@@ -125,11 +106,7 @@ function PartnerDetailsPage() {
                             </button>
                           }
                         >
-                          {/*<DropdownMenuItem>Edit Partner</DropdownMenuItem>*/}
                           <DropdownMenuItem>Suspend Partner</DropdownMenuItem>
-                          {/*<DropdownMenuItem className="text-red-600">
-                            Delete Partner
-                          </DropdownMenuItem>*/}
                         </DropdownMenu>
                       </div>
                     </div>
@@ -222,16 +199,6 @@ function PartnerDetailsPage() {
                     >
                       Overview
                     </button>
-                    {/*<button
-                      onClick={() => setActiveTab("properties")}
-                      className={`pb-4 px-1 font-medium text-sm transition-colors relative ${
-                        activeTab === "properties"
-                          ? "text-brand-orange border-b-2 border-brand-orange"
-                          : "text-gray-500 hover:text-gray-700"
-                      }`}
-                    >
-                      Promoted Properties
-                    </button>*/}
                   </div>
                 </div>
 
@@ -280,6 +247,19 @@ function PartnerDetailsPage() {
                               <p className="text-sm font-medium text-gray-900">
                                 {partner.verification_document?.address ||
                                   "N/A"}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="p-2 bg-orange-100 rounded-lg">
+                              <Share2 className="w-4 h-4 text-orange-600" />
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500">
+                                Referral Source
+                              </p>
+                              <p className="text-sm font-medium text-gray-900">
+                                {partner.referral_source || "N/A"}
                               </p>
                             </div>
                           </div>
