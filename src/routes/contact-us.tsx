@@ -60,7 +60,7 @@ function RouteComponent() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-orange-500" />
-                    <span className="text-sm">support@needhomes.ng</span>
+                    <span className="text-sm"> support@needhomes.com</span>
                   </div>
                 </div>
               </div>
@@ -129,8 +129,8 @@ function RouteComponent() {
 
                 <p className="text-[10px] text-gray-400 leading-tight">
                   By providing your name, phone number and email you consent to
-                  NeedHomes Property Investment Limited's use of your personal data in
-                  accordance with the Privacy Policy.
+                  NeedHomes Property Investment Limited's use of your personal
+                  data in accordance with the Privacy Policy.
                 </p>
 
                 <button

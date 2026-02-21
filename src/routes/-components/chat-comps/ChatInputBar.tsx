@@ -34,10 +34,10 @@ export default function ChatInputBar({
         onSubmit={form.handleSubmit((data) => {
           if (data.message.trim()) {
             if (convos) {
-              console.log(socket.current);
+              // console.log(socket.current);
               return socket.current.emit("chat:sendMessage", {
                 conversationId: convos.id,
-                message: data.message,
+                content: data.message,
               });
             }
             return mutation.mutate(data);

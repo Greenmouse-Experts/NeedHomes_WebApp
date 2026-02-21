@@ -46,15 +46,9 @@ export default function ChatPage() {
     socket.on("connect", () => {
       console.log("✅ Connected to WebSocket");
     });
-
-    socket.on("new_message", () => {
-      queryClient.invalidateQueries({ queryKey: ["chat"] });
-    });
-
     socket.on("connected", (data) => {
       console.log("User data:", data);
     });
-
     // ✅ DISCONNECT ON UNMOUNT
     return () => {
       console.log("❌ Disconnecting socket...");
@@ -76,7 +70,7 @@ export default function ChatPage() {
 
                 return (
                   <>
-                    <Conversations convos={convos} />
+                    <Conversations convos={convos} socket={socketRef} />
                     <ChatInputBar convos={convos} socket={socketRef} />
                   </>
                 );
