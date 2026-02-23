@@ -1,9 +1,11 @@
-import { logout } from "@/store/authStore";
+import { logout, useAuth } from "@/store/authStore";
 import { LogOut, AlertCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
+import CorpKYCFORM from "./CorpKYCFORM";
 
 export default function LogoutModal() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [auth] = useAuth();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);

@@ -14,7 +14,6 @@ import { extract_message } from "@/helpers/apihelpers";
 import type { VERIFICATION_REQUEST } from "@/types";
 import type { AxiosError } from "axios";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import CorpKYCFORM from "./CorpKYCFORM";
 
 interface KycFormData {
   idType:
@@ -30,13 +29,11 @@ interface KycFormData {
   address: string;
 }
 
-export default function KYCForm() {
+export default function CorpKYCFORM() {
   const [auth] = useAuth();
   const accountType = auth?.user?.accountType || "INDIVIDUAL";
   const [kyc, setKyc] = useKyc();
-  if (auth?.user.accountType == "CORPORATE") {
-    return <CorpKYCFORM />;
-  }
+
   const {
     register,
     handleSubmit,
@@ -223,11 +220,14 @@ export default function KYCForm() {
               className="flex w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200 appearance-none cursor-pointer"
             >
               <option value="">Select ID Type</option>
-              <option value="NIN">NIN (National Identification Number)</option>
-              {/*<option value="national-id">National ID Card</option>*/}
-              <option value="drivers-license">Driver's License</option>
-              <option value="passport">International Passport</option>
-              <option value="voters-card">Voter's Card</option>
+              <option value="cacDocument">
+                Business Registration / Incorporation Certificate
+              </option>
+              <option value="tinDocument">TIN / VAT Registration</option>
+              <option value="authorizedId">
+                Proof of Authorized Signatory (Director ID or Letter of
+                Authorization)
+              </option>
             </select>
             {errors.idType && (
               <p className="text-red-500 text-xs font-medium mt-1">
