@@ -71,9 +71,7 @@ export default function Conversations({
       {messages.map((message) => (
         <div
           key={message.id}
-          className={`chat ${
-            message.senderId === userId ? "chat-end" : "chat-start"
-          }`}
+          className={`chat ${!message.isSystem ? "chat-end" : "chat-start"}`}
         >
           <div className="chat-image avatar placeholder">
             <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
