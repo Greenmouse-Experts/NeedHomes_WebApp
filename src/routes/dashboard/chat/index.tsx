@@ -78,7 +78,16 @@ function RouteComponent() {
             <PendingConversations />
             <div className="border-t fade">
               <h2 className="border-b fade p-4 font-bold">Conversations </h2>
-              <QueryCompLayout query={query}>
+              <QueryCompLayout
+                query={query}
+                customLoading={
+                  <>
+                    <div className="flex-1 grid place-items-center">
+                      <h2>....Loading Conversations</h2>
+                    </div>
+                  </>
+                }
+              >
                 {(data) => {
                   const chats = data.data;
                   return (
