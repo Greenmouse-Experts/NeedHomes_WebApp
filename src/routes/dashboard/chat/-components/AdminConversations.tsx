@@ -73,7 +73,16 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
   return (
     <section className="h-[calc(100dvh-144px)] flex   p-0 isolate w-full b">
       <section className="flex flex-col flex-1 min-h-0 ">
-        <QueryCompLayout query={query}>
+        <QueryCompLayout
+          query={query}
+          customLoading={
+            <>
+              <div className="flex-1 grid place-items-center bg-base-100 border fade">
+                <h2>....Loading Conversations</h2>
+              </div>
+            </>
+          }
+        >
           {(data) => {
             return (
               <div className="bg-base-100 md:border-l fade flex flex-1 min-h-0 flex-col">
