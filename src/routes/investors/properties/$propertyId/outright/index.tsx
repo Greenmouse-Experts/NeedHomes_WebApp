@@ -196,7 +196,9 @@ function PropertyDetailPage() {
                       key={idx}
                       className="flex justify-between items-center"
                     >
-                      <span className="text-sm text-gray-600">{fee.label}</span>
+                      <span className="text-sm text-gray-600">
+                        {fee.label} (₦{fee.amount.toLocaleString()})
+                      </span>
                       <span className="text-sm font-medium">
                         {formatCurrency(fee.amount)}
                       </span>
