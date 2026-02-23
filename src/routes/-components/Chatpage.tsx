@@ -72,7 +72,11 @@ export default function ChatPage() {
                   <>
                     {socketRef.current && (
                       <>
-                        <Conversations convos={convos} socket={socketRef} />
+                        <Conversations
+                          query={query}
+                          convos={convos}
+                          socket={socketRef}
+                        />
                       </>
                     )}
                     <ChatInputBar convos={convos} socket={socketRef} />

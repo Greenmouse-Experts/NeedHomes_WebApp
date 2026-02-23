@@ -1,6 +1,14 @@
+import apiClient from "@/api/simpleApi";
+import { extract_message } from "@/helpers/apihelpers";
 import { useAuth } from "@/store/authStore";
+import {
+  useMutation,
+  type QueryObserver,
+  type QueryObserverResult,
+} from "@tanstack/react-query";
 import { useEffect, useState, type RefObject } from "react";
 import { io, Socket } from "socket.io-client";
+import { toast } from "sonner";
 
 interface Sender {
   id: string;
@@ -35,9 +43,11 @@ interface Conversation {
 
 export default function Conversations({
   convos,
+  query,
   socket,
 }: {
   convos: Conversation | null;
+  query: QueryObserverResult;
   socket: RefObject<Socket>;
 }) {
   useEffect(() => {
@@ -61,9 +71,45 @@ export default function Conversations({
   const [messages, setMessages] = useState<Message[]>(convos?.messages || []);
   const userId = auth?.user.id;
   const token = auth?.accessToken;
+  const mutation = useMutation({
+    mutationFn: async (data: { message: string }) => {
+      let resp = await apiClient.post("/chat/conversations", {
+        message: data.message,
+      });
+      return resp.data;
+    },
+    onSuccess: (data) => {
+      query.refetch;
+      // client.invalidateQueries({ queryKey: ["chat"] });
+    },
+  });
 
   if (!convos) {
-    return <>No Messages</>;
+    return (
+      <div className="flex-1 grid place-items-center">
+        <div>
+          <h2 className="text-current/50 text-2xl text-center">No Messages</h2>
+          <button
+            disabled={mutation.isPending}
+            onClick={() => {
+              toast.promise(
+                mutation.mutateAsync({
+                  message: "Hello",
+                }),
+                {
+                  loading: "starting convo",
+                  error: extract_message,
+                  success: "conversation started",
+                },
+              );
+            }}
+            className="mt-4 btn btn-primary btn-soft ring fade btn-lg"
+          >
+            Start Conversation
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

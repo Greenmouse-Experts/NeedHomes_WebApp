@@ -1,7 +1,7 @@
 import apiClient from "@/api/simpleApi";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
-import { Query, useMutation } from "@tanstack/react-query";
+import { Query, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { RefObject } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { Socket } from "socket.io-client";
@@ -18,6 +18,7 @@ export default function ChatInputBar({
       message: "",
     },
   });
+  const client = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (data: { message: string }) => {
@@ -26,7 +27,9 @@ export default function ChatInputBar({
       });
       return resp.data;
     },
-    // onSuccess: (data) => {},
+    onSuccess: (data) => {
+      // client.invalidateQueries({ queryKey: ["chat"] });
+    },
   });
   return (
     <FormProvider {...form}>
@@ -52,7 +55,9 @@ export default function ChatInputBar({
           placeholder="Type your message here..."
         />
         <div className="">
-          <button className="btn btn-primary">Submit</button>
+          <button disabled={!convos} className="btn btn-primary">
+            Submit
+          </button>
         </div>
       </form>
     </FormProvider>
