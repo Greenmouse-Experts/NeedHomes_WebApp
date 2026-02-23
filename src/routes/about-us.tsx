@@ -77,7 +77,7 @@ function RouteComponent() {
                 <p className="text-brand-orange font-medium mb-2">
                   Track Record
                 </p>
-                <h3 className="text-4xl font-serif mb-4">Over ₦500 Million</h3>
+                <h3 className="text-4xl font-serif mb-4">Over 1Billion</h3>
                 <p className="text-gray-300">
                   Invested so far into the company by partners who trust our
                   vision for the African real estate market.
