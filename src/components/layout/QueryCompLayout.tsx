@@ -76,9 +76,5 @@ export default function QueryCompLayout<TData>(
     );
   }
 
-  return (
-    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-      {typeof children === "function" ? children(query.data) : children}
-    </div>
-  );
+  return typeof children === "function" ? children(query.data) : children;
 }

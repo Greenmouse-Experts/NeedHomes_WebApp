@@ -41,40 +41,21 @@ export default function Conversations({
   socket: RefObject<Socket>;
 }) {
   useEffect(() => {
-    if (convos) {
-      // socket?.current.emit("chat:joinConversation", {
-      //   conversationId: convos?.id,
-      // });
-      socket?.current.emit("chat:createConversation", {
-        // conversationId: convos?.id,
+    socket?.current.emit("chat:createConversation", {
+      conversationId: convos?.id,
+    });
+    socket.current.on("chat:error", (error) => {
+      console.error("Chat error:", error.message);
+    });
+    socket.current.on("chat:newMessage", (message) => {
+      setMessages((prevMessages) => {
+        if (!prevMessages.some((msg) => msg.id === message.id)) {
+          return [...prevMessages, message];
+        }
+        return prevMessages;
       });
-      socket.current.on("chat:error", (error) => {
-        console.error("Chat error:", error.message);
-
-        // Show error toast
-
-        // Examples:
-        // - "Conversation not found"
-        // - "Only admins can join conversations"
-        // - "You are not part of this conversation"
-      });
-      socket.current.on("chat:conversationJoined", (data) => {
-        console.log("Joined conversation:", data.conversationId);
-        // Redirect admin to chat interface
-      });
-      socket.current.on("chat:newMessage", (message) => {
-        // This event is received by EVERYONE in the conversation room
-        console.log("New message:", message);
-        // Add to chat UI
-      });
-    }
-
-    // socket?.current.on("chat:newMessage", (message) => {
-    //   // This event is received by EVERYONE in the conversation room
-    //   console.log("New message:", message);
-    //   // Add to chat UI
-    // });
-  }, [convos?.id]);
+    });
+  }, []);
 
   const [auth] = useAuth();
   const [messages, setMessages] = useState<Message[]>(convos?.messages || []);
@@ -86,7 +67,7 @@ export default function Conversations({
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-4 flex-1 overflow-y-scroll">
       {messages.map((message) => (
         <div
           key={message.id}

@@ -58,27 +58,32 @@ export default function ChatPage() {
 
   return (
     <>
-      <div className="ring fade rounded-box">
-        <div className="p-6 border-b fade">
-          <h2 className="text-xl font-bold">Chat</h2>
-        </div>
-        <div className="">
-          <section className="p-4 ">
+      <section className="h-[calc(100dvh-124px)] max-h-[calc(100dvh-124px)] flex     isolate w-full">
+        <div className="ring fade rounded-box  flex flex-col flex-1   overflow-y-scroll isolate">
+          <div className="p-6 border-b fade max-h-20 sticky top-0 z-10 bg-base-100">
+            <h2 className="text-xl font-bold">Chat</h2>
+          </div>
+          <div className=" flex-1">
             <QueryCompLayout query={query}>
               {(data) => {
                 const convos = data.data;
 
                 return (
                   <>
-                    <Conversations convos={convos} socket={socketRef} />
+                    {socketRef.current && (
+                      <>
+                        <Conversations convos={convos} socket={socketRef} />
+                      </>
+                    )}
                     <ChatInputBar convos={convos} socket={socketRef} />
                   </>
                 );
               }}
             </QueryCompLayout>
-          </section>
+          </div>
         </div>
-      </div>
+      </section>
     </>
   );
+  return <></>;
 }

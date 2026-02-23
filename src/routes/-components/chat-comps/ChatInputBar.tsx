@@ -1,4 +1,5 @@
 import apiClient from "@/api/simpleApi";
+import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
 import { Query, useMutation } from "@tanstack/react-query";
 import type { RefObject } from "react";
@@ -30,7 +31,7 @@ export default function ChatInputBar({
   return (
     <FormProvider {...form}>
       <form
-        className="flex gap-2"
+        className="flex gap-2 sticky bottom-0 p-4 z-10 bg-base-100 border-t  fade"
         onSubmit={form.handleSubmit((data) => {
           if (data.message.trim()) {
             if (convos) {
@@ -45,7 +46,7 @@ export default function ChatInputBar({
           toast.info("Message is empty");
         })}
       >
-        <SimpleTextArea
+        <SimpleInput
           className="min-h-32"
           {...form.register("message")}
           placeholder="Type your message here..."
