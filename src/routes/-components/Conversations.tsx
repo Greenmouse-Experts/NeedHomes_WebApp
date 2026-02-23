@@ -79,7 +79,7 @@ export default function Conversations({
       return resp.data;
     },
     onSuccess: (data) => {
-      query.refetch;
+      query.refetch();
       // client.invalidateQueries({ queryKey: ["chat"] });
     },
   });

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "./ProfileCard";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 
 interface InvestorSidebarProps {
   activePage?: string;
@@ -66,6 +67,13 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "transactions",
       label: "Transaction",
       icon: <CircleDollarSign className="size-4" />,
+      alwaysEnabled: false,
+    },
+    {
+      to: "/investors/chat",
+      activePage: "support",
+      label: "Support",
+      icon: <ChatBubbleLeftIcon className="size-4" />,
       alwaysEnabled: false,
     },
     {
