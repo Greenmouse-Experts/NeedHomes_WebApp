@@ -67,19 +67,19 @@ export default function Conversations({
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4 flex-1 overflow-y-scroll">
+    <div className="flex flex-col gap-4  px-4">
       {messages.map((message) => (
         <div
           key={message.id}
           className={`chat ${!message.isSystem ? "chat-end" : "chat-start"}`}
         >
-          <div className="chat-image avatar placeholder">
-            <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
-              <span className="text-sm">
-                {message.sender?.firstName?.[0] || "?"}
-                {message.sender?.lastName?.[0] || ""}
-              </span>
-            </div>
+          <div className="chat-image avatar placeholder ring fade rounded-full grid place-items-center p-3 bg-primary text-primary-content">
+            {/*<div className="bg-neutral-focus text-neutral-content  rounded-full w-10">*/}
+            <span className="text-sm">
+              {message.sender?.firstName?.[0] || "?"}
+              {message.sender?.lastName?.[0] || ""}
+            </span>
+            {/*</div>*/}
           </div>
           <div className="chat-header">
             {message.sender?.firstName} {message.sender?.lastName}
