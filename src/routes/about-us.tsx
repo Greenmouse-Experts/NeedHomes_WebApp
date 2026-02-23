@@ -56,6 +56,16 @@ function RouteComponent() {
             </h2>
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
+                Needhomes is a Proptech enabled real estate investment platform
+                focused on affordable housing, through co-development and
+                fractional ownership that enables Individual home buyers and
+                Corporate Investors to invest discover, promote and earn returns
+                on there investments. The platform provides tools for user
+                onboarding, KYC verification, wallet funding,investment
+                tracking, property document access, and milestone based. All
+                managed under a secure, role based admin dashboard
+              </p>
+              <p>
                 We are not just a property company; we are your dedicated
                 partners on a journey of wealth creation through strategic real
                 estate investments.
