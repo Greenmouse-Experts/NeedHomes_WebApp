@@ -44,7 +44,8 @@ export default function ChatInputBar({
                 content: data.message,
               });
             }
-            return mutation.mutate(data);
+            mutation.mutate(data);
+            return form.reset();
           }
           toast.info("Message is empty");
         })}
