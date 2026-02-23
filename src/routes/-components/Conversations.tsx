@@ -67,7 +67,8 @@ export default function Conversations({
   }
 
   return (
-    <div className="flex flex-col gap-4 flex-1 min-h-0 overflow-y-auto  px-4 py-4">
+    //messages container
+    <div className="flex flex-col gap-4 flex-1 min-h-0 overflow-y-auto  px-4">
       {messages.map((message) => (
         <div
           key={message.id}
