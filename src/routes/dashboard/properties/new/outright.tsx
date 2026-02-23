@@ -235,7 +235,7 @@ function RouteComponent() {
                     <Layers size={20} />
                   </div>
                   <h2 className="text-lg font-bold">
-                    4. Outright Share Details
+                    4. Outright Purchase Details
                   </h2>
                 </div>
 
