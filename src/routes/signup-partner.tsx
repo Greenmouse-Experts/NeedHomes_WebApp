@@ -239,9 +239,9 @@ function SignUpPartnerPage() {
                   <option value="PROPERTY_DEVELOPER" className="bg-gray-800">
                     Property Developer
                   </option>
-                  <option value="AGENCY" className="bg-gray-800">
+                  {/*<option value="AGENCY" className="bg-gray-800">
                     Agency
-                  </option>
+                  </option>*/}
                   <option value="OTHER" className="bg-gray-800">
                     Other
                   </option>
