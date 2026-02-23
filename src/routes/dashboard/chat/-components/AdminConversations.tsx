@@ -63,18 +63,18 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
         <QueryCompLayout query={query}>
           {(data) => {
             return (
-              <div className="bg-base-100 md:border-l fade">
+              <div className="bg-base-100 md:border-l fade flex flex-1 p-4 min-h-0 flex-col">
                 <h2 className="p-3.5 border-b fade text-lg font-bold">
                   Live Conversations
                 </h2>
-                <div className="p-4">
+                <div className="p-4 flex-1 flex min-h-0 flex-col overflow-y-scroll">
                   <Messages convoId={convoId} />
                 </div>
+                <ChatBar socket={socket} />
               </div>
             );
           }}
         </QueryCompLayout>
-        <ChatBar socket={socket} />
       </section>
     </section>
   );
