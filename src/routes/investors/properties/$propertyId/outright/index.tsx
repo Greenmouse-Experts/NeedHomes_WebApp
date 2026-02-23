@@ -188,7 +188,7 @@ function PropertyDetailPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Base Price</span>
                     <span className="text-sm font-medium">
-                      {formatCurrency(property.basePrice / 100)}
+                      {formatCurrency(property.basePrice)}
                     </span>
                   </div>
                   {breakdown.additionalFees.map((fee, idx) => (
@@ -208,10 +208,9 @@ function PropertyDetailPage() {
                     </span>
                     <span className="text-lg font-bold text-(--color-orange)">
                       {formatCurrency(
-                        (totalPrice +
+                        totalPrice +
                           breakdown.additionalFeesTotal +
-                          percentage_totalPrice) /
-                          100,
+                          percentage_totalPrice,
                       )}
                     </span>
                   </div>
@@ -289,7 +288,7 @@ function PropertyDetailPage() {
                     </div>
                     <div className="sm:text-right">
                       <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
-                        {formatCurrency(totalPrice)}
+                        {formatCurrency(totalPrice / 100)}
                       </p>
                       <p className="text-xs md:text-sm text-gray-500 mt-1">
                         SKU: {property.id}
