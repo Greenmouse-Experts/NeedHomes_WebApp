@@ -42,7 +42,8 @@ function PropertyDetailPage() {
   });
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    return `₦${amount.toFixed().toLocaleString()}`;
+    const fixed = parseInt(amount.toPrecision());
+    return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
     mutationFn: async (data: { amountPaid: number; quantity: number }) => {
@@ -113,6 +114,7 @@ function PropertyDetailPage() {
           additionalFeesTotal: number;
           installmentAmount?: number;
           installmentDuration?: number;
+          systemCharge: number;
         } = {
           totalPrice: totalPrice + percentage_totalPrice,
           additionalFees: property.additionalFees || [],
@@ -120,6 +122,7 @@ function PropertyDetailPage() {
             (sum: number, fee: AdditionalFee) => sum + fee.amount,
             0,
           ),
+          systemCharge: percentage_totalPrice,
         };
 
         if (property.paymentOption === "INSTALLMENT") {
@@ -191,19 +194,37 @@ function PropertyDetailPage() {
                       {formatCurrency(property.basePrice)}
                     </span>
                   </div>
-                  {breakdown.additionalFees.map((fee, idx) => (
-                    <div
-                      key={idx}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="text-sm text-gray-600">
-                        {fee.label} (₦{fee.amount.toLocaleString()})
-                      </span>
-                      <span className="text-sm font-medium">
-                        {formatCurrency(fee.amount)}
-                      </span>
-                    </div>
-                  ))}
+
+                  {breakdown.additionalFees.length > 0 && (
+                    <section className="rounded-lg border border-gray-200 overflow-hidden">
+                      <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
+                        Additional Fees
+                      </h2>
+                      <ul className="p-3 space-y-2">
+                        {breakdown.additionalFees.map((fee, idx) => (
+                          <li
+                            key={idx}
+                            className="flex justify-between items-center"
+                          >
+                            <span className="text-sm text-gray-600">
+                              {fee.label}
+                            </span>
+                            <span className="text-sm font-medium">
+                              {formatCurrency(fee.amount)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">System Charge</span>
+                    <span className="text-sm font-medium">
+                      {formatCurrency(breakdown.systemCharge)}
+                    </span>
+                  </div>
+
                   <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                     <span className="text-sm font-bold text-gray-900">
                       Total Due
@@ -212,7 +233,7 @@ function PropertyDetailPage() {
                       {formatCurrency(
                         totalPrice +
                           breakdown.additionalFeesTotal +
-                          percentage_totalPrice,
+                          breakdown.systemCharge,
                       )}
                     </span>
                   </div>
@@ -223,7 +244,7 @@ function PropertyDetailPage() {
                     <p className="text-xs text-blue-700">
                       You are paying the minimum installment of{" "}
                       <span className="font-bold">
-                        {property.minimumInstallmentAmount?.toLocaleString()}
+                        {formatCurrency(property.minimumInstallmentAmount)}
                       </span>
                       . Remaining balance will be spread over{" "}
                       {property.installmentDuration} months.
