@@ -42,7 +42,7 @@ function PropertyDetailPage() {
   });
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    return `₦${amount.toLocaleString()}`;
+    return `₦${amount.toFixed().toLocaleString()}`;
   };
   const mutate = useMutation({
     mutationFn: async (data: { amountPaid: number; quantity: number }) => {
