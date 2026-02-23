@@ -195,19 +195,21 @@ export default function DefaultForm<T = any>({
                   )}
                 />
               )}
-              <Controller
-                name="completionDate"
-                control={methods.control}
-                render={({ field }) => (
-                  <SimpleInput
-                    {...field}
-                    disabled={disable_completionn}
-                    label="Completion Date"
-                    type="date"
-                    icon={<Calendar size={16} />}
-                  />
-                )}
-              />
+              {hideCompletion ? null : (
+                <Controller
+                  name="completionDate"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <SimpleInput
+                      {...field}
+                      disabled={disableCompletion}
+                      label="Completion Date"
+                      type="date"
+                      icon={<Calendar size={16} />}
+                    />
+                  )}
+                />
+              )}
               <div className="md:col-span-2">
                 <Controller
                   name="description"
