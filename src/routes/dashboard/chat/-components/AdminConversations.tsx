@@ -1,13 +1,16 @@
 import apiClient from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import ChatBar from "./ChatBar";
 import Messages from "./Messages";
+import { get_user_value } from "@/store/authStore";
 
 export default function AdminConvos({ convoId }: { convoId?: string }) {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
+  const auth = get_user_value();
+
   const [messages, setMessages] = useState<any[]>([]);
   const query = useQuery({
     queryKey: ["convoId", convoId],
@@ -21,40 +24,50 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
   });
 
   useEffect(() => {
-    if (!convoId) return;
-    const token = localStorage.getItem("authToken");
-    const newSocket = io(
+    if (!auth?.accessToken) return;
+
+    const socket = io(
       import.meta.env.VITE_BACKEND_URL ||
         "https://needhomes-backend-staging.onrender.com",
       {
-        auth: { token },
-        extraHeaders: { Authorization: `Bearer ${token}` },
-        // transports: ["websocket", "polling"],
+        auth: {
+          token: auth.accessToken,
+        },
+        extraHeaders: {
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5,
       },
     );
 
-    newSocket.emit("chat:joinConversation", {
-      conversationId: convoId,
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket");
     });
-
-    // newSocket.on("new_message", (message) => {
-    //   setMessages((prev) => [...prev, message]);
-    // });
-    newSocket.on("chat:newMessage", (message) => {
-      // This event is received by EVERYONE in the conversation room
-      console.log("New message:", message);
-      // Add to chat UI
+    socket.on("connected", (data) => {
+      console.log("User data:", data);
     });
-
-    setSocket(newSocket);
-
+    // ✅ DISCONNECT ON UNMOUNT
     return () => {
-      newSocket.disconnect();
+      console.log("❌ Disconnecting socket...");
+      socket.disconnect();
     };
-  }, [convoId]);
-
+  }, [auth?.accessToken]);
   if (!convoId) {
-    return <div>No conversation selected</div>;
+    return (
+      <div className="flex-1  bg-base-100 flex flex-col border-l fade">
+        <h2 className="p-3.5 border-b fade text-lg font-bold">
+          Live Conversations
+        </h2>
+        <div className="flex-1 p-4 grid place-items-center text-xl font-bold text-current/60">
+          NO CONVERSATIONS STARTED
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -68,10 +81,10 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
                   Live Conversations
                 </h2>
                 <div className="p-4 flex-1 flex min-h-0 flex-col overflow-y-scroll">
-                  <Messages socket={socket} convoId={convoId} />
+                  <Messages socket={socketRef} convoId={convoId} />
                 </div>
                 <div>
-                  <ChatBar socket={socket} />
+                  <ChatBar socket={socketRef} />
                 </div>
               </div>
             );

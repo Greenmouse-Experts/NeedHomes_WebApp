@@ -1,6 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { readTransformValue } from "framer-motion";
 import { useEffect, type RefObject } from "react";
 import type { Socket } from "socket.io-client";
@@ -40,8 +40,9 @@ export default function Messages({
   socket,
 }: {
   convoId: string;
-  socket: Socket;
+  socket: RefObject<Socket>;
 }) {
+  const queryClient = useQueryClient();
   const query = useQuery<ApiResponse<Conversation>>({
     queryKey: ["chats", convoId],
     queryFn: async () => {
@@ -49,26 +50,46 @@ export default function Messages({
       return resp.data;
     },
   });
+  const handleNewMessage = (message: Message) => {
+    queryClient.setQueryData<ApiResponse<Conversation>>(
+      ["chats", convoId],
+      (oldData) => {
+        if (!oldData) return oldData;
 
+        // Prevent adding duplicate messages
+        const messageExists = oldData.data.messages.some(
+          (existingMessage) => existingMessage.id === message.id,
+        );
+
+        if (messageExists) {
+          return oldData;
+        }
+
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            messages: [...oldData.data.messages, message],
+          },
+        };
+      },
+    );
+  };
   useEffect(() => {
-    console.log(socket);
-    socket.on("chat:newMessage", (message) => {
-      // This event is received by EVERYONE in the conversation room
+    const currentSocket = socket.current;
+    if (!currentSocket) return;
+
+    const handleMessage = (message: Message) => {
       console.log("New message:", message);
-      // Add to chat UI
-    });
-    socket.on("chat:error", (error) => {
-      console.error("Chat error:", error.message);
+      handleNewMessage(message);
+    };
 
-      // Show error toast
-      // showErrorToast(error.message);
+    currentSocket.on("chat:newMessage", handleMessage);
 
-      // Examples:
-      // - "Conversation not found"
-      // - "Only admins can join conversations"
-      // - "You are not part of this conversation"
-    });
-  }, [convoId]);
+    return () => {
+      currentSocket.off("chat:newMessage", handleMessage);
+    };
+  }, [convoId, socket, queryClient]);
   return (
     <QueryCompLayout query={query}>
       {(data) => {

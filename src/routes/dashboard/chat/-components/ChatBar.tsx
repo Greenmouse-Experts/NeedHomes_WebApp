@@ -1,9 +1,10 @@
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useParams, useSearch } from "@tanstack/react-router";
+import type { RefObject } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { Socket } from "socket.io-client";
 
-export default function ChatBar({ socket }: { socket?: Socket }) {
+export default function ChatBar({ socket }: { socket?: RefObject<Socket> }) {
   const { convoId } = useSearch({
     strict: false,
   });
@@ -20,8 +21,8 @@ export default function ChatBar({ socket }: { socket?: Socket }) {
             // console.log(socket, convoId);
 
             if (socket && convoId) {
-              console.log("ss");
-              return socket.emit("chat:sendMessage", {
+              // console.log("ss");
+              return socket.current.emit("chat:sendMessage", {
                 conversationId: convoId,
                 content: data.content,
               });
