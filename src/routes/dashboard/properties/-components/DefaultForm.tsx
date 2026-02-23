@@ -104,6 +104,7 @@ export default function DefaultForm<T = any>({
   videoUpload,
   docUpload,
   update,
+  disableCompletion,
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -115,6 +116,7 @@ export default function DefaultForm<T = any>({
   videoUpload: ReturnType<typeof useVideoUpload>;
   docUpload: ReturnType<typeof useDocumentUpload>;
   update?: boolean;
+  disableCompletion?: boolean;
 }) {
   const methods = form;
 
@@ -183,7 +185,9 @@ export default function DefaultForm<T = any>({
                   <LocalSelect {...field} label="Development Stage">
                     <option value="PLANNING">Planning</option>
                     <option value="ONGOING">Under Construction</option>
-                    <option value="COMPLETED">Completed</option>
+                    {disableCompletion ? null : (
+                      <option value="COMPLETED">Completed</option>
+                    )}
                   </LocalSelect>
                 )}
               />
