@@ -288,7 +288,7 @@ function PropertyDetailPage() {
                     </div>
                     <div className="sm:text-right">
                       <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
-                        {formatCurrency(totalPrice / 100)}
+                        {formatCurrency(property.basePrice)}
                       </p>
                       <p className="text-xs md:text-sm text-gray-500 mt-1">
                         SKU: {property.id}
