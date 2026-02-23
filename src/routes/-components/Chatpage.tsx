@@ -59,11 +59,11 @@ export default function ChatPage() {
   return (
     <>
       <section className="h-[calc(100dvh-124px)] max-h-[calc(100dvh-124px)] flex     isolate w-full">
-        <div className="ring fade rounded-box  flex flex-col flex-1   overflow-y-scroll isolate">
+        <div className="ring fade rounded-box  flex flex-col flex-1    isolate">
           <div className="p-6 border-b fade max-h-20 sticky top-0 z-10 bg-base-100">
             <h2 className="text-xl font-bold">Chat</h2>
           </div>
-          <div className=" flex-1">
+          <section className=" flex-1 flex flex-col min-h-0">
             <QueryCompLayout query={query}>
               {(data) => {
                 const convos = data.data;
@@ -80,7 +80,7 @@ export default function ChatPage() {
                 );
               }}
             </QueryCompLayout>
-          </div>
+          </section>
         </div>
       </section>
     </>
