@@ -3,11 +3,11 @@ import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import ChatBar from "./ChatBar";
 
 export default function AdminConvos({ convoId }: { convoId?: string }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
-
   const query = useQuery({
     queryKey: ["convoId", convoId],
     queryFn: async () => {
@@ -21,7 +21,6 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
 
   useEffect(() => {
     if (!convoId) return;
-
     const token = localStorage.getItem("authToken");
     const newSocket = io(
       import.meta.env.VITE_BACKEND_URL ||
@@ -33,13 +32,17 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
       },
     );
 
-    newSocket.on("connect", () => {
-      console.log("✅ Connected to WebSocket");
-      newSocket.emit("join_room", convoId);
+    newSocket.emit("chat:joinConversation", {
+      conversationId: convoId,
     });
 
-    newSocket.on("new_message", (message) => {
-      setMessages((prev) => [...prev, message]);
+    // newSocket.on("new_message", (message) => {
+    //   setMessages((prev) => [...prev, message]);
+    // });
+    newSocket.on("chat:newMessage", (message) => {
+      // This event is received by EVERYONE in the conversation room
+      console.log("New message:", message);
+      // Add to chat UI
     });
 
     setSocket(newSocket);
@@ -75,6 +78,7 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
           );
         }}
       </QueryCompLayout>
+      <ChatBar socket={socket} />
     </section>
   );
 }

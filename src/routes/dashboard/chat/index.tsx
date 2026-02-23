@@ -53,7 +53,7 @@ function RouteComponent() {
   const query = useQuery<ApiResponse<Conversation[]>>({
     queryKey: ["chat-admin"],
     queryFn: async () => {
-      let resp = await apiClient.get("/chat/pending");
+      let resp = await apiClient.get("/chat/my-admin-conversations");
       return resp.data;
     },
   });

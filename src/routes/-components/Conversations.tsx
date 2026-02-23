@@ -42,8 +42,11 @@ export default function Conversations({
 }) {
   useEffect(() => {
     if (convos) {
-      socket?.current.emit("chat:joinConversation", {
-        conversationId: convos?.id,
+      // socket?.current.emit("chat:joinConversation", {
+      //   conversationId: convos?.id,
+      // });
+      socket?.current.emit("chat:createConversation", {
+        // conversationId: convos?.id,
       });
       socket.current.on("chat:error", (error) => {
         console.error("Chat error:", error.message);
