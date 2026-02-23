@@ -99,11 +99,11 @@ export default function Messages({
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`chat ${!message.isSystem ? "chat-end" : "chat-start"}`}
+                className={`chat ${message.isSystem || message.sender.firstName == "Admin" ? "chat-end" : "chat-start"}`}
               >
                 <div className="chat-image avatar placeholder ring fade rounded-full grid place-items-center p-3 bg-primary text-primary-content">
                   {/*<div className="bg-neutral-focus text-neutral-content  rounded-full w-10">*/}
-                  {message.isSystem ? (
+                  {message.isSystem || message.sender.firstName == "Admin" ? (
                     <>
                       <span className="text-sm">AD</span>
                     </>
@@ -116,7 +116,7 @@ export default function Messages({
                   {/*</div>*/}
                 </div>
                 <div className="chat-header">
-                  {message.isSystem ? (
+                  {message.isSystem || message.sender.firstName == "Admin" ? (
                     <>Admin</>
                   ) : (
                     <>
@@ -130,7 +130,9 @@ export default function Messages({
                 </div>
                 <div
                   className={`chat-bubble ${
-                    message.isSystem ? "chat-bubble-info" : ""
+                    message.isSystem || message.sender.firstName == "Admin"
+                      ? "chat-bubble-info"
+                      : ""
                   }`}
                 >
                   {message.content}
