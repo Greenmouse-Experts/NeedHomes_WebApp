@@ -219,6 +219,7 @@ function RouteComponent() {
             </p>
           </div>
           <DefaultForm
+            hideCompletion
             docUpload={docUpload}
             videoUpload={videoUpload}
             useImagesProps={useImageProps}

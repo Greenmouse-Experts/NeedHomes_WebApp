@@ -106,6 +106,7 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.published;
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
+  delete cleaned.developmentStage;
   return cleaned;
 };
 

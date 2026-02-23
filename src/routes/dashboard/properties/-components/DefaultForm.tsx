@@ -180,7 +180,7 @@ export default function DefaultForm<T = any>({
                   </LocalSelect>
                 )}
               />
-              {hideCompletion ? null : (
+              {hideCompletetion ? null : (
                 <Controller
                   name="developmentStage"
                   control={methods.control}
