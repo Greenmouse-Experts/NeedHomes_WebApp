@@ -3,6 +3,7 @@ import { useParams, useSearch } from "@tanstack/react-router";
 import type { RefObject } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { Socket } from "socket.io-client";
+import { toast } from "sonner";
 
 export default function ChatBar({ socket }: { socket?: RefObject<Socket> }) {
   const { convoId } = useSearch({
@@ -19,13 +20,15 @@ export default function ChatBar({ socket }: { socket?: RefObject<Socket> }) {
         <form
           onSubmit={form.handleSubmit((data) => {
             // console.log(socket, convoId);
-
+            if (data.content.trim().length == 0)
+              return toast.info("Please enter a message");
             if (socket && convoId) {
-              // console.log("ss");
-              return socket.current.emit("chat:sendMessage", {
+              socket.current.emit("chat:sendMessage", {
                 conversationId: convoId,
                 content: data.content,
               });
+              console.log("clearing");
+              return form.setValue("content", "");
             }
           })}
           className="flex gap-2"
