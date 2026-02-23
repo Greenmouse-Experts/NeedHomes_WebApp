@@ -25,7 +25,10 @@ import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleLeftIcon,
+  CheckBadgeIcon,
+} from "@heroicons/react/24/outline";
 
 interface NavItem {
   label: string;
@@ -115,6 +118,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     title: "KYC",
     items: [{ label: "KYC", to: "/dashboard/verifications", icon: Receipt }],
   },
+  { label: "CONVERSATIONS", to: "/dashboard/chat", icon: ChatBubbleLeftIcon },
   { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
   { label: "NOTIFICATIONS", to: "/dashboard/notifications", icon: Bell },
   // {
