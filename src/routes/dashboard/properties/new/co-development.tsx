@@ -269,6 +269,7 @@ function RouteComponent() {
         useImagesProps={useImageProps}
         form={form as any}
         selectImageProps={selectImageProps as any}
+        disableCompletion={true}
         mutation={mutation as any}
         onSubmit={onSubmit}
       >
