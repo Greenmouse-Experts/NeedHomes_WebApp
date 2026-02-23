@@ -208,7 +208,7 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => (
           <CustomTable
-            data={data.data}
+            data={data.data.data}
             columns={columns}
             actions={actions}
             paginationProps={paginationProps}
