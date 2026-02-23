@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import InvPropDetails from "./-components/InvPropDetails";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -227,6 +228,7 @@ function InvestmentDetailsPage() {
                   </Link>
                 </div>
               </div>
+              <InvPropDetails propId={investment.propertyId} />
             </>
           );
         }}

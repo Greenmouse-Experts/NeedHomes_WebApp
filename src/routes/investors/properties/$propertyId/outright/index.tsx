@@ -100,6 +100,9 @@ function PropertyDetailPage() {
     minimumInstallmentAmount?: number;
     installmentDuraion?: number;
   }
+  const form = useForm({
+    defaultValues: {},
+  });
   return (
     <PageLoader query={query}>
       {(data) => {
