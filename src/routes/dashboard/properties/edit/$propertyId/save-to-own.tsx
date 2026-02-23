@@ -167,7 +167,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 <div className="p-2 bg-primary/10 rounded-lg text-primary">
                   <Layers size={20} />
                 </div>
-                <h2 className="text-lg font-bold">4. Save To Own Details</h2>
+                <h2 className="text-lg font-bold">
+                  4. Save To Own Purchase Details
+                </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Controller
