@@ -51,6 +51,12 @@ const NAV_LINKS = [
     icon: Wallet,
   },
   {
+    to: "/partners/chat",
+    label: "Chat",
+    id: "chat",
+    icon: ChatBubbleLeftIcon,
+  },
+  {
     to: "/partners/announcements",
     label: "Announcement",
     id: "announcements",
