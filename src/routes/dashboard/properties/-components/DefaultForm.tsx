@@ -105,7 +105,7 @@ export default function DefaultForm<T = any>({
   docUpload,
   update,
   disableCompletion,
-  hideCompletetion,
+  hideCompletion,
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -180,7 +180,7 @@ export default function DefaultForm<T = any>({
                   </LocalSelect>
                 )}
               />
-              {hideCompletetion ? null : (
+              {hideCompletion ? null : (
                 <Controller
                   name="developmentStage"
                   control={methods.control}
