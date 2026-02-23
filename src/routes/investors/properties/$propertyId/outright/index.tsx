@@ -48,7 +48,7 @@ function PropertyDetailPage() {
     mutationFn: async (data: { amountPaid: number; quantity: number }) => {
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
-        amountPaid: data.amountPaid,
+        amountPaid: parseInt(data.amountPaid.toFixed()),
         quantity: data.quantity,
       });
       return resp.data;
