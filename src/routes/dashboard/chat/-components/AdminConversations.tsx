@@ -58,19 +58,21 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
   }
 
   return (
-    <section className="h-[calc(100dvh-124px)] max-h-[calc(100dvh-124px)] flex   p-0 isolate w-full b">
+    <section className="h-[calc(100dvh-144px)] flex   p-0 isolate w-full b">
       <section className="flex flex-col flex-1 min-h-0 ">
         <QueryCompLayout query={query}>
           {(data) => {
             return (
-              <div className="bg-base-100 md:border-l fade flex flex-1 p-4 min-h-0 flex-col">
+              <div className="bg-base-100 md:border-l fade flex flex-1 min-h-0 flex-col">
                 <h2 className="p-3.5 border-b fade text-lg font-bold">
                   Live Conversations
                 </h2>
                 <div className="p-4 flex-1 flex min-h-0 flex-col overflow-y-scroll">
-                  <Messages convoId={convoId} />
+                  <Messages socket={socket} convoId={convoId} />
                 </div>
-                <ChatBar socket={socket} />
+                <div>
+                  <ChatBar socket={socket} />
+                </div>
               </div>
             );
           }}

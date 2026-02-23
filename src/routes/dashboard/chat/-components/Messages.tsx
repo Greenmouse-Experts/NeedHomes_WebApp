@@ -2,6 +2,8 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
 import { readTransformValue } from "framer-motion";
+import { useEffect, type RefObject } from "react";
+import type { Socket } from "socket.io-client";
 interface Sender {
   id: string;
   firstName: string;
@@ -33,7 +35,13 @@ interface Conversation {
   messages: Message[];
 }
 
-export default function Messages({ convoId }: { convoId: string }) {
+export default function Messages({
+  convoId,
+  socket,
+}: {
+  convoId: string;
+  socket: Socket;
+}) {
   const query = useQuery<ApiResponse<Conversation>>({
     queryKey: ["chats", convoId],
     queryFn: async () => {
@@ -41,6 +49,26 @@ export default function Messages({ convoId }: { convoId: string }) {
       return resp.data;
     },
   });
+
+  useEffect(() => {
+    console.log(socket);
+    socket.on("chat:newMessage", (message) => {
+      // This event is received by EVERYONE in the conversation room
+      console.log("New message:", message);
+      // Add to chat UI
+    });
+    socket.on("chat:error", (error) => {
+      console.error("Chat error:", error.message);
+
+      // Show error toast
+      // showErrorToast(error.message);
+
+      // Examples:
+      // - "Conversation not found"
+      // - "Only admins can join conversations"
+      // - "You are not part of this conversation"
+    });
+  }, [convoId]);
   return (
     <QueryCompLayout query={query}>
       {(data) => {

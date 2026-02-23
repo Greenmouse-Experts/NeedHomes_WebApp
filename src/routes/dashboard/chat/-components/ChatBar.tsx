@@ -18,7 +18,9 @@ export default function ChatBar({ socket }: { socket?: Socket }) {
         <form
           onSubmit={form.handleSubmit((data) => {
             // console.log(socket, convoId);
+
             if (socket && convoId) {
+              console.log("ss");
               return socket.emit("chat:sendMessage", {
                 conversationId: convoId,
                 content: data.content,

@@ -57,19 +57,27 @@ function RouteComponent() {
       return resp.data;
     },
   });
+
+  // return (
+  //   <>
+  //     <section>
+  //       <AdminConvos convoId={convoId} />
+  //     </section>
+  //   </>
+  // );
   return (
     <>
-      <ThemeProvider className="drawer lg:drawer-open">
+      <ThemeProvider className="drawer lg:drawer-open   ">
         <input id="chat-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">
+        <div className="drawer-content md:h-[calc(100dvh-144px)] flex   p-0 isolate w-full b">
           <AdminConvos convoId={convoId} />
           {/* Page content here */}
           {/*<label htmlFor="chat-drawer" className="btn drawer-button lg:hidden">
             Open drawer
           </label>*/}
         </div>
-        <div className="drawer-side">
-          <div className="w-80 bg-white">
+        <div className="drawer-side md:h-[calc(100dvh-144px)]">
+          <div className="w-80 bg-white ">
             <h2 className="border-b fade p-4 font-bold">Conversations </h2>
             <QueryCompLayout query={query}>
               {(data) => {
