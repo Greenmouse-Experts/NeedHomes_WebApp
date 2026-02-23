@@ -79,7 +79,6 @@ function RouteComponent() {
                     {chats.map((chat) => {
                       const lastMessage = chat.messages[0];
                       const initials = `${chat.user.firstName[0]}${chat.user.lastName[0]}`;
-
                       return (
                         <Link
                           key={chat.id}
@@ -124,10 +123,5 @@ function RouteComponent() {
         </div>
       </ThemeProvider>
     </>
-  );
-  return (
-    <div className="flex ">
-      <div className="flex flex-1"></div>
-    </div>
   );
 }

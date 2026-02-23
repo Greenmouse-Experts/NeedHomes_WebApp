@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import ChatBar from "./ChatBar";
+import Messages from "./Messages";
 
 export default function AdminConvos({ convoId }: { convoId?: string }) {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -57,28 +58,24 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
   }
 
   return (
-    <section className="bg-base-100 ">
-      <QueryCompLayout query={query}>
-        {(data) => {
-          return (
-            <div className=" ">
-              <h2 className="p-4 border-b fade text-lg font-bold">
-                Live Conversations
-              </h2>
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-              <div className="mt-4">
-                <h3 className="font-bold">Live Messages:</h3>
-                {messages.map((msg, i) => (
-                  <div key={i} className="p-2 border-b">
-                    {msg.content || JSON.stringify(msg)}
-                  </div>
-                ))}
+    <section className="h-[calc(100dvh-124px)] max-h-[calc(100dvh-124px)] flex   p-0 isolate w-full b">
+      <section className="flex flex-col flex-1 min-h-0 ">
+        <QueryCompLayout query={query}>
+          {(data) => {
+            return (
+              <div className="bg-base-100 md:border-l fade">
+                <h2 className="p-3.5 border-b fade text-lg font-bold">
+                  Live Conversations
+                </h2>
+                <div className="p-4">
+                  <Messages convoId={convoId} />
+                </div>
               </div>
-            </div>
-          );
-        }}
-      </QueryCompLayout>
-      <ChatBar socket={socket} />
+            );
+          }}
+        </QueryCompLayout>
+        <ChatBar socket={socket} />
+      </section>
     </section>
   );
 }
