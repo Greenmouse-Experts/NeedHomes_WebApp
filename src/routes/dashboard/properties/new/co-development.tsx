@@ -97,7 +97,7 @@ function RouteComponent() {
               case "certificate":
                 uploadedDocUrls.certificate = uploaded.data.url;
                 break;
-              case "surveyPlan":
+              case "surveyPlanDocument":
                 uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
                 break;
               case "transferDocument":

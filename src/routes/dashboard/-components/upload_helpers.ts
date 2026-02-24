@@ -46,7 +46,7 @@ export const doc_helper = async (
 
   return {
     certificate: uploaded_docs.certificate,
-    surveyPlan: uploaded_docs.surveyPlan,
+    surveyPlanDocument: uploaded_docs.surveyPlanDocument,
     transferDocument: uploaded_docs.transferDocument,
     brochure: uploaded_docs.brochure,
   };

@@ -262,7 +262,7 @@ export const get_docs = async (
     try {
       // @ts-expect-error
 
-      const url = await uploadFile(docFiles.surveyPlan);
+      const url = await uploadFile(docFiles.surveyPlanDocument);
       if (url) uploadedDocUrls.surveyPlanDocument = url;
     } catch (e) {}
   }
