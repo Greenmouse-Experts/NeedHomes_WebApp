@@ -48,7 +48,11 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
             </form>
           </div>
           {children && <div className="my-3 p-4">{children}</div>}
-          {actions && <div className="ml-auto p-4">{actions}</div>}
+          {actions && (
+            <div className=" flex justify-end gap-2 fade sticky bottom-0 p-4 bg-white border-t">
+              {actions}
+            </div>
+          )}
         </div>
       </dialog>
     );
