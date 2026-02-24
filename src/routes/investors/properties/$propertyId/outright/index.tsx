@@ -144,6 +144,7 @@ function PropertyDetailPage() {
         if (breakdown.installmentAmount) {
           form.setValue("amount", breakdown.installmentAmount);
         }
+        const installOptions = property.paymentOption == "INSTALLMENT";
         return (
           <>
             <Modal
@@ -264,15 +265,16 @@ function PropertyDetailPage() {
                     </div>
                   )}
                 </div>
-
-                <div className="flex gap-2 items-centerm mt-2">
-                  <input
-                    {...form.register("installment")}
-                    type="checkbox"
-                    className="checkbox checkbox-sm"
-                  />
-                  <h2 className="text-sm">Pay Installmentally</h2>
-                </div>
+                {installOptions && (
+                  <div className="flex gap-2 items-center mt-2">
+                    <input
+                      {...form.register("installment")}
+                      type="checkbox"
+                      className="checkbox checkbox-sm"
+                    />
+                    <h2 className="text-sm">Pay Installmentally</h2>
+                  </div>
+                )}
                 {payInstall && (
                   <div className="mt-4">
                     <InstallMentForm
