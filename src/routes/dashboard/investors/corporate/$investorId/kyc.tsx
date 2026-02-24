@@ -8,8 +8,11 @@ import { Label } from "@/components/ui/Label";
 import { Select } from "@/components/ui/Select";
 import AdminKycForm from "@/components/AdminKycForm";
 import AdminBankDetails from "@/components/AdminBankDetails";
+import CorpAdminKycForm from "@/components/CorpAdminKycDetails";
 
-export const Route = createFileRoute("/dashboard/investors/corporate/$investorId/kyc")({
+export const Route = createFileRoute(
+  "/dashboard/investors/corporate/$investorId/kyc",
+)({
   component: InvestorKYCPage,
 });
 
@@ -122,7 +125,7 @@ function InvestorKYCPage() {
       </div>
 
       {/* KYC Information Tab */}
-      {activeTab === "kyc" && <AdminKycForm id={investorId} />}
+      {activeTab === "kyc" && <CorpAdminKycForm id={investorId} />}
 
       {/* Bank Details Tab */}
       {activeTab === "bank" && (
