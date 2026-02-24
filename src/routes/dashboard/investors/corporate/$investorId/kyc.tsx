@@ -1,0 +1,135 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState, useRef } from "react";
+import { ChevronLeft, Upload } from "lucide-react";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { Label } from "@/components/ui/Label";
+import { Select } from "@/components/ui/Select";
+import AdminKycForm from "@/components/AdminKycForm";
+import AdminBankDetails from "@/components/AdminBankDetails";
+
+export const Route = createFileRoute("/dashboard/investors/corporate/$investorId/kyc")({
+  component: InvestorKYCPage,
+});
+
+function InvestorKYCPage() {
+  const { investorId } = Route.useParams();
+  const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState<"kyc" | "bank">("kyc");
+
+  const frontUploadRef = useRef<HTMLInputElement>(null);
+  const backUploadRef = useRef<HTMLInputElement>(null);
+  const utilityBillUploadRef = useRef<HTMLInputElement>(null);
+
+  const [kycData, setKycData] = useState({
+    idType: "national-id",
+    address:
+      "Zone 4, 1 ladi Kwali St, Wuse, Abuja 900001, Federal Capital Territory, Nigeria",
+    frontUpload: null as File | null,
+    backUpload: null as File | null,
+    utilityBill: null as File | null,
+  });
+
+  const [bankDetails, setBankDetails] = useState({
+    accountNumber: "0123456789",
+    accountName: "Emeka Okafor",
+    bankName: "first-bank",
+  });
+
+  const idTypeOptions = [
+    // { value: "national-id", label: "National ID" },
+    { value: "drivers-license", label: "Driver's License" },
+    { value: "passport", label: "International Passport" },
+  ];
+
+  const bankOptions = [
+    { value: "access-bank", label: "Access Bank" },
+    { value: "gtbank", label: "Guaranty Trust Bank (GTBank)" },
+    { value: "first-bank", label: "First Bank of Nigeria" },
+    { value: "uba", label: "United Bank for Africa (UBA)" },
+    { value: "zenith-bank", label: "Zenith Bank" },
+    { value: "fidelity-bank", label: "Fidelity Bank" },
+    { value: "union-bank", label: "Union Bank" },
+    { value: "sterling-bank", label: "Sterling Bank" },
+    { value: "stanbic-ibtc", label: "Stanbic IBTC Bank" },
+    { value: "fcmb", label: "First City Monument Bank (FCMB)" },
+    { value: "ecobank", label: "Ecobank Nigeria" },
+    { value: "wema-bank", label: "Wema Bank" },
+    { value: "polaris-bank", label: "Polaris Bank" },
+    { value: "keystone-bank", label: "Keystone Bank" },
+    { value: "providus-bank", label: "Providus Bank" },
+    { value: "kuda-bank", label: "Kuda Bank" },
+    { value: "opay", label: "OPay" },
+    { value: "palmpay", label: "PalmPay" },
+  ];
+
+  const handleFileUpload = (
+    field: "frontUpload" | "backUpload" | "utilityBill",
+    file: File | null,
+  ) => {
+    setKycData((prev) => ({ ...prev, [field]: file }));
+  };
+
+  const handleKycSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("KYC update:", kycData);
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      {/* Header with Back Button */}
+      <div className="mb-6">
+        <button
+          onClick={() =>
+            navigate({
+              to: "/dashboard/investors/$investorId",
+              params: { investorId },
+            })
+          }
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+        >
+          <ChevronLeft className="w-5 h-5" />
+          <span className="font-medium">Back to Investor Details</span>
+        </button>
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-gray-200 mb-6">
+        <div className="flex gap-8">
+          <button
+            onClick={() => setActiveTab("kyc")}
+            className={`pb-3 px-1 font-medium text-sm transition-colors relative ${
+              activeTab === "kyc"
+                ? "text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            KYC Information
+          </button>
+          <button
+            onClick={() => setActiveTab("bank")}
+            className={`pb-3 px-1 font-medium text-sm transition-colors relative ${
+              activeTab === "bank"
+                ? "text-[var(--color-orange)] border-b-2 border-[var(--color-orange)]"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Bank Details
+          </button>
+        </div>
+      </div>
+
+      {/* KYC Information Tab */}
+      {activeTab === "kyc" && <AdminKycForm id={investorId} />}
+
+      {/* Bank Details Tab */}
+      {activeTab === "bank" && (
+        <>
+          <AdminBankDetails id={investorId} />
+        </>
+      )}
+    </div>
+  );
+}

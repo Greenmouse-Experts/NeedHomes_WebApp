@@ -120,7 +120,7 @@ function InvestorsPage() {
       key: "view-details",
       label: "View Details",
       action: (item: INVESTOR, nav) =>
-        nav({ to: `/dashboard/investors/${item.id}` }),
+        nav({ to: `/dashboard/investors/corporate/${item.id}` }),
     },
     // {
     //   key: "edit",

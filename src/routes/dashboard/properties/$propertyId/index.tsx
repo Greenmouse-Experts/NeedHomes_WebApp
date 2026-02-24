@@ -1,9 +1,15 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, MapPin, Calendar, Package, Home } from "lucide-react";
+import {
+  ChevronLeft,
+  MapPin,
+  Calendar,
+  Package,
+  Home,
+  FileText,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
-import type { PROPERTY_TYPE } from "@/types/property";
 import PageLoader from "@/components/layout/PageLoader";
 import { toast } from "sonner";
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
@@ -304,31 +310,80 @@ function PropertyDetailsPage() {
                           </div>
                         )}
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {property.certificate && (
-                          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                            <h3 className="font-semibold mb-2">Certificate</h3>
-                            <a
-                              href={property.certificate}
-                              target="_blank"
-                              className="text-sm text-blue-600 hover:underline"
-                            >
-                              View Document
-                            </a>
-                          </div>
-                        )}
-                        {property.surveyPlanDocument && (
-                          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                            <h3 className="font-semibold mb-2">Survey Plan</h3>
-                            <a
-                              href={property.surveyPlanDocument}
-                              target="_blank"
-                              className="text-sm text-blue-600 hover:underline"
-                            >
-                              View Document
-                            </a>
-                          </div>
-                        )}
+                      <div>
+                        <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-3">
+                          Documents
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {property.certificate && (
+                            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <FileText className="w-5 h-5 text-blue-600" />
+                              <div className="min-w-0">
+                                <h3 className="font-semibold text-sm">
+                                  Certificate
+                                </h3>
+                                <a
+                                  href={property.certificate}
+                                  target="_blank"
+                                  className="text-xs text-blue-600 hover:underline"
+                                >
+                                  View Document
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                          {property.surveyPlanDocument && (
+                            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <FileText className="w-5 h-5 text-blue-600" />
+                              <div className="min-w-0">
+                                <h3 className="font-semibold text-sm">
+                                  Survey Plan
+                                </h3>
+                                <a
+                                  href={property.surveyPlanDocument}
+                                  target="_blank"
+                                  className="text-xs text-blue-600 hover:underline"
+                                >
+                                  View Document
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                          {property.brochure && (
+                            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <FileText className="w-5 h-5 text-blue-600" />
+                              <div className="min-w-0">
+                                <h3 className="font-semibold text-sm">
+                                  Brochure
+                                </h3>
+                                <a
+                                  href={property.brochure}
+                                  target="_blank"
+                                  className="text-xs text-blue-600 hover:underline"
+                                >
+                                  View Document
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                          {property.transferDocument && (
+                            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                              <FileText className="w-5 h-5 text-blue-600" />
+                              <div className="min-w-0">
+                                <h3 className="font-semibold text-sm">
+                                  Transfer Document
+                                </h3>
+                                <a
+                                  href={property.transferDocument}
+                                  target="_blank"
+                                  className="text-xs text-blue-600 hover:underline"
+                                >
+                                  View Document
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -372,7 +427,9 @@ function PropertyDetailsPage() {
                             </span>
                             <span className="text-sm font-medium text-gray-900">
                               {/*//@ts-ignore*/}
-                              {property.systemCharges.platformChargePercentage}%
+                              {property.systemCharges
+                                ?.platformChargePercentage || 0}
+                              %
                             </span>
                           </div>
                         </div>
@@ -426,10 +483,6 @@ function PropertyDetailsPage() {
                           className="w-full text-sm md:text-base"
                           disabled={publishMutation.isPending}
                           onClick={() => {
-                            const action = property.published
-                              ? "unpublish"
-                              : "publish";
-
                             publishMutation.mutate(!property.published);
                           }}
                         >
