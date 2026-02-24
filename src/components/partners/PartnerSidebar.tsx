@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "../investors/ProfileCard";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 
 interface PartnerSidebarProps {
   activePage?: string;

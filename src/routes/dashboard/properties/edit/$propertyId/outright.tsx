@@ -203,6 +203,16 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Controller
+                    name="paymentOption"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <LocalSelect {...field} label="Payment Option">
+                        <option value="FULL_PAYMENT">Full Payment</option>
+                        <option value="INSTALLMENT">Installment</option>
+                      </LocalSelect>
+                    )}
+                  />
                   {paymentOption === "INSTALLMENT" && (
                     <>
                       <Controller
@@ -237,16 +247,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       />
                     </>
                   )}
-                  <Controller
-                    name="paymentOption"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <LocalSelect {...field} label="Payment Option">
-                        <option value="FULL_PAYMENT">Full Payment</option>
-                        <option value="INSTALLMENT">Installment</option>
-                      </LocalSelect>
-                    )}
-                  />
                 </div>
               </section>
             </>

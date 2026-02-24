@@ -111,6 +111,7 @@ function PropertyDetailPage() {
         // Calculate total price including additional fees if they exist
         const totalPrice = property.totalPrice || property.basePrice;
         const percentage_totalPrice = (2 / 100) * totalPrice;
+        const system_charge_per = (2 / 100) * property.basePrice;
         let breakdown: {
           totalPrice: number;
           additionalFees: AdditionalFee[];
@@ -222,7 +223,9 @@ function PropertyDetailPage() {
                   )}
 
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">System Charge</span>
+                    <span className="text-sm text-gray-600">
+                      System Charge%
+                    </span>
                     <span className="text-sm font-medium">
                       {formatCurrency(breakdown.systemCharge)}
                     </span>
