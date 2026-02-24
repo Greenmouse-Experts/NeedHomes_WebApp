@@ -328,7 +328,7 @@ function PropertyDetailPage() {
                       <div className="p-2 bg-white rounded-lg shrink-0">
                         <Calendar className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
                       </div>
-                      <div className="min-w-0">
+                      {/*<div className="min-w-0">
                         <p className="text-xs text-gray-500 whitespace-nowrap">
                           Completion
                         </p>
@@ -337,7 +337,7 @@ function PropertyDetailPage() {
                             property.completionDate,
                           ).toLocaleDateString()}
                         </p>
-                      </div>
+                      </div>*/}
                     </div>
                     {property.profitSharingRatio && (
                       <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
