@@ -86,7 +86,7 @@ function RouteComponent() {
         ...data,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
-        additionalFees: update_addtional_fees(data.additionalFees),
+        additionalFees: update_addtional_fees(data.additionalFees as any),
         galleryImages: allGallery,
         videos: videoUrl,
         //@ts-ignore
