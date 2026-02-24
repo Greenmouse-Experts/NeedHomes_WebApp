@@ -16,23 +16,17 @@ import type { AxiosError } from "axios";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 interface KycFormData {
-  idType:
-    | "NIN"
-    | "national-id"
-    | "drivers-license"
-    | "passport"
-    | "voters-card"
-    | "";
-  frontPage: string | null;
-  backPage: string | null;
-  utilityBill: string | null;
-  address: string;
+  companyName: string;
+  rcNumber: string;
+  cacDocument: string | null;
+  tinDocument: string | null;
+  authorizedId: string | null;
 }
 
 export default function CorpKYCFORM() {
   const [auth] = useAuth();
-  const accountType = auth?.user?.accountType || "INDIVIDUAL";
-  const [kyc, setKyc] = useKyc();
+  const accountType = auth?.user?.accountType || "CORPORATE";
+  const [, setKyc] = useKyc();
 
   const {
     register,
@@ -41,18 +35,18 @@ export default function CorpKYCFORM() {
     formState: { errors },
   } = useForm<KycFormData>({
     defaultValues: {
-      idType: "",
-      frontPage: null,
-      backPage: null,
-      utilityBill: null,
-      address: "",
+      companyName: "",
+      rcNumber: "",
+      cacDocument: null,
+      tinDocument: null,
+      authorizedId: null,
     },
   });
 
   // Image selection hooks for preview and state management
-  const frontImage = useSelectImage(null);
-  const backImage = useSelectImage(null);
-  const utilityImage = useSelectImage(null);
+  const cacImage = useSelectImage("");
+  const tinImage = useSelectImage("");
+  const authorizedIdImage = useSelectImage("");
 
   // Fetch existing KYC data
   const {
@@ -71,31 +65,29 @@ export default function CorpKYCFORM() {
   useEffect(() => {
     if (kycData?.data.verification) {
       const verification = kycData.data.verification;
-      console.log(verification);
-      // setkyc(kyc.);
       reset({
-        idType: (verification.idType as KycFormData["idType"]) || "",
-        address: verification.address || "",
-        frontPage: verification.frontPage || null,
-        backPage: verification.backPage || null,
-        utilityBill: verification.utilityBill || null,
+        companyName: verification.companyName || "",
+        rcNumber: verification.rcNumber || "",
+        cacDocument: verification.cacDocument || null,
+        tinDocument: verification.tinDocument || null,
+        authorizedId: verification.authorizedId || null,
       });
-      if (verification.frontPage) {
-        frontImage.setPrev(verification.frontPage);
+      if (verification.cacDocument) {
+        cacImage.setPrev(verification.cacDocument);
       }
-      if (verification.backPage) {
-        backImage.setPrev(verification.backPage);
+      if (verification.tinDocument) {
+        tinImage.setPrev(verification.tinDocument);
       }
-      if (verification.utilityBill) {
-        utilityImage.setPrev(verification.utilityBill);
+      if (verification.authorizedId) {
+        authorizedIdImage.setPrev(verification.authorizedId);
       }
     } else if (isError && (error as AxiosError)?.response?.status === 404) {
       reset({
-        idType: "",
-        address: "",
-        frontPage: null,
-        backPage: null,
-        utilityBill: null,
+        companyName: "",
+        rcNumber: "",
+        cacDocument: null,
+        tinDocument: null,
+        authorizedId: null,
       });
     }
   }, [kycData, reset, isError, error]);
@@ -108,7 +100,6 @@ export default function CorpKYCFORM() {
     onSuccess: (data: ApiResponse) => {
       setKyc(data.data.verification);
       refetch();
-      // toast.success(data.message || "KYC submitted successfully!");
     },
     onError: (error) => {
       toast.error(
@@ -120,46 +111,56 @@ export default function CorpKYCFORM() {
 
   const onSubmit = async (data: KycFormData) => {
     const submitData: KycFormData = {
-      idType: data.idType,
-      address: data.address,
-      frontPage: null,
-      backPage: null,
-      utilityBill: null,
+      companyName: data.companyName,
+      rcNumber: data.rcNumber,
+      cacDocument: null,
+      tinDocument: null,
+      authorizedId: null,
     };
-    toast.info("submitting", { duration: 1500 });
-    try {
-      // Upload images first
-      if (frontImage.image && typeof frontImage.image !== "string") {
-        const uploaded = await uploadImage(frontImage.image);
-        submitData.frontPage = uploaded.data.url;
-      } else if (typeof frontImage.image === "string") {
-        submitData.frontPage = frontImage.image;
-      }
+    const upload_docs = async () => {
+      try {
+        // Upload images first
+        if (cacImage.image && typeof cacImage.image !== "string") {
+          const uploaded = await uploadImage(cacImage.image);
+          submitData.cacDocument = uploaded.data.url;
+        } else if (typeof cacImage.image === "string") {
+          submitData.cacDocument = cacImage.image;
+        }
 
-      if (backImage.image && typeof backImage.image !== "string") {
-        const uploaded = await uploadImage(backImage.image);
-        submitData.backPage = uploaded.data.url;
-      } else if (typeof backImage.image === "string") {
-        submitData.backPage = backImage.image;
-      }
+        if (tinImage.image && typeof tinImage.image !== "string") {
+          const uploaded = await uploadImage(tinImage.image);
+          submitData.tinDocument = uploaded.data.url;
+        } else if (typeof tinImage.image === "string") {
+          submitData.tinDocument = tinImage.image;
+        }
 
-      if (utilityImage.image && typeof utilityImage.image !== "string") {
-        const uploaded = await uploadImage(utilityImage.image);
-        submitData.utilityBill = uploaded.data.url;
-      } else if (typeof utilityImage.image === "string") {
-        submitData.utilityBill = utilityImage.image;
-      }
+        if (
+          authorizedIdImage.image &&
+          typeof authorizedIdImage.image !== "string"
+        ) {
+          const uploaded = await uploadImage(authorizedIdImage.image);
+          submitData.authorizedId = uploaded.data.url;
+        } else if (typeof authorizedIdImage.image === "string") {
+          submitData.authorizedId = authorizedIdImage.image;
+        }
 
-      // Submit KYC data
-      toast.promise(kycMutation.mutateAsync(submitData), {
-        loading: "Submitting KYC...",
-        success: (res) => res.message || "KYC submitted successfully!",
-        error: (err: any) => extract_message(err) || "Failed to submit KYC.",
-      });
-    } catch (err) {
-      console.error("Error during KYC submission:", err);
-      toast.error("An error occurred while processing your request.");
-    }
+        // Submit KYC data
+        toast.promise(kycMutation.mutateAsync(submitData), {
+          loading: "Submitting KYC...",
+          success: (res) => res.message || "KYC submitted successfully!",
+          error: (err: any) => extract_message(err) || "Failed to submit KYC.",
+        });
+      } catch (err) {
+        console.error("Error during KYC submission:", err);
+        toast.error("An error occurred while processing your request.");
+      }
+    };
+    toast.promise(upload_docs, {
+      loading: "Uploading documents...",
+      success: "Documents uploaded successfully!",
+      error: (err: any) =>
+        extract_message(err) || "Failed to upload documents.",
+    });
   };
 
   if (isLoadingKyc) {
@@ -197,110 +198,87 @@ export default function CorpKYCFORM() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 md:p-8">
         <div className="mb-8 border-b border-gray-100 pb-4">
           <h3 className="text-lg font-bold text-gray-900">
-            Identity Verification
+            Corporate Verification
           </h3>
           <p className="text-sm text-gray-500 mt-1">
-            Please provide valid government-issued identification and proof of
-            address.
+            Please provide your business registration details and documents.
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* ID Type */}
-          <div className="space-y-2">
-            <Label
-              htmlFor="idType"
-              className="text-sm font-semibold text-gray-700"
-            >
-              Document Type
-            </Label>
-            <select
-              id="idType"
-              {...register("idType", { required: "Please select an ID type" })}
-              className="flex w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200 appearance-none cursor-pointer"
-            >
-              <option value="">Select ID Type</option>
-              <option value="cacDocument">
-                Business Registration / Incorporation Certificate
-              </option>
-              <option value="tinDocument">TIN / VAT Registration</option>
-              <option value="authorizedId">
-                Proof of Authorized Signatory (Director ID or Letter of
-                Authorization)
-              </option>
-            </select>
-            {errors.idType && (
-              <p className="text-red-500 text-xs font-medium mt-1">
-                {errors.idType.message}
-              </p>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Company Name */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="companyName"
+                className="text-sm font-semibold text-gray-700"
+              >
+                Company Name
+              </Label>
+              <Input
+                id="companyName"
+                {...register("companyName", {
+                  required: "Company name is required",
+                })}
+                placeholder="Enter registered company name"
+                className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
+              />
+              {errors.companyName && (
+                <p className="text-red-500 text-xs font-medium mt-1">
+                  {errors.companyName.message}
+                </p>
+              )}
+            </div>
+
+            {/* RC Number */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="rcNumber"
+                className="text-sm font-semibold text-gray-700"
+              >
+                RC Number
+              </Label>
+              <Input
+                id="rcNumber"
+                {...register("rcNumber", { required: "RC Number is required" })}
+                placeholder="Enter RC Number"
+                className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
+              />
+              {errors.rcNumber && (
+                <p className="text-red-500 text-xs font-medium mt-1">
+                  {errors.rcNumber.message}
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Upload Front */}
+            {/* CAC Document */}
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-gray-700">
-                Front View
+                CAC Document
               </Label>
-              <SelectImage title="Click to upload front" {...frontImage} />
-              {errors.frontPage && (
-                <p className="text-red-500 text-xs font-medium mt-1">
-                  {errors.frontPage.message}
-                </p>
-              )}
+              <SelectImage title="Upload CAC Certificate" {...cacImage} />
             </div>
 
-            {/* Upload Back */}
+            {/* TIN Document */}
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-gray-700">
-                Back View
+                TIN Document
               </Label>
-              <SelectImage title="Click to upload back" {...backImage} />
-              {errors.backPage && (
-                <p className="text-red-500 text-xs font-medium mt-1">
-                  {errors.backPage.message}
-                </p>
-              )}
+              <SelectImage title="Upload TIN Certificate" {...tinImage} />
             </div>
           </div>
 
-          {/* Utility Bill */}
+          {/* Authorized ID */}
           <div className="space-y-2">
             <Label className="text-sm font-semibold text-gray-700">
-              Proof of Address
+              Authorized Signatory ID
             </Label>
             <SelectImage
-              title="Upload Utility Bill (Electricity, Water, etc.)"
-              {...utilityImage}
+              title="Upload ID of Authorized Signatory"
+              {...authorizedIdImage}
             />
-            {errors.utilityBill && (
-              <p className="text-red-500 text-xs font-medium mt-1">
-                {errors.utilityBill.message}
-              </p>
-            )}
-          </div>
-
-          {/* Address */}
-          <div className="space-y-2">
-            <Label
-              htmlFor="address"
-              className="text-sm font-semibold text-gray-700"
-            >
-              Residential Address
-            </Label>
-            <Input
-              id="address"
-              {...register("address", {
-                required: "Full residential address is required",
-              })}
-              placeholder="House Number, Street Name, City, State"
-              className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
-            />
-            {errors.address && (
-              <p className="text-red-500 text-xs font-medium mt-1">
-                {errors.address.message}
-              </p>
-            )}
           </div>
 
           {/* Submit Button */}
@@ -316,7 +294,7 @@ export default function CorpKYCFORM() {
                   Processing...
                 </span>
               ) : (
-                "Submit Verification"
+                "Submit Corporate Verification"
               )}
             </Button>
           </div>
