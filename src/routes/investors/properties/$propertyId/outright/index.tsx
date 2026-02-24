@@ -157,11 +157,12 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
-                      if (payOption == "INSTALLMENT") {
+                      if (payInstall) {
+                        const amount = form.getValues("amount");
                         return toast.promise(
                           mutate.mutateAsync({
-                            amountPaid: property.minimumInstallmentAmount,
-                            quantity: 1,
+                            amountPaid: amount,
+                            // quantity: 1,
                           }),
                           {
                             loading: "Processing payment...",
@@ -270,7 +271,7 @@ function PropertyDetailPage() {
                     type="checkbox"
                     className="checkbox checkbox-sm"
                   />
-                  <h2>Pay Installmentally</h2>
+                  <h2 className="text-sm">Pay Installmentally</h2>
                 </div>
                 {payInstall && (
                   <div className="mt-4">
