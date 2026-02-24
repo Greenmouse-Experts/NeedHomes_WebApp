@@ -38,6 +38,7 @@ import {
   FormProvider,
   useFieldArray,
   useForm,
+  useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
 import DefaultForm from "../../-components/DefaultForm";
@@ -163,6 +164,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
+  const paymentOption = useWatch({
+    control: methods.control,
+    name: "paymentOption",
+  });
   return (
     <ThemeProvider>
       <div className="mx-auto">
@@ -198,19 +203,40 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Controller
-                    name="installmentDuration"
-                    control={methods.control}
-                    render={({ field }) => (
-                      //@ts-ignore
-                      <SimpleInput
-                        {...field}
-                        type="number"
-                        label="Installment Duration (Months)"
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  {paymentOption === "INSTALLMENT" && (
+                    <>
+                      <Controller
+                        name="installmentDuration"
+                        control={methods.control}
+                        render={({ field }) => (
+                          //@ts-ignore
+                          <SimpleInput
+                            {...field}
+                            type="number"
+                            label="Installment Duration (Months)"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
                       />
-                    )}
-                  />
+                      <Controller
+                        name="minimumInstallmentAmount"
+                        control={methods.control}
+                        render={({ field }) => (
+                          //@ts-ignore
+                          <SimpleInput
+                            {...field}
+                            type="number"
+                            label="Minimum Installment Amount"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                    </>
+                  )}
                   <Controller
                     name="paymentOption"
                     control={methods.control}
