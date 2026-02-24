@@ -126,7 +126,7 @@ function PropertyDetailPage() {
             (sum: number, fee: AdditionalFee) => sum + fee.amount,
             0,
           ),
-          systemCharge: percentage_totalPrice,
+          systemCharge: system_charge_per,
         };
 
         if (property.paymentOption === "INSTALLMENT") {
