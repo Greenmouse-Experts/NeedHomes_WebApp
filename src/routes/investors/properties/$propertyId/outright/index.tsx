@@ -124,7 +124,7 @@ function PropertyDetailPage() {
           installmentDuration?: number;
           systemCharge: number;
         } = {
-          totalPrice: totalPrice + percentage_totalPrice,
+          totalPrice: totalPrice + system_charge_per,
           additionalFees: property.additionalFees || [],
           additionalFeesTotal: (property.additionalFees || []).reduce(
             (sum: number, fee: AdditionalFee) => sum + fee.amount,
@@ -243,7 +243,7 @@ function PropertyDetailPage() {
 
                     <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
-                        Total Due
+                        Total
                       </span>
                       <span className="text-lg font-bold text-(--color-orange)">
                         {formatCurrency(breakdown.totalPrice)}
