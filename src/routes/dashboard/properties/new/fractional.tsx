@@ -258,10 +258,10 @@ export const get_docs = async (
     } catch (e) {}
   }
 
-  if (docFiles.transferOfOwnershipDocument) {
+  if (docFiles.transferDocument) {
     try {
       // @ts-ignore
-      const url = await uploadFile(docFiles.transferOfOwnershipDocument);
+      const url = await uploadFile(docFiles.transferDocument);
       if (url) uploadedDocUrls.transferDocument = url;
     } catch (e) {}
   }

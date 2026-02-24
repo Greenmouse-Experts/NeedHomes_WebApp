@@ -146,10 +146,10 @@ function RouteComponent() {
   //       );
   //       uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
   //     }
-  //     if (useDocUpload.documents.transferOfOwnershipDocument) {
+  //     if (useDocUpload.documents.transferDocument) {
   //       const uploaded = await apiClient.post(
   //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.transferOfOwnershipDocument },
+  //         { file: useDocUpload.documents.transferDocument },
   //         { headers: { "Content-Type": "multipart/form-data" } },
   //       );
   //       uploadedDocUrls.transferDocument = uploaded.data.url;

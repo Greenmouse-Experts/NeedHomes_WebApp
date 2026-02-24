@@ -46,7 +46,7 @@ export const doc_helper = async (
   return {
     certificate: uploaded_docs.certificate,
     surveyPlan: uploaded_docs.surveyPlan,
-    transferOfOwnershipDocument: uploaded_docs.transferOfOwnershipDocument,
+    transferDocument: uploaded_docs.transferDocument,
     brochureFactSheet: uploaded_docs.brochureFactSheet,
   };
 };

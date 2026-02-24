@@ -10,7 +10,7 @@ import {
 interface Documents<T = any> {
   certificate?: T | File | string;
   surveyPlanDocument?: T | File | string;
-  transferOfOwnershipDocument?: T | File | string;
+  transferDocument?: T | File | string;
   brochure?: T | File | string;
 }
 
@@ -23,7 +23,7 @@ export const DocumentUpload = (props: {
   const documentTypes: Array<keyof Documents> = [
     "certificate",
     "surveyPlanDocument",
-    "transferOfOwnershipDocument",
+    "transferDocument",
     "brochure",
   ];
 
@@ -33,7 +33,7 @@ export const DocumentUpload = (props: {
         return "Certificate of Ownership";
       case "surveyPlanDocument":
         return "Survey Plan Document";
-      case "transferOfOwnershipDocument":
+      case "transferDocument":
         return "Transfer of Ownership Document";
       case "brochure":
         return "Brochure / Fact Sheet";

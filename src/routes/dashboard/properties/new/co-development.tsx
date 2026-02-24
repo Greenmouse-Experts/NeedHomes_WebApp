@@ -100,7 +100,7 @@ function RouteComponent() {
               case "surveyPlan":
                 uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
                 break;
-              case "transferOfOwnershipDocument":
+              case "transferDocument":
                 uploadedDocUrls.transferDocument = uploaded.data.url;
                 break;
               case "brochureFactSheet":
