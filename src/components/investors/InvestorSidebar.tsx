@@ -71,8 +71,8 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
     },
     {
       to: "/investors/chat",
-      activePage: "support",
-      label: "Support",
+      activePage: "chat",
+      label: "chat",
       icon: <ChatBubbleLeftIcon className="size-4" />,
       alwaysEnabled: false,
     },
