@@ -4,6 +4,7 @@ import type { useDocumentUpload } from "./DocumentUpload";
 import { uploadFile } from "@/api/fileApi";
 import type { useVideoUpload } from "./VideoUpload";
 import type { DocProps } from "@/types/form";
+import type { AdditionalFee } from "@/types/property";
 
 export const get_cover_image = async (
   selectImageProps: ReturnType<typeof useSelectImage>,
@@ -80,4 +81,14 @@ export const gallery_helper = async (
     ...uploadedGalleryUrls,
   ];
   return allGallery;
+};
+
+export const update_addtional_fees = (
+  fees: AdditionalFee[],
+): AdditionalFee[] => {
+  const new_fees = fees.map((item) => {
+    const new_item = { ...item, amount: item.amount * 100 } as AdditionalFee;
+    return new_item;
+  });
+  return new_fees;
 };

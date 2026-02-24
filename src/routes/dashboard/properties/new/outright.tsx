@@ -21,6 +21,7 @@ import {
   doc_helper,
   gallery_helper,
   get_cover_image,
+  update_addtional_fees,
   video_helper,
 } from "../../-components/upload_helpers";
 import { strip_outright } from "../../-components/form_cleaners";
@@ -76,7 +77,7 @@ function RouteComponent() {
         Number(data.basePrice) +
         (data.additionalFees
           ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
+              (acc, fee) => acc + (Number(fee.amount * 100) || 0),
               0,
             )
           : 0);
@@ -85,6 +86,7 @@ function RouteComponent() {
         ...data,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
+        additionalFees: update_addtional_fees(data.additionalFees),
         galleryImages: allGallery,
         videos: videoUrl,
         //@ts-ignore
