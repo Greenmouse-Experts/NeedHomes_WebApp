@@ -101,17 +101,21 @@ function PropertyDetailPage() {
     installmentDuraion?: number;
   }
   const form = useForm({
-    defaultValues: {},
+    defaultValues: {
+      installment: false,
+      amount: 0,
+    },
   });
+
   return (
     <PageLoader query={query}>
       {(data) => {
         const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
-
         // Calculate total price including additional fees if they exist
         const totalPrice = property.totalPrice || property.basePrice;
         const percentage_totalPrice = (2 / 100) * totalPrice;
         const system_charge_per = (2 / 100) * property.basePrice;
+
         let breakdown: {
           totalPrice: number;
           additionalFees: AdditionalFee[];
@@ -135,7 +139,11 @@ function PropertyDetailPage() {
           breakdown.installmentDuration = property.installmentDuration;
         }
         const payOption = property.paymentOption;
+        const payInstall = form.watch("installment");
 
+        if (breakdown.installmentAmount) {
+          form.setValue("amount", breakdown.installmentAmount);
+        }
         return (
           <>
             <Modal
@@ -177,87 +185,102 @@ function PropertyDetailPage() {
                     disabled={mutate.isPending}
                   >
                     Confirm & Pay{" "}
-                    {payOption == "INSTALLMENT"
+                    {payInstall
                       ? property.minimumInstallmentAmount?.toLocaleString()
                       : breakdown.totalPrice.toLocaleString()}
                   </Button>
                 </div>
               }
             >
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Property</span>
-                    <span className="text-sm font-semibold">
-                      {property.propertyTitle}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Base Price</span>
-                    <span className="text-sm font-medium">
-                      {formatCurrency(property.basePrice)}
-                    </span>
+              <section>
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Property</span>
+                      <span className="text-sm font-semibold">
+                        {property.propertyTitle}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Base Price</span>
+                      <span className="text-sm font-medium">
+                        {formatCurrency(property.basePrice)}
+                      </span>
+                    </div>
+
+                    {breakdown.additionalFees.length > 0 && (
+                      <section className="rounded-lg border border-gray-200 overflow-hidden">
+                        <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
+                          Additional Fees
+                        </h2>
+                        <ul className="p-3 space-y-2">
+                          {breakdown.additionalFees.map((fee, idx) => (
+                            <li
+                              key={idx}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm text-gray-600">
+                                {fee.label}
+                              </span>
+                              <span className="text-sm font-medium">
+                                {formatCurrency(fee.amount)}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        System Charge: 2%
+                      </span>
+                      <span className="text-sm font-medium">
+                        {formatCurrency(breakdown.systemCharge)}
+                      </span>
+                    </div>
+
+                    <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                      <span className="text-sm font-bold text-gray-900">
+                        Total Due
+                      </span>
+                      <span className="text-lg font-bold text-(--color-orange)">
+                        {formatCurrency(breakdown.totalPrice)}
+                      </span>
+                    </div>
                   </div>
 
-                  {breakdown.additionalFees.length > 0 && (
-                    <section className="rounded-lg border border-gray-200 overflow-hidden">
-                      <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
-                        Additional Fees
-                      </h2>
-                      <ul className="p-3 space-y-2">
-                        {breakdown.additionalFees.map((fee, idx) => (
-                          <li
-                            key={idx}
-                            className="flex justify-between items-center"
-                          >
-                            <span className="text-sm text-gray-600">
-                              {fee.label}
-                            </span>
-                            <span className="text-sm font-medium">
-                              {formatCurrency(fee.amount)}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
+                  {property.paymentOption === "INSTALLMENT" && (
+                    <div className="p-3 bg-blue-50 rounded border border-blue-100">
+                      <p className="text-xs text-blue-700">
+                        You are paying the minimum installment of{" "}
+                        <span className="font-bold">
+                          {formatCurrency(property.minimumInstallmentAmount)}
+                        </span>
+                        . Remaining balance will be spread over{" "}
+                        {property.installmentDuration} months.
+                      </p>
+                    </div>
                   )}
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">
-                      System Charge%
-                    </span>
-                    <span className="text-sm font-medium">
-                      {formatCurrency(breakdown.systemCharge)}
-                    </span>
-                  </div>
-
-                  <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                    <span className="text-sm font-bold text-gray-900">
-                      Total Due
-                    </span>
-                    <span className="text-lg font-bold text-(--color-orange)">
-                      {formatCurrency(
-                        totalPrice +
-                          breakdown.additionalFeesTotal +
-                          breakdown.systemCharge,
-                      )}
-                    </span>
-                  </div>
                 </div>
 
-                {property.paymentOption === "INSTALLMENT" && (
-                  <div className="p-3 bg-blue-50 rounded border border-blue-100">
-                    <p className="text-xs text-blue-700">
-                      You are paying the minimum installment of{" "}
-                      <span className="font-bold">
-                        {formatCurrency(property.minimumInstallmentAmount)}
-                      </span>
-                      . Remaining balance will be spread over{" "}
-                      {property.installmentDuration} months.
-                    </p>
+                <div className="flex gap-2 items-centerm mt-2">
+                  <input
+                    {...form.register("installment")}
+                    type="checkbox"
+                    className="checkbox checkbox-sm"
+                  />
+                  <h2>Pay Installmentally</h2>
+                </div>
+                {payInstall && (
+                  <div className="mt-4">
+                    <InstallMentForm
+                      form={form}
+                      minimumInvestmentAmount={breakdown.installmentAmount}
+                    />
                   </div>
                 )}
-              </div>
+              </section>
             </Modal>
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <Button
@@ -606,3 +629,46 @@ function PropertyDetailPage() {
     </PageLoader>
   );
 }
+
+const InstallMentForm = ({
+  form,
+  minimumInvestmentAmount,
+}: {
+  form: any;
+  minimumInvestmentAmount: number;
+}) => {
+  const formatCurrency = (amount: number | null | undefined) => {
+    if (amount === null || amount === undefined) return "N/A";
+    const fixed = parseInt(amount.toPrecision());
+    return `₦ ${fixed.toLocaleString()}`;
+  };
+
+  return (
+    <div className="space-y-4">
+      <SimpleInput
+        {...form.register("amount", {
+          valueAsNumber: true,
+          min: {
+            value: minimumInvestmentAmount,
+            message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
+          },
+        })}
+        label="Installment Amount"
+        type="number"
+        placeholder={formatCurrency(minimumInvestmentAmount)}
+        className="w-full"
+      />
+      {form.formState.errors.amount && (
+        <p className="text-red-500 text-sm">
+          {form.formState.errors.amount.message as string}
+        </p>
+      )}
+      <p className="text-sm text-gray-600">
+        Minimum installment amount:{" "}
+        <span className="font-medium">
+          {formatCurrency(minimumInvestmentAmount)}
+        </span>
+      </p>
+    </div>
+  );
+};
