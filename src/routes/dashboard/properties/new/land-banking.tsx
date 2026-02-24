@@ -154,10 +154,10 @@ function RouteComponent() {
   //       );
   //       uploadedDocUrls.transferDocument = uploaded.data.url;
   //     }
-  //     if (useDocUpload.documents.brochureFactSheet) {
+  //     if (useDocUpload.documents.brochure) {
   //       const uploaded = await apiClient.post(
   //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.brochureFactSheet },
+  //         { file: useDocUpload.documents.brochure },
   //         { headers: { "Content-Type": "multipart/form-data" } },
   //       );
   //       uploadedDocUrls.brochure = uploaded.data.url;

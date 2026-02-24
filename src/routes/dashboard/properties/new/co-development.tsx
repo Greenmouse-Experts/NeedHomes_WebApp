@@ -103,7 +103,7 @@ function RouteComponent() {
               case "transferDocument":
                 uploadedDocUrls.transferDocument = uploaded.data.url;
                 break;
-              case "brochureFactSheet":
+              case "brochure":
                 uploadedDocUrls.brochure = uploaded.data.url;
                 break;
             }

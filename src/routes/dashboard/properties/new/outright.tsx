@@ -71,6 +71,7 @@ function RouteComponent() {
       const allGallery = await gallery_helper(useImageProps);
       // Handle Document Uploads
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
+      console.log(uploadedDocUrls);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
       const totalPrice =

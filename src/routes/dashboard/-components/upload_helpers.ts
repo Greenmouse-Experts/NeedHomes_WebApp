@@ -48,7 +48,7 @@ export const doc_helper = async (
     certificate: uploaded_docs.certificate,
     surveyPlan: uploaded_docs.surveyPlan,
     transferDocument: uploaded_docs.transferDocument,
-    brochureFactSheet: uploaded_docs.brochureFactSheet,
+    brochure: uploaded_docs.brochure,
   };
 };
 
