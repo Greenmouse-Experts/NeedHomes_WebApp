@@ -91,7 +91,7 @@ function RouteComponent() {
         galleryImages: allGallery,
         videos: videoUrl,
         //@ts-ignore
-        basePrice: data.basePrice,
+        basePrice: data.basePrice * 100,
         totalPrice: totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
