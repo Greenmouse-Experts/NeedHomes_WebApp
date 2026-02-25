@@ -164,7 +164,7 @@ function PropertyDetailPage() {
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
-                            // quantity: 1,
+                            quantity: 1,
                           }),
                           {
                             loading: "Processing payment...",
