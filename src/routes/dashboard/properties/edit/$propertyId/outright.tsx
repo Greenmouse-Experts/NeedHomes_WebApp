@@ -161,7 +161,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+      //@ts-ignore
       if (payload.minimumInstallmentAmount) {
+        //@ts-ignore
         payload.minimumInstallmentAmount = data.minimumInstallmentAmount * 100;
       }
       const new_payload = strip_outright(payload);

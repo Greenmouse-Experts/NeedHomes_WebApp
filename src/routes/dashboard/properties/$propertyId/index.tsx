@@ -394,7 +394,7 @@ function PropertyDetailsPage() {
                     <div className="space-y-4 md:space-y-6">
                       <InvestmentDetails
                         inv={property}
-                        type={property.investmentModel}
+                        type={property.investmentModel as any}
                       />
 
                       <div className="space-y-3">
