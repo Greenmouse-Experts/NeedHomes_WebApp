@@ -117,17 +117,13 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
-      console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
+      const keys = [
+        "minimumInvestment",
+        "minimumInstallmentAmount",
+      ] as (typeof data)[string];
+      const new_payload = calculate_fees(data, keys);
       const payload = {
-        ...data,
+        ...new_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
