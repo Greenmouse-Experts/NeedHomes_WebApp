@@ -78,6 +78,7 @@ function RouteComponent() {
           }
           return (
             <>
+              {/*//@ts-ignore*/}
               <FormField defaultValue={new_data} />
             </>
           );
