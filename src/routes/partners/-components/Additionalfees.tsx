@@ -21,8 +21,8 @@ export default function AdditionalFees({ fees }: AdditionalFeesProps) {
             <span className="text-sm font-medium">
               {new Intl.NumberFormat("en-US", {
                 style: "currency",
-                currency: "USD",
-              }).format(fee.amount)}
+                currency: "NGN",
+              }).format(fee.amount / 100)}
             </span>
           </li>
         ))}

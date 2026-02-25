@@ -112,7 +112,8 @@ function PropertyDetailPage() {
       {(data) => {
         const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
         // Calculate total price including additional fees if they exist
-        const totalPrice = property.totalPrice || property.basePrice;
+        const totalPrice =
+          property.totalPrice / 100 || property.basePrice / 100;
         const percentage_totalPrice = (2 / 100) * totalPrice;
         const system_charge_per = (2 / 100) * property.basePrice;
 
@@ -127,7 +128,7 @@ function PropertyDetailPage() {
           totalPrice: totalPrice + percentage_totalPrice,
           additionalFees: property.additionalFees || [],
           additionalFeesTotal: (property.additionalFees || []).reduce(
-            (sum: number, fee: AdditionalFee) => sum + fee.amount,
+            (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
             0,
           ),
           systemCharge: percentage_totalPrice,
@@ -174,7 +175,7 @@ function PropertyDetailPage() {
                       }
                       toast.promise(
                         mutate.mutateAsync({
-                          amountPaid: breakdown.totalPrice,
+                          amountPaid: breakdown.totalPrice * 100,
                           quantity: 1,
                         }),
                         {
@@ -206,7 +207,7 @@ function PropertyDetailPage() {
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Base Price</span>
                       <span className="text-sm font-medium">
-                        {formatCurrency(property.basePrice)}
+                        {formatCurrency(property.basePrice / 100)}
                       </span>
                     </div>
 
@@ -225,7 +226,7 @@ function PropertyDetailPage() {
                                 {fee.label}
                               </span>
                               <span className="text-sm font-medium">
-                                {formatCurrency(fee.amount)}
+                                {formatCurrency(fee.amount / 100)}
                               </span>
                             </li>
                           ))}
@@ -345,7 +346,7 @@ function PropertyDetailPage() {
                     </div>
                     <div className="sm:text-right">
                       <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
-                        {formatCurrency(property.basePrice)}
+                        {formatCurrency(property.basePrice / 100)}
                       </p>
                       <p className="text-xs md:text-sm text-gray-500 mt-1">
                         SKU: {property.id}
