@@ -12,7 +12,7 @@ export default function PropertyCard({
       style: "currency",
       currency: "NGN",
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(amount / 100);
   };
   const route = (propType: typeof property.investmentModel) => {
     switch (propType) {
