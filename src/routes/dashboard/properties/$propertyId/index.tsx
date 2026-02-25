@@ -265,7 +265,7 @@ function PropertyDetailsPage() {
                                       {fee.label}
                                     </span>
                                     <span className="font-semibold text-gray-900">
-                                      ₦{fee.amount.toLocaleString()}
+                                      ₦{(fee.amount / 100).toLocaleString()}
                                     </span>
                                   </div>
                                 ))}
@@ -276,7 +276,10 @@ function PropertyDetailsPage() {
                                   <span className="font-bold text-lg text-(--color-orange)">
                                     ₦
                                     {property.additionalFees
-                                      .reduce((sum, fee) => sum + fee.amount, 0)
+                                      .reduce(
+                                        (sum, fee) => sum + fee.amount / 100,
+                                        0,
+                                      )
                                       .toLocaleString()}
                                   </span>
                                 </div>
