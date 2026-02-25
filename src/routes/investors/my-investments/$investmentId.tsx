@@ -140,7 +140,7 @@ function InvestmentDetailsPage() {
                   </div>
                   <p className="text-sm text-gray-600 mb-1">Amount Paid</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {formatCurrency(investment.amountPaid)}
+                    {formatCurrency(investment.amountPaid / 100)}
                   </p>
                 </div>
 
@@ -204,7 +204,7 @@ function InvestmentDetailsPage() {
                       Total Contract Amount:
                     </span>
                     <span className="font-medium text-gray-900">
-                      {formatCurrency(investment.totalAmount)}
+                      {formatCurrency(investment.totalAmount / 100)}
                     </span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-50">

@@ -30,7 +30,7 @@ const columns: columnType<Installment>[] = [
   {
     key: "amount",
     label: "Amount",
-    render: (value) => value.toLocaleString(),
+    render: (value) => (value / 100).toLocaleString(),
   },
   {
     key: "status",
