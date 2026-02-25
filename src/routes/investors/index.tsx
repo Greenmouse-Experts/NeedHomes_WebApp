@@ -6,6 +6,7 @@ import CalendarWidget from "@/components/CalendarWidget";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
 import UserWallet from "../-components/Wallet";
+import Example from "./-components/Chart";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -323,6 +324,7 @@ function InvestorDashboard() {
       </div>
 
       {/* Monthly Analysis */}
+      <Example />
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
         <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4 md:mb-6">
           Monthly Analysis
