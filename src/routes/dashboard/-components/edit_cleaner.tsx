@@ -10,5 +10,5 @@ export default function edit_cleaner(data: ADMIN_PROPERTY_LISTING) {
     })),
     totalPrice: data.totalPrice / 100,
   } as ADMIN_PROPERTY_LISTING;
-  return new_dta;
+  return new_data;
 }
