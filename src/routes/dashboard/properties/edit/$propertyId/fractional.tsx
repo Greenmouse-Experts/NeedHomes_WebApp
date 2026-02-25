@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { uploadImage } from "@/api/imageApi";
@@ -61,7 +61,7 @@ function RouteComponent() {
           }
           return (
             <>
-              <FormField defaultValue={form_data} />
+              <FormField defaultValue={new_data} />
             </>
           );
         }}
@@ -80,6 +80,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   const docUpload = useDocumentUpload(defaultValue as any);
   const videoUpload = useVideoUpload(defaultValue.videos);
   const nav = useNavigate();
+
   const useImageProps = useImages(
     defaultValue.galleryImages.map((url) => {
       return {
@@ -95,6 +96,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     defaultValues: {
       ...defaultValue,
     },
+  });
+  const paymentOption = useWatch({
+    control: methods.control,
+    name: "paymentOption",
   });
   const mutation = useMutation({
     mutationFn: async (data: FractionalPropertyFormValues) => {
@@ -231,19 +236,63 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       />
                     )}
                   />
-                </div>
-                <Controller
-                  name="exitWindow"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <LocalSelect {...field} label="Exit Window">
-                      <option value="MONTHLY">Monthly</option>
-                      <option value="QUATERLY">Quaterly</option>
-                      <option value="ANNUALLY">Annually</option>
-                      <option value="AT_MATURITY">At Maturity</option>
-                    </LocalSelect>
+                  <Controller
+                    name="exitWindow"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <LocalSelect {...field} label="Exit Window">
+                        <option value="MONTHLY">Monthly</option>
+                        <option value="QUATERLY">Quaterly</option>
+                        <option value="ANNUALLY">Annually</option>
+                        <option value="AT_MATURITY">At Maturity</option>
+                      </LocalSelect>
+                    )}
+                  />
+                  <Controller
+                    name="paymentOption"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <LocalSelect {...field} label="Payment Option">
+                        <option value="FULL_PAYMENT">Full Payment</option>
+                        <option value="INSTALLMENT">Installment</option>
+                      </LocalSelect>
+                    )}
+                  />
+                  {paymentOption === "INSTALLMENT" && (
+                    <>
+                      <Controller
+                        name="installmentDuration"
+                        control={methods.control}
+                        render={({ field }) => (
+                          //@ts-ignore
+                          <SimpleInput
+                            {...field}
+                            type="number"
+                            label="Installment Duration (Months)"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="minimumInstallmentAmount"
+                        control={methods.control}
+                        render={({ field }) => (
+                          //@ts-ignore
+                          <SimpleInput
+                            {...field}
+                            type="number"
+                            label="Minimum Installment Amount"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                    </>
                   )}
-                />
+                </div>
               </section>
               {/* 5. Investment-Specific Details */}
             </>

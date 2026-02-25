@@ -321,8 +321,6 @@ export const get_docs = async (
 
   if (docFiles.brochure) {
     try {
-      // @ts-expect-error
-
       const url = await uploadFile(docFiles.brochure);
       if (url) uploadedDocUrls.brochure = url;
     } catch (e) {}
