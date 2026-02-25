@@ -1,5 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_TYPE } from "@/types/property";
 import { useQuery } from "@tanstack/react-query";
 
@@ -22,7 +23,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
       : "—";
 
   return (
-    <div>
+    <ThemeProvider className="ring fade rounded-box shadow">
       <QueryCompLayout query={query}>
         {(data) => {
           const prop_data = data.data;
@@ -407,6 +408,6 @@ export default function InvPropDetails({ propId }: { propId: string }) {
           );
         }}
       </QueryCompLayout>
-    </div>
+    </ThemeProvider>
   );
 }

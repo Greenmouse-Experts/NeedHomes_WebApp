@@ -99,7 +99,7 @@ export default function InvPaymentSchedule({ id }: { id: string }) {
   });
 
   return (
-    <ThemeProvider className="my-4 ring fade shadow rounded-box ">
+    <ThemeProvider className="my-4 ring fade rounded-box ">
       <h2 className="p-4 text-lg font-bold fade border-b text-current/70">
         Installment Schedule
       </h2>

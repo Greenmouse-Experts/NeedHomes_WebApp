@@ -21,6 +21,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
+import { useEffect } from "react";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/outright/",
@@ -146,6 +147,12 @@ function PropertyDetailPage() {
           form.setValue("amount", breakdown.installmentAmount);
         }
         const installOptions = property.paymentOption == "INSTALLMENT";
+        useEffect(() => {
+          const installment_value = form.getValues("installment");
+          if (installOptions) {
+            form.setValue("installment", true);
+          }
+        }, [installOptions]);
         return (
           <>
             <Modal
@@ -269,6 +276,7 @@ function PropertyDetailPage() {
                 {installOptions && (
                   <div className="flex gap-2 items-center mt-2">
                     <input
+                      disabled={installOptions}
                       {...form.register("installment")}
                       type="checkbox"
                       className="checkbox checkbox-sm"
