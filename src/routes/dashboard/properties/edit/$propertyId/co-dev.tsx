@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useImages, useSelectImage } from "@/helpers/images";
@@ -25,6 +25,7 @@ import {
   video_helper,
 } from "@/routes/dashboard/-components/upload_helpers";
 import { strip_co_dev } from "@/routes/dashboard/-components/form_cleaners";
+import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/co-dev",
@@ -59,10 +60,21 @@ function RouteComponent() {
     <>
       <PageLoader query={query}>
         {(data) => {
-          const form_data = data.data;
+          const formData = data.data;
+
+          //@ts-ignore
+          const exists = formData.minimumInstallmentAmount;
+          let new_data = edit_cleaner(formData as any);
+          if (exists) {
+            new_data = {
+              ...new_data,
+              //@ts-ignore
+              minimumInstallmentAmount: new_data.minimumInstallmentAmount / 100,
+            };
+          }
           return (
             <>
-              <FormField defaultValue={form_data} />
+              <FormField defaultValue={new_data as any} />
             </>
           );
         }}
@@ -90,6 +102,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     defaultValues: {
       ...defaultValue,
     },
+  });
+  const paymentOption = useWatch({
+    control: form.control,
+    name: "paymentOption",
   });
 
   const mutation = useMutation({
@@ -216,8 +232,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 />
               )}
             />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <LocalSelect
               {...form.register("exitRule")}
               label="Exit Strategy"
@@ -231,6 +246,46 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
               <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
               <option value="NOT_ALLOWED">Not Allowed</option>
             </LocalSelect>
+            <Controller
+              name="paymentOption"
+              control={form.control}
+              render={({ field }) => (
+                <LocalSelect {...field} label="Payment Option">
+                  <option value="FULL_PAYMENT">Full Payment</option>
+                  <option value="INSTALLMENT">Installment</option>
+                </LocalSelect>
+              )}
+            />
+            {paymentOption === "INSTALLMENT" && (
+              <>
+                <Controller
+                  name="installmentDuration"
+                  control={form.control}
+                  render={({ field }) => (
+                    //@ts-ignore
+                    <SimpleInput
+                      {...field}
+                      type="number"
+                      label="Installment Duration (Months)"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  )}
+                />
+                <Controller
+                  name="minimumInstallmentAmount"
+                  control={form.control}
+                  render={({ field }) => (
+                    //@ts-ignore
+                    <SimpleInput
+                      {...field}
+                      type="number"
+                      label="Minimum Installment Amount"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  )}
+                />
+              </>
+            )}
           </div>
         </>
       </DefaultForm>
