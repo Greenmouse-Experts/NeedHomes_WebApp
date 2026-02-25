@@ -107,6 +107,7 @@ function PropertyDetailPage() {
       amount: 0,
     },
   });
+  // let payAmount = form.watch("amount");
 
   return (
     <PageLoader query={query}>
@@ -143,16 +144,20 @@ function PropertyDetailPage() {
         const payOption = property.paymentOption;
         const payInstall = form.watch("installment");
 
-        if (breakdown.installmentAmount) {
-          form.setValue("amount", breakdown.installmentAmount / 100);
-        }
         const installOptions = property.paymentOption == "INSTALLMENT";
+        const payAmount = form.watch("amount");
         useEffect(() => {
           const installment_value = form.getValues("installment");
+
           if (installOptions) {
             form.setValue("installment", true);
           }
         }, [installOptions]);
+        useEffect(() => {
+          if (breakdown.installmentAmount) {
+            form.setValue("amount", breakdown.installmentAmount / 100);
+          }
+        }, []);
         return (
           <>
             <Modal
@@ -196,7 +201,11 @@ function PropertyDetailPage() {
                   >
                     Confirm & Pay{" "}
                     {payInstall
-                      ? formatCurrency(property.minimumInstallmentAmount / 100)
+                      ? payAmount
+                        ? formatCurrency(payAmount)
+                        : formatCurrency(
+                            property.minimumInstallmentAmount / 100,
+                          )
                       : breakdown.totalPrice.toLocaleString()}
                   </Button>
                 </div>
