@@ -65,7 +65,17 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const formData = data.data;
-          const new_data = edit_cleaner(formData);
+
+          //@ts-ignore
+          const exists = formData.mininumInvestmentAmount;
+          let new_data = edit_cleaner(formData as any);
+          if (exists) {
+            new_data = {
+              ...new_data,
+              //@ts-ignore
+              mininumInvestmentAmount: new_data.mininumInvestmentAmount / 100,
+            };
+          }
           return (
             <>
               <FormField defaultValue={new_data} />
