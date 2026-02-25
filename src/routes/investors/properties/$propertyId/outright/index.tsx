@@ -277,8 +277,10 @@ function PropertyDetailPage() {
                 )}
                 {payInstall && (
                   <div className="mt-4">
+                    {/*{JSON.stringify(property["installmentDuration"])}*/}
                     <InstallMentForm
                       form={form}
+                      duration={property["installmentDuration"]}
                       minimumInvestmentAmount={breakdown.installmentAmount}
                     />
                   </div>
@@ -632,12 +634,13 @@ function PropertyDetailPage() {
     </PageLoader>
   );
 }
-
 const InstallMentForm = ({
   form,
   minimumInvestmentAmount,
+  duration,
 }: {
   form: any;
+  duration: string | number;
   minimumInvestmentAmount: number;
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
@@ -647,29 +650,35 @@ const InstallMentForm = ({
   };
 
   return (
-    <div className="space-y-4">
-      <SimpleInput
-        {...form.register("amount", {
-          valueAsNumber: true,
-          min: {
-            value: minimumInvestmentAmount,
-            message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
-          },
-        })}
-        label="Installment Amount"
-        type="number"
-        placeholder={formatCurrency(minimumInvestmentAmount)}
-        className="w-full"
-      />
-      {form.formState.errors.amount && (
-        <p className="text-red-500 text-sm">
-          {form.formState.errors.amount.message as string}
-        </p>
-      )}
-      <p className="text-sm text-gray-600">
-        Minimum installment amount:{" "}
-        <span className="font-medium">
-          {formatCurrency(minimumInvestmentAmount)}
+    <div className="space-y-4 p-4 ring rounded-box fade">
+      <div className="flex items-end gap-2">
+        <div className="flex-1">
+          <SimpleInput
+            {...form.register("amount", {
+              valueAsNumber: true,
+              min: {
+                value: minimumInvestmentAmount,
+                message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
+              },
+            })}
+            label="Installment Amount"
+            type="number"
+            placeholder={formatCurrency(minimumInvestmentAmount)}
+            className="w-full"
+          />
+          {form.formState.errors.amount && (
+            <p className="text-red-500 text-sm mt-1">
+              {form.formState.errors.amount.message as string}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <p className=" text-gray-600/60 text-sm ">
+        <span className="font-semibold text-gray-900/60 ">
+          You are paying the minimum installment of{" "}
+          {formatCurrency(minimumInvestmentAmount)} Remaining balance will be
+          spread over {duration} months.
         </span>
       </p>
     </div>
