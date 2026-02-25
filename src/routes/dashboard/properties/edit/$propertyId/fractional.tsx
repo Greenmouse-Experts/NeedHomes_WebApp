@@ -27,6 +27,7 @@ import {
   strip_fractional,
   strip_land_banking,
 } from "@/routes/dashboard/-components/form_cleaners";
+import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/fractional",
@@ -49,6 +50,15 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const form_data = data.data;
+          const exists = form_data.minimumInstallmentAmount;
+          let new_data = edit_cleaner(form_data as any, ["pricePerShare"]);
+          if (exists) {
+            new_data = {
+              ...new_data,
+              //@ts-ignore
+              minimumInstallmentAmount: new_data.minimumInstallmentAmount / 100,
+            };
+          }
           return (
             <>
               <FormField defaultValue={form_data} />
