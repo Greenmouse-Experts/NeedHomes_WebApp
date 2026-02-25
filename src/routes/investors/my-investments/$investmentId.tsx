@@ -81,6 +81,7 @@ function InvestmentDetailsPage() {
       <PageLoader query={query}>
         {(data) => {
           const investment = data.data as Investment;
+          const investment_type = investment.paymentOption == "INSTALLMENT";
           return (
             <>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -229,7 +230,9 @@ function InvestmentDetailsPage() {
                   </Link>
                 </div>
               </div>
-              <InvPaymentSchedule id={investmentId} />
+              {investment_type ? (
+                <InvPaymentSchedule id={investmentId} />
+              ) : null}
               <InvPropDetails propId={investment.propertyId} />
             </>
           );
