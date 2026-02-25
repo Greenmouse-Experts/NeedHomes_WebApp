@@ -60,7 +60,7 @@ function RouteComponent() {
     {
       key: "amountPaid",
       label: "Amount Paid",
-      render: (value) => `₦${value.toLocaleString()}`,
+      render: (value) => `₦${(value / 100).toLocaleString()}`,
     },
     {
       key: "unitsBought",
