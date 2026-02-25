@@ -73,11 +73,13 @@ const getActions = (refetch: () => void): Actions<Installment>[] => [
         },
         {
           loading: "Paying...",
-          success: "Payment successful!",
+          success: () => {
+            refetch();
+            return "Payment successful!";
+          },
           error: extract_message,
         },
       );
-      refetch();
     },
     // render: (item) =>
     //   item.status === "PENDING" ? (
