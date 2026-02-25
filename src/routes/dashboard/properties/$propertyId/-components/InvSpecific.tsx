@@ -1,0 +1,105 @@
+import type { ADMIN_PROPERTY_LISTING } from "@/types";
+
+const keys = ["FRACTIONAL_OWNERSHIP", "OUTRIGHT"] as const;
+
+export default function InvestmentDetails({
+  type,
+  inv: property,
+}: {
+  type: (typeof keys)[number];
+  inv: ADMIN_PROPERTY_LISTING;
+}) {
+  // return <>loso</>;
+  switch (type) {
+    case "FRACTIONAL_OWNERSHIP":
+      return (
+        <div>
+          <div className="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
+              Investment Details
+            </h3>
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Total Shares:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.totalShares?.toLocaleString() || "N/A"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Price Per Share:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  ₦{property.pricePerShare?.toLocaleString() || "0"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">
+                  Minimum Shares To Buy:
+                </span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.minimumSharesToBuy?.toLocaleString() || "N/A"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Exit Window:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.exitWindow}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Payment Option:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.paymentOption || "N/A"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Platform Charge:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {/*//@ts-ignore*/}
+                  {property.systemCharges?.platformChargePercentage || 0}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    default:
+      return (
+        <div>
+          <div className="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
+              Investment Details
+            </h3>
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Min. Investment:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  ₦{property.minimumInvestment?.toLocaleString() || "N/A"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Exit Window:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.exitWindow}
+                </span>
+              </div>
+              {property.profitSharingRatio && (
+                <div className="pt-3 border-t border-gray-200">
+                  <span className="text-sm text-gray-600">Profit Sharing:</span>
+                  <p className="text-sm font-medium text-gray-900 mt-1">
+                    {property.profitSharingRatio}
+                  </p>
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Platform Charge:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {/*//@ts-ignore*/}
+                  {property.systemCharges?.platformChargePercentage || 0}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+  }
+}
