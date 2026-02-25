@@ -133,6 +133,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
+
         videos: videoUrl,
         totalPrice,
         completionDate: data.completionDate
