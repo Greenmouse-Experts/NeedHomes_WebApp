@@ -112,7 +112,7 @@ function PropertyDetailsPage() {
                     </div>
                     <div className="sm:text-right">
                       <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
-                        ₦{property.totalPrice.toLocaleString()}
+                        ₦{(property.totalPrice / 100).toLocaleString()}
                       </p>
                       <p className="text-xs md:text-sm text-gray-500 mt-1">
                         ID: {property.id}
@@ -233,7 +233,7 @@ function PropertyDetailsPage() {
                                 Total Price:
                               </span>
                               <span className="font-medium text-gray-900 text-sm">
-                                ₦{property.totalPrice.toLocaleString()}
+                                ₦{(property.totalPrice / 100).toLocaleString()}
                               </span>
                             </div>
                             <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2 py-2">
