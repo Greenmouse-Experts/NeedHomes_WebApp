@@ -28,6 +28,7 @@ import {
   strip_land_banking,
 } from "@/routes/dashboard/-components/form_cleaners";
 import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
+import calculate_fees from "../../-components/calculate_fees";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/fractional",
@@ -119,8 +120,13 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             )
           : 0);
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
+      const keys = [
+        "pricePerShare",
+        "minimumInstallmentAmount",
+      ] as (typeof data)[string];
+      const calc_payload = calculate_fees(data, keys);
       const payload = {
-        ...data,
+        ...calc_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
