@@ -1,5 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
+import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_TYPE } from "@/types/property";
 import { useQuery } from "@tanstack/react-query";
@@ -365,7 +366,8 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                         <span className="ml-2">{prop_data.paymentOption}</span>
                       </li>
                     )}
-                    {prop_data.additionalFees &&
+                    <AdditionalFees fees={prop_data.additionalFees} />
+                    {/*{prop_data.additionalFees &&
                       prop_data.additionalFees.length > 0 && (
                         <li>
                           <span className="font-medium">Additional Fees:</span>
@@ -384,7 +386,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                       <li className="text-gray-500">
                         No additional fees listed.
                       </li>
-                    )}
+                    )}*/}
                   </ul>
                 </div>
               </div>
