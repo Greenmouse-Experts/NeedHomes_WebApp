@@ -26,6 +26,7 @@ import {
 } from "@/routes/dashboard/-components/upload_helpers";
 import { strip_co_dev } from "@/routes/dashboard/-components/form_cleaners";
 import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
+import calculate_fees from "../../-components/calculate_fees";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/co-dev",
@@ -121,14 +122,13 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         "minimumInvestment",
         "minimumInstallmentAmount",
       ] as (typeof data)[string];
-      const new_payload = calculate_fees(data, keys);
+      const calculatedFees = calculate_fees(data, keys);
       const payload = {
-        ...new_payload,
+        ...calculatedFees,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
