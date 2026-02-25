@@ -202,7 +202,11 @@ export default function DefaultForm<T = any>({
                   render={({ field }) => (
                     <SimpleInput
                       {...field}
-                      value={new Date(field.value).toISOString().split("T")[0]}
+                      value={
+                        field.value
+                          ? new Date(field.value).toISOString().split("T")[0]
+                          : field.value
+                      }
                       // disabled={disableCompletion}
                       label={`Completion Date`}
                       type="date"
