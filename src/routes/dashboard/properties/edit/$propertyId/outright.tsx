@@ -42,6 +42,8 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import DefaultForm from "../../-components/DefaultForm";
+import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
+import type { ADMIN_PROPERTY_LISTING } from "@/types";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/outright",
@@ -51,7 +53,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { propertyId } = Route.useParams();
-  const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
+  const query = useQuery<ApiResponse<PROPERTY_TYPE | ADMIN_PROPERTY_LISTING>>({
     queryKey: ["edit", propertyId],
     queryFn: async () => {
       let resp = await apiClient.get("/properties/" + propertyId);
@@ -63,9 +65,10 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const formData = data.data;
+          const new_data = edit_cleaner(formData);
           return (
             <>
-              <FormField defaultValue={formData} />
+              <FormField defaultValue={new_data} />
             </>
           );
         }}
