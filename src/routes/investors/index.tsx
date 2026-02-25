@@ -325,45 +325,6 @@ function InvestorDashboard() {
 
       {/* Monthly Analysis */}
       <Example />
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
-        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4 md:mb-6">
-          Monthly Analysis
-        </h3>
-        <div className="flex items-end justify-between h-48 md:h-64 gap-1 md:gap-2 lg:gap-4 overflow-x-auto pb-2">
-          {monthlyData.map((data) => (
-            <div
-              key={data.month}
-              className="flex-1 min-w-[24px] md:min-w-0 flex flex-col items-center gap-1 md:gap-2"
-            >
-              <div
-                className="w-full flex items-end justify-center"
-                style={{ height: "180px" }}
-              >
-                <div
-                  className="w-full bg-gradient-to-t from-gray-600 to-gray-800 rounded-t-lg hover:from-[var(--color-orange)] hover:to-orange-600 transition-all duration-300 cursor-pointer"
-                  style={{
-                    height: `${(data.value / maxValue) * 100}%`,
-                    minHeight: "8px",
-                  }}
-                  title={`${data.month}: N ${data.value.toLocaleString()}`}
-                ></div>
-              </div>
-              <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                {data.month}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 flex items-center justify-between text-xs text-gray-400 px-2 overflow-x-auto">
-          <span className="whitespace-nowrap">N0M</span>
-          <span className="whitespace-nowrap hidden sm:inline">N10M</span>
-          <span className="whitespace-nowrap hidden md:inline">N20M</span>
-          <span className="whitespace-nowrap hidden lg:inline">N30M</span>
-          <span className="whitespace-nowrap hidden md:inline">N40M</span>
-          <span className="whitespace-nowrap hidden sm:inline">N50M</span>
-          <span className="whitespace-nowrap">N60M</span>
-        </div>
-      </div>
     </div>
   );
 }
