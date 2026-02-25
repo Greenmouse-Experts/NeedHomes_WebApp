@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { uploadImage } from "@/api/imageApi";
@@ -33,6 +33,11 @@ function RouteComponent() {
       developmentStage: "PLANNING",
       premiumProperty: false,
     },
+  });
+  const paymentOption = useWatch({
+    co
+    ntrol: methods.control,
+    name: "paymentOption",
   });
   const nav = useNavigate();
   const docUpload = useDocumentUpload();
@@ -212,19 +217,63 @@ function RouteComponent() {
                       />
                     )}
                   />
-                </div>
-                <Controller
-                  name="exitWindow"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <LocalSelect {...field} label="Exit Window">
-                      <option value="MONTHLY">Monthly</option>
-                      <option value="QUATERLY">Quaterly</option>
-                      <option value="ANNUALLY">Annually</option>
-                      <option value="AT_MATURITY">At Maturity</option>
-                    </LocalSelect>
+                  <Controller
+                    name="exitWindow"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <LocalSelect {...field} label="Exit Window">
+                        <option value="MONTHLY">Monthly</option>
+                        <option value="QUATERLY">Quaterly</option>
+                        <option value="ANNUALLY">Annually</option>
+                        <option value="AT_MATURITY">At Maturity</option>
+                      </LocalSelect>
+                    )}
+                  />
+                  <Controller
+                    name="paymentOption"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <LocalSelect {...field} label="Payment Option">
+                        <option value="FULL_PAYMENT">Full Payment</option>
+                        <option value="INSTALLMENT">Installment</option>
+                      </LocalSelect>
+                    )}
+                  />
+                  {paymentOption === "INSTALLMENT" && (
+                    <>
+                      <Controller
+                        name="installmentDuration"
+                        control={methods.control}
+                        render={({ field }) => (
+                          //@ts-ignore
+                          <SimpleInput
+                            {...field}
+                            type="number"
+                            label="Installment Duration (Months)"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="minimumInstallmentAmount"
+                        control={methods.control}
+                        render={({ field }) => (
+                          //@ts-ignore
+                          <SimpleInput
+                            {...field}
+                            type="number"
+                            label="Minimum Installment Amount"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                    </>
                   )}
-                />
+                </div>
               </section>
               {/* 5. Investment-Specific Details */}
             </>
