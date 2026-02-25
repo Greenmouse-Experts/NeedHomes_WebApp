@@ -144,7 +144,7 @@ function PropertyDetailPage() {
         const payInstall = form.watch("installment");
 
         if (breakdown.installmentAmount) {
-          form.setValue("amount", breakdown.installmentAmount);
+          form.setValue("amount", breakdown.installmentAmount / 100);
         }
         const installOptions = property.paymentOption == "INSTALLMENT";
         useEffect(() => {
@@ -196,7 +196,7 @@ function PropertyDetailPage() {
                   >
                     Confirm & Pay{" "}
                     {payInstall
-                      ? property.minimumInstallmentAmount?.toLocaleString()
+                      ? formatCurrency(property.minimumInstallmentAmount / 100)
                       : breakdown.totalPrice.toLocaleString()}
                   </Button>
                 </div>
@@ -686,8 +686,8 @@ const InstallMentForm = ({
       <p className=" text-gray-600/60 text-sm ">
         <span className="font-semibold text-gray-900/60 ">
           You are paying the minimum installment of{" "}
-          {formatCurrency(minimumInvestmentAmount)} Remaining balance will be
-          spread over {duration} months.
+          {formatCurrency(minimumInvestmentAmount / 100)} Remaining balance will
+          be spread over {duration} months.
         </span>
       </p>
     </div>
