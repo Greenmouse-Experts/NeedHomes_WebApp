@@ -13,31 +13,35 @@ const property_option = [
   {
     name: "Co-Development",
     path: "/dashboard/properties/new/co-development",
-    description: "Partner with us to develop high-value real estate projects.",
+    description:
+      "Create a new listing for collaborative real estate development projects.",
     icon: <Building2 className="w-6 h-6" />,
   },
   {
     name: "Fractional Ownership",
     path: "/dashboard/properties/new/fractional",
-    description: "Invest in shares of premium properties and earn dividends.",
+    description:
+      "Upload a property to be sold in fractional shares to multiple investors.",
     icon: <Users className="w-6 h-6" />,
   },
   {
     name: "Outright Purchases",
     path: "/dashboard/properties/new/outright",
-    description: "Buy properties directly with full ownership rights.",
+    description: "List a property for full ownership and direct acquisition.",
     icon: <Home className="w-6 h-6" />,
   },
   {
     name: "Land Banking",
     path: "/dashboard/properties/new/land-banking",
-    description: "Secure strategic land parcels for future appreciation.",
+    description:
+      "Add strategic land parcels intended for long-term value appreciation.",
     icon: <Map className="w-6 h-6" />,
   },
   {
     name: "Save to Own",
     path: "/dashboard/properties/new/save-to-own",
-    description: "Flexible payment plans to help you own your dream home.",
+    description:
+      "Set up a property with structured payment plans for aspiring homeowners.",
     icon: <Wallet className="w-6 h-6" />,
   },
 ];
@@ -52,11 +56,11 @@ function RouteComponent() {
       <div className="py-10 px-6  mx-auto">
         <div className="mb-12">
           <h1 className="text-4xl font-extrabold tracking-tight text-base-content">
-            Investment Path
+            Add New Property
           </h1>
           <p className="text-base-content/60 mt-3 text-lg max-w-2xl">
-            Choose the investment model that best aligns with your financial
-            goals and property ownership strategy.
+            Select the appropriate property category to begin the upload process
+            and configure investment parameters.
           </p>
         </div>
 
@@ -80,7 +84,7 @@ function RouteComponent() {
               </div>
 
               <div className="mt-8 flex items-center text-sm font-semibold text-primary">
-                <span>Select Path</span>
+                <span>Continue to Upload</span>
                 <ChevronRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
