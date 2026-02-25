@@ -67,13 +67,13 @@ function RouteComponent() {
           const formData = data.data;
 
           //@ts-ignore
-          const exists = formData.mininumInvestmentAmount;
+          const exists = formData.minimumInstallmentAmount;
           let new_data = edit_cleaner(formData as any);
           if (exists) {
             new_data = {
               ...new_data,
               //@ts-ignore
-              mininumInvestmentAmount: new_data.mininumInvestmentAmount / 100,
+              minimumInstallmentAmount: new_data.minimumInstallmentAmount / 100,
             };
           }
           return (
