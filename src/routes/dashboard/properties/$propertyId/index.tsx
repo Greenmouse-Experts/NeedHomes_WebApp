@@ -225,7 +225,7 @@ function PropertyDetailsPage() {
                                 Base Price:
                               </span>
                               <span className="font-medium text-gray-900 text-sm">
-                                ₦{property.basePrice.toLocaleString()}
+                                ₦{(property.basePrice / 100).toLocaleString()}
                               </span>
                             </div>
                             <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2 py-2 border-b border-gray-200">
