@@ -136,6 +136,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
         videos: videoUrl,
         totalPrice,
+        additionalFees: data.additionalFees.map((fee) => ({
+          ...fee,
+          amount: fee.amount * 100,
+        })),
         basePrice: data.basePrice * 100,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
