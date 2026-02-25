@@ -93,40 +93,42 @@ export default function Example() {
       <h2 className="p-4 border-b fade font-semibold text-lg ">
         Monthly Analysis
       </h2>
-      <section className="h-120 w-full my-2 p-4 ">
-        <ResponsiveContainer>
-          <LineChart
-            // style={{
-            //   width: "100%",
-            //   height: "100%",
-            //   maxHeight: "70vh",
-            //   aspectRatio: 1.618,
-            // }}
-            className="flex-1 aspect-video "
-            responsive
-            data={data}
-            margin={{
-              top: 5,
-              right: 0,
-              left: 0,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis width="auto" />
-            <Tooltip />
-            {/*<Legend />*/}
-            <Line
-              type="monotone"
-              dataKey="pv"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-            <RechartsDevtools />
-          </LineChart>
-        </ResponsiveContainer>
+      <section className="h-120 w-full overflow-x-scroll p-4">
+        <div className="size-full min-w-[520px] ">
+          <ResponsiveContainer className={"min-w-[520px]"}>
+            <LineChart
+              // style={{
+              //   width: "100%",
+              //   height: "100%",
+              //   maxHeight: "70vh",
+              //   aspectRatio: 1.618,
+              // }}
+              className="flex-1 aspect-video "
+              responsive
+              data={data}
+              margin={{
+                top: 5,
+                right: 0,
+                left: 0,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis width="auto" />
+              <Tooltip />
+              {/*<Legend />*/}
+              <Line
+                type="monotone"
+                dataKey="pv"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+              <RechartsDevtools />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </section>
     </div>
   );
