@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { uploadImage } from "@/api/imageApi";
@@ -35,8 +35,7 @@ function RouteComponent() {
     },
   });
   const paymentOption = useWatch({
-    co
-    ntrol: methods.control,
+    control: methods.control,
     name: "paymentOption",
   });
   const nav = useNavigate();
