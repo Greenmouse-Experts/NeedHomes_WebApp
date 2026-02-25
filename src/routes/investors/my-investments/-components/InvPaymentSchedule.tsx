@@ -57,41 +57,13 @@ const columns: columnType<Installment>[] = [
   },
 ];
 
-const getActions = (refetch: () => void): Actions<Installment>[] => [
-  {
-    key: "pay",
-    label: "Pay Now",
-    action: async (item) => {
-      // Only allow paying if status is PENDING
-      if (item.status !== "PENDING") return;
-      toast.promise(
-        async () => {
-          let resp = await apiClient.post(
-            `investments/installments/${item.id}/pay`,
-          );
-          return resp.data;
-        },
-        {
-          loading: "Paying...",
-          success: () => {
-            refetch();
-            return "Payment successful!";
-          },
-          error: extract_message,
-        },
-      );
-    },
-    // render: (item) =>
-    //   item.status === "PENDING" ? (
-    //     <span className="text-success">Pay Now</span>
-    //   ) : (
-    //     <span className="text-base-content/40">Pay Now</span>
-    //   ),
-    disabled: (item) => item.status !== "PENDING",
-  },
-];
-
-export default function InvPaymentSchedule({ id }: { id: string }) {
+export default function InvPaymentSchedule({
+  id,
+  propertyId,
+}: {
+  id: string;
+  propertyId: string;
+}) {
   const query = useQuery({
     queryKey: ["inv-schedule" + id],
     queryFn: async () => {
@@ -99,6 +71,45 @@ export default function InvPaymentSchedule({ id }: { id: string }) {
       return resp.data;
     },
   });
+  const getActions = (refetch: () => void): Actions<Installment>[] => [
+    {
+      key: "pay",
+      label: "Pay Now",
+      action: async (item) => {
+        // Only allow paying if status is PENDING
+        if (item.status !== "PENDING") return;
+        toast.promise(
+          async () => {
+            let resp = await apiClient.post(
+              `investments/installments/${item.id}/pay`,
+              {
+                amount: item.amount,
+                // amountPaid: item.amount,
+                // propertyId: propertyId,
+                // qua
+              },
+            );
+            return resp.data;
+          },
+          {
+            loading: "Paying...",
+            success: () => {
+              refetch();
+              return "Payment successful!";
+            },
+            error: extract_message,
+          },
+        );
+      },
+      // render: (item) =>
+      //   item.status === "PENDING" ? (
+      //     <span className="text-success">Pay Now</span>
+      //   ) : (
+      //     <span className="text-base-content/40">Pay Now</span>
+      //   ),
+      disabled: (item) => item.status !== "PENDING",
+    },
+  ];
 
   return (
     <ThemeProvider className="my-4 ring fade rounded-box ">

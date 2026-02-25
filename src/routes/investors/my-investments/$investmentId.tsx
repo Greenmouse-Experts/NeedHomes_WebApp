@@ -119,7 +119,7 @@ function InvestmentDetailsPage() {
                   <div className="text-left md:text-right">
                     <p className="text-sm text-gray-500 mb-1">Current Value</p>
                     <p className="text-3xl font-bold text-(--color-orange)">
-                      {formatCurrency(investment.currentValue)}
+                      {formatCurrency(investment.currentValue / 100)}
                     </p>
                     <div className="flex items-center gap-1 mt-2 md:justify-end">
                       <ArrowUpRight className="w-4 h-4 text-green-600" />
@@ -231,7 +231,10 @@ function InvestmentDetailsPage() {
                 </div>
               </div>
               {investment_type ? (
-                <InvPaymentSchedule id={investmentId} />
+                <InvPaymentSchedule
+                  id={investmentId}
+                  propertyId={investment.propertyId}
+                />
               ) : null}
               <InvPropDetails propId={investment.propertyId} />
             </>
