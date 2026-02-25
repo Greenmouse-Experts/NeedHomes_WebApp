@@ -19,6 +19,7 @@ import type { DocProps } from "@/types/form";
 import { docPropsResolver } from "../-components/formresolver";
 import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
+import calculate_fees from "../-components/calculate_fees";
 
 export const Route = createFileRoute(
   "/dashboard/properties/new/co-development",
@@ -119,23 +120,14 @@ function RouteComponent() {
           videoUrl = uploaded.data.url;
         }
       }
-
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
-
+      const keys = ["minimumInvestment"] as (typeof data)[string];
+      const new_payload = calculate_fees(data, keys);
       const payload = {
-        ...data,
+        ...new_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl, // Add uploaded video URL to the payload
-        totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
