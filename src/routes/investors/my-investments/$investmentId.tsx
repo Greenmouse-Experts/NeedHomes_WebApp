@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import InvPropDetails from "./-components/InvPropDetails";
+import InvPaymentSchedule from "./-components/InvPaymentSchedule";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -48,7 +49,7 @@ function InvestmentDetailsPage() {
   const query = useQuery<ApiResponse>({
     queryKey: ["investment", investmentId],
     queryFn: async () => {
-      let resp = await apiClient.get("investments/" + investmentId);
+      let resp = await apiClient.get(`investments/${investmentId}`);
       return resp.data;
     },
     enabled: !!investmentId,
@@ -228,6 +229,7 @@ function InvestmentDetailsPage() {
                   </Link>
                 </div>
               </div>
+              <InvPaymentSchedule id={investmentId} />
               <InvPropDetails propId={investment.propertyId} />
             </>
           );

@@ -163,7 +163,7 @@ function PropertyDetailPage() {
                         const amount = form.getValues("amount");
                         return toast.promise(
                           mutate.mutateAsync({
-                            amountPaid: amount,
+                            amountPaid: amount * 100,
                             // quantity: 1,
                           }),
                           {
