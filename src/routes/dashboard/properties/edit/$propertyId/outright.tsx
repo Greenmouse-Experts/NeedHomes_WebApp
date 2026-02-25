@@ -142,7 +142,8 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             )
           : 0);
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
-      const payload = {
+
+      let payload = {
         ...data,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
@@ -155,10 +156,14 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           amount: fee.amount * 100,
         })),
         basePrice: data.basePrice * 100,
+
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+      if (payload.minimumInstallmentAmount) {
+        payload.minimumInstallmentAmount = data.minimumInstallmentAmount * 100;
+      }
       const new_payload = strip_outright(payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/outright`,
