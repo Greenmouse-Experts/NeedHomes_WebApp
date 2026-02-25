@@ -265,7 +265,9 @@ function PropertyDetailPage() {
                       <p className="text-xs text-blue-700">
                         You are paying the minimum installment of{" "}
                         <span className="font-bold">
-                          {formatCurrency(property.minimumInstallmentAmount)}
+                          {formatCurrency(
+                            property.minimumInstallmentAmount / 100,
+                          )}
                         </span>
                         . Remaining balance will be spread over{" "}
                         {property.installmentDuration} months.
