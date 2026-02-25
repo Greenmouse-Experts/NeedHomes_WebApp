@@ -74,8 +74,9 @@ function RouteComponent() {
       console.log(uploadedDocUrls);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
+
       const totalPrice =
-        Number(data.basePrice) +
+        Number(data.basePrice * 100) +
         (data.additionalFees
           ? data.additionalFees.reduce(
               (acc, fee) => acc + (Number(fee.amount * 100) || 0),
@@ -91,8 +92,8 @@ function RouteComponent() {
         galleryImages: allGallery,
         videos: videoUrl,
         //@ts-ignore
-        basePrice: data.basePrice * 100,
-        totalPrice: totalPrice * 100,
+        basePrice: data.basePrice,
+        totalPrice: totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
