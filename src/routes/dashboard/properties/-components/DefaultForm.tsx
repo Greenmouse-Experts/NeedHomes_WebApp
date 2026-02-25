@@ -202,7 +202,7 @@ export default function DefaultForm<T = any>({
                   render={({ field }) => (
                     <SimpleInput
                       {...field}
-                      disabled={disableCompletion}
+                      // disabled={disableCompletion}
                       label="Completion Date"
                       type="date"
                       icon={<Calendar size={16} />}

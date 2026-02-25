@@ -123,7 +123,10 @@ function RouteComponent() {
           videoUrl = uploaded.data.url;
         }
       }
-      const keys = ["minimumInvestment"] as (typeof data)[string];
+      const keys = [
+        "minimumInvestment",
+        "minimumInstallmentAmount",
+      ] as (typeof data)[string];
       const new_payload = calculate_fees(data, keys);
       const payload = {
         ...new_payload,
@@ -266,6 +269,7 @@ function RouteComponent() {
         form={form as any}
         selectImageProps={selectImageProps as any}
         disableCompletion={true}
+        // hideCompletion
         mutation={mutation as any}
         onSubmit={onSubmit}
       >
