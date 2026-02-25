@@ -136,6 +136,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
         videos: videoUrl,
         totalPrice,
+        basePrice: data.basePrice * 100,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
