@@ -124,13 +124,13 @@ function PropertyDetailPage() {
           installmentDuration?: number;
           systemCharge: number;
         } = {
-          totalPrice: totalPrice + system_charge_per,
+          totalPrice: totalPrice + percentage_totalPrice,
           additionalFees: property.additionalFees || [],
           additionalFeesTotal: (property.additionalFees || []).reduce(
             (sum: number, fee: AdditionalFee) => sum + fee.amount,
             0,
           ),
-          systemCharge: system_charge_per,
+          systemCharge: percentage_totalPrice,
         };
 
         if (property.paymentOption === "INSTALLMENT") {
