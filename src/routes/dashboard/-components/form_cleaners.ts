@@ -20,7 +20,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
 
   delete cleaned.investmentModel;
-  delete cleaned.paymentOption;
+  // delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
@@ -48,7 +48,7 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
   delete cleaned.investmentModel;
-  delete cleaned.paymentOption;
+  // delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
@@ -70,7 +70,7 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.holdingPeriod;
   delete cleaned.buyBackOption;
   delete cleaned.investmentModel;
-  delete cleaned.paymentOption;
+  // delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.minimumInvestment;
   delete cleaned.profitSharingRatio;
@@ -118,7 +118,7 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.minimumShares;
   delete cleaned.exitWindow;
   delete cleaned.investmentModel;
-  delete cleaned.paymentOption;
+  // delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.minimumInvestment;
   delete cleaned.profitSharingRatio;

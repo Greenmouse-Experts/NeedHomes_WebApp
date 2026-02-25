@@ -15,6 +15,7 @@ import DefaultForm from "../-components/DefaultForm";
 import { uploadFile } from "@/api/fileApi";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import calculate_fees from "../-components/calculate_fees";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
   component: RouteComponent,
@@ -94,9 +95,13 @@ function RouteComponent() {
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
       console.log("Uploaded Doc URLs:", uploadedDocUrls);
-
+      const keys = [
+        "pricePerShare",
+        "minimumInstallmentAmount",
+      ] as (typeof data)[string];
+      const new_payload = calculate_fees(data, keys);
       const payload: any = {
-        ...data,
+        ...new_payload,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         completionDate: data.completionDate
