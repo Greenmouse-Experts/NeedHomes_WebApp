@@ -207,6 +207,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             </p>
           </div>
           <DefaultForm
+            hideCompletion
             update
             docUpload={docUpload}
             videoUpload={videoUpload}
