@@ -119,7 +119,7 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.exitWindow;
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
-  delete cleaned.installmentDuration;
+  // delete cleaned.installmentDuration;
   delete cleaned.minimumInvestment;
   delete cleaned.profitSharingRatio;
   delete cleaned.projectDuration;

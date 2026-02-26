@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { toast } from "sonner";
@@ -27,6 +27,7 @@ import {
   strip_save_to_own,
 } from "@/routes/dashboard/-components/form_cleaners";
 import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
+import calculate_fees from "../../-components/calculate_fees";
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/save-to-own",
 )({
@@ -106,22 +107,18 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
+
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
+      const new_p = calculate_fees(data, [
+        "targetPropertyPrice",
+        "minimumInstallmentAmount",
+      ]);
       const payload = {
-        ...data,
+        ...new_p,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
@@ -143,6 +140,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     },
   });
 
+  const paymentOption = useWatch({
+    control: methods.control,
+    name: "paymentOption",
+  });
   const onSubmit = (data: SaveToOwnFormValues) => {
     //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
@@ -225,6 +226,50 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                     />
                   )}
                 />
+                <Controller
+                  name="paymentOption"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <LocalSelect {...field} label="Payment Option">
+                      <option value="FULL_PAYMENT">Full Payment</option>
+                      <option value="INSTALLMENT">Installment</option>
+                    </LocalSelect>
+                  )}
+                />
+                {paymentOption === "INSTALLMENT" && (
+                  <>
+                    <Controller
+                      name="installmentDuration"
+                      control={methods.control}
+                      render={({ field }) => (
+                        //@ts-ignore
+                        <SimpleInput
+                          {...field}
+                          type="number"
+                          label="Installment Duration (Months)"
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="minimumInstallmentAmount"
+                      control={methods.control}
+                      render={({ field }) => (
+                        //@ts-ignore
+                        <SimpleInput
+                          {...field}
+                          type="number"
+                          label="Minimum Installment Amount"
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
+                      )}
+                    />
+                  </>
+                )}
               </div>
             </section>
           </DefaultForm>
