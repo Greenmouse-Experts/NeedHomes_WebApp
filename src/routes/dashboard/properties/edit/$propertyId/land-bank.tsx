@@ -110,6 +110,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
+      data["basePrice"] = data.pricePerPlot * data.plotSize;
       const edited_payload = calculate_fees(data, [
         "pricePerPlot",
         "minimumInstallmentAmount",
@@ -124,6 +125,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+
       const new_payload = strip_land_banking(payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/land-Banking`,
