@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useImages, useSelectImage } from "@/helpers/images";
@@ -22,6 +22,9 @@ import {
   video_helper,
 } from "@/routes/dashboard/-components/upload_helpers";
 import { strip_land_banking } from "@/routes/dashboard/-components/form_cleaners";
+import calculate_fees from "../../-components/calculate_fees";
+import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/land-bank",
@@ -44,6 +47,15 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const form_data = data.data;
+          const exists = form_data?.minimumInstallmentAmount;
+          let new_data = edit_cleaner(form_data as any, ["pricePerPlot"]);
+          if (exists) {
+            new_data = {
+              ...new_data,
+              //@ts-ignore
+              minimumInstallmentAmount: new_data.minimumInstallmentAmount / 100,
+            };
+          }
           return (
             <>
               <FormField defaultValue={form_data} />
@@ -74,6 +86,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       };
     }),
   );
+
   //@ts-ignore
 
   const selectImageProps = useSelectImage(defaultValue.coverImage);
@@ -81,6 +94,11 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     defaultValues: {
       ...defaultValue,
     },
+  });
+
+  const paymentOption = useWatch({
+    control: methods.control,
+    name: "paymentOption",
   });
 
   const mutation = useMutation({
@@ -92,22 +110,16 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
-      console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
+      const edited_payload = calculate_fees(data, [
+        "pricePerPlot",
+        "minimumInstallmentAmount",
+      ]);
       const payload = {
-        ...data,
+        ...edited_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
@@ -210,7 +222,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 )}
               />
 
-              <div className="md:col-span-2 flex items-end pb-1">
+              <div className="flex items-end pb-1">
                 <div className="flex items-center gap-4 p-3 border  fade rounded-lg w-full bg-base-200/20">
                   <Controller
                     name="buyBackOption"
@@ -231,6 +243,46 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                   />
                 </div>
               </div>
+              <Controller
+                name="paymentOption"
+                control={methods.control}
+                render={({ field }) => (
+                  <LocalSelect {...field} label="Payment Option">
+                    <option value="FULL_PAYMENT">Full Payment</option>
+                    <option value="INSTALLMENT">Installment</option>
+                  </LocalSelect>
+                )}
+              />
+              {paymentOption === "INSTALLMENT" && (
+                <>
+                  <Controller
+                    name="installmentDuration"
+                    control={methods.control}
+                    render={({ field }) => (
+                      //@ts-ignore
+                      <SimpleInput
+                        {...field}
+                        type="number"
+                        label="Installment Duration (Months)"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="minimumInstallmentAmount"
+                    control={methods.control}
+                    render={({ field }) => (
+                      //@ts-ignore
+                      <SimpleInput
+                        {...field}
+                        type="number"
+                        label="Minimum Installment Amount"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    )}
+                  />
+                </>
+              )}
             </div>
           </section>
         </DefaultForm>

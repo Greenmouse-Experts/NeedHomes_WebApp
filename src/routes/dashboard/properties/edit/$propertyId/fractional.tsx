@@ -51,7 +51,7 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const form_data = data.data;
-          const exists = form_data.minimumInstallmentAmount;
+          const exists = form_data?.minimumInstallmentAmount;
           let new_data = edit_cleaner(form_data as any, ["pricePerShare"]);
           if (exists) {
             new_data = {
