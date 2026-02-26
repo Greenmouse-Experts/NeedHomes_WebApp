@@ -16,27 +16,10 @@ import { uploadImage } from "@/api/imageApi";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
-import {
-  Plus,
-  Trash2,
-  MapPin,
-  DollarSign,
-  Calendar,
-  Home,
-  Image as ImageIcon,
-  Briefcase,
-  Info,
-  FileText,
-  Video,
-} from "lucide-react";
+import { Home, Image as ImageIcon, Briefcase } from "lucide-react";
 import type { DocProps } from "@/types/form";
-import {
-  DocumentUpload,
-  useDocumentUpload,
-} from "@/routes/dashboard/-components/DocumentUpload";
-import VideoUpload, {
-  useVideoUpload,
-} from "@/routes/dashboard/-components/VideoUpload";
+import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
+import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
 import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
@@ -80,6 +63,7 @@ function RouteComponent() {
       certificate: "",
       surveyPlanDocument: "",
       transferDocument: "",
+      paymentOption: "FULL_PAYMENT",
       brochure: "",
       videos: "",
     },
@@ -144,7 +128,7 @@ function RouteComponent() {
         ...uploadedGalleryUrls,
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
-
+      data["basePrice"] = data.pricePerPlot * data.plotSize;
       const new_payload = calculate_fees(data, [
         "pricePerPlot",
         "minimumInstallmentAmount",
@@ -206,6 +190,7 @@ function RouteComponent() {
           docUpload={docUpload}
           videoUpload={videoUpload}
           useImagesProps={useImageProps}
+          disable_base_price
           form={methods as any}
           selectImageProps={selectImageProps as any}
           mutation={mutation as any}

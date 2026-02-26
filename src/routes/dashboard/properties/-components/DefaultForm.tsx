@@ -107,6 +107,7 @@ export default function DefaultForm<T = any>({
   update,
   disableCompletion,
   hideCompletion,
+  disable_base_price,
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -120,6 +121,7 @@ export default function DefaultForm<T = any>({
   update?: boolean;
   disableCompletion?: boolean;
   hideCompletion?: boolean;
+  disable_base_price?: boolean;
 }) {
   const methods = form;
 
@@ -282,6 +284,7 @@ export default function DefaultForm<T = any>({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Controller
+                disabled={disable_base_price}
                 name="basePrice"
                 control={methods.control}
                 render={({ field }) => (
