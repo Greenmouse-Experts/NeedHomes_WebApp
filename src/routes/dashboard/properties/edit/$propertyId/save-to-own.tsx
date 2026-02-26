@@ -26,6 +26,7 @@ import {
   strip_land_banking,
   strip_save_to_own,
 } from "@/routes/dashboard/-components/form_cleaners";
+import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/save-to-own",
 )({
@@ -45,10 +46,22 @@ function RouteComponent() {
     <>
       <PageLoader query={query}>
         {(data) => {
-          const formData = data.data;
+          const form_data = data.data;
+          //@ts-ignore
+          const exists = form_data?.minimumInstallmentAmount;
+          let new_data = edit_cleaner(form_data as any, [
+            "targetPropertyPrice",
+          ]);
+          if (exists) {
+            new_data = {
+              ...new_data,
+              //@ts-ignore
+              minimumInstallmentAmount: new_data.minimumInstallmentAmount / 100,
+            };
+          }
           return (
             <>
-              <FormField defaultValue={formData} />
+              <FormField defaultValue={new_data} />
             </>
           );
         }}
