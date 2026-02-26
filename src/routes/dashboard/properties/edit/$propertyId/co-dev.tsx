@@ -65,7 +65,7 @@ function RouteComponent() {
 
           //@ts-ignore
           const exists = formData.minimumInstallmentAmount;
-          let new_data = edit_cleaner(formData as any);
+          let new_data = edit_cleaner(formData as any, ["minimumInvestment"]);
           if (exists) {
             new_data = {
               ...new_data,
