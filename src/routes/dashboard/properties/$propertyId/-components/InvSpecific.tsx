@@ -16,6 +16,53 @@ export default function InvestmentDetails({
 }) {
   // return <>loso</>;
   switch (type) {
+    case "LAND_BANKING":
+      return (
+        <div>
+          <div className="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
+              Investment Details
+            </h3>
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Plot Size (sqm):</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.plotSize || 0}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Price Per Plot:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  ₦{property.pricePerPlot?.toLocaleString() || "0"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">
+                  Holding Period (Months):
+                </span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.holdingPeriod || 0}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">
+                  Include Buy-Back Option (Guaranteed Exit):
+                </span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.buyBackOption ? "Yes" : "No"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Payment Option:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.paymentOption || "N/A"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
     case "CO_DEVELOPMENT":
       return (
         <>
