@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
@@ -19,6 +19,7 @@ import { useNavigate } from "@tanstack/react-router";
 import type { DocProps } from "@/types/form";
 import { uploadFile } from "@/api/fileApi";
 import { get_docs } from "./fractional";
+import calculate_fees from "../-components/calculate_fees";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
   component: RouteComponent,
@@ -110,22 +111,13 @@ function RouteComponent() {
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
 
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
-
+      const new_payload = calculate_fees(data, ["targetPropertyPrice"]);
       const payload = {
-        ...data,
+        ...new_payload,
         ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
@@ -154,6 +146,10 @@ function RouteComponent() {
       error: (err) => extract_message(err) || "An error occurred.",
     });
   };
+  const paymentOption = useWatch({
+    control: methods.control,
+    name: "paymentOption",
+  });
 
   return (
     <ThemeProvider>
@@ -228,6 +224,50 @@ function RouteComponent() {
                     />
                   )}
                 />
+                <Controller
+                  name="paymentOption"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <LocalSelect {...field} label="Payment Option">
+                      <option value="FULL_PAYMENT">Full Payment</option>
+                      <option value="INSTALLMENT">Installment</option>
+                    </LocalSelect>
+                  )}
+                />
+                {paymentOption === "INSTALLMENT" && (
+                  <>
+                    <Controller
+                      name="installmentDuration"
+                      control={methods.control}
+                      render={({ field }) => (
+                        //@ts-ignore
+                        <SimpleInput
+                          {...field}
+                          type="number"
+                          label="Installment Duration (Months)"
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="minimumInstallmentAmount"
+                      control={methods.control}
+                      render={({ field }) => (
+                        //@ts-ignore
+                        <SimpleInput
+                          {...field}
+                          type="number"
+                          label="Minimum Installment Amount"
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
+                        />
+                      )}
+                    />
+                  </>
+                )}
               </div>
             </section>
           </DefaultForm>
