@@ -40,6 +40,7 @@ function AdditionalFeesManager() {
     control,
     name: "additionalFees",
   });
+
   return (
     <div className="space-y-4 bg-base-200/50 p-4 rounded-lg border border-base-300">
       <div className="flex justify-between items-center">
@@ -199,6 +200,7 @@ export default function DefaultForm<T = any>({
                 <Controller
                   name="completionDate"
                   control={methods.control}
+                  disabled={disable_completionn}
                   render={({ field }) => (
                     <SimpleInput
                       {...field}
