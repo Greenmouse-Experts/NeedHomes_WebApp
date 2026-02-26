@@ -21,7 +21,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
 
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
-  delete cleaned.installmentDuration;
+  // delete cleaned.installmentDuration;
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
   delete cleaned.minimumShares;
