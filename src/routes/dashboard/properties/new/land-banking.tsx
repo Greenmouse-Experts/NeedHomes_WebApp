@@ -5,6 +5,7 @@ import {
   useFormContext,
   useFieldArray,
   Controller,
+  useWatch,
 } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
@@ -39,6 +40,7 @@ import VideoUpload, {
 import DefaultForm from "../-components/DefaultForm";
 import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
+import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
@@ -87,112 +89,10 @@ function RouteComponent() {
   //@ts-ignore
   const selectImageProps = useSelectImage(null);
   const nav = useNavigate();
-
-  // const mutation = useMutation({
-  //   mutationFn: async (data: LandBankingProperty) => {
-  //     let coverImageUrl = "";
-
-  //     if (selectProps.image) {
-  //       const uploaded = await uploadImage(selectProps.image);
-  //       coverImageUrl = uploaded.data.url;
-  //     } else if (selectProps.prev) {
-  //       coverImageUrl = selectProps.prev;
-  //     }
-
-  //     if (!coverImageUrl) throw new Error("A cover image is required.");
-
-  //     const uploadedGalleryUrls: string[] = [];
-  //     if (newImages && newImages.length > 0) {
-  //       for (const img of newImages) {
-  //         const uploaded = await uploadImage(img);
-  //         if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
-  //       }
-  //     }
-
-  //     const allGallery = [
-  //       ...(images || []).map((img) => img.url),
-  //       ...uploadedGalleryUrls,
-  //     ];
-
-  //     const feesTotal = (data.additionalFees || []).reduce(
-  //       (acc: number, fee: AdditionalFee) => acc + Number(fee.amount || 0),
-  //       0,
-  //     );
-
-  //     const totalPrice = Number(data.basePrice || 0) + feesTotal;
-
-  //     // Upload documents
-  //     const uploadedDocUrls: DocProps = {
-  //       certificate: "",
-  //       surveyPlanDocument: "",
-  //       transferDocument: "",
-  //       brochure: "",
-  //       videos: "",
-  //     };
-
-  //     if (useDocUpload.documents.certificate) {
-  //       const uploaded = await apiClient.post(
-  //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.certificate },
-  //         { headers: { "Content-Type": "multipart/form-data" } },
-  //       );
-  //       uploadedDocUrls.certificate = uploaded.data.url;
-  //     }
-  //     if (useDocUpload.documents.surveyPlan) {
-  //       const uploaded = await apiClient.post(
-  //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.surveyPlan },
-  //         { headers: { "Content-Type": "multipart/form-data" } },
-  //       );
-  //       uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
-  //     }
-  //     if (useDocUpload.documents.transferDocument) {
-  //       const uploaded = await apiClient.post(
-  //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.transferDocument },
-  //         { headers: { "Content-Type": "multipart/form-data" } },
-  //       );
-  //       uploadedDocUrls.transferDocument = uploaded.data.url;
-  //     }
-  //     if (useDocUpload.documents.brochure) {
-  //       const uploaded = await apiClient.post(
-  //         "/admin/upload-file",
-  //         { file: useDocUpload.documents.brochure },
-  //         { headers: { "Content-Type": "multipart/form-data" } },
-  //       );
-  //       uploadedDocUrls.brochure = uploaded.data.url;
-  //     }
-
-  //     // Upload video
-  //     if (useVideoUploadProps.videoFile) {
-  //       const uploaded = await apiClient.post(
-  //         "/admin/upload-file",
-  //         { file: useVideoUploadProps.videoFile },
-  //         { headers: { "Content-Type": "multipart/form-data" } },
-  //       );
-  //       uploadedDocUrls.videos = uploaded.data.url;
-  //     }
-
-  //     const payload = {
-  //       ...data,
-  //       coverImage: coverImageUrl,
-  //       galleryImages: allGallery,
-  //       totalPrice,
-  //       ...uploadedDocUrls,
-  //     };
-
-  //     const response = await apiClient.post(
-  //       "/admin/properties/land-banking",
-  //       payload,
-  //     );
-  //     return response.data;
-  //   },
-  //   onSuccess: () => {
-  //     nav({
-  //       to: "/partners/properties",
-  //     });
-  //   },
-  // });
+  const paymentOption = useWatch({
+    control: methods.control,
+    name: "paymentOption",
+  });
 
   const mutation = useMutation({
     mutationFn: async (data: LandBankingProperty) => {
@@ -281,6 +181,7 @@ function RouteComponent() {
     },
   });
   const onSubmit = (data: LandBankingProperty) => {
+    //@ts-ignore
     toast.promise(mutation.mutateAsync(data), {
       loading: "Submitting...",
       success: extract_message,
@@ -361,7 +262,7 @@ function RouteComponent() {
                 )}
               />
 
-              <div className="md:col-span-2 flex items-end pb-1">
+              <div className="flex items-end pb-1">
                 <div className="flex items-center gap-4 p-3 border  fade rounded-lg w-full bg-base-200/20">
                   <Controller
                     name="buyBackOption"
@@ -382,6 +283,46 @@ function RouteComponent() {
                   />
                 </div>
               </div>
+              <Controller
+                name="paymentOption"
+                control={methods.control}
+                render={({ field }) => (
+                  <LocalSelect {...field} label="Payment Option">
+                    <option value="FULL_PAYMENT">Full Payment</option>
+                    <option value="INSTALLMENT">Installment</option>
+                  </LocalSelect>
+                )}
+              />
+              {paymentOption === "INSTALLMENT" && (
+                <>
+                  <Controller
+                    name="installmentDuration"
+                    control={methods.control}
+                    render={({ field }) => (
+                      //@ts-ignore
+                      <SimpleInput
+                        {...field}
+                        type="number"
+                        label="Installment Duration (Months)"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="minimumInstallmentAmount"
+                    control={methods.control}
+                    render={({ field }) => (
+                      //@ts-ignore
+                      <SimpleInput
+                        {...field}
+                        type="number"
+                        label="Minimum Installment Amount"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    )}
+                  />
+                </>
+              )}
             </div>
           </section>
         </DefaultForm>
