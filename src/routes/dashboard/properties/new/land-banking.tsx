@@ -41,6 +41,7 @@ import DefaultForm from "../-components/DefaultForm";
 import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import calculate_fees from "../-components/calculate_fees";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
@@ -144,22 +145,16 @@ function RouteComponent() {
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
 
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
-
+      const new_payload = calculate_fees(data, [
+        "pricePerPlot",
+        "minimumInstallmentAmount",
+      ]);
       const payload = {
-        ...data,
+        ...new_payload,
         ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
