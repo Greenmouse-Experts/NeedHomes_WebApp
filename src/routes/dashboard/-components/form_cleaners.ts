@@ -71,8 +71,8 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.buyBackOption;
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
-  delete cleaned.installmentDuration;
-  delete cleaned.minimumInvestment;
+  // delete cleaned.installmentDuration;
+  // delete cleaned.minimumInvestment;
   delete cleaned.profitSharingRatio;
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
