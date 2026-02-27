@@ -40,7 +40,7 @@ export default function PropertyCard({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-          <div className="badge badge-neutral border-none bg-base-100/90 backdrop-blur text-neutral font-bold text-[10px] uppercase tracking-wider">
+          <div className="badge ring   badge-neutral badge-soft  font-semibold fade  tracking-wider">
             {property.investmentModel.replace(/_/g, " ")}
           </div>
           {property.premiumProperty && (
