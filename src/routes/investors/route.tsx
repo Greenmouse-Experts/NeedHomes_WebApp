@@ -73,26 +73,23 @@ function LayoutComponent() {
     });
     socket.on("announcement:new", (data: Announcement) => {
       console.log("New announcement:", data);
-      toast.info(
+      return toast(
         <div>
-          <h2 className="p-2  text-sm font-bold border-b fade">
-            New notification
+          <h2 className="py-2  text-sm font-bold border-b fade">
+            Announcement
           </h2>
-          <div className="p-2">{data.content}</div>
+          <div className="py-2">{data.content}</div>
         </div>,
-        {
-          description: data.content,
-        },
       );
     });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
       toast.info(
         <div>
-          <h2 className="p-2  text-sm font-bold border-b fade">
-            New notification
+          <h2 className="py-2  text-sm font-bold border-b fade">
+            Notification
           </h2>
-          <div className="p-2">{data.content}</div>
+          <div className="py-2">{data.notification.content}</div>
         </div>,
       );
     });
