@@ -8,6 +8,7 @@ import { get_kyc_value, refresh_kyc, useAuth } from "@/store/authStore";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { BellDotIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/investors")({
   component: LayoutComponent,
@@ -74,23 +75,23 @@ function LayoutComponent() {
     socket.on("announcement:new", (data: Announcement) => {
       console.log("New announcement:", data);
       return toast(
-        <div>
-          <h2 className="py-2  text-sm font-bold border-b fade">
+        <Link to={`/investors/announcements/`}>
+          <h2 className="py-2  text-sm font-bold border-b fade w-full">
             Announcement
           </h2>
           <div className="py-2">{data.content}</div>
-        </div>,
+        </Link>,
       );
     });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
       toast.info(
-        <div>
-          <h2 className="py-2  text-sm font-bold border-b fade">
+        <Link to={`/investors/notifications/`}>
+          <h2 className="py-2  text-sm font-bold border-b fade w-full">
             Notification
           </h2>
           <div className="py-2">{data.notification.content}</div>
-        </div>,
+        </Link>,
       );
     });
     // ✅ DISCONNECT ON UNMOUNT
