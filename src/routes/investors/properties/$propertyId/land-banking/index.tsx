@@ -689,9 +689,8 @@ const InstallMentForm = ({
 
       <p className=" text-gray-600/60 text-sm ">
         <span className="font-semibold text-gray-900/60 ">
-          You are paying the minimum installment of{" "}
-          {formatCurrency(minimumInvestmentAmount / 100)} Remaining balance will
-          be spread over {duration} months.
+          The balance payment can be made anytime without waiting for
+          installment date
         </span>
       </p>
     </div>
