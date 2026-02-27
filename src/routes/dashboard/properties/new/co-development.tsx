@@ -138,7 +138,7 @@ function RouteComponent() {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
-
+      delete payload.minimumInvestment;
       const response = await apiClient.post(
         "/admin/properties/codevelopment",
         payload,
