@@ -80,9 +80,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                     </div>
                     <div className="text-right">
                       <div className="text-lg md:text-xl font-bold text-primary">
-                        {formatCurrency(
-                          prop_data.targetPropertyPrice ?? prop_data.totalPrice,
-                        )}
+                        {formatCurrency(prop_data.totalPrice / 100)}
                       </div>
                       <div className="text-xs text-gray-400">Target / Ask</div>
                     </div>
@@ -114,7 +112,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                     <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
                       <div className="text-xs text-gray-500">Base Price</div>
                       <div className="mt-1 font-medium text-gray-900">
-                        {formatCurrency(prop_data.basePrice)}
+                        {formatCurrency(prop_data.basePrice / 100)}
                       </div>
                     </div>
                     <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
@@ -139,9 +137,9 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                       </div>
                       <div className="mt-1 font-medium text-gray-900">
                         {prop_data.pricePerShare
-                          ? formatCurrency(prop_data.pricePerShare)
+                          ? formatCurrency(prop_data.pricePerShare / 100)
                           : prop_data.pricePerPlot
-                            ? formatCurrency(prop_data.pricePerPlot)
+                            ? formatCurrency(prop_data.pricePerPlot / 100)
                             : "—"}
                       </div>
                     </div>
