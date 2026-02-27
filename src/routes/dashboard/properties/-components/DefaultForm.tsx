@@ -283,20 +283,22 @@ export default function DefaultForm<T = any>({
               <h2 className="text-lg font-bold">3. Pricing & Availability</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Controller
-                disabled={disable_base_price}
-                name="basePrice"
-                control={methods.control}
-                render={({ field }) => (
-                  <SimpleInput
-                    {...field}
-                    label="Base Price"
-                    type="number"
-                    icon={<span>₦</span>}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
-                )}
-              />
+              {disable_base_price ?? (
+                <Controller
+                  disabled={disable_base_price}
+                  name="basePrice"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <SimpleInput
+                      {...field}
+                      label="Base Price"
+                      type="number"
+                      icon={<span>₦</span>}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  )}
+                />
+              )}
               <Controller
                 name="availableUnits"
                 control={methods.control}
