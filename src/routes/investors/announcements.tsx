@@ -1,22 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, Calendar, Clock, Eye, ChevronRight } from "lucide-react";
+import { Bell, Calendar, Clock, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import { useModal } from "@/store/modals";
+import Modal from "@/components/modals/DialogModal";
+import { useState } from "react";
 
 export const Route = createFileRoute("/investors/announcements")({
   component: RouteComponent,
 });
 
+type AnnouncementCreate = {
+  id: string;
+  content: string;
+  target: "ALL_USERS";
+  createdBy: string;
+  createdAt: string;
+  deletedAt: string | null;
+};
+
 function RouteComponent() {
-  type AnnouncementCreate = {
-    id: string;
-    content: string;
-    target: "ALL_USERS";
-    createdBy: string;
-    createdAt: string;
-    deletedAt: string | null;
-  };
+  const modalRef = useModal();
+  const [selectedAnnouncement, setSelectedAnnouncement] =
+    useState<AnnouncementCreate | null>(null);
 
   const query = useQuery<ApiResponseV2<AnnouncementCreate[]>>({
     queryKey: ["announcements"],
@@ -52,8 +59,36 @@ function RouteComponent() {
     }
   };
 
+  const handleOpenAnnouncement = (announcement: AnnouncementCreate) => {
+    setSelectedAnnouncement(announcement);
+    modalRef.ref.current?.open();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/50 p-4 sm:p-8">
+      <Modal ref={modalRef.ref} title="Announcement Details">
+        {selectedAnnouncement && (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <div className="flex items-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                {formatDate(selectedAnnouncement.createdAt)}
+              </div>
+              <div className="flex items-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <Clock className="h-3.5 w-3.5 mr-1.5" />
+                {formatTime(selectedAnnouncement.createdAt)}
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">
+              Important Update
+            </h3>
+            <div className="prose prose-sm max-w-none text-gray-600 whitespace-pre-wrap">
+              {selectedAnnouncement.content}
+            </div>
+          </div>
+        )}
+      </Modal>
+
       <div className="mx-auto">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
@@ -81,10 +116,10 @@ function RouteComponent() {
                   announcementsList.map((announcement) => (
                     <div
                       key={announcement.id}
+                      onClick={() => handleOpenAnnouncement(announcement)}
                       className="group relative bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 cursor-pointer ring fade"
                     >
                       <div className="flex items-start gap-5">
-                        {/* Icon/Status Indicator */}
                         <div className="hidden sm:flex shrink-0 w-12 h-12 rounded-xl bg-gray-50 items-center justify-center group-hover:bg-orange-50 transition-colors duration-300">
                           <Bell className="size-10 text-gray-400 group-hover:text-orange-500" />
                         </div>
@@ -108,11 +143,6 @@ function RouteComponent() {
                           <p className="text-gray-600 leading-relaxed text-sm sm:text-base line-clamp-2">
                             {announcement.content}
                           </p>
-
-                          {/*<div className="mt-4 flex items-center text-sm font-semibold text-orange-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
-                            View Details
-                            <ChevronRight className="ml-1 h-4 w-4" />
-                          </div>*/}
                         </div>
 
                         <div className="shrink-0 self-center">
