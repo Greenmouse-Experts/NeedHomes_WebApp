@@ -203,7 +203,8 @@ function RouteComponent() {
           </div>
           <button
             onClick={handleMarkAllAsRead}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-(--color-orange) hover:bg-orange-50 rounded-lg transition-colors"
+            disabled
+            className="btn btn-primary btn-sm btn-ghost"
           >
             <Check className="w-4 h-4" />
             Mark all as read
