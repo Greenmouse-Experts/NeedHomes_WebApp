@@ -5,6 +5,7 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { type Actions } from "@/components/tables/pop-up";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { usePagination } from "@/helpers/pagination";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Filter, Printer, Search } from "lucide-react";
@@ -114,10 +115,15 @@ const actions: Actions[] = [
 
 function RouteComponent() {
   const [searchQuery, setSearchQuery] = useState("");
+  const props = usePagination();
   const query = useQuery<ApiResponse<Investment[]>>({
-    queryKey: ["investments-admin"],
+    queryKey: ["investments-admin", props.page],
     queryFn: async () => {
-      let resp = await apiClient.get("investments/admin/all");
+      let resp = await apiClient.get("investments/admin/all", {
+        params: {
+          page: props.page,
+        },
+      });
       return resp.data;
     },
   });
@@ -175,6 +181,7 @@ function RouteComponent() {
 
           return (
             <CustomTable
+              paginationProps={props}
               ring={false}
               columns={columns}
               data={filteredData}
