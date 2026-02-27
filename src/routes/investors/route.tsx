@@ -7,6 +7,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { get_kyc_value, refresh_kyc, useAuth } from "@/store/authStore";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
+import { BellDotIcon } from "lucide-react";
 
 export const Route = createFileRoute("/investors")({
   component: LayoutComponent,
@@ -73,11 +74,15 @@ function LayoutComponent() {
     });
     socket.on("announcement:new", (data: Announcement) => {
       console.log("New announcement:", data);
-      toast.info(data.content);
+      toast.info("New Annoucement", {
+        description: data.content,
+      });
     });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
-      toast.info(data.content);
+      toast.info("New Notfications", {
+        description: data.content,
+      });
     });
     // ✅ DISCONNECT ON UNMOUNT
     return () => {
