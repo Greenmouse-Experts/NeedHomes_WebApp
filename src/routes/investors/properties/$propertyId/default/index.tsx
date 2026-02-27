@@ -127,13 +127,13 @@ function PropertyDetailPage() {
           installmentDuration?: number;
           systemCharge: number;
         } = {
-          totalPrice: totalPrice + percentage_totalPrice,
+          totalPrice: totalPrice + system_charge_per,
           additionalFees: property.additionalFees || [],
           additionalFeesTotal: (property.additionalFees || []).reduce(
             (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
             0,
           ),
-          systemCharge: percentage_totalPrice,
+          systemCharge: system_charge_per,
         };
 
         if (property.paymentOption === "INSTALLMENT") {
@@ -649,10 +649,10 @@ function PropertyDetailPage() {
               </div>
             </div>
           </>
-        )
+        );
       }}
     </PageLoader>
-  )
+  );
 }
 const InstallMentForm = ({
   form,
