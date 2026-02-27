@@ -46,7 +46,6 @@ function LayoutComponent() {
   }
   useEffect(() => {
     if (!auth?.accessToken) return;
-
     const socket = io(
       import.meta.env.VITE_BACKEND_URL ||
         "https://needhomes-backend-staging.onrender.com",

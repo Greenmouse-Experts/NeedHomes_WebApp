@@ -1,4 +1,9 @@
-import { get_kyc_value, get_user_value, refresh_kyc } from "@/store/authStore";
+import {
+  get_kyc_value,
+  get_user_value,
+  refresh_kyc,
+  useAuth,
+} from "@/store/authStore";
 import {
   createFileRoute,
   Outlet,
@@ -6,9 +11,10 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { PartnerSidebar } from "@/components/partners/PartnerSidebar";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import PatHeader from "./-components/PatHeader";
+import { io, type Socket } from "socket.io-client";
 
 export const Route = createFileRoute("/partners")({
   component: RouteComponent,
@@ -49,7 +55,59 @@ function RouteComponent() {
   else if (path.includes("notifications")) activePage = "notifications";
   else if (path.includes("transactions")) activePage = "transactions";
   else if (path.includes("announcements")) activePage = "announcements";
+  const [auth] = useAuth();
+  const socketRef = useRef<Socket>(null);
+  interface Announcement {
+    id: string;
+    content: string;
+    target: "ALL_USERS" | string;
+    createdAt: string;
+  }
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: {
+          token: auth.accessToken,
+        },
+        extraHeaders: {
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5,
+      },
+    );
 
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket");
+    });
+    socket.on("connected", (data) => {
+      console.log("User data:", data);
+    });
+    socket.on("announcement:new", (data: Announcement) => {
+      console.log("New announcement:", data);
+      toast.info("New Annoucement", {
+        description: data.content,
+      });
+    });
+    socket.on("notification:new", (data) => {
+      console.log("New notification:", data);
+      toast.info("New Notfications", {
+        description: data.content,
+      });
+    });
+    // ✅ DISCONNECT ON UNMOUNT
+    return () => {
+      console.log("❌ Disconnecting socket...");
+      socket.disconnect();
+    };
+  }, [auth?.accessToken]);
   return (
     <>
       <ThemeProvider>
