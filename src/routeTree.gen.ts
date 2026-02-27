@@ -116,6 +116,7 @@ import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dash
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
 import { Route as PartnerRecoverForgotPasswordResetIndexRouteImport } from './routes/partner/recover/forgot-password/reset/index'
 import { Route as InvestorsPropertiesPropertyIdOutrightIndexRouteImport } from './routes/investors/properties/$propertyId/outright/index'
+import { Route as InvestorsPropertiesPropertyIdDefaultIndexRouteImport } from './routes/investors/properties/$propertyId/default/index'
 import { Route as DashboardPropertiesInvestmentsIdIndexRouteImport } from './routes/dashboard/properties/investments/$id/index'
 import { Route as DashboardPartnersPartnerIdPromotionsIndexRouteImport } from './routes/dashboard/partners/$partnerId/promotions/index'
 import { Route as DashboardInvestorsCorporateInvestorIdIndexRouteImport } from './routes/dashboard/investors/corporate/$investorId/index'
@@ -707,6 +708,12 @@ const InvestorsPropertiesPropertyIdOutrightIndexRoute =
     path: '/outright/',
     getParentRoute: () => InvestorsPropertiesPropertyIdRoute,
   } as any)
+const InvestorsPropertiesPropertyIdDefaultIndexRoute =
+  InvestorsPropertiesPropertyIdDefaultIndexRouteImport.update({
+    id: '/default/',
+    path: '/default/',
+    getParentRoute: () => InvestorsPropertiesPropertyIdRoute,
+  } as any)
 const DashboardPropertiesInvestmentsIdIndexRoute =
   DashboardPropertiesInvestmentsIdIndexRouteImport.update({
     id: '/investments/$id/',
@@ -877,6 +884,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/investors/corporate/$investorId/': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
   '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
+  '/investors/properties/$propertyId/default/': typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   '/investors/properties/$propertyId/outright/': typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
@@ -976,6 +984,7 @@ export interface FileRoutesByTo {
   '/dashboard/investors/corporate/$investorId': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
   '/dashboard/partners/$partnerId/promotions': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id': typeof DashboardPropertiesInvestmentsIdIndexRoute
+  '/investors/properties/$propertyId/default': typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   '/investors/properties/$propertyId/outright': typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
   '/partner/recover/forgot-password/reset': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
@@ -1095,6 +1104,7 @@ export interface FileRoutesById {
   '/dashboard/investors/corporate/$investorId/': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
   '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
+  '/investors/properties/$propertyId/default/': typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   '/investors/properties/$propertyId/outright/': typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
 }
@@ -1215,6 +1225,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/corporate/$investorId/'
     | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
+    | '/investors/properties/$propertyId/default/'
     | '/investors/properties/$propertyId/outright/'
     | '/partner/recover/forgot-password/reset/'
   fileRoutesByTo: FileRoutesByTo
@@ -1314,6 +1325,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/corporate/$investorId'
     | '/dashboard/partners/$partnerId/promotions'
     | '/dashboard/properties/investments/$id'
+    | '/investors/properties/$propertyId/default'
     | '/investors/properties/$propertyId/outright'
     | '/partner/recover/forgot-password/reset'
   id:
@@ -1432,6 +1444,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/corporate/$investorId/'
     | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
+    | '/investors/properties/$propertyId/default/'
     | '/investors/properties/$propertyId/outright/'
     | '/partner/recover/forgot-password/reset/'
   fileRoutesById: FileRoutesById
@@ -2225,6 +2238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestorsPropertiesPropertyIdOutrightIndexRouteImport
       parentRoute: typeof InvestorsPropertiesPropertyIdRoute
     }
+    '/investors/properties/$propertyId/default/': {
+      id: '/investors/properties/$propertyId/default/'
+      path: '/default'
+      fullPath: '/investors/properties/$propertyId/default/'
+      preLoaderRoute: typeof InvestorsPropertiesPropertyIdDefaultIndexRouteImport
+      parentRoute: typeof InvestorsPropertiesPropertyIdRoute
+    }
     '/dashboard/properties/investments/$id/': {
       id: '/dashboard/properties/investments/$id/'
       path: '/investments/$id'
@@ -2602,6 +2622,7 @@ const InvestorsMyInvestmentsRouteWithChildren =
 
 interface InvestorsPropertiesPropertyIdRouteChildren {
   InvestorsPropertiesPropertyIdIndexRoute: typeof InvestorsPropertiesPropertyIdIndexRoute
+  InvestorsPropertiesPropertyIdDefaultIndexRoute: typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   InvestorsPropertiesPropertyIdOutrightIndexRoute: typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
 }
 
@@ -2609,6 +2630,8 @@ const InvestorsPropertiesPropertyIdRouteChildren: InvestorsPropertiesPropertyIdR
   {
     InvestorsPropertiesPropertyIdIndexRoute:
       InvestorsPropertiesPropertyIdIndexRoute,
+    InvestorsPropertiesPropertyIdDefaultIndexRoute:
+      InvestorsPropertiesPropertyIdDefaultIndexRoute,
     InvestorsPropertiesPropertyIdOutrightIndexRoute:
       InvestorsPropertiesPropertyIdOutrightIndexRoute,
   }

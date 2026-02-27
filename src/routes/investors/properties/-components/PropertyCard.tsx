@@ -19,8 +19,8 @@ export default function PropertyCard({
       //@ts-ignore
       case "OUTRIGHT_PURCHASE":
         return "/investors/properties/$propertyId/outright";
-
-        return "/investors/properties";
+      default:
+        return "/investors/properties/$propertyId/default";
     }
   };
 
