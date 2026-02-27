@@ -109,10 +109,10 @@ function RouteComponent() {
                             {announcement.content}
                           </p>
 
-                          <div className="mt-4 flex items-center text-sm font-semibold text-orange-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                          {/*<div className="mt-4 flex items-center text-sm font-semibold text-orange-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
                             View Details
                             <ChevronRight className="ml-1 h-4 w-4" />
-                          </div>
+                          </div>*/}
                         </div>
 
                         <div className="shrink-0 self-center">
