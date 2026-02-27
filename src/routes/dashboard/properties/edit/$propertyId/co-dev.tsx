@@ -188,47 +188,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             </h2>
           </div>
           <div className="grid md:grid-cols-2  gap-4">
-            <Controller
-              name="profitSharingRatio"
-              control={form.control}
-              render={({ field }) => (
-                <SimpleInput
-                  {...field}
-                  value={field.value ?? ""}
-                  label="Profit Ratio (0-100)%"
-                  type="number"
-                  step="0.01"
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                />
-              )}
-            />
-            <Controller
-              name="projectDuration"
-              control={form.control}
-              render={({ field }) => (
-                <SimpleInput
-                  {...field}
-                  value={field.value ?? ""}
-                  label="Duration (Months)"
-                  type="number"
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                />
-              )}
-            />
-            <Controller
-              name="minimumInvestment"
-              control={form.control}
-              render={({ field }) => (
-                <SimpleInput
-                  {...field}
-                  value={field.value ?? ""}
-                  label="Min. Investment"
-                  type="number"
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                />
-              )}
-            />
-
             <LocalSelect
               {...form.register("exitRule")}
               label="Exit Strategy"
