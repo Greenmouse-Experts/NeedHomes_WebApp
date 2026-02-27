@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import PatHeader from "./-components/PatHeader";
 import { io, type Socket } from "socket.io-client";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/partners")({
   component: RouteComponent,
