@@ -1,10 +1,12 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { InvestorSidebar } from "@/components/investors/InvestorSidebar";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "@tanstack/react-router";
 import InvHeader from "./-components/InvHeader";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { get_kyc_value, refresh_kyc } from "@/store/authStore";
+import { get_kyc_value, refresh_kyc, useAuth } from "@/store/authStore";
+import { io, Socket } from "socket.io-client";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/investors")({
   component: LayoutComponent,
@@ -21,7 +23,7 @@ export const Route = createFileRoute("/investors")({
 function LayoutComponent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
-
+  const [auth, setAuth] = useAuth();
   // Derive active page from path
   const getActivePage = () => {
     const path = location.pathname;
@@ -34,6 +36,54 @@ function LayoutComponent() {
     if (path.includes("/settings")) return "settings";
     return "dashboard";
   };
+  const socketRef = useRef<Socket>(null);
+  interface Announcement {
+    id: string;
+    content: string;
+    target: "ALL_USERS" | string;
+    createdAt: string;
+  }
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: {
+          token: auth.accessToken,
+        },
+        extraHeaders: {
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5,
+      },
+    );
+
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket");
+    });
+    socket.on("connected", (data) => {
+      console.log("User data:", data);
+    });
+    socket.on("announcement:new", (data: Announcement) => {
+      console.log("New announcement:", data);
+      toast.info(data.content);
+    });
+    socket.on("notification:new", (data) => {
+      console.log("New notification:", data);
+    });
+    // ✅ DISCONNECT ON UNMOUNT
+    return () => {
+      console.log("❌ Disconnecting socket...");
+      socket.disconnect();
+    };
+  }, [auth?.accessToken]);
 
   return (
     <>
