@@ -117,7 +117,7 @@ function PropertyDetailPage() {
         const totalPrice =
           property.totalPrice / 100 || property.basePrice / 100;
         const percentage_totalPrice = (2 / 100) * totalPrice;
-        const system_charge_per = (2 / 100) * property.basePrice;
+        const system_charge_per = (2 / 100) * (property.basePrice / 100);
 
         let breakdown: {
           totalPrice: number;

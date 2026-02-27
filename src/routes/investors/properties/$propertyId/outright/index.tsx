@@ -117,7 +117,7 @@ function PropertyDetailPage() {
         const totalPrice =
           property.totalPrice / 100 || property.basePrice / 100;
         const percentage_totalPrice = (2 / 100) * totalPrice;
-        const system_charge_per = (2 / 100) * property.basePrice;
+        const system_charge_per = (2 / 100) * (property.basePrice / 100);
 
         let breakdown: {
           totalPrice: number;
@@ -133,7 +133,7 @@ function PropertyDetailPage() {
             (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
             0,
           ),
-          systemCharge: system_charge_per,
+          systemCharge: system_charge_per / 100,
         };
 
         if (property.paymentOption === "INSTALLMENT") {
