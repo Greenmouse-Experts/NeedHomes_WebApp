@@ -73,15 +73,28 @@ function LayoutComponent() {
     });
     socket.on("announcement:new", (data: Announcement) => {
       console.log("New announcement:", data);
-      toast.info("New Annoucement", {
-        description: data.content,
-      });
+      toast.info(
+        <div>
+          <h2 className="p-2  text-sm font-bold border-b fade">
+            New notification
+          </h2>
+          <div className="p-2">{data.content}</div>
+        </div>,
+        {
+          description: data.content,
+        },
+      );
     });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
-      toast.info("New Notfications", {
-        description: data.content,
-      });
+      toast.info(
+        <div>
+          <h2 className="p-2  text-sm font-bold border-b fade">
+            New notification
+          </h2>
+          <div className="p-2">{data.content}</div>
+        </div>,
+      );
     });
     // ✅ DISCONNECT ON UNMOUNT
     return () => {
