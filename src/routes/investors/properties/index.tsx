@@ -12,6 +12,7 @@ import { useState } from "react";
 import PropertyCard from "./-components/PropertyCard";
 import { usePagination } from "@/helpers/pagination";
 import SimplePaginator from "@/simpleComps/SimplePaginator";
+import SearchBar from "@/routes/-components/Searchbar";
 
 export const Route = createFileRoute("/investors/properties/")({
   component: PartnerPropertiesList,
@@ -20,6 +21,8 @@ export const Route = createFileRoute("/investors/properties/")({
 function PartnerPropertiesList() {
   const [selectedPropertyType, setSelectedPropertyType] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  // const props = useSearc
 
   const propertyTypes = [
     { id: "all", label: "All Properties" },
@@ -31,11 +34,12 @@ function PartnerPropertiesList() {
   ];
   const props = usePagination();
   const query = useQuery<ApiResponseV2<PROPERTY_DATA[]>>({
-    queryKey: ["property-list", props.page],
+    queryKey: ["property-list", props.page, search],
     queryFn: async () => {
       let resp = await apiClient.get("/properties", {
         params: {
           page: props.page,
+          search,
         },
       });
       return resp.data;
@@ -54,6 +58,7 @@ function PartnerPropertiesList() {
               Properties
             </h1>
           </div>
+
           {/* Property Type Dropdown */}
           <div className="relative flex-1 md:flex-none">
             <button
@@ -92,7 +97,7 @@ function PartnerPropertiesList() {
           Browse and manage your real estate partnership opportunities.
         </p>
       </div>
-
+      <SearchBar value={search} onChange={setSearch} />
       <PageLoader query={query}>
         {(response) => {
           const properties = response.data.data || [];
