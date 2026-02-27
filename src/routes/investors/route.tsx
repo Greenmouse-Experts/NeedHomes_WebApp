@@ -77,6 +77,7 @@ function LayoutComponent() {
     });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
+      toast.info(data.content);
     });
     // ✅ DISCONNECT ON UNMOUNT
     return () => {
