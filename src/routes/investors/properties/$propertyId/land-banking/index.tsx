@@ -155,7 +155,11 @@ function PropertyDetailPage() {
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
-            form.setValue("amount", breakdown.installmentAmount / 100);
+            form.setValue(
+              "amount",
+              breakdown.installmentAmount / 100 +
+                ((2 / 100) * breakdown.installmentAmount) / 100,
+            );
           }
         }, []);
         return (
@@ -301,7 +305,9 @@ function PropertyDetailPage() {
                     <InstallMentForm
                       form={form}
                       duration={property["installmentDuration"]}
-                      minimumInvestmentAmount={breakdown.installmentAmount}
+                      minimumInvestmentAmount={
+                        breakdown.installmentAmount + breakdown.systemCharge
+                      }
                     />
                   </div>
                 )}
