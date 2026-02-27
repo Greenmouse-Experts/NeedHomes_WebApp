@@ -17,7 +17,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 interface KycFormData {
   companyName: string;
-  rcNumber: string;
+  // rcNumber: string;
   cacDocument: string | null;
   tinDocument: string | null;
   authorizedId: string | null;
@@ -36,7 +36,7 @@ export default function CorpKYCFORM() {
   } = useForm<KycFormData>({
     defaultValues: {
       companyName: "",
-      rcNumber: "",
+      // rcNumber: "",
       cacDocument: null,
       tinDocument: null,
       authorizedId: null,
@@ -67,7 +67,7 @@ export default function CorpKYCFORM() {
       const verification = kycData.data.verification;
       reset({
         companyName: verification.companyName || "",
-        rcNumber: verification.rcNumber || "",
+        // rcNumber: verification.rcNumber || "",
         cacDocument: verification.cacDocument || null,
         tinDocument: verification.tinDocument || null,
         authorizedId: verification.authorizedId || null,
@@ -84,7 +84,7 @@ export default function CorpKYCFORM() {
     } else if (isError && (error as AxiosError)?.response?.status === 404) {
       reset({
         companyName: "",
-        rcNumber: "",
+        // rcNumber: "",
         cacDocument: null,
         tinDocument: null,
         authorizedId: null,
@@ -112,7 +112,7 @@ export default function CorpKYCFORM() {
   const onSubmit = async (data: KycFormData) => {
     const submitData: KycFormData = {
       companyName: data.companyName,
-      rcNumber: data.rcNumber,
+      // rcNumber: data.rcNumber,
       cacDocument: null,
       tinDocument: null,
       authorizedId: null,
@@ -231,7 +231,7 @@ export default function CorpKYCFORM() {
             </div>
 
             {/* RC Number */}
-            <div className="space-y-2">
+            {/*<div className="space-y-2">
               <Label
                 htmlFor="rcNumber"
                 className="text-sm font-semibold text-gray-700"
@@ -249,7 +249,7 @@ export default function CorpKYCFORM() {
                   {errors.rcNumber.message}
                 </p>
               )}
-            </div>
+            </div>*/}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
