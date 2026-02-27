@@ -24,6 +24,13 @@ interface Investment {
   paymentOption: "OUTRIGHT" | "INSTALLMENT";
   status: "ACTIVE" | "PENDING" | "COMPLETED";
   createdAt: string;
+  property: {
+    basePrice: number;
+    id: string;
+    investmentModel: string;
+    propertyType: string;
+    propertyTitle: string;
+  };
   updatedAt: string;
   deletedAt: string | null;
   currentValue: number;
@@ -56,6 +63,11 @@ function RouteComponent() {
       key: "createdAt",
       label: "Date",
       render: (value) => new Date(value).toLocaleDateString(),
+    },
+    {
+      key: "property.propertyTitle",
+      label: "Property",
+      render: (_, item) => item.property.propertyTitle,
     },
     {
       key: "amountPaid",
