@@ -9,6 +9,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
+import PageLoader from "@/components/layout/PageLoader";
 
 export const Route = createFileRoute("/investors/notifications")({
   component: RouteComponent,
@@ -19,7 +22,9 @@ type NotificationType = "alert" | "update" | "success" | "info";
 interface Notification {
   id: string;
   title: string;
-  message: string;
+  content: string;
+  userId: string;
+  createdAt: string;
   type: NotificationType;
   date: string;
   isRead: boolean;
@@ -73,6 +78,13 @@ const mockNotifications: Notification[] = [
 ];
 
 function RouteComponent() {
+  const query = useQuery<ApiResponseV2<Notification[]>>({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      let resp = await apiClient.get("/notifications");
+      return resp.data;
+    },
+  });
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const [notifications, setNotifications] =
     useState<Notification[]>(mockNotifications);
@@ -174,50 +186,68 @@ function RouteComponent() {
             <div className="p-8 text-center text-gray-500">
               No notifications found.
             </div>
-          ) : (
-            filteredNotifications.map((notification) => (
-              <div
-                key={notification.id}
-                className={`p-4 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors ${
-                  !notification.isRead ? "bg-blue-50/30" : ""
-                }`}
-              >
-                <div
-                  className={`p-2 rounded-full flex-shrink-0 ${getBgColor(notification.type)}`}
-                >
-                  {getIcon(notification.type)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
-                    <h3
-                      className={`text-sm md:text-base font-semibold ${
-                        !notification.isRead ? "text-gray-900" : "text-gray-700"
-                      }`}
-                    >
-                      {notification.title}
-                    </h3>
-                    <span className="text-xs text-gray-500 whitespace-nowrap flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {notification.date}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {notification.message}
-                  </p>
-                </div>
-                {!notification.isRead && (
-                  <button
-                    onClick={() => handleMarkAsRead(notification.id)}
-                    className="p-1 hover:bg-gray-200 rounded-full transition-colors self-center"
-                    title="Mark as read"
-                  >
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  </button>
-                )}
-              </div>
-            ))
-          )}
+          ) : null}
         </div>
+        <section>
+          <PageLoader query={query}>
+            {(resp) => {
+              let list = resp.data.data;
+
+              return (
+                <>
+                  {list.map((item) => {
+                    const notification = item;
+                    return (
+                      <>
+                        <div
+                          key={notification.id}
+                          className={`p-4 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors ${
+                            !notification.isRead ? "bg-blue-50/30" : ""
+                          }`}
+                        >
+                          <div
+                            className={`p-2 rounded-full flex-shrink-0 ${getBgColor(notification.type)}`}
+                          >
+                            {getIcon(notification.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                              <h3
+                                className={`text-sm md:text-base font-semibold ${
+                                  !notification.isRead
+                                    ? "text-gray-900"
+                                    : "text-gray-700"
+                                }`}
+                              >
+                                {notification.title}
+                              </h3>
+                              <span className="text-xs text-gray-500 whitespace-nowrap flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {notification.date}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                              {notification.content}
+                            </p>
+                          </div>
+                          {!notification.isRead && (
+                            <button
+                              onClick={() => handleMarkAsRead(notification.id)}
+                              className="p-1 hover:bg-gray-200 rounded-full transition-colors self-center"
+                              title="Mark as read"
+                            >
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            </button>
+                          )}
+                        </div>
+                      </>
+                    );
+                  })}
+                </>
+              );
+            }}
+          </PageLoader>
+        </section>
       </div>
     </div>
   );
