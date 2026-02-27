@@ -580,7 +580,7 @@ function PropertyDetailPage() {
                                 Price Per Plot:
                               </span>
                               <span className="text-sm font-medium text-gray-900">
-                                {formatCurrency(property.pricePerPlot)}
+                                {formatCurrency(property.pricePerPlot / 100)}
                               </span>
                             </div>
                           )}
