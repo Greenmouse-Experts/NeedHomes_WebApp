@@ -223,7 +223,7 @@ function PropertyDetailPage() {
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Base Price</span>
                       <span className="text-sm font-medium">
-                        {formatCurrency(property.basePrice / 100)}
+                        {formatCurrency(property.totalPrice / 100)}
                       </span>
                     </div>
 
