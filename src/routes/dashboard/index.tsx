@@ -17,6 +17,10 @@ import { Badge } from "@/components/ui/Badge";
 import { Separator } from "@/components/ui/Separator";
 import { useAuth } from "@/store/authStore";
 import AdminDashStats from "./-components/AdminDashStats";
+import { useEffect, useRef } from "react";
+import { io, type Socket } from "socket.io-client";
+import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
@@ -24,7 +28,70 @@ export const Route = createFileRoute("/dashboard/")({
 
 function DashboardIndexPage() {
   const [user] = useAuth();
+  const auth = user;
 
+  const socketRef = useRef<Socket>(null);
+  interface Announcement {
+    id: string;
+    content: string;
+    target: "ALL_USERS" | string;
+    createdAt: string;
+  }
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: {
+          token: auth.accessToken,
+        },
+        extraHeaders: {
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5,
+      },
+    );
+
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket");
+    });
+    socket.on("connected", (data) => {
+      console.log("User data:", data);
+    });
+    socket.on("announcement:new", (data: Announcement) => {
+      console.log("New announcement:", data);
+      return toast(
+        <Link to={`/dashboard/announcements`} className="w-full">
+          <h2 className="py-2  text-sm font-bold border-b fade w-full">
+            Announcement
+          </h2>
+          <div className="py-2 line-clamp-2">{data.content}</div>
+        </Link>,
+      );
+    });
+    socket.on("notification:new", (data) => {
+      console.log("New notification:", data);
+      toast.info(
+        <Link to={`/dashboard/notifications`} className="w-full">
+          <h2 className="py-2  text-sm font-bold border-b fade w-full">
+            Notification
+          </h2>
+          <div className="py-2 line-clamp-2">{data.notification.content}</div>
+        </Link>,
+      );
+    });
+    // ✅ DISCONNECT ON UNMOUNT
+    return () => {
+      console.log("❌ Disconnecting socket...");
+      socket.disconnect();
+    };
+  }, [auth?.accessToken]);
   return (
     <DashboardLayout title="Super Admin Dashboard">
       {/* Stats Cards */}
