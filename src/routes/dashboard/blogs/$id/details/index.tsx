@@ -2,7 +2,7 @@ import apiClient from "@/api/simpleApi";
 import BackButton from "@/components/BackButton";
 import PageLoader from "@/components/layout/PageLoader";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import React from "react";
 
 export const Route = createFileRoute("/dashboard/blogs/$id/details/")({
@@ -53,7 +53,17 @@ function RouteComponent() {
 
   return (
     <>
-      <BackButton />
+      <div className="flex items-center w-full">
+        <BackButton />
+        <div className="ml-auto">
+          <Link
+            to={`/dashboard/blogs/${id}/edit`}
+            className="btn btn-lg btn-primary "
+          >
+            Edit
+          </Link>
+        </div>
+      </div>
       <PageLoader query={query}>
         {(resp) => {
           const data = resp.data as BlogDetails;
@@ -96,7 +106,7 @@ function RouteComponent() {
                   <img
                     src={data.photoUrl[0]}
                     alt="Blog cover"
-                    className="w-full h-120 object-cover rounded"
+                    className="w-full h-90 md:h-120 object-cover rounded"
                   />
                 </div>
               )}
