@@ -118,6 +118,14 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     title: "KYC",
     items: [{ label: "KYC", to: "/dashboard/verifications", icon: Receipt }],
   },
+  {
+    id: "blog",
+    title: "BLOG",
+    items: [
+      { label: "Blog", to: "/dashboard/blogs", icon: Receipt },
+      { label: "Categories", to: "/dashboard/blogs/categories", icon: Receipt },
+    ],
+  },
   { label: "CONVERSATIONS", to: "/dashboard/chat", icon: ChatBubbleLeftIcon },
   { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
   { label: "NOTIFICATIONS", to: "/dashboard/notifications", icon: Bell },
