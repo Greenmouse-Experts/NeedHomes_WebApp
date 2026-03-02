@@ -119,7 +119,7 @@ function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
       <div className="">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-base-content mb-2">
-            Create Blog
+            Edit Blog
           </h1>
           <p className="text-base-content/60">
             Share your thoughts and ideas with the world
@@ -277,7 +277,7 @@ function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
               {mutation.isPending ? (
                 <>
                   <span className="loading loading-spinner loading-sm"></span>
-                  Creating...
+                  Editing...
                 </>
               ) : (
                 "Publish Blog"
