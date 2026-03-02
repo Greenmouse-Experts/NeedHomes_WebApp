@@ -95,7 +95,11 @@ export default function SimpleSelect<T extends RecordModel>(
       </div>
     );
 
-  const items: T[] = query.data?.data ?? [];
+  const items: T[] = Array.isArray(query.data)
+    ? query.data
+    : Array.isArray(query.data?.data)
+      ? query.data.data
+      : [];
 
   return (
     <div className="w-full space-y-2">
