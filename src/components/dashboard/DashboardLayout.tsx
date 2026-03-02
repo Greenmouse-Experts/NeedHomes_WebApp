@@ -157,6 +157,7 @@ export function DashboardLayout({
     propertyManagement: true,
     transaction: true,
     kyc: true,
+    blog: true,
   });
 
   const toggleSection = (section: string) => {
