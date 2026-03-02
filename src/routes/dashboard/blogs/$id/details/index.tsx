@@ -3,7 +3,6 @@ import BackButton from "@/components/BackButton";
 import PageLoader from "@/components/layout/PageLoader";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import React from "react";
 
 export const Route = createFileRoute("/dashboard/blogs/$id/details/")({
   component: RouteComponent,
@@ -52,97 +51,147 @@ function RouteComponent() {
   });
 
   return (
-    <>
-      <div className="flex items-center w-full">
+    <div className=" top-0 z-10 bg-white border-b border-gray-200 rounded-t-box shadow-sm">
+      <div className="flex items-center justify-between w-full px-6 py-4">
         <BackButton />
         <div className="ml-auto">
           <Link
             to={`/dashboard/blogs/${id}/edit`}
-            className="btn btn-lg btn-primary "
+            className="btn btn-lg btn-primary"
           >
             Edit
           </Link>
         </div>
       </div>
+
       <PageLoader query={query}>
         {(resp) => {
           const data = resp.data as BlogDetails;
           return (
-            <div className="mx-auto bg-white rounded-lg shadow p-6 mt-8">
-              <div className="flex items-center mb-6">
-                <img
-                  src={data.author.profilePicture}
-                  alt={`${data.author.firstName} ${data.author.lastName}`}
-                  className="w-14 h-14 rounded-full mr-4 object-cover"
-                />
-                <div>
-                  <div className="font-semibold text-lg">
-                    {data.author.firstName} {data.author.lastName}
+            <div className="">
+              {/* Main Content Card */}
+              <article className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+                {/* Author Section */}
+                <div className="border-b border-gray-200 p-6">
+                  <div className="flex items-center">
+                    <img
+                      src={data.author.profilePicture}
+                      alt={`${data.author.firstName} ${data.author.lastName}`}
+                      className="w-12 h-12 rounded-full mr-4 object-cover"
+                    />
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900">
+                        {data.author.firstName} {data.author.lastName}
+                      </div>
+                      <div className="text-sm text-gray-500">Author</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-gray-500">
+                        {data.isPublished ? "Published" : "Draft"}
+                      </div>
+                      <div className="text-xs font-medium text-gray-700">
+                        {data.isPublished
+                          ? new Date(data.createdAt).toLocaleDateString()
+                          : "Not published"}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">Author</div>
                 </div>
-              </div>
-              <div className="mb-4">
-                <h1 className="text-2xl font-bold mb-2">{data.title}</h1>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {data.blogCategories.map((cat) => (
-                    <span
-                      key={cat.id}
-                      className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
-                    >
-                      {cat.name}
-                    </span>
-                  ))}
+
+                {/* Title and Categories */}
+                <div className="p-6 border-b border-gray-200">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                    {data.title}
+                  </h1>
+                  {data.blogCategories.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {data.blogCategories.map((cat) => (
+                        <span
+                          key={cat.id}
+                          className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium"
+                        >
+                          {cat.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="text-xs text-gray-400">
-                  Published:{" "}
-                  {data.isPublished
-                    ? new Date(data.createdAt).toLocaleDateString()
-                    : "Draft"}
+
+                {/* Featured Image */}
+                {data.photoUrl && data.photoUrl.length > 0 && (
+                  <div className="w-full h-96 bg-gray-100 overflow-hidden border-b border-gray-200">
+                    <img
+                      src={data.photoUrl[0]}
+                      alt="Blog cover"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="p-6 border-b border-gray-200">
+                  <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-line leading-relaxed">
+                    {data.content}
+                  </div>
                 </div>
-              </div>
-              {data.photoUrl && data.photoUrl.length > 0 && (
-                <div className="mb-4">
-                  <img
-                    src={data.photoUrl[0]}
-                    alt="Blog cover"
-                    className="w-full h-90 md:h-120 object-cover rounded"
-                  />
+
+                {/* Metadata Footer */}
+                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Comments Enabled:</span>
+                      <span
+                        className={`font-semibold ${
+                          data.allowComments ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {data.allowComments ? "Yes" : "No"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Total Comments:</span>
+                      <span className="font-semibold text-gray-900">
+                        {data._count.comments}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Last Updated:</span>
+                      <span className="font-semibold text-gray-900">
+                        {new Date(data.updatedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
-              <div className="mb-6">
-                <div className="text-gray-700 whitespace-pre-line">
-                  {data.content}
-                </div>
-              </div>
-              <div className="flex justify-between items-center text-sm text-gray-600">
-                <div>
-                  Comments allowed:{" "}
-                  <span
-                    className={
-                      data.allowComments ? "text-green-600" : "text-red-600"
-                    }
-                  >
-                    {data.allowComments ? "Yes" : "No"}
-                  </span>
-                </div>
-                <div>
-                  Comments:{" "}
-                  <span className="font-semibold">{data._count.comments}</span>
-                </div>
-                <div>
-                  Last updated: {new Date(data.updatedAt).toLocaleString()}
-                </div>
-              </div>
-              {data.deletedAt && (
-                <div className="mt-4 text-red-600 font-semibold">
-                  Deleted at: {new Date(data.deletedAt).toLocaleString()}
+
+                {/* Deleted State Warning */}
+                {data.deletedAt && (
+                  <div className="bg-red-50 px-6 py-4 border-t-2 border-red-200">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-red-600 rounded-full mr-3"></div>
+                      <span className="text-red-700 font-semibold">
+                        Deleted at: {new Date(data.deletedAt).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </article>
+
+              {/* Comments Section Placeholder */}
+              {data.allowComments && (
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    Comments
+                  </h2>
+                  {/* Comments Component will be loaded here */}
+                  <div className="text-center py-12 text-gray-500">
+                    <p>Comments section will load here</p>
+                  </div>
                 </div>
               )}
             </div>
           );
         }}
       </PageLoader>
-    </>
+    </div>
   );
 }
