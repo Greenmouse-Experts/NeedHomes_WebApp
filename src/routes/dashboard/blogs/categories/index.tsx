@@ -4,6 +4,7 @@ import Modal from "@/components/modals/DialogModal";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
 import { extract_message } from "@/helpers/apihelpers";
+import { usePagination } from "@/helpers/pagination";
 import { useModal } from "@/store/modals";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -25,11 +26,15 @@ function RouteComponent() {
   } | null>(null);
   const [editName, setEditName] = useState("");
   const nav = useNavigate();
-
+  const props = usePagination();
   const query = useQuery<ApiResponseV2<[{ name: string; id: string }]>>({
-    queryKey: ["blog-categories"],
+    queryKey: ["blog-categories", props.page],
     queryFn: async () => {
-      let resp = await apiClient.get("/blogs/categories");
+      let resp = await apiClient.get("/blogs/categories", {
+        params: {
+          page: props.page,
+        },
+      });
       return resp.data;
     },
   });
@@ -133,6 +138,7 @@ function RouteComponent() {
               columns={columns}
               ring={true}
               actions={actions}
+              paginationProps={props}
             />
           );
         }}
