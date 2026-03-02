@@ -195,7 +195,7 @@ function PartnerPropertiesList() {
             <div className="flex items-center justify-between">
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="btn btn-accent"
                 onClick={() => {
                   form.reset();
                 }}
@@ -305,7 +305,7 @@ function PartnerPropertiesList() {
             </button>
             <button
               onClick={handleResetFilters}
-              className="btn btn-secondary"
+              className="btn btn-accent"
               type="button"
               disabled={
                 !filters.propertyType &&
