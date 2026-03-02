@@ -19,26 +19,30 @@ export const Route = createFileRoute("/investors/properties/")({
 });
 
 function PartnerPropertiesList() {
-  const [selectedPropertyType, setSelectedPropertyType] = useState("all");
+  const [selectedPropertyType, setSelectedPropertyType] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [search, setSearch] = useState("");
   // const props = useSearc
 
   const propertyTypes = [
-    { id: "all", label: "All Properties" },
-    { id: "OUTRIGHT", label: "Outright Purchase" },
-    { id: "INVESTMENT", label: "Co-Development" },
-    { id: "fractional-ownership", label: "Fractional Ownership" },
-    { id: "LAND", label: "Land Banking" },
-    { id: "SAVE_TO_OWN", label: "Save to Own" },
+    { id: null, label: "All Properties" },
+    { id: "RESIDENTIAL", label: "Residential" },
+    { id: "COMMERCIAL", label: "Commercial" },
+    { id: "LAND", label: "Land" },
+    // { id: "OUTRIGHT", label: "Outright Purchase" },
+    // { id: "INVESTMENT", label: "Co-Development" },
+    // { id: "fractional-ownership", label: "Fractional Ownership" },
+    // { id: "LAND", label: "Land Banking" },
+    // { id: "SAVE_TO_OWN", label: "Save to Own" },
   ];
   const props = usePagination();
   const query = useQuery<ApiResponseV2<PROPERTY_DATA[]>>({
-    queryKey: ["property-list", props.page, search],
+    queryKey: ["property-list", props.page, search, selectedPropertyType],
     queryFn: async () => {
       let resp = await apiClient.get("/properties", {
         params: {
           page: props.page,
+          propertyType: selectedPropertyType,
           search,
         },
       });
@@ -101,27 +105,19 @@ function PartnerPropertiesList() {
       <PageLoader query={query}>
         {(response) => {
           const properties = response.data.data || [];
-          const filteredProperties =
-            selectedPropertyType === "all"
-              ? properties
-              : properties.filter(
-                  (p) =>
-                    p.investmentModel === selectedPropertyType ||
-                    p.propertyType === selectedPropertyType,
-                );
 
           return (
             <div className="flex flex-col gap-6">
               {/* Header */}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
-                {filteredProperties.map((property) => (
+                {properties.map((property) => (
                   <>
                     <PropertyCard item={property} key={"ss"} />
                   </>
                 ))}
               </div>
-              {filteredProperties.length === 0 && (
+              {properties.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
                   No properties found for this category.
                 </div>
