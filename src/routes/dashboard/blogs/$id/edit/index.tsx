@@ -18,7 +18,7 @@ export const Route = createFileRoute("/dashboard/blogs/$id/edit/")({
 });
 interface FORM_PROPS {
   title: string;
-  photoUrl: string | null;
+  photoUrl: string[] | null;
   content: string;
   categoryIds: string[];
   allowComments: boolean;
@@ -50,7 +50,7 @@ function RouteComponent() {
     </PageLoader>
   );
 }
-function FormField({ defaultValues }:{defaultValues:FORM_PROPS}) {
+function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
   const {
     register,
     handleSubmit,
@@ -64,7 +64,7 @@ function FormField({ defaultValues }:{defaultValues:FORM_PROPS}) {
     },
   });
   const useImageProps = useImages(
-    defaultValues.photoUrl.map((item as any) => {
+    defaultValues?.photoUrl.map((item) => {
       return {
         url: item,
         path: item,
