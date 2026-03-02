@@ -3,6 +3,7 @@ import BackButton from "@/components/BackButton";
 import PageLoader from "@/components/layout/PageLoader";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import ListComment from "../../-components/ListComments";
 
 export const Route = createFileRoute("/dashboard/blogs/$id/details/")({
   component: RouteComponent,
@@ -183,9 +184,7 @@ function RouteComponent() {
                     Comments
                   </h2>
                   {/* Comments Component will be loaded here */}
-                  <div className="text-center py-12 text-gray-500">
-                    <p>Comments section will load here</p>
-                  </div>
+                  <ListComment id={id} />
                 </div>
               )}
             </div>

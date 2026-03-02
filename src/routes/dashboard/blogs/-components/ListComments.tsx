@@ -1,3 +1,3 @@
 export default function ListComment({ id }: { id: string }) {
-  return <div className=""></div>;
+  return <div className="">comments will load here</div>;
 }
