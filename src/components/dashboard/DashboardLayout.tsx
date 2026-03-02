@@ -5,7 +5,6 @@ import {
   Users,
   Handshake,
   Home,
-  Eye,
   HomeIcon,
   Plus,
   Receipt,
@@ -16,9 +15,9 @@ import {
   ChevronRight,
   Menu,
   X,
-  Search,
   Bell,
   LogOut,
+  List,
 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -122,8 +121,8 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     id: "blog",
     title: "BLOG",
     items: [
-      { label: "Blog", to: "/dashboard/blogs", icon: Receipt },
-      { label: "Categories", to: "/dashboard/blogs/categories", icon: Receipt },
+      { label: "Blog", to: "/dashboard/blogs", icon: List },
+      { label: "Categories", to: "/dashboard/blogs/categories", icon: List },
     ],
   },
   { label: "CONVERSATIONS", to: "/dashboard/chat", icon: ChatBubbleLeftIcon },
