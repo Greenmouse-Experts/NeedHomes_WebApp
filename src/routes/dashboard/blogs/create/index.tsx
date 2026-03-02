@@ -119,6 +119,7 @@ function RouteComponent() {
           <h2 className="p-2 border-b fade mb-2">Categories</h2>
           <SimpleMultiSelect
             route="blogs/categories"
+            //@ts-ignore
             render={(item: { name: string; id: string }) => {
               const add_to = () => {
                 selectProps.add_to({
