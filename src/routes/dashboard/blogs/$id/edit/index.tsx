@@ -43,14 +43,14 @@ function RouteComponent() {
         let data = resp.data;
         return (
           <>
-            <FormField defaultValues={data} />
+            <FormField defaultValues={data as FORM_PROPS} />
           </>
         );
       }}
     </PageLoader>
   );
 }
-function FormField({ defaultValues }) {
+function FormField({ defaultValues }:{defaultValues:FORM_PROPS}) {
   const {
     register,
     handleSubmit,
@@ -64,7 +64,7 @@ function FormField({ defaultValues }) {
     },
   });
   const useImageProps = useImages(
-    defaultValues.photoUrl.map((item) => {
+    defaultValues.photoUrl.map((item as any) => {
       return {
         url: item,
         path: item,
