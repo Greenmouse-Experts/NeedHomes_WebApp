@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 interface BlogAuthor {
   id: string;
   firstName: string;
@@ -126,9 +128,12 @@ export function BlogCard({ post }: BlogCardProps) {
             {post._count.comments !== 1 ? "s" : ""}
           </div>
         )}
-        <button className="btn btn-primary btn-md rounded-full mt-3">
+        <Link
+          to={`/dashboard/blogs/${post.id}/details`}
+          className="btn btn-primary btn-md rounded-full mt-3"
+        >
           Read More
-        </button>
+        </Link>
         {/* Comments */}
       </div>
     </div>
