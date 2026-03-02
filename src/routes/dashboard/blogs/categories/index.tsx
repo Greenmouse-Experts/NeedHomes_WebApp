@@ -6,7 +6,7 @@ import type { Actions } from "@/components/tables/pop-up";
 import { extract_message } from "@/helpers/apihelpers";
 import { useModal } from "@/store/modals";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,6 +19,12 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const { ref, showModal, closeModal } = useModal();
   const [name, setName] = useState("");
+  const [editCategory, setEditCategory] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [editName, setEditName] = useState("");
+  const nav = useNavigate();
 
   const query = useQuery<ApiResponseV2<[{ name: string; id: string }]>>({
     queryKey: ["blog-categories"],
@@ -40,28 +46,72 @@ function RouteComponent() {
     },
   });
 
-  const call_endpoint = async (func: any) => {
+  const editMutation = useMutation({
+    mutationFn: async (data: { id: string; name: string }) => {
+      const resp = await apiClient.patch(`/blogs/categories/${data.id}`, {
+        name: data.name,
+      });
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blog-categories"] });
+      setEditCategory(null);
+      setEditName("");
+      closeModal();
+      toast.success("Category updated successfully");
+    },
+    onError: extract_message,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const resp = await apiClient.delete(`/blogs/categories/${id}`);
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blog-categories"] });
+      toast.success("Category deleted successfully");
+    },
+    onError: extract_message,
+  });
+
+  const call_endpoint = async (
+    func: any,
+    opts?: { loading?: string; success?: string },
+  ) => {
     toast.promise(func, {
-      loading: "Creating category...",
-      success: "Category created successfully",
+      loading: opts?.loading || "Processing...",
+      success: opts?.success || "Success",
       error: extract_message,
     });
   };
+
   const columns: columnType[] = [
     { key: "id", label: "ID" },
     { key: "name", label: "Name" },
     { key: "slug", label: "Slug" },
   ];
+
   const actions: Actions[] = [
     {
       key: "edit",
       label: "Edit",
-      action: (item: any) => {},
+      action: (item: any) => {
+        setEditCategory(item);
+        setEditName(item.name);
+        showModal();
+      },
     },
     {
       key: "delete",
       label: "Delete",
-      action: (item: any) => {},
+      action: (item: any) => {
+        toast.promise(() => deleteMutation.mutateAsync(item.id), {
+          loading: "Deleting category...",
+          success: "Category deleted successfully",
+          error: extract_message,
+        });
+      },
     },
   ];
 
@@ -90,22 +140,59 @@ function RouteComponent() {
 
       <Modal
         ref={ref}
-        title="Create New Category"
+        title={editCategory ? "Edit Category" : "Create New Category"}
         actions={
-          <>
-            <button className="btn btn-ghost" onClick={closeModal}>
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary"
-              disabled={createMutation.isPending}
-              onClick={() =>
-                call_endpoint(() => createMutation.mutateAsync({ name }))
-              }
-            >
-              {createMutation.isPending ? "Creating..." : "Create Category"}
-            </button>
-          </>
+          editCategory ? (
+            <>
+              <button
+                className="btn btn-ghost"
+                onClick={() => {
+                  setEditCategory(null);
+                  setEditName("");
+                  closeModal();
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-primary"
+                disabled={editMutation.isPending}
+                onClick={() =>
+                  call_endpoint(
+                    () =>
+                      editMutation.mutateAsync({
+                        id: editCategory.id,
+                        name: editName,
+                      }),
+                    {
+                      loading: "Updating category...",
+                      success: "Category updated successfully",
+                    },
+                  )
+                }
+              >
+                {editMutation.isPending ? "Updating..." : "Update Category"}
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-ghost" onClick={closeModal}>
+                Cancel
+              </button>
+              <button
+                className="btn btn-primary"
+                disabled={createMutation.isPending}
+                onClick={() =>
+                  call_endpoint(() => createMutation.mutateAsync({ name }), {
+                    loading: "Creating category...",
+                    success: "Category created successfully",
+                  })
+                }
+              >
+                {createMutation.isPending ? "Creating..." : "Create Category"}
+              </button>
+            </>
+          )
         }
       >
         <div className="form-control w-full">
@@ -116,8 +203,14 @@ function RouteComponent() {
             type="text"
             placeholder="e.g. Investment Tips"
             className="input input-bordered w-full"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={editCategory ? editName : name}
+            onChange={(e) => {
+              if (editCategory) {
+                setEditName(e.target.value);
+              } else {
+                setName(e.target.value);
+              }
+            }}
           />
         </div>
       </Modal>
