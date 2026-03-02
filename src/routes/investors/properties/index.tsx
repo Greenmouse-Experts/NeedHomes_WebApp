@@ -128,7 +128,7 @@ function PartnerPropertiesList() {
     }));
     // Reset page to 1 when filter changes
     if (props.page !== 1) {
-      props.setPage(1);
+      props.setPagination(1);
     }
   };
 
@@ -154,7 +154,7 @@ function PartnerPropertiesList() {
     });
     form.reset();
     setSearch("");
-    props.setPage(1);
+    props.setPagination(1);
     query.refetch();
   };
 
@@ -340,7 +340,7 @@ function PartnerPropertiesList() {
         value={search}
         onChange={(val) => {
           setSearch(val);
-          props.setPage(1);
+          props.setPagination(1);
         }}
         placeholder="Search by title, location, or description"
       />
@@ -353,10 +353,7 @@ function PartnerPropertiesList() {
               {/* Header */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
                 {properties.map((property) => (
-                  <PropertyCard
-                    item={property}
-                    key={property.id || property.title || property.name}
-                  />
+                  <PropertyCard item={property} key={property.id} />
                 ))}
               </div>
               {properties.length === 0 && (
