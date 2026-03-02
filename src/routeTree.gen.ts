@@ -65,6 +65,7 @@ import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard
 import { Route as DashboardNotificationsRouteRouteImport } from './routes/dashboard/notifications/route'
 import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
 import { Route as DashboardChatRouteRouteImport } from './routes/dashboard/chat/route'
+import { Route as DashboardBlogsRouteRouteImport } from './routes/dashboard/blogs/route'
 import { Route as PartnersSubscriptionsIndexRouteImport } from './routes/partners/subscriptions/index'
 import { Route as PartnersPropertiesIndexRouteImport } from './routes/partners/properties/index'
 import { Route as PartnersPromotionsIndexRouteImport } from './routes/partners/promotions/index'
@@ -83,6 +84,7 @@ import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/p
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
 import { Route as DashboardChatIndexRouteImport } from './routes/dashboard/chat/index'
+import { Route as DashboardBlogsIndexRouteImport } from './routes/dashboard/blogs/index'
 import { Route as PartnersPropertiesPropertyIdRouteImport } from './routes/partners/properties/$propertyId'
 import { Route as InvestorsPropertiesPropertyIdRouteImport } from './routes/investors/properties/$propertyId'
 import { Route as InvestorsMyInvestmentsInvestmentIdRouteImport } from './routes/investors/my-investments/$investmentId'
@@ -106,6 +108,7 @@ import { Route as DashboardPropertiesPropertyIdIndexRouteImport } from './routes
 import { Route as DashboardPartnersPartnerIdIndexRouteImport } from './routes/dashboard/partners/$partnerId/index'
 import { Route as DashboardInvestorsCorporateIndexRouteImport } from './routes/dashboard/investors/corporate/index'
 import { Route as DashboardInvestorsInvestorIdIndexRouteImport } from './routes/dashboard/investors/$investorId/index'
+import { Route as DashboardBlogsCreateIndexRouteImport } from './routes/dashboard/blogs/create/index'
 import { Route as DashboardPropertiesNewSaveToOwnRouteImport } from './routes/dashboard/properties/new/save-to-own'
 import { Route as DashboardPropertiesNewOutrightRouteImport } from './routes/dashboard/properties/new/outright'
 import { Route as DashboardPropertiesNewLandBankingRouteImport } from './routes/dashboard/properties/new/land-banking'
@@ -413,6 +416,11 @@ const DashboardChatRouteRoute = DashboardChatRouteRouteImport.update({
   path: '/chat',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardBlogsRouteRoute = DashboardBlogsRouteRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const PartnersSubscriptionsIndexRoute =
   PartnersSubscriptionsIndexRouteImport.update({
     id: '/subscriptions/',
@@ -511,6 +519,11 @@ const DashboardChatIndexRoute = DashboardChatIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardChatRouteRoute,
+} as any)
+const DashboardBlogsIndexRoute = DashboardBlogsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardBlogsRouteRoute,
 } as any)
 const PartnersPropertiesPropertyIdRoute =
   PartnersPropertiesPropertyIdRouteImport.update({
@@ -648,6 +661,12 @@ const DashboardInvestorsInvestorIdIndexRoute =
     id: '/$investorId/',
     path: '/$investorId/',
     getParentRoute: () => DashboardInvestorsRouteRoute,
+  } as any)
+const DashboardBlogsCreateIndexRoute =
+  DashboardBlogsCreateIndexRouteImport.update({
+    id: '/create/',
+    path: '/create/',
+    getParentRoute: () => DashboardBlogsRouteRoute,
   } as any)
 const DashboardPropertiesNewSaveToOwnRoute =
   DashboardPropertiesNewSaveToOwnRouteImport.update({
@@ -806,6 +825,7 @@ export interface FileRoutesByFullPath {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
@@ -845,6 +865,7 @@ export interface FileRoutesByFullPath {
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRouteWithChildren
+  '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -871,6 +892,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/new/land-banking': typeof DashboardPropertiesNewLandBankingRoute
   '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
   '/dashboard/properties/new/save-to-own': typeof DashboardPropertiesNewSaveToOwnRoute
+  '/dashboard/blogs/create/': typeof DashboardBlogsCreateIndexRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
@@ -946,6 +968,7 @@ export interface FileRoutesByTo {
   '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
+  '/dashboard/blogs': typeof DashboardBlogsIndexRoute
   '/dashboard/chat': typeof DashboardChatIndexRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
@@ -972,6 +995,7 @@ export interface FileRoutesByTo {
   '/dashboard/properties/new/land-banking': typeof DashboardPropertiesNewLandBankingRoute
   '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
   '/dashboard/properties/new/save-to-own': typeof DashboardPropertiesNewSaveToOwnRoute
+  '/dashboard/blogs/create': typeof DashboardBlogsCreateIndexRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdIndexRoute
@@ -1028,6 +1052,7 @@ export interface FileRoutesById {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
@@ -1067,6 +1092,7 @@ export interface FileRoutesById {
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRouteWithChildren
+  '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -1093,6 +1119,7 @@ export interface FileRoutesById {
   '/dashboard/properties/new/land-banking': typeof DashboardPropertiesNewLandBankingRoute
   '/dashboard/properties/new/outright': typeof DashboardPropertiesNewOutrightRoute
   '/dashboard/properties/new/save-to-own': typeof DashboardPropertiesNewSaveToOwnRoute
+  '/dashboard/blogs/create/': typeof DashboardBlogsCreateIndexRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
@@ -1150,6 +1177,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
     | '/dashboard/notifications'
@@ -1189,6 +1217,7 @@ export interface FileRouteTypes {
     | '/investors/my-investments/$investmentId'
     | '/investors/properties/$propertyId'
     | '/partners/properties/$propertyId'
+    | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/investors/'
     | '/dashboard/notifications/'
@@ -1215,6 +1244,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new/land-banking'
     | '/dashboard/properties/new/outright'
     | '/dashboard/properties/new/save-to-own'
+    | '/dashboard/blogs/create/'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
@@ -1290,6 +1320,7 @@ export interface FileRouteTypes {
     | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/my-investments/$investmentId'
+    | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
     | '/dashboard/notifications'
@@ -1316,6 +1347,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new/land-banking'
     | '/dashboard/properties/new/outright'
     | '/dashboard/properties/new/save-to-own'
+    | '/dashboard/blogs/create'
     | '/dashboard/investors/$investorId'
     | '/dashboard/investors/corporate'
     | '/dashboard/partners/$partnerId'
@@ -1371,6 +1403,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
     | '/dashboard/notifications'
@@ -1410,6 +1443,7 @@ export interface FileRouteTypes {
     | '/investors/my-investments/$investmentId'
     | '/investors/properties/$propertyId'
     | '/partners/properties/$propertyId'
+    | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/investors/'
     | '/dashboard/notifications/'
@@ -1436,6 +1470,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new/land-banking'
     | '/dashboard/properties/new/outright'
     | '/dashboard/properties/new/save-to-own'
+    | '/dashboard/blogs/create/'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/partners/$partnerId/'
@@ -1894,6 +1929,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardChatRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/blogs': {
+      id: '/dashboard/blogs'
+      path: '/blogs'
+      fullPath: '/dashboard/blogs'
+      preLoaderRoute: typeof DashboardBlogsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/partners/subscriptions/': {
       id: '/partners/subscriptions/'
       path: '/subscriptions'
@@ -2019,6 +2061,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/chat/'
       preLoaderRoute: typeof DashboardChatIndexRouteImport
       parentRoute: typeof DashboardChatRouteRoute
+    }
+    '/dashboard/blogs/': {
+      id: '/dashboard/blogs/'
+      path: '/'
+      fullPath: '/dashboard/blogs/'
+      preLoaderRoute: typeof DashboardBlogsIndexRouteImport
+      parentRoute: typeof DashboardBlogsRouteRoute
     }
     '/partners/properties/$propertyId': {
       id: '/partners/properties/$propertyId'
@@ -2181,6 +2230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsInvestorIdIndexRouteImport
       parentRoute: typeof DashboardInvestorsRouteRoute
     }
+    '/dashboard/blogs/create/': {
+      id: '/dashboard/blogs/create/'
+      path: '/create'
+      fullPath: '/dashboard/blogs/create/'
+      preLoaderRoute: typeof DashboardBlogsCreateIndexRouteImport
+      parentRoute: typeof DashboardBlogsRouteRoute
+    }
     '/dashboard/properties/new/save-to-own': {
       id: '/dashboard/properties/new/save-to-own'
       path: '/save-to-own'
@@ -2330,6 +2386,19 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface DashboardBlogsRouteRouteChildren {
+  DashboardBlogsIndexRoute: typeof DashboardBlogsIndexRoute
+  DashboardBlogsCreateIndexRoute: typeof DashboardBlogsCreateIndexRoute
+}
+
+const DashboardBlogsRouteRouteChildren: DashboardBlogsRouteRouteChildren = {
+  DashboardBlogsIndexRoute: DashboardBlogsIndexRoute,
+  DashboardBlogsCreateIndexRoute: DashboardBlogsCreateIndexRoute,
+}
+
+const DashboardBlogsRouteRouteWithChildren =
+  DashboardBlogsRouteRoute._addFileChildren(DashboardBlogsRouteRouteChildren)
 
 interface DashboardChatRouteRouteChildren {
   DashboardChatIndexRoute: typeof DashboardChatIndexRoute
@@ -2583,6 +2652,7 @@ const DashboardPartnersRouteWithChildren =
   DashboardPartnersRoute._addFileChildren(DashboardPartnersRouteChildren)
 
 interface DashboardRouteRouteChildren {
+  DashboardBlogsRouteRoute: typeof DashboardBlogsRouteRouteWithChildren
   DashboardChatRouteRoute: typeof DashboardChatRouteRouteWithChildren
   DashboardInvestorsRouteRoute: typeof DashboardInvestorsRouteRouteWithChildren
   DashboardNotificationsRouteRoute: typeof DashboardNotificationsRouteRouteWithChildren
@@ -2600,6 +2670,7 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardBlogsRouteRoute: DashboardBlogsRouteRouteWithChildren,
   DashboardChatRouteRoute: DashboardChatRouteRouteWithChildren,
   DashboardInvestorsRouteRoute: DashboardInvestorsRouteRouteWithChildren,
   DashboardNotificationsRouteRoute:
