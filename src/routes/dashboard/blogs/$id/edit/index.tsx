@@ -1,4 +1,5 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import BackButton from "@/components/BackButton";
 import PageLoader from "@/components/layout/PageLoader";
 import { Textarea } from "@/components/ui/Textarea";
 import { extract_message } from "@/helpers/apihelpers";
@@ -38,16 +39,19 @@ function RouteComponent() {
     console.log(data);
   };
   return (
-    <PageLoader query={query}>
-      {(resp) => {
-        let data = resp.data;
-        return (
-          <>
-            <FormField defaultValues={data as FORM_PROPS} />
-          </>
-        );
-      }}
-    </PageLoader>
+    <>
+      <BackButton />
+      <PageLoader query={query}>
+        {(resp) => {
+          let data = resp.data;
+          return (
+            <>
+              <FormField defaultValues={data as FORM_PROPS} />
+            </>
+          );
+        }}
+      </PageLoader>
+    </>
   );
 }
 function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
@@ -64,6 +68,7 @@ function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
     },
   });
   const useImageProps = useImages(
+    //@ts-ignore
     defaultValues?.photoUrl.map((item) => {
       return {
         url: item,
