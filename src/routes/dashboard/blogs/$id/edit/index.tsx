@@ -111,7 +111,7 @@ function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
 
   return (
     <div className="mx-auto p-6 bg-base-100 rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6">Create Blog</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Blog</h1>
       <div className="my-2">
         {/*//@ts-ignore*/}
         <UpdateImages {...useImageProps} />
