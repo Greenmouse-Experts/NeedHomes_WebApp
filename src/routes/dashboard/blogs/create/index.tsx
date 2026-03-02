@@ -3,7 +3,7 @@ import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { gallery_helper } from "../../-components/upload_helpers";
 import { useImages } from "@/helpers/images";
 import UpdateImages from "@/simpleComps/inputs/UpdateImages";
@@ -11,6 +11,8 @@ import apiClient from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
+import SimpleMultiSelect from "@/simpleComps/inputs/SimpleMultiSelect";
+import useSelect from "@/helpers/selectors";
 
 export const Route = createFileRoute("/dashboard/blogs/create/")({
   component: RouteComponent,
@@ -27,7 +29,10 @@ function RouteComponent() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
+    control,
+    getValues,
   } = useForm({
     defaultValues: {
       title: "Updated Title",
@@ -56,6 +61,7 @@ function RouteComponent() {
       return resp.data;
     },
   });
+  const selectProps = useSelect();
 
   const onSubmit = (data: FORM_PROPS) => {
     console.log(data);
@@ -85,7 +91,7 @@ function RouteComponent() {
         {/*<LocalSelect label="Category">
           <option value="uuid-of-category">Category 1</option>
         </LocalSelect>*/}
-
+        {/*
         <SimpleSelect
           route="blogs/categories"
           render={(option: { id: string; name: string }) => {
@@ -95,7 +101,55 @@ function RouteComponent() {
               </option>
             );
           }}
-        ></SimpleSelect>
+        ></SimpleSelect>*/}
+
+        <ul className="menu ring fade rounded-box w-full">
+          <h2 className="p-2 border-b fade mb-2">Categories</h2>
+          <SimpleMultiSelect
+            route="blogs/categories"
+            render={(item: { name: string; id: string }) => {
+              const add_to = () => {
+                selectProps.add_to({
+                  id: item.id as any,
+                  name: item.name,
+                });
+                setValue("categoryIds", selectProps.mapped);
+                return;
+              };
+              const remove_from = () => {
+                selectProps.remove(item.id as any);
+                setValue("categoryIds", selectProps.mapped);
+                return;
+              };
+              const exists = () => {
+                return selectProps.exists(item.id as any);
+              };
+              if (exists()) {
+                return (
+                  <li
+                    className="menu-item "
+                    onMouseUp={() => {
+                      remove_from();
+                    }}
+                  >
+                    <a className="menu-active">{item.name}</a>
+                  </li>
+                );
+              }
+              return (
+                <li
+                  className="menu-item"
+                  onMouseUp={() => {
+                    add_to();
+                  }}
+                >
+                  <a className="">{item.name}</a>
+                </li>
+              );
+            }}
+          ></SimpleMultiSelect>
+        </ul>
+
         <div className="form-control">
           <label className="label cursor-pointer">
             <span className="label-text font-semibold">Allow Comments</span>

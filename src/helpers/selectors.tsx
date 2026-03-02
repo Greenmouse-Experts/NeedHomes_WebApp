@@ -23,6 +23,9 @@ export default function useSelect() {
   const clear = () => {
     setSelected({});
   };
+  const exists = (id: string) => {
+    return selected && selected[id] !== undefined;
+  };
 
-  return { selected, setSelected, mapped, add_to, remove, clear };
+  return { selected, setSelected, mapped, add_to, remove, clear, exists };
 }

@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import type { RecordModel } from "pocketbase";
 import { useForm, useFormContext } from "react-hook-form";
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import apiClient, {
+  type ApiResponse,
+  type ApiResponseV2,
+} from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 
 interface SimpleMultiSelectProps<T = any> extends PropsWithChildren {
@@ -14,9 +17,9 @@ interface SimpleMultiSelectProps<T = any> extends PropsWithChildren {
   render: (item: T, index: number) => React.ReactNode;
 }
 
-export default function SimpleMultiSelect<T extends RecordModel>(
-  props: SimpleMultiSelectProps<T>,
-) {
+export default function SimpleMultiSelect<
+  T extends ApiResponse | ApiResponse<T[]> | ApiResponse<T[]>,
+>(props: SimpleMultiSelectProps<T>) {
   const { route, value, onChange, label, name, render } = props;
 
   // ✅ SAFE: prevents crash when no FormProvider exists
@@ -33,7 +36,7 @@ export default function SimpleMultiSelect<T extends RecordModel>(
     value ?? null,
   );
 
-  const query = useQuery<ApiResponse<T[]>>({
+  const query = useQuery<ApiResponse<T[] | ApiResponseV2<T[]>>>({
     queryKey: ["select", route],
     queryFn: async () => {
       let resp = await apiClient.get(route);
@@ -57,7 +60,11 @@ export default function SimpleMultiSelect<T extends RecordModel>(
   return (
     <QueryCompLayout query={query}>
       {(data) => {
-        const items = data.data;
+        const items: T[] = Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data?.data.data)
+            ? data?.data.data
+            : [];
         return (
           <>
             <div className="w-full space-y-2">
