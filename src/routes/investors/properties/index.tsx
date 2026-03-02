@@ -13,6 +13,11 @@ import PropertyCard from "./-components/PropertyCard";
 import { usePagination } from "@/helpers/pagination";
 import SimplePaginator from "@/simpleComps/SimplePaginator";
 import SearchBar from "@/routes/-components/Searchbar";
+import { useModal } from "@/store/modals";
+import Modal from "@/components/modals/DialogModal";
+import { FormProvider, useForm } from "react-hook-form";
+import SimpleInput from "@/simpleComps/inputs/SimpleInput";
+import { toast } from "sonner";
 
 // Investment Model filter options
 const investmentModels = [
@@ -49,6 +54,13 @@ function PartnerPropertiesList() {
   const [search, setSearch] = useState("");
 
   const props = usePagination();
+  const modal = useModal();
+  const form = useForm({
+    defaultValues: {
+      minPrice: null,
+      maxPrice: null,
+    },
+  });
 
   const query = useQuery<ApiResponseV2<PROPERTY_DATA[]>>({
     queryKey: [
@@ -57,6 +69,8 @@ function PartnerPropertiesList() {
       search,
       selectedPropertyType,
       selectedInvestmentModel,
+      form.getValues("minPrice"),
+      form.getValues("maxPrice"),
     ],
     queryFn: async () => {
       let resp = await apiClient.get("/properties", {
@@ -65,14 +79,50 @@ function PartnerPropertiesList() {
           propertyType: selectedPropertyType,
           investmentModel: selectedInvestmentModel,
           search,
+          minPrice:
+            form.getValues("minPrice") && form.getValues("minPrice") * 100,
+          maxPrice:
+            form.getValues("maxPrice") && form.getValues("maxPrice") * 100,
         },
       });
       return resp.data;
     },
   });
-
+  const onSubmit = (data: { minPrice?: number; maxPrice?: number }) => {
+    // console.log(data);
+    if (!data.minPrice && !data.maxPrice) {
+      toast.error("Please enter at least one price filter");
+      return;
+    }
+    modal.closeModal();
+    query.refetch();
+  };
   return (
     <ThemeProvider>
+      <Modal ref={modal.ref} title="Price Filters">
+        <FormProvider {...form}>
+          <form
+            className="space-y-4"
+            onSubmit={form.handleSubmit(onSubmit as any)}
+          >
+            <SimpleInput
+              {...form.register("minPrice")}
+              type="number"
+              label="Min Price"
+            />
+            <SimpleInput
+              {...form.register("maxPrice")}
+              type="number"
+              label="Max Price"
+            />
+            <>
+              <div className="flex items-center justify-end">
+                <button className="btn btn-primary">Apply</button>
+              </div>
+            </>
+          </form>
+        </FormProvider>
+      </Modal>
       <div className="mb-6 sm:mb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
           <div className="flex items-center space-x-3">
@@ -87,10 +137,10 @@ function PartnerPropertiesList() {
           {/* Filters */}
           <div className="flex flex-col md:flex-row gap-2 flex-1 md:flex-none">
             {/* Property Type Dropdown */}
-            <div className="relative flex-1 md:flex-none">
+            <div className="relative flex-1 md:flex-none flex">
               <button
                 onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
-                className="flex items-center justify-between gap-2 bg-(--color-orange) text-white px-4 md:px-6 py-2.5 rounded-lg font-medium hover:bg-orange-600 transition-colors w-full md:w-auto"
+                className="btn btn-primary flex-1 "
               >
                 <span className="text-sm md:text-base">
                   {propertyTypes.find((t) => t.id === selectedPropertyType)
@@ -99,7 +149,7 @@ function PartnerPropertiesList() {
                 <ChevronDown className="w-4 h-4" />
               </button>
               {isTypeDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                <div className="absolute right-0 mt-12 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                   {propertyTypes.map((type) => (
                     <button
                       key={type.id ?? "all"}
@@ -120,10 +170,10 @@ function PartnerPropertiesList() {
               )}
             </div>
             {/* Investment Model Dropdown */}
-            <div className="relative flex-1 md:flex-none">
+            <div className="relative flex-1 md:flex-none flex ">
               <button
                 onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-                className="flex items-center justify-between gap-2 bg-(--color-orange) text-white px-4 md:px-6 py-2.5 rounded-lg font-medium hover:bg-orange-600 transition-colors w-full md:w-auto"
+                className="btn btn-primary flex-1"
               >
                 <span className="text-sm md:text-base">
                   {investmentModels.find(
@@ -133,7 +183,7 @@ function PartnerPropertiesList() {
                 <ChevronDown className="w-4 h-4" />
               </button>
               {isModelDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                <div className="absolute right-0 mt-12 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                   {investmentModels.map((model) => (
                     <button
                       key={model.id ?? "all"}
@@ -153,6 +203,12 @@ function PartnerPropertiesList() {
                 </div>
               )}
             </div>
+            <button
+              onClick={() => modal.showModal()}
+              className="btn btn-primary btn-outline "
+            >
+              Filter
+            </button>
           </div>
         </div>
         <p className="text-gray-600 text-sm sm:text-base">
