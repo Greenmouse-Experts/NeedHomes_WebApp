@@ -88,8 +88,12 @@ function RouteComponent() {
 
         <SimpleSelect
           route="blogs/categories"
-          render={(option) => {
-            return <option value={option.value}>{option?.name}</option>;
+          render={(option: { id: string; name: string }) => {
+            return (
+              <option value={option.id} className="capitalize">
+                {option.name}
+              </option>
+            );
           }}
         ></SimpleSelect>
         <div className="form-control">

@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import type { RecordModel } from "pocketbase";
 import { useFormContext } from "react-hook-form";
-import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import type { ApiResponse } from "@/api/simpleApi";
+import apiClient from "@/api/simpleApi";
 
 interface SimpleSelectProps<T = any> extends PropsWithChildren {
   route: string;
@@ -13,9 +14,9 @@ interface SimpleSelectProps<T = any> extends PropsWithChildren {
   render: (item: T, index: number) => React.ReactNode;
 }
 
-export default function SimpleSelect<T extends RecordModel>(
-  props: SimpleSelectProps<T>,
-) {
+export default function SimpleSelect<
+  T extends ApiResponse | ApiResponse<T[]> | ApiResponse<T[]>,
+>(props: SimpleSelectProps<T>) {
   const { route, value, onChange, label, name, render } = props;
 
   // ✅ SAFE: prevents crash when no FormProvider exists
@@ -95,10 +96,11 @@ export default function SimpleSelect<T extends RecordModel>(
       </div>
     );
 
-  const items: T[] = Array.isArray(query.data)
-    ? query.data
-    : Array.isArray(query.data?.data)
-      ? query.data.data
+  const data = query.data;
+  const items: T[] = Array.isArray(data?.data)
+    ? data.data
+    : Array.isArray(data?.data.data)
+      ? data?.data.data
       : [];
 
   return (
@@ -121,6 +123,7 @@ export default function SimpleSelect<T extends RecordModel>(
         <option value="null" disabled>
           None
         </option>
+        {/*{JSON.stringify(items)}*/}
         {items.map((item, idx) => render(item, idx))}
       </select>
       {error && (
