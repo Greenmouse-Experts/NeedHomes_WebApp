@@ -3,6 +3,7 @@ import PageLoader from "@/components/layout/PageLoader";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
+import { BlogCard } from "./-components/BlogCard";
 
 export const Route = createFileRoute("/dashboard/blogs/")({
   component: RouteComponent,
@@ -33,7 +34,17 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const blogs = data.data.data;
-          return <div>{JSON.stringify(blogs)}</div>;
+          return (
+            <div className="grid grid-cols-4 gap-2">
+              {blogs.map((blog) => {
+                return (
+                  <>
+                    <BlogCard post={blog} />
+                  </>
+                );
+              })}
+            </div>
+          );
         }}
       </PageLoader>
     </>

@@ -2,12 +2,15 @@ import { Textarea } from "@/components/ui/Textarea";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Controller, useForm } from "react-hook-form";
 import { gallery_helper } from "../../-components/upload_helpers";
 import { useImages } from "@/helpers/images";
 import UpdateImages from "@/simpleComps/inputs/UpdateImages";
-import apiClient from "@/api/simpleApi";
+import apiClient, {
+  type ApiResponse,
+  type ApiResponseV2,
+} from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
@@ -43,7 +46,7 @@ function RouteComponent() {
     },
   });
   const useImageProps = useImages([]);
-
+  const nav = useNavigate();
   const mutation = useMutation({
     mutationFn: async (data: FORM_PROPS) => {
       const allGallery = await gallery_helper(useImageProps);
@@ -59,6 +62,15 @@ function RouteComponent() {
       };
       const resp = await apiClient.post("/blogs", payload);
       return resp.data;
+    },
+    onSuccess: (data: ApiResponse) => {
+      const id = data.data.id;
+      return nav({
+        to: `/dashboard/blogs/$id/details`,
+        params: {
+          id: id,
+        },
+      });
     },
   });
   const selectProps = useSelect();
