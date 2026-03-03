@@ -51,6 +51,7 @@ function RouteComponent() {
       certificate: "",
       surveyPlanDocument: "",
       transferDocument: "",
+      paymentOption: "INSTALLMENT",
       brochure: "",
       videos: "",
     },
@@ -224,7 +225,7 @@ function RouteComponent() {
                     />
                   )}
                 />
-                <Controller
+                {/*<Controller
                   name="paymentOption"
                   control={methods.control}
                   render={({ field }) => (
@@ -267,7 +268,7 @@ function RouteComponent() {
                       )}
                     />
                   </>
-                )}
+                )}*/}
               </div>
             </section>
           </DefaultForm>
