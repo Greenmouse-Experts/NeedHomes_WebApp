@@ -5,6 +5,7 @@ import ListComment from "@/routes/dashboard/blogs/-components/ListComments";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import Featured from "../-components/Featured";
 
 export const Route = createFileRoute("/blogs/$id/")({
   component: RouteComponent,
@@ -53,119 +54,134 @@ function RouteComponent() {
   });
 
   return (
-    <ThemeProvider className="bg-white min-h-screen py-8 sm:py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <ThemeProvider className="bg-gray-50 py-8">
+      <div className="container mx-auto">
         {/* Top Navigation */}
         <div className="mb-8 flex items-center justify-between">
           <BackButton />
         </div>
 
-        <PageLoader query={query}>
-          {(resp) => {
-            const data = resp.data as BlogDetails;
-            return (
-              <article className="w-full rounded-lg bg-white shadow-sm ring-1 ring-gray-200">
-                {/* Featured Image */}
-                {data.photoUrl && data.photoUrl.length > 0 && (
-                  <div className="h-96 w-full overflow-hidden rounded-t-lg bg-gray-200">
-                    <img
-                      src={data.photoUrl[0]}
-                      alt="Blog cover"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-
-                {/* Title Section */}
-                <div className="border-b border-gray-100 px-6 py-10 sm:px-10 sm:py-12">
-                  <h1 className="mb-6 text-4xl font-bold text-gray-900 sm:text-5xl">
-                    {data.title}
-                  </h1>
-
-                  {/* Author and Date */}
-                  <div className="mb-6 flex items-center gap-4">
-                    <img
-                      src={data.author.profilePicture}
-                      alt={`${data.author.firstName} ${data.author.lastName}`}
-                      className="h-14 w-14 rounded-full object-cover ring-1 ring-gray-200"
-                    />
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900">
-                        {data.author.firstName} {data.author.lastName}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {new Date(data.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Categories */}
-                  {data.blogCategories.length > 0 && (
-                    <div className="flex flex-wrap gap-2 pt-6">
-                      {data.blogCategories.map((cat) => (
-                        <span
-                          key={cat.id}
-                          className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 hover:bg-blue-100 transition"
-                        >
-                          {cat.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="border-b border-gray-100 px-6 py-10 sm:px-10">
-                  <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {data.content}
-                  </div>
-                </div>
-
-                {/* Metadata */}
-                <div className="border-b border-gray-100 px-6 py-6 sm:px-10">
-                  <div className="flex flex-wrap gap-6">
-                    {data._count.comments > 0 && (
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900">
-                          {data._count.comments}
-                        </span>
-                        <span className="text-sm text-gray-600">
-                          {data._count.comments === 1 ? "Comment" : "Comments"}
-                        </span>
+        <section className="flex  gap-2">
+          <div className=" flex-1">
+            <PageLoader query={query}>
+              {(resp) => {
+                const data = resp.data as BlogDetails;
+                return (
+                  <article className="w-full flex-1 bg-red-500 p-2">
+                    {/* Featured Image */}
+                    {data.photoUrl && data.photoUrl.length > 0 && (
+                      <div className="mb-8 h-[400px] w-full overflow-hidden rounded-xl bg-gray-200 shadow-lg">
+                        <img
+                          src={data.photoUrl[0]}
+                          alt="Blog cover"
+                          className="h-full w-full object-cover"
+                        />
                       </div>
                     )}
-                  </div>
-                </div>
 
-                {/* Deleted State Warning */}
-                {data.deletedAt && (
-                  <div className="border-b border-red-100 bg-red-50 px-6 py-4 sm:px-10">
-                    <div className="flex items-center gap-3">
-                      <div className="h-2 w-2 shrink-0 rounded-full bg-red-600"></div>
-                      <span className="text-sm font-medium text-red-700">
-                        This post has been deleted
-                      </span>
+                    {/* Content Card */}
+                    <div className="rounded-xl bg-white p-8 sm:p-12 shadow-md">
+                      {/* Title Section */}
+                      <div className="mb-8">
+                        <h1 className="mb-6 text-4xl font-bold text-gray-900 sm:text-5xl leading-tight">
+                          {data.title}
+                        </h1>
+
+                        {/* Categories */}
+                        {data.blogCategories.length > 0 && (
+                          <div className="flex flex-wrap gap-2 pb-6 border-b border-gray-200">
+                            {data.blogCategories.map((cat) => (
+                              <span
+                                key={cat.id}
+                                className="rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100 transition"
+                              >
+                                {cat.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Author and Date */}
+                        <div className="mt-6 flex items-center gap-4">
+                          <img
+                            src={data.author.profilePicture}
+                            alt={`${data.author.firstName} ${data.author.lastName}`}
+                            className="h-16 w-16 rounded-full object-cover ring-2 ring-gray-200"
+                          />
+                          <div className="flex-1">
+                            <div className="font-semibold text-gray-900 text-lg">
+                              {data.author.firstName} {data.author.lastName}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {new Date(data.createdAt).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                },
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="border-b border-gray-200 pb-8 mb-8">
+                        <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+                          {data.content}
+                        </div>
+                      </div>
+
+                      {/* Metadata */}
+                      <div className="border-b border-gray-200 pb-8 mb-8">
+                        <div className="flex flex-wrap gap-6">
+                          {data._count.comments > 0 && (
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900 text-lg">
+                                {data._count.comments}
+                              </span>
+                              <span className="text-sm text-gray-600">
+                                {data._count.comments === 1
+                                  ? "Comment"
+                                  : "Comments"}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Deleted State Warning */}
+                      {data.deletedAt && (
+                        <div className="rounded-lg border border-red-200 bg-red-50 p-4 mb-8">
+                          <div className="flex items-center gap-3">
+                            <div className="h-2 w-2 shrink-0 rounded-full bg-red-600"></div>
+                            <span className="text-sm font-medium text-red-700">
+                              This post has been deleted
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Comments Section */}
+                      {data.allowComments && (
+                        <div>
+                          <h2 className="mb-8 text-2xl font-bold text-gray-900">
+                            Comments
+                          </h2>
+                          <ListComment id={id} />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
-
-                {/* Comments Section */}
-                {data.allowComments && (
-                  <div className="px-6 py-10 sm:px-10">
-                    <h2 className="mb-8 text-2xl font-bold text-gray-900">
-                      Comments
-                    </h2>
-                    <ListComment id={id} />
-                  </div>
-                )}
-              </article>
-            );
-          }}
-        </PageLoader>
+                  </article>
+                );
+              }}
+            </PageLoader>
+          </div>
+          <div className="flex-1 max-w-sm ">
+            <Featured />
+          </div>
+        </section>
       </div>
     </ThemeProvider>
   );
