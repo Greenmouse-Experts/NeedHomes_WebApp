@@ -132,7 +132,7 @@ function RouteComponent() {
       key: "view",
       label: "View",
       action: (item) => {
-        nav({ to: `/blogs/${item.slug || item.id}` });
+        return nav({ to: `/dashboard/blogs/${item.id}/details` });
       },
     },
     {
