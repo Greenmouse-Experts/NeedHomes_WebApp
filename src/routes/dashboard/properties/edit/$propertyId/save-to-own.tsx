@@ -226,7 +226,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                     />
                   )}
                 />
-                <Controller
+                {/*<Controller
                   name="paymentOption"
                   control={methods.control}
                   render={({ field }) => (
@@ -269,7 +269,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       )}
                     />
                   </>
-                )}
+                )}*/}
               </div>
             </section>
           </DefaultForm>
