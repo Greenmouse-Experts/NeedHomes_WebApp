@@ -43,7 +43,9 @@ export default function Featured() {
   });
   return (
     <div className="ring fade rounded-box">
-      <h2 className="p-4 border-b fade font-bold text-lgs">Featured</h2>
+      <h2 className="p-4 border-b fade font-bold text-lg bg-primary rounded-t-box  text-primary-content">
+        Related News
+      </h2>
       <div className="p-4">
         <QueryCompLayout query={query}>
           {(resp) => {
@@ -53,13 +55,13 @@ export default function Featured() {
                   <Link key={blog.id} to={`/blogs/${blog.id}`}>
                     <div className="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
                       <div className="card-body p-4 flex-row">
-                        <div className="flex">
+                        {/*<div className="flex">
                           <img
                             src={blog.photoUrl[0]}
-                            className="size-18 rounded-box"
+                            className="size-15 rounded-box"
                             alt=""
                           />
-                        </div>
+                        </div>*/}
                         <div>
                           <h3 className="card-title text-lg hover:text-primary transition-colors">
                             {blog.title}

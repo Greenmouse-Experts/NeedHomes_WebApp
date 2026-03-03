@@ -6,6 +6,8 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import Featured from "../-components/Featured";
+import { Facebook, Twitter, Linkedin, Copy, Check } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/blogs/$id/")({
   component: RouteComponent,
@@ -45,6 +47,15 @@ interface BlogDetails {
 
 function RouteComponent() {
   const { id } = Route.useParams();
+  const date = new Date();
+  const current_date = {
+    day: date.getDay(),
+    day_name: date.toLocaleDateString("en-US", { weekday: "long" }),
+    year: date.getFullYear(),
+    month: date.toLocaleDateString("en-US", { month: "long" }),
+    day_of_month: date.getDate(),
+  };
+  const [copied, setCopied] = useState(false);
   const query = useQuery({
     queryKey: ["blog-details", id],
     queryFn: async () => {
@@ -52,6 +63,38 @@ function RouteComponent() {
       return resp.data;
     },
   });
+
+  const handleShare = (platform: string, title: string) => {
+    const url = window.location.href;
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(title);
+
+    switch (platform) {
+      case "facebook":
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+          "_blank",
+        );
+        break;
+      case "twitter":
+        window.open(
+          `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+          "_blank",
+        );
+        break;
+      case "linkedin":
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+          "_blank",
+        );
+        break;
+      case "copy":
+        navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        break;
+    }
+  };
 
   return (
     <ThemeProvider className="bg-gray-50 py-8">
@@ -61,8 +104,12 @@ function RouteComponent() {
           <BackButton />
         </div>
 
-        <section className="flex  gap-2">
-          <div className=" flex-1">
+        <section className="flex gap-2">
+          {/* Social Links Sidebar */}
+          <div className="md:block hidden flex-1 max-w-sm">
+            <Featured />
+          </div>
+          <div className="flex-1">
             <PageLoader query={query}>
               {(resp) => {
                 const data = resp.data as BlogDetails;
@@ -70,7 +117,7 @@ function RouteComponent() {
                   <article className="w-full flex-1 bg-base-100 p-2">
                     {/* Featured Image */}
                     {data.photoUrl && data.photoUrl.length > 0 && (
-                      <div className="mb-8 h-[400px]  w-full overflow-hidden rounded-xl bg-gray-200 shadow-lg">
+                      <div className="mb-8 h-100 w-full overflow-hidden rounded-xl bg-gray-200 shadow-lg">
                         <img
                           src={data.photoUrl[0]}
                           alt="Blog cover"
@@ -178,8 +225,60 @@ function RouteComponent() {
               }}
             </PageLoader>
           </div>
-          <div className="flex-1 max-w-sm ">
-            <Featured />
+
+          <div className="sticky top-8 h-fit hidden md:flex flex-col gap-4 p-4  rounded-box shadow">
+            <div className="p-4 bg-white rounded-xl shadow-md">
+              <div className="text-center">
+                <div className="text-sm font-semibold text-gray-900">
+                  {current_date.day_name}
+                </div>
+                <div className="text-2xl font-bold text-gray-900 mt-1">
+                  {current_date.day_of_month}
+                </div>
+                <div className="text-xs text-gray-600 mt-1">
+                  {current_date.month} {current_date.year}
+                </div>
+              </div>
+            </div>
+            {/*//social*/}
+            <div className="flex flex-col gap-3 bg-white rounded-xl p-4 shadow-md ring fade  items-center">
+              <button
+                onClick={() =>
+                  query.data && handleShare("facebook", query.data.data.title)
+                }
+                className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition duration-200"
+                title="Share on Facebook"
+              >
+                <Facebook size={20} />
+              </button>
+              <button
+                onClick={() =>
+                  query.data && handleShare("twitter", query.data.data.title)
+                }
+                className="p-3 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-600 transition duration-200"
+                title="Share on Twitter"
+              >
+                <Twitter size={20} />
+              </button>
+              <button
+                onClick={() =>
+                  query.data && handleShare("linkedin", query.data.data.title)
+                }
+                className="p-3 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 transition duration-200"
+                title="Share on LinkedIn"
+              >
+                <Linkedin size={20} />
+              </button>
+              <button
+                onClick={() =>
+                  query.data && handleShare("copy", query.data.data.title)
+                }
+                className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition duration-200"
+                title="Copy link"
+              >
+                {copied ? <Check size={20} /> : <Copy size={20} />}
+              </button>
+            </div>
           </div>
         </section>
       </div>
