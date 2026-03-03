@@ -1,7 +1,9 @@
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import SearchBar from "../-components/Searchbar";
 
 interface BlogCategory {
   id: string;
@@ -94,19 +96,34 @@ function RouteComponent() {
     },
   });
   return (
-    <div className="mx-auto container py-8">
-      <PageLoader query={query}>
-        {(resp) => {
-          let data = resp.data.data as Blog[];
-          return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.map((blog) => (
-                <BlogCard key={blog.id} blog={blog} />
-              ))}
-            </div>
-          );
-        }}
-      </PageLoader>
-    </div>
+    <ThemeProvider className="">
+      <div className="bg-linear-120 from-primary to-primary/50 py-16 mb-8">
+        <div className="mx-auto container px-4">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Our Blog
+            </h1>
+            <p className="text-blue-100 text-lg mb-6">
+              Discover insights, stories, and updates from our team
+            </p>
+            <SearchBar />
+          </div>
+        </div>
+      </div>
+      <div className="mx-auto container">
+        <PageLoader query={query}>
+          {(resp) => {
+            let data = resp.data.data as Blog[];
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {data.map((blog) => (
+                  <BlogCard key={blog.id} blog={blog} />
+                ))}
+              </div>
+            );
+          }}
+        </PageLoader>
+      </div>
+    </ThemeProvider>
   );
 }

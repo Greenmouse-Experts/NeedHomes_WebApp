@@ -20,7 +20,7 @@ export default function SearchBar({ value, onChange }: any) {
         <input
           className="input md:input-lg"
           {...form.register("search")}
-          placeholder="search email..."
+          placeholder="search here..."
         />
         <button
           className="btn ml-2 btn-primary md:btn-lg btn-square"
