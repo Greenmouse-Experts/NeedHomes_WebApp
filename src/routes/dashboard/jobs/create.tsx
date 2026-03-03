@@ -6,6 +6,7 @@ import apiClient from "@/api/simpleApi";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
 
 export const Route = createFileRoute("/dashboard/jobs/create")({
   component: RouteComponent,
@@ -80,7 +81,20 @@ function RouteComponent() {
               },
             })}
           />
-
+          <SimpleSelect
+            label="Category"
+            {...methods.register("categoryId")}
+            route="/careers/categories"
+            render={(item: { name: string; id: string }) => {
+              return (
+                <>
+                  <option className="" value={item.id}>
+                    {item.name}
+                  </option>
+                </>
+              );
+            }}
+          ></SimpleSelect>
           <LocalSelect label="Job Type" {...methods.register("jobType")}>
             <option value="FULL_TIME">Full Time</option>
             <option value="PART_TIME">Part Time</option>
@@ -89,13 +103,13 @@ function RouteComponent() {
             <option value="HYBRID">Hybrid</option>
           </LocalSelect>
 
-          <SimpleInput
+          {/*<SimpleInput
             label="Category ID"
             placeholder="Enter category ID"
             {...methods.register("categoryId", {
               required: "Category ID is required",
             })}
-          />
+          />*/}
 
           <div className="w-full space-y-2">
             <label className="fieldset-label font-semibold">
