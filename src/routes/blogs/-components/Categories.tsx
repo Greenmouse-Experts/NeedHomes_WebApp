@@ -29,13 +29,18 @@ export default function Categories() {
             let data = resp.data.data as any[];
             return (
               <ul className="menu w-full gap-1">
+                <li className="">
+                  <Link to={`/blogs`} className="p-2 capitalize ">
+                    All
+                  </Link>
+                </li>
                 {data.map((item) => {
-                  if (cat == item.name) {
+                  if (cat == item.id) {
                     return (
                       <li className="" key={item.id}>
                         <Link
                           to={`/blogs`}
-                          search={{ category: encodeURIComponent(item.name) }}
+                          search={{ category: encodeURIComponent(item.id) }}
                           className="p-2 capitalize menu-active "
                         >
                           {item.name}
@@ -48,7 +53,7 @@ export default function Categories() {
                       <li className="" key={item.id}>
                         <Link
                           to={`/blogs`}
-                          search={{ category: encodeURIComponent(item.name) }}
+                          search={{ category: encodeURIComponent(item.id) }}
                           className="p-2 capitalize "
                         >
                           {item.name}

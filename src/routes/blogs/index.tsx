@@ -107,10 +107,13 @@ export const Route = createFileRoute("/blogs/")({
 
 function RouteComponent() {
   const [search, setSearch] = useState("");
+  const { category } = Route.useSearch();
   const query = useQuery<ApiResponseV2<Blog[]>>({
-    queryKey: ["user-blogs", search],
+    queryKey: ["user-blogs", search, category],
     queryFn: async () => {
-      let resp = await apiClient.get("/blogs", { params: { search } });
+      let resp = await apiClient.get("/blogs", {
+        params: { search, categoryId: category },
+      });
       return resp.data;
     },
   });
