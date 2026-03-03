@@ -87,16 +87,17 @@ function RouteComponent() {
             render={({ field }) => {
               return (
                 <SimpleSelect
-                  {...field}
+                  value={field.value}
+                  onChange={(val) => {
+                    field.onChange(val);
+                  }}
                   label="Category"
                   route="/careers/categories"
                   render={(item: { name: string; id: string }) => {
                     return (
-                      <>
-                        <option className="" value={item.id}>
-                          {item.name}
-                        </option>
-                      </>
+                      <option className="" value={item.id}>
+                        {item.name}
+                      </option>
                     );
                   }}
                 ></SimpleSelect>
