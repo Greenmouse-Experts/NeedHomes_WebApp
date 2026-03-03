@@ -37,7 +37,7 @@ function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedJobType, setSelectedJobType] = useState("");
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  const query = useQuery({
     queryKey: [
       "jobs",
       pagination.page,
@@ -60,6 +60,7 @@ function RouteComponent() {
     },
   });
 
+  const { refetch } = query;
   const columns: columnType<Job>[] = [
     {
       key: "title",
@@ -169,19 +170,19 @@ function RouteComponent() {
         </div>
 
         <div className="bg-white rounded-lg shadow-sm">
-          <PageLoader
-            query={{ isLoading, isError, error, data: data || [] }}
-            loadingText="Loading jobs..."
-          >
-            {(jobs) => (
-              <CustomTable
-                data={jobs}
-                columns={columns}
-                actions={actions}
-                totalCount={data?.length || 0}
-                paginationProps={pagination}
-              />
-            )}
+          <PageLoader query={query} loadingText="Loading jobs...">
+            {(resp) => {
+              const data = resp.data.data;
+              return (
+                <CustomTable
+                  data={data}
+                  columns={columns}
+                  actions={actions}
+                  totalCount={resp?.length || 0}
+                  paginationProps={pagination}
+                />
+              );
+            }}
           </PageLoader>
         </div>
       </div>
