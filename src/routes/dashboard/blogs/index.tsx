@@ -151,8 +151,8 @@ function RouteComponent() {
     return resp.data;
   };
   return (
-    <>
-      <section className="flex flex-col md:flex-row">
+    <div className="bg-base-100 shadow ring fade p-4 rounded-box">
+      <section className="flex flex-col md:flex-row ">
         <div className="mb-6 ">
           <h1 className="text-xl font-bold">Blog</h1>
           <p className="text-base-content/60">Blog management page</p>
@@ -180,6 +180,6 @@ function RouteComponent() {
           );
         }}
       </PageLoader>
-    </>
+    </div>
   );
 }
