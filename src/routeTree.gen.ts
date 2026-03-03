@@ -111,6 +111,7 @@ import { Route as DashboardPropertiesNewIndexRouteImport } from './routes/dashbo
 import { Route as DashboardPropertiesInvestmentsIndexRouteImport } from './routes/dashboard/properties/investments/index'
 import { Route as DashboardPropertiesPropertyIdIndexRouteImport } from './routes/dashboard/properties/$propertyId/index'
 import { Route as DashboardPartnersPartnerIdIndexRouteImport } from './routes/dashboard/partners/$partnerId/index'
+import { Route as DashboardJobsCategoriesIndexRouteImport } from './routes/dashboard/jobs/categories/index'
 import { Route as DashboardInvestorsCorporateIndexRouteImport } from './routes/dashboard/investors/corporate/index'
 import { Route as DashboardInvestorsInvestorIdIndexRouteImport } from './routes/dashboard/investors/$investorId/index'
 import { Route as DashboardBlogsCreateIndexRouteImport } from './routes/dashboard/blogs/create/index'
@@ -683,6 +684,12 @@ const DashboardPartnersPartnerIdIndexRoute =
     path: '/',
     getParentRoute: () => DashboardPartnersPartnerIdRoute,
   } as any)
+const DashboardJobsCategoriesIndexRoute =
+  DashboardJobsCategoriesIndexRouteImport.update({
+    id: '/categories/',
+    path: '/categories/',
+    getParentRoute: () => DashboardJobsRouteRoute,
+  } as any)
 const DashboardInvestorsCorporateIndexRoute =
   DashboardInvestorsCorporateIndexRouteImport.update({
     id: '/corporate/',
@@ -952,6 +959,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blogs/create/': typeof DashboardBlogsCreateIndexRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
+  '/dashboard/jobs/categories/': typeof DashboardJobsCategoriesIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
   '/dashboard/properties/$propertyId/': typeof DashboardPropertiesPropertyIdIndexRoute
   '/dashboard/properties/investments/': typeof DashboardPropertiesInvestmentsIndexRoute
@@ -1062,6 +1070,7 @@ export interface FileRoutesByTo {
   '/dashboard/blogs/create': typeof DashboardBlogsCreateIndexRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate': typeof DashboardInvestorsCorporateIndexRoute
+  '/dashboard/jobs/categories': typeof DashboardJobsCategoriesIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdIndexRoute
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdIndexRoute
   '/dashboard/properties/investments': typeof DashboardPropertiesInvestmentsIndexRoute
@@ -1194,6 +1203,7 @@ export interface FileRoutesById {
   '/dashboard/blogs/create/': typeof DashboardBlogsCreateIndexRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
+  '/dashboard/jobs/categories/': typeof DashboardJobsCategoriesIndexRoute
   '/dashboard/partners/$partnerId/': typeof DashboardPartnersPartnerIdIndexRoute
   '/dashboard/properties/$propertyId/': typeof DashboardPropertiesPropertyIdIndexRoute
   '/dashboard/properties/investments/': typeof DashboardPropertiesInvestmentsIndexRoute
@@ -1327,6 +1337,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/create/'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
+    | '/dashboard/jobs/categories/'
     | '/dashboard/partners/$partnerId/'
     | '/dashboard/properties/$propertyId/'
     | '/dashboard/properties/investments/'
@@ -1437,6 +1448,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/create'
     | '/dashboard/investors/$investorId'
     | '/dashboard/investors/corporate'
+    | '/dashboard/jobs/categories'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/investments'
@@ -1568,6 +1580,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/create/'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
+    | '/dashboard/jobs/categories/'
     | '/dashboard/partners/$partnerId/'
     | '/dashboard/properties/$propertyId/'
     | '/dashboard/properties/investments/'
@@ -2349,6 +2362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPartnersPartnerIdIndexRouteImport
       parentRoute: typeof DashboardPartnersPartnerIdRoute
     }
+    '/dashboard/jobs/categories/': {
+      id: '/dashboard/jobs/categories/'
+      path: '/categories'
+      fullPath: '/dashboard/jobs/categories/'
+      preLoaderRoute: typeof DashboardJobsCategoriesIndexRouteImport
+      parentRoute: typeof DashboardJobsRouteRoute
+    }
     '/dashboard/investors/corporate/': {
       id: '/dashboard/investors/corporate/'
       path: '/corporate'
@@ -2615,10 +2635,12 @@ const DashboardInvestorsRouteRouteWithChildren =
 
 interface DashboardJobsRouteRouteChildren {
   DashboardJobsCreateRoute: typeof DashboardJobsCreateRoute
+  DashboardJobsCategoriesIndexRoute: typeof DashboardJobsCategoriesIndexRoute
 }
 
 const DashboardJobsRouteRouteChildren: DashboardJobsRouteRouteChildren = {
   DashboardJobsCreateRoute: DashboardJobsCreateRoute,
+  DashboardJobsCategoriesIndexRoute: DashboardJobsCategoriesIndexRoute,
 }
 
 const DashboardJobsRouteRouteWithChildren =
