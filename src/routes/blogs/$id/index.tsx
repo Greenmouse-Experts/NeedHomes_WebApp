@@ -67,10 +67,10 @@ function RouteComponent() {
               {(resp) => {
                 const data = resp.data as BlogDetails;
                 return (
-                  <article className="w-full flex-1 bg-red-500 p-2">
+                  <article className="w-full flex-1 bg-base-100 p-2">
                     {/* Featured Image */}
                     {data.photoUrl && data.photoUrl.length > 0 && (
-                      <div className="mb-8 h-[400px] w-full overflow-hidden rounded-xl bg-gray-200 shadow-lg">
+                      <div className="mb-8 h-[400px]  w-full overflow-hidden rounded-xl bg-gray-200 shadow-lg">
                         <img
                           src={data.photoUrl[0]}
                           alt="Blog cover"
@@ -80,7 +80,7 @@ function RouteComponent() {
                     )}
 
                     {/* Content Card */}
-                    <div className="rounded-xl bg-white p-8 sm:p-12 shadow-md">
+                    <div className="rounded-xl bg-white p-8 sm:p-12 shadow-md ring fade">
                       {/* Title Section */}
                       <div className="mb-8">
                         <h1 className="mb-6 text-4xl font-bold text-gray-900 sm:text-5xl leading-tight">
