@@ -111,6 +111,14 @@ function RouteComponent() {
         nav({ to: `/dashboard/blogs/${item.id}/edit` });
       },
     },
+
+    {
+      key: "view",
+      label: "View",
+      action: (item) => {
+        return nav({ to: `/dashboard/blogs/${item.id}/details` });
+      },
+    },
     {
       key: "status",
       label: "publish",
@@ -126,13 +134,6 @@ function RouteComponent() {
       },
       render: (item) => {
         return <>{item.isPublished ? "Unpublish" : "Publish"}</>;
-      },
-    },
-    {
-      key: "view",
-      label: "View",
-      action: (item) => {
-        return nav({ to: `/dashboard/blogs/${item.id}/details` });
       },
     },
     {
