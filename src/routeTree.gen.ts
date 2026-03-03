@@ -85,6 +85,7 @@ import { Route as DashboardSubAdminsIndexRouteImport } from './routes/dashboard/
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/partners/index'
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications/index'
+import { Route as DashboardJobsIndexRouteImport } from './routes/dashboard/jobs/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
 import { Route as DashboardChatIndexRouteImport } from './routes/dashboard/chat/index'
 import { Route as DashboardBlogsIndexRouteImport } from './routes/dashboard/blogs/index'
@@ -534,6 +535,11 @@ const DashboardNotificationsIndexRoute =
     path: '/',
     getParentRoute: () => DashboardNotificationsRouteRoute,
   } as any)
+const DashboardJobsIndexRoute = DashboardJobsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardJobsRouteRoute,
+} as any)
 const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -931,6 +937,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
+  '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -1012,7 +1019,6 @@ export interface FileRoutesByTo {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
-  '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
@@ -1042,6 +1048,7 @@ export interface FileRoutesByTo {
   '/dashboard/blogs': typeof DashboardBlogsIndexRoute
   '/dashboard/chat': typeof DashboardChatIndexRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
+  '/dashboard/jobs': typeof DashboardJobsIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
   '/dashboard/partners': typeof DashboardPartnersIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
@@ -1175,6 +1182,7 @@ export interface FileRoutesById {
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
+  '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -1309,6 +1317,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/investors/'
+    | '/dashboard/jobs/'
     | '/dashboard/notifications/'
     | '/dashboard/partners/'
     | '/dashboard/settings/'
@@ -1390,7 +1399,6 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
-    | '/dashboard/jobs'
     | '/dashboard/properties'
     | '/dashboard/announcements'
     | '/investors/announcements'
@@ -1420,6 +1428,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
+    | '/dashboard/jobs'
     | '/dashboard/notifications'
     | '/dashboard/partners'
     | '/dashboard/settings'
@@ -1552,6 +1561,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/investors/'
+    | '/dashboard/jobs/'
     | '/dashboard/notifications/'
     | '/dashboard/partners/'
     | '/dashboard/settings/'
@@ -2180,6 +2190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardNotificationsIndexRouteImport
       parentRoute: typeof DashboardNotificationsRouteRoute
     }
+    '/dashboard/jobs/': {
+      id: '/dashboard/jobs/'
+      path: '/'
+      fullPath: '/dashboard/jobs/'
+      preLoaderRoute: typeof DashboardJobsIndexRouteImport
+      parentRoute: typeof DashboardJobsRouteRoute
+    }
     '/dashboard/investors/': {
       id: '/dashboard/investors/'
       path: '/'
@@ -2635,11 +2652,13 @@ const DashboardInvestorsRouteRouteWithChildren =
 
 interface DashboardJobsRouteRouteChildren {
   DashboardJobsCreateRoute: typeof DashboardJobsCreateRoute
+  DashboardJobsIndexRoute: typeof DashboardJobsIndexRoute
   DashboardJobsCategoriesIndexRoute: typeof DashboardJobsCategoriesIndexRoute
 }
 
 const DashboardJobsRouteRouteChildren: DashboardJobsRouteRouteChildren = {
   DashboardJobsCreateRoute: DashboardJobsCreateRoute,
+  DashboardJobsIndexRoute: DashboardJobsIndexRoute,
   DashboardJobsCategoriesIndexRoute: DashboardJobsCategoriesIndexRoute,
 }
 

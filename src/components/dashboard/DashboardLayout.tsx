@@ -18,16 +18,13 @@ import {
   Bell,
   LogOut,
   List,
+  Briefcase,
 } from "lucide-react";
-import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import {
-  ChatBubbleLeftIcon,
-  CheckBadgeIcon,
-} from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 
 interface NavItem {
   label: string;
@@ -125,14 +122,18 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
       { label: "Categories", to: "/dashboard/blogs/categories", icon: List },
     ],
   },
+  {
+    id: "jobs",
+    title: "JOBS",
+    items: [
+      { label: "Jobs", to: "/dashboard/jobs", icon: Briefcase },
+      { label: "Categories", to: "/dashboard/jobs/category", icon: List },
+      { label: "Create", to: "/dashboard/jobs/create", icon: Plus },
+    ],
+  },
   { label: "CONVERSATIONS", to: "/dashboard/chat", icon: ChatBubbleLeftIcon },
   { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
   { label: "NOTIFICATIONS", to: "/dashboard/notifications", icon: Bell },
-  // {
-  //   label: "SUBSCRIPTIONS",
-  //   to: "/dashboard/subscriptions",
-  //   icon: CheckBadgeIcon,
-  // },
   { label: "SETTING", to: "/dashboard/settings", icon: Settings },
 ];
 
@@ -157,6 +158,7 @@ export function DashboardLayout({
     transaction: true,
     kyc: true,
     blog: true,
+    jobs: true,
   });
 
   const toggleSection = (section: string) => {
@@ -244,7 +246,7 @@ export function DashboardLayout({
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {NAVIGATION_CONFIG.map((item, index) => {
+          {NAVIGATION_CONFIG.map((item) => {
             if ("items" in item) {
               return (
                 <div key={item.id}>
