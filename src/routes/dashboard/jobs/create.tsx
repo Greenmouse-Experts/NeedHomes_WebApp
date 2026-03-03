@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import apiClient from "@/api/simpleApi";
@@ -81,20 +81,28 @@ function RouteComponent() {
               },
             })}
           />
-          <SimpleSelect
-            label="Category"
-            {...methods.register("categoryId")}
-            route="/careers/categories"
-            render={(item: { name: string; id: string }) => {
+          <Controller
+            control={methods.control}
+            name="categoryId"
+            render={({ field }) => {
               return (
-                <>
-                  <option className="" value={item.id}>
-                    {item.name}
-                  </option>
-                </>
+                <SimpleSelect
+                  {...field}
+                  label="Category"
+                  route="/careers/categories"
+                  render={(item: { name: string; id: string }) => {
+                    return (
+                      <>
+                        <option className="" value={item.id}>
+                          {item.name}
+                        </option>
+                      </>
+                    );
+                  }}
+                ></SimpleSelect>
               );
             }}
-          ></SimpleSelect>
+          ></Controller>
           <LocalSelect label="Job Type" {...methods.register("jobType")}>
             <option value="FULL_TIME">Full Time</option>
             <option value="PART_TIME">Part Time</option>

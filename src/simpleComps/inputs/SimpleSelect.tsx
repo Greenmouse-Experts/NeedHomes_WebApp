@@ -48,6 +48,7 @@ export default function SimpleSelect<
   }, [value]);
 
   useEffect(() => {
+    console.log(internalValue);
     if (internalValue !== value && onChange) {
       onChange(internalValue);
     }

@@ -127,7 +127,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     title: "JOBS",
     items: [
       { label: "Jobs", to: "/dashboard/jobs", icon: Briefcase },
-      { label: "Categories", to: "/dashboard/jobs/category", icon: List },
+      { label: "Categories", to: "/dashboard/jobs/categories", icon: List },
       { label: "Create", to: "/dashboard/jobs/create", icon: Plus },
     ],
   },
