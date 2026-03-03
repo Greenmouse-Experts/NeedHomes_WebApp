@@ -124,7 +124,7 @@ function RouteComponent() {
         </div>
       </div>
       <div className="my-4 container mx-auto">
-        <h2 className="text-xl font-bold">Latest News</h2>
+        <h2 className="text-2xl font-bold">Latest News</h2>
         <div className="mt-4">
           <QueryCompLayout query={query}>
             {(resp) => {
@@ -203,6 +203,7 @@ function RouteComponent() {
         </div>
       </div>
       <div className="mx-auto container">
+        <h2 className="text-2xl font-bold mb-8">All News</h2>
         <PageLoader query={query}>
           {(resp) => {
             let data = resp.data.data as Blog[];
