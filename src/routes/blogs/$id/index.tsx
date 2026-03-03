@@ -53,49 +53,47 @@ function RouteComponent() {
   });
 
   return (
-    <ThemeProvider className="bg-gray-50 min-h-screen py-12">
-      <div className="container ring fade rounded-xl mx-auto">
+    <ThemeProvider className="bg-white min-h-screen py-8 sm:py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* Top Navigation */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between w-full px-4 sm:px-6 py-4">
-            <BackButton />
-          </div>
+        <div className="mb-8 flex items-center justify-between">
+          <BackButton />
         </div>
 
         <PageLoader query={query}>
           {(resp) => {
             const data = resp.data as BlogDetails;
             return (
-              <article className="w-full">
+              <article className="w-full rounded-lg bg-white shadow-sm ring-1 ring-gray-200">
                 {/* Featured Image */}
                 {data.photoUrl && data.photoUrl.length > 0 && (
-                  <div className="w-full h-96 bg-gray-200 overflow-hidden">
+                  <div className="h-96 w-full overflow-hidden rounded-t-lg bg-gray-200">
                     <img
                       src={data.photoUrl[0]}
                       alt="Blog cover"
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                 )}
 
                 {/* Title Section */}
-                <div className="bg-white px-4 sm:px-6 pt-8 pb-6 sm:pt-12 sm:pb-8">
-                  <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                <div className="border-b border-gray-100 px-6 py-10 sm:px-10 sm:py-12">
+                  <h1 className="mb-6 text-4xl font-bold text-gray-900 sm:text-5xl">
                     {data.title}
                   </h1>
 
                   {/* Author and Date */}
-                  <div className="flex items-center gap-4 mb-4">
+                  <div className="mb-6 flex items-center gap-4">
                     <img
                       src={data.author.profilePicture}
                       alt={`${data.author.firstName} ${data.author.lastName}`}
-                      className="w-12 h-12 rounded-full object-cover"
+                      className="h-14 w-14 rounded-full object-cover ring-1 ring-gray-200"
                     />
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">
+                      <div className="font-semibold text-gray-900">
                         {data.author.firstName} {data.author.lastName}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-500">
                         {new Date(data.createdAt).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "long",
@@ -107,11 +105,11 @@ function RouteComponent() {
 
                   {/* Categories */}
                   {data.blogCategories.length > 0 && (
-                    <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+                    <div className="flex flex-wrap gap-2 pt-6">
                       {data.blogCategories.map((cat) => (
                         <span
                           key={cat.id}
-                          className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium hover:bg-gray-200 transition"
+                          className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 hover:bg-blue-100 transition"
                         >
                           {cat.name}
                         </span>
@@ -121,21 +119,21 @@ function RouteComponent() {
                 </div>
 
                 {/* Content */}
-                <div className="bg-white px-4 sm:px-6 py-8 border-b border-gray-200">
+                <div className="border-b border-gray-100 px-6 py-10 sm:px-10">
                   <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
                     {data.content}
                   </div>
                 </div>
 
                 {/* Metadata */}
-                <div className="bg-white px-4 sm:px-6 py-6 text-sm text-gray-600 border-b border-gray-200">
+                <div className="border-b border-gray-100 px-6 py-6 sm:px-10">
                   <div className="flex flex-wrap gap-6">
                     {data._count.comments > 0 && (
-                      <div>
-                        <span className="font-medium text-gray-900">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-900">
                           {data._count.comments}
                         </span>
-                        <span className="ml-2">
+                        <span className="text-sm text-gray-600">
                           {data._count.comments === 1 ? "Comment" : "Comments"}
                         </span>
                       </div>
@@ -145,10 +143,10 @@ function RouteComponent() {
 
                 {/* Deleted State Warning */}
                 {data.deletedAt && (
-                  <div className="bg-red-50 px-4 sm:px-6 py-4 border-b border-red-200">
+                  <div className="border-b border-red-100 bg-red-50 px-6 py-4 sm:px-10">
                     <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-red-600 rounded-full flex-shrink-0"></div>
-                      <span className="text-red-700">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-red-600"></div>
+                      <span className="text-sm font-medium text-red-700">
                         This post has been deleted
                       </span>
                     </div>
@@ -157,8 +155,8 @@ function RouteComponent() {
 
                 {/* Comments Section */}
                 {data.allowComments && (
-                  <div className="bg-white px-4 sm:px-6 py-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-8">
+                  <div className="px-6 py-10 sm:px-10">
+                    <h2 className="mb-8 text-2xl font-bold text-gray-900">
                       Comments
                     </h2>
                     <ListComment id={id} />

@@ -42,43 +42,52 @@ function BlogCard({ blog }: { blog: Blog }) {
     <Link
       to="/blogs/$id"
       params={{ id: blog.id }}
-      className="bg-white ring fade rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col"
     >
       {blog.photoUrl && blog.photoUrl.length > 0 && (
-        <img
-          src={blog.photoUrl[0]}
-          alt={blog.title}
-          className="w-full h-48 object-cover"
-        />
+        <div className="relative h-64 overflow-hidden bg-gray-200">
+          <img
+            src={blog.photoUrl[0]}
+            alt={blog.title}
+            className="w-full h-full object-cover"
+          />
+        </div>
       )}
-      <div className="p-4">
-        <h3 className="text-lg font-bold mb-2">{blog.title}</h3>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            {new Date(blog.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </span>
+          <h3 className="text-xl font-bold mt-2 text-gray-900 line-clamp-2">
+            {blog.title}
+          </h3>
+        </div>
+        <p className="text-gray-600 text-sm mb-6 line-clamp-3 flex-grow">
           {blog.content}
         </p>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <img
-              src={blog.author.profilePicture}
-              alt={`${blog.author.firstName} ${blog.author.lastName}`}
-              className="w-8 h-8 rounded-full"
-            />
-            <span className="text-sm font-medium">{`${blog.author.firstName} ${blog.author.lastName}`}</span>
+        <div className="pt-4 border-t border-gray-200">
+          <div className="flex items-center gap-3">
+            {blog.author.profilePicture && (
+              <img
+                src={blog.author.profilePicture}
+                alt={`${blog.author.firstName} ${blog.author.lastName}`}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+            )}
+            <div>
+              <p className="text-sm font-medium text-gray-900">
+                {`${blog.author.firstName} ${blog.author.lastName}`}
+              </p>
+              <p className="text-xs text-gray-500">
+                {blog._count.comments}{" "}
+                {blog._count.comments === 1 ? "comment" : "comments"}
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-wrap gap-2 mb-3">
-          {blog.blogCategories.map((category) => (
-            <span
-              key={category.id}
-              className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
-            >
-              {category.name}
-            </span>
-          ))}
-        </div>
-        <div className="flex justify-between text-xs text-gray-500">
-          <span>{blog._count.comments} comments</span>
-          <span>{blog.isPublished ? "Published" : "Draft"}</span>
         </div>
       </div>
     </Link>

@@ -37,6 +37,7 @@ import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as PartnersRouteRouteImport } from './routes/partners/route'
 import { Route as InvestorsRouteRouteImport } from './routes/investors/route'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
+import { Route as BlogsRouteRouteImport } from './routes/blogs/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
 import { Route as PartnersIndexRouteImport } from './routes/partners/index'
@@ -276,6 +277,11 @@ const DashboardRouteRoute = DashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsRouteRoute = BlogsRouteRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -312,9 +318,9 @@ const CoporateIndexRoute = CoporateIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogsIndexRoute = BlogsIndexRouteImport.update({
-  id: '/blogs/',
-  path: '/blogs/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogsRouteRoute,
 } as any)
 const PartnersTransactionsRoute = PartnersTransactionsRouteImport.update({
   id: '/transactions',
@@ -536,9 +542,9 @@ const DashboardBlogsIndexRoute = DashboardBlogsIndexRouteImport.update({
   getParentRoute: () => DashboardBlogsRouteRoute,
 } as any)
 const BlogsIdIndexRoute = BlogsIdIndexRouteImport.update({
-  id: '/blogs/$id/',
-  path: '/blogs/$id/',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id/',
+  path: '/$id/',
+  getParentRoute: () => BlogsRouteRoute,
 } as any)
 const PartnersPropertiesPropertyIdRoute =
   PartnersPropertiesPropertyIdRouteImport.update({
@@ -830,6 +836,7 @@ const DashboardInvestorsCorporateInvestorIdKycRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blogs': typeof BlogsRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/investors': typeof InvestorsRouteRouteWithChildren
   '/partners': typeof PartnersRouteRouteWithChildren
@@ -1067,6 +1074,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blogs': typeof BlogsRouteRouteWithChildren
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/investors': typeof InvestorsRouteRouteWithChildren
   '/partners': typeof PartnersRouteRouteWithChildren
@@ -1197,6 +1205,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blogs'
     | '/dashboard'
     | '/investors'
     | '/partners'
@@ -1433,6 +1442,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/blogs'
     | '/dashboard'
     | '/investors'
     | '/partners'
@@ -1562,6 +1572,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlogsRouteRoute: typeof BlogsRouteRouteWithChildren
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   InvestorsRouteRoute: typeof InvestorsRouteRouteWithChildren
   PartnersRouteRoute: typeof PartnersRouteRouteWithChildren
@@ -1590,11 +1601,9 @@ export interface RootRouteChildren {
   TestRoute: typeof TestRoute
   VerifyRoute: typeof VerifyRoute
   VerifyPartnerRoute: typeof VerifyPartnerRoute
-  BlogsIndexRoute: typeof BlogsIndexRoute
   CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
-  BlogsIdIndexRoute: typeof BlogsIdIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
   PartnerRecoverForgotPasswordIndexRoute: typeof PartnerRecoverForgotPasswordIndexRoute
   PartnerRecoverForgotPasswordResetIndexRoute: typeof PartnerRecoverForgotPasswordResetIndexRoute
@@ -1798,6 +1807,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -1849,10 +1865,10 @@ declare module '@tanstack/react-router' {
     }
     '/blogs/': {
       id: '/blogs/'
-      path: '/blogs'
+      path: '/'
       fullPath: '/blogs/'
       preLoaderRoute: typeof BlogsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof BlogsRouteRoute
     }
     '/partners/transactions': {
       id: '/partners/transactions'
@@ -2143,10 +2159,10 @@ declare module '@tanstack/react-router' {
     }
     '/blogs/$id/': {
       id: '/blogs/$id/'
-      path: '/blogs/$id'
+      path: '/$id'
       fullPath: '/blogs/$id/'
       preLoaderRoute: typeof BlogsIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof BlogsRouteRoute
     }
     '/partners/properties/$propertyId': {
       id: '/partners/properties/$propertyId'
@@ -2486,6 +2502,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface BlogsRouteRouteChildren {
+  BlogsIndexRoute: typeof BlogsIndexRoute
+  BlogsIdIndexRoute: typeof BlogsIdIndexRoute
+}
+
+const BlogsRouteRouteChildren: BlogsRouteRouteChildren = {
+  BlogsIndexRoute: BlogsIndexRoute,
+  BlogsIdIndexRoute: BlogsIdIndexRoute,
+}
+
+const BlogsRouteRouteWithChildren = BlogsRouteRoute._addFileChildren(
+  BlogsRouteRouteChildren,
+)
 
 interface DashboardBlogsRouteRouteChildren {
   DashboardBlogsIndexRoute: typeof DashboardBlogsIndexRoute
@@ -2942,6 +2972,7 @@ const PartnersRouteRouteWithChildren = PartnersRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlogsRouteRoute: BlogsRouteRouteWithChildren,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   InvestorsRouteRoute: InvestorsRouteRouteWithChildren,
   PartnersRouteRoute: PartnersRouteRouteWithChildren,
@@ -2970,11 +3001,9 @@ const rootRouteChildren: RootRouteChildren = {
   TestRoute: TestRoute,
   VerifyRoute: VerifyRoute,
   VerifyPartnerRoute: VerifyPartnerRoute,
-  BlogsIndexRoute: BlogsIndexRoute,
   CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
-  BlogsIdIndexRoute: BlogsIdIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,
   PartnerRecoverForgotPasswordIndexRoute:
     PartnerRecoverForgotPasswordIndexRoute,
