@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import apiClient from "@/api/simpleApi";
@@ -120,9 +120,9 @@ function RouteComponent() {
       <div className="container mx-auto ">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900">Jobs Management</h1>
-          <button className="btn btn-primary bg-purple-600 hover:bg-purple-700 border-purple-600">
+          <Link to="/dashboard/jobs/create" className="btn btn-primary ">
             + Add New Job
-          </button>
+          </Link>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
