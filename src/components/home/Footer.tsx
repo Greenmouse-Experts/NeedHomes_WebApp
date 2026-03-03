@@ -1,89 +1,89 @@
-import { Link } from '@tanstack/react-router'
-import { Phone, Mail, MailIcon, MailCheck } from 'lucide-react'
+import { Link } from "@tanstack/react-router";
+import { Phone, Mail, MailIcon, MailCheck } from "lucide-react";
 
 interface Links {
-  name: string
-  path?: string
-  icon?: React.ReactNode
+  name: string;
+  path?: string;
+  icon?: React.ReactNode;
 }
 
 const companyLinks = [
   {
-    name: 'About Us',
-    path: '/about-us',
+    name: "About Us",
+    path: "/about-us",
   },
   {
-    name: 'Leadership',
-    path: '/leadership',
+    name: "Leadership",
+    path: "/leadership",
   },
   {
-    name: 'Careers',
-    path: '/careers',
+    name: "Careers",
+    path: "/careers",
   },
   {
-    name: 'Partner with us',
-    path: '/partner-with-us',
+    name: "Partner with us",
+    path: "/partner-with-us",
   },
   {
-    name: 'Contact Us',
-    path: '/contact-us',
+    name: "Contact Us",
+    path: "/contact-us",
   },
-] satisfies Links[]
+] satisfies Links[];
 
 const investment_links: Links[] = [
   {
-    name: 'Fractional Ownership',
-    path: '/',
+    name: "Fractional Ownership",
+    path: "/",
   },
   {
-    name: 'Co-Development',
-    path: '/',
+    name: "Co-Development",
+    path: "/",
   },
   {
-    name: 'Land Banking',
-    path: '/',
+    name: "Land Banking",
+    path: "/",
   },
   {
-    name: 'Outright Purchase',
-    path: '/',
+    name: "Outright Purchase",
+    path: "/",
   },
   {
-    name: 'Save to Own',
-    path: '/',
+    name: "Save to Own",
+    path: "/",
   },
-]
+];
 
 const resources_links: Links[] = [
   {
-    name: 'Blog',
-    path: '/blog',
+    name: "Blog",
+    path: "/blogs",
   },
   {
-    name: 'FAQs',
-    path: '/faqs',
+    name: "FAQs",
+    path: "/faqs",
   },
   {
-    name: 'How it works',
-    path: '/how-it-works',
+    name: "How it works",
+    path: "/how-it-works",
   },
-]
+];
 
 const support_links = [
   {
-    name: '+234 702 500 5857',
-    path: 'tel:+2347025005857',
+    name: "+234 702 500 5857",
+    path: "tel:+2347025005857",
     icon: <Phone className="w-4 h-4 shrink-0" />,
   },
   {
-    name: 'sales@needhomes.ng',
-    path: 'mailto:sales@needhomes.ng',
+    name: "sales@needhomes.ng",
+    path: "mailto:sales@needhomes.ng",
     icon: <Mail className="w-4 h-4 shrink-0" />,
   },
-]
+];
 
 export default function Footer() {
   return (
-    <div className="pt-12 pb-2" style={{ background: '#39383E' }}>
+    <div className="pt-12 pb-2" style={{ background: "#39383E" }}>
       <footer className="contain mx-auto px-4 md:px-6 *:text-left">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="max-w-2xs space-y-3 text-white flex-1">
@@ -104,18 +104,24 @@ export default function Footer() {
             © 2025 Needhomes Property Investment Limited. All rights reserved.
           </p>
           <div className="md:ml-auto space-x-2 flex gap-2">
-            <Link to="/privacy-policy" className="hover:text-[var(--color-orange)] transition-colors">
+            <Link
+              to="/privacy-policy"
+              className="hover:text-[var(--color-orange)] transition-colors"
+            >
               Privacy Policy
             </Link>
             <span>•</span>
-            <Link to="/terms-and-conditions" className="hover:text-[var(--color-orange)] transition-colors">
+            <Link
+              to="/terms-and-conditions"
+              className="hover:text-[var(--color-orange)] transition-colors"
+            >
               Terms and Conditions
             </Link>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 const RenderLinks = ({ title, links }: { title: string; links: Links[] }) => {
@@ -126,15 +132,17 @@ const RenderLinks = ({ title, links }: { title: string; links: Links[] }) => {
         {links.map((item: Links, index) => {
           return (
             <li key={item.name + index}>
-              <Link to={item.path || '/'} className="hover:text-[var(--color-orange)] transition-colors flex items-center gap-2">
+              <Link
+                to={item.path || "/"}
+                className="hover:text-[var(--color-orange)] transition-colors flex items-center gap-2"
+              >
                 {item.icon && item.icon}
                 {item.name}
               </Link>
             </li>
-          )
+          );
         })}
       </ul>
     </div>
-  )
-}
-
+  );
+};
