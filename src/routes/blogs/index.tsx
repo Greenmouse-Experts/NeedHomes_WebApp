@@ -4,6 +4,8 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import SearchBar from "../-components/Searchbar";
+import { useState } from "react";
+import EmptyList from "@/simpleComps/EmptyList";
 
 interface BlogCategory {
   id: string;
@@ -88,10 +90,11 @@ export const Route = createFileRoute("/blogs/")({
 });
 
 function RouteComponent() {
+  const [search, setSearch] = useState("");
   const query = useQuery<ApiResponseV2<Blog[]>>({
-    queryKey: ["admin-blogs"],
+    queryKey: ["user-blogs", search],
     queryFn: async () => {
-      let resp = await apiClient.get("/blogs");
+      let resp = await apiClient.get("/blogs", { params: { search } });
       return resp.data;
     },
   });
@@ -106,7 +109,7 @@ function RouteComponent() {
             <p className="text-blue-100 text-lg mb-6">
               Discover insights, stories, and updates from our team
             </p>
-            <SearchBar />
+            <SearchBar value={search} onChange={setSearch} />
           </div>
         </div>
       </div>
@@ -115,11 +118,14 @@ function RouteComponent() {
           {(resp) => {
             let data = resp.data.data as Blog[];
             return (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {data.map((blog) => (
-                  <BlogCard key={blog.id} blog={blog} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {data.map((blog) => (
+                    <BlogCard key={blog.id} blog={blog} />
+                  ))}
+                </div>
+                <EmptyList list={data} />
+              </>
             );
           }}
         </PageLoader>
