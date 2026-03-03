@@ -124,6 +124,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         "pricePerShare",
         "minimumInstallmentAmount",
       ] as (typeof data)[string];
+      data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const calc_payload = calculate_fees(data, keys);
       const payload = {
         ...calc_payload,
