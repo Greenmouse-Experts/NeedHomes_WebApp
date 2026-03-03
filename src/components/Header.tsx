@@ -78,7 +78,7 @@ const dropdownMenus = {
   Resources: [
     {
       name: "Blog",
-      path: "/blog",
+      path: "/blogs",
       description: "Latest updates & insights",
       icon: "📝",
     },
