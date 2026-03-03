@@ -10,6 +10,7 @@ export default function Categories() {
   });
   //@ts-ignore
   const cat = selected["category"];
+  const decoded = cat ? decodeURIComponent(cat) : null;
   const query = useQuery({
     queryKey: ["blog-categories"],
     queryFn: async () => {
@@ -19,7 +20,9 @@ export default function Categories() {
   });
   return (
     <div className="rounded-box ring fade">
-      <h2 className="p-4 border-b fade text-xl font-bold">Categories</h2>
+      <h2 className="p-4 border-b fade text-lg font-bold rounded-t-box bg-primary text-primary-content">
+        Categories
+      </h2>
       <div className="p-2">
         <QueryCompLayout query={query}>
           {(resp) => {
@@ -27,13 +30,26 @@ export default function Categories() {
             return (
               <ul className="menu w-full gap-1">
                 {data.map((item) => {
+                  if (cat == item.name) {
+                    return (
+                      <li className="" key={item.id}>
+                        <Link
+                          to={`/blogs`}
+                          search={{ category: encodeURIComponent(item.name) }}
+                          className="p-2 capitalize menu-active "
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    );
+                  }
                   return (
                     <>
                       <li className="" key={item.id}>
                         <Link
                           to={`/blogs`}
                           search={{ category: encodeURIComponent(item.name) }}
-                          className="p-2 capitalize"
+                          className="p-2 capitalize "
                         >
                           {item.name}
                         </Link>
