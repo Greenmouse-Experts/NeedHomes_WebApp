@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import apiClient from "@/api/simpleApi";
+import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { usePagination } from "@/helpers/pagination";
@@ -21,15 +21,6 @@ interface Job {
   createdAt: string;
 }
 
-interface JobsResponse {
-  data: Job[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-  };
-}
-
 function RouteComponent() {
   const navigate = useNavigate();
   const pagination = usePagination();
@@ -37,7 +28,7 @@ function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedJobType, setSelectedJobType] = useState("");
 
-  const query = useQuery({
+  const query = useQuery<ApiResponseV2<Job[]>>({
     queryKey: [
       "jobs",
       pagination.page,
@@ -47,16 +38,19 @@ function RouteComponent() {
       selectedJobType,
     ],
     queryFn: async () => {
-      const response = await apiClient.get<JobsResponse>("/careers/admin/all", {
-        params: {
-          page: pagination.page,
-          limit: pagination.pageSize,
-          search: searchQuery || undefined,
-          categoryId: selectedCategory || undefined,
-          jobType: selectedJobType || undefined,
+      const response = await apiClient.get<ApiResponseV2<Job[]>>(
+        "/careers/admin/all",
+        {
+          params: {
+            page: pagination.page,
+            limit: pagination.pageSize,
+            search: searchQuery || undefined,
+            categoryId: selectedCategory || undefined,
+            jobType: selectedJobType || undefined,
+          },
         },
-      });
-      return response.data.data;
+      );
+      return response.data;
     },
   });
 
@@ -69,6 +63,9 @@ function RouteComponent() {
     {
       key: "category",
       label: "Category",
+      render: (value) => {
+        <>{value.name}</>;
+      },
     },
     {
       key: "jobType",
@@ -174,13 +171,16 @@ function RouteComponent() {
             {(resp) => {
               const data = resp.data.data;
               return (
-                <CustomTable
-                  data={data}
-                  columns={columns}
-                  actions={actions}
-                  totalCount={resp?.length || 0}
-                  paginationProps={pagination}
-                />
+                <>
+                  {/*{JSON.stringify(data)}*/}
+                  <CustomTable
+                    data={data}
+                    columns={columns}
+                    actions={actions}
+                    // totalCount={data?.length || 0}
+                    paginationProps={pagination}
+                  />
+                </>
               );
             }}
           </PageLoader>
