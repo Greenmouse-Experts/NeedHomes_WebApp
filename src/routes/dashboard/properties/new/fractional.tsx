@@ -99,6 +99,7 @@ function RouteComponent() {
         "pricePerShare",
         "minimumInstallmentAmount",
       ] as (typeof data)[string];
+      data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const new_payload = calculate_fees(data, keys);
       const payload: any = {
         ...new_payload,
