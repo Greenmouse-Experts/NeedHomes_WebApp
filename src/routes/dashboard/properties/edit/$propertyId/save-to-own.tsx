@@ -168,6 +168,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
           <DefaultForm
             update
+            disable_base_price
             docUpload={docUpload}
             videoUpload={videoUpload}
             useImagesProps={useImageProps}
@@ -219,7 +220,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                   render={({ field }) => (
                     <SimpleInput
                       {...field}
-                      label="Savings Duration (Months)"
+                      label="Savings Duration"
                       type="number"
                       icon={<Clock size={16} />}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}

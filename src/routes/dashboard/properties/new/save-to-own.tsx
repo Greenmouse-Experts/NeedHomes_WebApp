@@ -167,6 +167,7 @@ function RouteComponent() {
           </div>
 
           <DefaultForm
+            disable_base_price
             docUpload={docUpload}
             videoUpload={videoUpload}
             useImagesProps={useImageProps}
@@ -218,7 +219,7 @@ function RouteComponent() {
                   render={({ field }) => (
                     <SimpleInput
                       {...field}
-                      label="Savings Duration (Months)"
+                      label="Savings Duration"
                       type="number"
                       icon={<Clock size={16} />}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
