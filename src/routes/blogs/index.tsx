@@ -149,7 +149,7 @@ function RouteComponent() {
                               />
                             </div>
                           )}
-                          <div className="p-8">
+                          <div className="p-8 flex flex-col">
                             <div className="mb-4">
                               <span className="inline-block text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full">
                                 Latest
@@ -171,7 +171,7 @@ function RouteComponent() {
                             <p className="text-gray-600 text-base mb-6 line-clamp-4">
                               {latest.content}
                             </p>
-                            <div className="flex items-center gap-4 pt-4 border-t border-gray-200">
+                            <div className="flex mt-auto items-center gap-4 pt-4 border-t border-gray-200">
                               {latest.author.profilePicture && (
                                 <img
                                   src={latest.author.profilePicture}
@@ -179,7 +179,7 @@ function RouteComponent() {
                                   className="w-12 h-12 rounded-full object-cover"
                                 />
                               )}
-                              <div>
+                              <div className="">
                                 <p className="text-sm font-medium text-gray-900">
                                   {`${latest.author.firstName} ${latest.author.lastName}`}
                                 </p>
