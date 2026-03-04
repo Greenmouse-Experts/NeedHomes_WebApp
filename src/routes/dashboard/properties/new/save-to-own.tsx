@@ -112,7 +112,7 @@ function RouteComponent() {
         ...uploadedGalleryUrls,
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
-
+      data["basePrice"] = data["targetPropertyPrice"];
       const new_payload = calculate_fees(data, ["targetPropertyPrice"]);
       const new_p = new_payload;
       const total_price =
@@ -124,6 +124,7 @@ function RouteComponent() {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
+        totalPrice: total_price,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
