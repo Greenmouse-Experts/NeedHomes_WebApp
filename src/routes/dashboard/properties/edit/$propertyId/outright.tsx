@@ -44,6 +44,7 @@ import { toast } from "sonner";
 import DefaultForm from "../../-components/DefaultForm";
 import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
+import calculate_fees from "../../-components/calculate_fees";
 
 export const Route = createFileRoute(
   "/dashboard/properties/edit/$propertyId/outright",
@@ -133,30 +134,15 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      const totalPrice =
-        Number(data.basePrice * 100) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount * 100) || 0),
-              0,
-            )
-          : 0);
+      const calc_payload = calculate_fees(data);
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
 
       let payload = {
-        ...data,
+        ...calc_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-
         videos: videoUrl,
-        totalPrice,
-        additionalFees: data.additionalFees.map((fee) => ({
-          ...fee,
-          amount: fee.amount * 100,
-        })),
-        basePrice: data.basePrice * 100,
-
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
