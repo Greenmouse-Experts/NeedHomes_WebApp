@@ -133,7 +133,7 @@ function RouteComponent() {
           </div>
         </div>
       </div>
-      <main className="flex  container mx-auto gap-4">
+      <main className="flex  container mx-auto gap-4 px-4">
         <section className="flex-1">
           <div className="my-4 container mx-auto">
             <h2 className="text-2xl font-bold">Latest News</h2>
