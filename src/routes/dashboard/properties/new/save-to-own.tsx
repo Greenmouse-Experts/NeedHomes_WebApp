@@ -20,6 +20,7 @@ import type { DocProps } from "@/types/form";
 import { uploadFile } from "@/api/fileApi";
 import { get_docs } from "./fractional";
 import calculate_fees from "../-components/calculate_fees";
+import { strip_save_to_own } from "../../-components/form_cleaners";
 
 export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
   component: RouteComponent,
@@ -113,6 +114,10 @@ function RouteComponent() {
       const uploadedDocUrls = await get_docs(docUploadProps);
 
       const new_payload = calculate_fees(data, ["targetPropertyPrice"]);
+      const new_p = new_payload;
+      const total_price =
+        new_p["targetPropertyPrice"] +
+        new_p.additionalFees.reduce((acc, fee) => acc + fee.amount, 0);
       const payload = {
         ...new_payload,
         ...uploadedDocUrls,
@@ -123,9 +128,10 @@ function RouteComponent() {
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+      const upload_ = strip_save_to_own(payload);
       const response = await apiClient.post(
         "/admin/properties/save-to-own",
-        payload,
+        upload_,
       );
       return response.data;
     },
