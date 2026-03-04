@@ -1,7 +1,7 @@
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
 const keys = [
   "FRACTIONAL_OWNERSHIP",
-  "OUTRIGHT",
+  "OUTRIGHT_PURCHASE",
   "CO_DEVELOPMENT",
   "LAND_BANKING",
   "SAVE_TO_OWN",
@@ -62,7 +62,27 @@ export default function InvestmentDetails({
           </div>
         </div>
       );
-
+    case "OUTRIGHT_PURCHASE":
+      return (
+        <>
+          <div>
+            <div className="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200">
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
+                Investment Details
+              </h3>
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                  <span className="text-sm text-gray-600">Payment Option:</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {property.paymentOption || "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    case "SAVE_TO_OWN":
     case "CO_DEVELOPMENT":
       return (
         <>
