@@ -33,6 +33,7 @@ function RouteComponent() {
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
       premiumProperty: false,
+      paymentOption: "FULL_PAYMENT",
     },
   });
   const paymentOption = useWatch({

@@ -25,6 +25,7 @@ import {
   video_helper,
 } from "../../-components/upload_helpers";
 import { strip_outright } from "../../-components/form_cleaners";
+import calculate_fees from "../-components/calculate_fees";
 
 export const Route = createFileRoute("/dashboard/properties/new/outright")({
   component: RouteComponent,
@@ -74,29 +75,34 @@ function RouteComponent() {
       console.log(uploadedDocUrls);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      const totalPrice =
-        Number(data.basePrice * 100) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount * 100) || 0),
-              0,
-            )
-          : 0);
+      const calc_payload = calculate_fees(data);
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
-      const payload = {
-        ...data,
+
+      let payload = {
+        ...calc_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
-        additionalFees: update_addtional_fees(data.additionalFees as any),
         galleryImages: allGallery,
         videos: videoUrl,
-        //@ts-ignore
-        basePrice: data.basePrice * 100,
-        totalPrice: totalPrice,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
       };
+      // console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
+      // const payload = {
+      //   ...data,
+      //   ...uploadedDocUrls, // Add uploaded document URLs to the payload
+      //   coverImage: coverImageUrl,
+      //   additionalFees: update_addtional_fees(data.additionalFees as any),
+      //   galleryImages: allGallery,
+      //   videos: videoUrl,
+      //   //@ts-ignore
+      //   basePrice: data.basePrice * 100,
+      //   totalPrice: totalPrice,
+      //   completionDate: data.completionDate
+      //     ? new Date(data.completionDate).toISOString()
+      //     : null,
+      // };
       const new_payload = strip_outright(payload);
       const response = await apiClient.post(
         `/admin/properties/outright`,
