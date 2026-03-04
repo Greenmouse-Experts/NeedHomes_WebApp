@@ -111,14 +111,16 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      data["basePrice"] = data.pricePerPlot;
+      data["basePrice"] = data.pricePerPlot * data["availableUnits"];
       const edited_payload = calculate_fees(data, [
         "pricePerPlot",
         "minimumInstallmentAmount",
       ]);
-      let basePrice = edited_payload["pricePerPlot"] as number;
-      const charges = (2 / 100) * basePrice;
-      basePrice = basePrice + charges;
+      // let basePrice = (edited_payload["pricePerPlot"] *
+      //   data["availableUnits"]) as number;
+
+      // const charges = (2 / 100) * basePrice;
+      // basePrice = basePrice + charges;
       const payload = {
         ...edited_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
@@ -128,6 +130,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
+        minimumInstallmentAmount: parseInt(
+          edited_payload["totalPrice"] / data.installmentDuration,
+        ),
       };
 
       const new_payload = strip_land_banking(payload);
@@ -275,7 +280,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       />
                     )}
                   />
-                  <Controller
+                  {/*<Controller
                     name="minimumInstallmentAmount"
                     control={methods.control}
                     render={({ field }) => (
@@ -287,7 +292,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
                     )}
-                  />
+                  />*/}
                 </>
               )}
             </div>
