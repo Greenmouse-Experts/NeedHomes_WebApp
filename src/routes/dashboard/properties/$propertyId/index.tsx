@@ -164,9 +164,11 @@ function PropertyDetailsPage() {
                           Completion
                         </p>
                         <p className="font-semibold text-sm md:text-base text-gray-900 truncate">
-                          {new Date(
-                            property.completionDate,
-                          ).toLocaleDateString()}
+                          {property.completionDate
+                            ? new Date(
+                                property.completionDate,
+                              ).toLocaleDateString()
+                            : "N/A"}
                         </p>
                       </div>
                     </div>
