@@ -228,7 +228,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                     />
                   )}
                 />
-                <Controller
+                {/*<Controller
                   name="minimumInstallmentAmount"
                   control={form.control}
                   render={({ field }) => (
@@ -240,7 +240,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
-                />
+                />*/}
               </>
             )}
           </div>

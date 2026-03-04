@@ -325,7 +325,7 @@ function RouteComponent() {
                     />
                   )}
                 />
-                <Controller
+                {/*<Controller
                   name="minimumInstallmentAmount"
                   control={form.control}
                   render={({ field }) => (
@@ -337,7 +337,7 @@ function RouteComponent() {
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
-                />
+                />*/}
               </>
             )}
           </div>
