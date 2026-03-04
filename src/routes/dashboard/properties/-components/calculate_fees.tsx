@@ -5,8 +5,9 @@ export default function calculate_fees(data: DocProps, keys?: string[]) {
   const system_charge = (2 / 100) * new_base_price;
   // console.log(system_charge, new_base_price, new_base_price);
   //
+  const new_base = new_base_price + system_charge;
   const total_price =
-    new_base_price +
+    new_base +
     data.additionalFees.reduce((acc, fee) => acc + fee.amount * 100, 0);
   const new_data = {
     ...data,
