@@ -130,6 +130,7 @@ function RouteComponent() {
         "minimumInvestment",
         "minimumInstallmentAmount",
       ] as (typeof data)[string];
+      // data["basePrice"] = data["minimumInstallmentAmount"];
       const new_payload = calculate_fees(data, keys);
       const payload = {
         ...new_payload,
@@ -140,6 +141,8 @@ function RouteComponent() {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
+        minimumInstallmentAmount:
+          new_payload["totalPrice"] / data.installmentDuration,
       };
       delete payload.minimumInvestment;
       const response = await apiClient.post(
