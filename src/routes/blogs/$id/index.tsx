@@ -8,6 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import Featured from "../-components/Featured";
 import { Facebook, Twitter, Linkedin, Copy, Check } from "lucide-react";
 import { useState } from "react";
+import Comments from "../-components/Comments";
 
 export const Route = createFileRoute("/blogs/$id/")({
   component: RouteComponent,
@@ -98,7 +99,7 @@ function RouteComponent() {
 
   return (
     <ThemeProvider className="bg-gray-50 py-8">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         {/* Top Navigation */}
         <div className="mb-8 flex items-center justify-between">
           <BackButton />
@@ -216,7 +217,7 @@ function RouteComponent() {
                           <h2 className="mb-8 text-2xl font-bold text-gray-900">
                             Comments
                           </h2>
-                          <ListComment id={id} />
+                          <Comments id={id} />
                         </div>
                       )}
                     </div>
