@@ -111,7 +111,7 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.developmentStage;
   return cleaned;
 };
-
+// property paymentOption should not exist, property installmentDuration should not exist, property minimumInstallmentAmount should not exist
 export const strip_save_to_own = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
   delete cleaned.totalShares;
@@ -119,9 +119,10 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.minimumShares;
   delete cleaned.exitWindow;
   delete cleaned.investmentModel;
-  // delete cleaned.paymentOption;
-  // delete cleaned.installmentDuration;
+  delete cleaned.paymentOption;
+  delete cleaned.installmentDuration;
   delete cleaned.minimumInvestment;
+  delete cleaned.minimumInstallmentAmount;
   delete cleaned.profitSharingRatio;
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
