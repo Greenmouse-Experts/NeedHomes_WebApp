@@ -128,7 +128,7 @@ function RouteComponent() {
         ...uploadedGalleryUrls,
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
-      data["basePrice"] = data.pricePerPlot;
+      data["basePrice"] = data.pricePerPlot * data["availableUnits"];
       const new_payload = calculate_fees(data, [
         "pricePerPlot",
         "minimumInstallmentAmount",
