@@ -55,7 +55,10 @@ function RouteComponent() {
       exitRule: "ANYTIME",
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
+      paymentOption: "FULL_PAYMENT",
+      exitRule: "ANYTIME",
       premiumProperty: false,
+
       additionalFees: [],
     },
   });
