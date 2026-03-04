@@ -49,6 +49,7 @@ function RouteComponent() {
           const form_data = data.data;
           const exists = form_data?.minimumInstallmentAmount;
           let new_data = edit_cleaner(form_data as any, ["pricePerPlot"]);
+
           if (exists) {
             new_data = {
               ...new_data,
@@ -110,11 +111,14 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      data["basePrice"] = data.pricePerPlot * data.plotSize;
+      data["basePrice"] = data.pricePerPlot;
       const edited_payload = calculate_fees(data, [
         "pricePerPlot",
         "minimumInstallmentAmount",
       ]);
+      let basePrice = edited_payload["pricePerPlot"] as number;
+      const charges = (2 / 100) * basePrice;
+      basePrice = basePrice + charges;
       const payload = {
         ...edited_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
