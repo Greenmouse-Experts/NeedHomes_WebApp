@@ -140,7 +140,9 @@ export default function InvestmentDetails({
                   </span>
                   <span className="text-sm font-medium text-gray-900">
                     ₦
-                    {property.minimumInstallmentAmount?.toLocaleString() || "0"}
+                    {(
+                      property.minimumInstallmentAmount / 100
+                    )?.toLocaleString() || "0"}
                   </span>
                 </div>
               </div>
