@@ -228,27 +228,27 @@ export default function InvestmentDetails({
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">Total Shares:</span>
                 <span className="text-sm font-medium text-gray-900">
-                  {property.totalShares?.toLocaleString() || "N/A"}
+                  {property?.totalShares?.toLocaleString() || "N/A"}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">Price Per Share:</span>
                 <span className="text-sm font-medium text-gray-900">
-                  ₦{(property?.pricePerShare / 100).toLocaleString() || "0"}
+                  ₦ {(property?.pricePerShare / 100).toLocaleString() || "0"}
                 </span>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">Payment Option:</span>
                 <span className="text-sm font-medium text-gray-900">
-                  {property.paymentOption || "N/A"}
+                  {property?.paymentOption || "N/A"}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">Platform Charge:</span>
                 <span className="text-sm font-medium text-gray-900">
                   {/*//@ts-ignore*/}
-                  {property.systemCharges?.platformChargePercentage || 0}%
+                  {property?.systemCharges?.platformChargePercentage || 0}%
                 </span>
               </div>
             </div>

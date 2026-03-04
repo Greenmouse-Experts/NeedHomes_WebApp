@@ -22,6 +22,7 @@ import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
+import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/default/",
@@ -488,160 +489,11 @@ function PropertyDetailPage() {
                         <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
                           Property Information
                         </h3>
-                        <div className="space-y-3">
-                          <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                            <span className="text-sm text-gray-600">
-                              Property Type:
-                            </span>
-                            <span className="text-sm font-medium text-gray-900">
-                              {property.propertyType}
-                            </span>
-                          </div>
-                          <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                            <span className="text-sm text-gray-600">
-                              Investment Model:
-                            </span>
-                            <span className="text-sm font-medium text-gray-900">
-                              {property.investmentModel.replace(/_/g, " ")}
-                            </span>
-                          </div>
-                          <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                            <span className="text-sm text-gray-600">
-                              Development Stage:
-                            </span>
-                            <span className="text-sm font-medium text-gray-900">
-                              {property.developmentStage}
-                            </span>
-                          </div>
-                          <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                            <span className="text-sm text-gray-600">
-                              Available Units:
-                            </span>
-                            <span className="text-sm font-medium text-gray-900">
-                              {property.availableUnits}
-                            </span>
-                          </div>
-                          {property.projectDuration && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Project Duration:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.projectDuration}
-                              </span>
-                            </div>
-                          )}
-                          {property.exitRule && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Exit Rule:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.exitRule}
-                              </span>
-                            </div>
-                          )}
-                          {property.paymentOption && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Payment Option:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.paymentOption.replace(/_/g, " ")}
-                              </span>
-                            </div>
-                          )}
-                          {property.installmentDuration && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Installment Duration:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.installmentDuration} months
-                              </span>
-                            </div>
-                          )}
-                          {property.minimumInvestment && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Min. Investment:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {formatCurrency(property.minimumInvestment)}
-                              </span>
-                            </div>
-                          )}
-                          {property.plotSize && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Plot Size:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.plotSize}
-                              </span>
-                            </div>
-                          )}
-                          {property.pricePerPlot && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Price Per Plot:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {formatCurrency(property.pricePerPlot)}
-                              </span>
-                            </div>
-                          )}
-                          {property.holdingPeriod && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Holding Period:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.holdingPeriod} months
-                              </span>
-                            </div>
-                          )}
-                          {property.buyBackOption !== null && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Buy-Back Option:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.buyBackOption ? "Yes" : "No"}
-                              </span>
-                            </div>
-                          )}
-                          {property.savingsFrequency && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Savings Frequency:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.savingsFrequency.replace(/_/g, " ")}
-                              </span>
-                            </div>
-                          )}
-                          {property.savingsDuration && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Savings Duration:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {property.savingsDuration} months
-                              </span>
-                            </div>
-                          )}
-                          {property.targetPropertyPrice && (
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                              <span className="text-sm text-gray-600">
-                                Target Property Price:
-                              </span>
-                              <span className="text-sm font-medium text-gray-900">
-                                {formatCurrency(property.targetPropertyPrice)}
-                              </span>
-                            </div>
-                          )}
-                        </div>
+                        {/*{property.investmentModel}*/}
+                        <InvestmentDetails
+                          type={property.investmentModel}
+                          inv={property}
+                        />
                       </div>
                     </div>
                   </div>
