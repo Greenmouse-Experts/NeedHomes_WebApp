@@ -126,13 +126,14 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       ] as (typeof data)[string];
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const calc_payload = calculate_fees(data, keys);
+      console.log("calc_base", calc_payload["basePrice"]);
       const payload = {
         ...calc_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice,
+        totalPrice: totalPrice * 100,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
