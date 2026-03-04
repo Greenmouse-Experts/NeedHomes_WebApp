@@ -10,8 +10,8 @@ export default function calculate_fees(data: DocProps, keys?: string[]) {
     data.additionalFees.reduce((acc, fee) => acc + fee.amount * 100, 0);
   const new_data = {
     ...data,
-    basePrice: new_base_price + system_charge,
-    totalPrice: total_price,
+    basePrice: parseInt(new_base_price + system_charge),
+    totalPrice: parseInt(total_price),
     additionalFees: data.additionalFees.map((fee) => ({
       ...fee,
       amount: fee.amount * 100,
