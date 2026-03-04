@@ -137,6 +137,15 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const calc_payload = calculate_fees(data);
       console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
 
+      const minimumInstallmentAmount = parseInt(
+        calc_payload["totalPrice"] / data.installmentDuration,
+      );
+      console.log(
+        calc_payload["totalPrice"],
+        data.installmentDuration,
+        minimumInstallmentAmount,
+        "total_price",
+      );
       let payload = {
         ...calc_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload
@@ -146,15 +155,13 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          calc_payload["totalPrice"] / data.installmentDuration,
-        ),
+        minimumInstallmentAmount: parseInt(minimumInstallmentAmount),
       };
       //@ts-ignore
-      if (payload.minimumInstallmentAmount) {
-        //@ts-ignore
-        payload.minimumInstallmentAmount = data.minimumInstallmentAmount * 100;
-      }
+      // if (payload.minimumInstallmentAmount) {
+      //   //@ts-ignore
+      //   payload.minimumInstallmentAmount = data.minimumInstallmentAmount * 100;
+      // }
       const new_payload = strip_outright(payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/outright`,
@@ -247,7 +254,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                           />
                         )}
                       />
-                      <Controller
+                      {/*<Controller
                         name="minimumInstallmentAmount"
                         control={methods.control}
                         render={({ field }) => (
@@ -261,7 +268,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                             }
                           />
                         )}
-                      />
+                      />*/}
                     </>
                   )}
                 </div>
