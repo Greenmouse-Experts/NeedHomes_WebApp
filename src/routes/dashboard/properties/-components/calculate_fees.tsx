@@ -1,12 +1,13 @@
 import type { DocProps } from "@/types/form";
 
 export default function calculate_fees(data: DocProps, keys?: string[]) {
-  const total_price =
-    data.basePrice * 100 +
-    data.additionalFees.reduce((acc, fee) => acc + fee.amount * 100, 0);
   const new_base_price = data.basePrice * 100;
   const system_charge = (2 / 100) * new_base_price;
   // console.log(system_charge, new_base_price, new_base_price);
+  //
+  const total_price =
+    new_base_price +
+    data.additionalFees.reduce((acc, fee) => acc + fee.amount * 100, 0);
   const new_data = {
     ...data,
     basePrice: new_base_price + system_charge,
@@ -18,7 +19,9 @@ export default function calculate_fees(data: DocProps, keys?: string[]) {
   } as DocProps;
   if (keys && keys.length > 0) {
     for (const key of keys) {
+      console.log(key, data[key]);
       new_data[key] = data[key] * 100;
+      console.log(key, new_data[key]);
     }
   }
   return new_data;
