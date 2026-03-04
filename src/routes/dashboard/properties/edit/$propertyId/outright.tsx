@@ -146,6 +146,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
+        minimumInstallmentAmount: parseInt(
+          calc_payload["totalPrice"] / data.installmentDuration,
+        ),
       };
       //@ts-ignore
       if (payload.minimumInstallmentAmount) {
