@@ -127,6 +127,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const calc_payload = calculate_fees(data, keys);
       console.log("calc_base", calc_payload["basePrice"]);
+
       const payload = {
         ...calc_payload,
         ...uploadedDocUrls, // Add uploaded document URLs to the payload

@@ -430,7 +430,7 @@ function PropertyDetailPage() {
                                 Price Per Share
                               </p>
                               <p className="text-lg font-semibold text-(--color-orange)">
-                                {formatCurrency(property.pricePerShare)}
+                                {formatCurrency(property.pricePerShare / 100)}
                               </p>
                             </div>
                             <div>
