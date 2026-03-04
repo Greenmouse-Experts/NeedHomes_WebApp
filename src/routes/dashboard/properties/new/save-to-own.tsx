@@ -115,16 +115,16 @@ function RouteComponent() {
       data["basePrice"] = data["targetPropertyPrice"];
       const new_payload = calculate_fees(data, ["targetPropertyPrice"]);
       const new_p = new_payload;
-      const total_price =
-        new_p["targetPropertyPrice"] +
-        new_p.additionalFees.reduce((acc, fee) => acc + fee.amount, 0);
+      // const total_price =
+      //   new_p["targetPropertyPrice"] +
+      //   new_p.additionalFees.reduce((acc, fee) => acc + fee.amount, 0);
       const payload = {
         ...new_payload,
         ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice: total_price,
+        // totalPrice: total_price,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
