@@ -112,6 +112,9 @@ function RouteComponent() {
           : null,
         videos: videoUrl || data.videos,
         ...uploadedDocUrls,
+        minimumInstallmentAmount: parseInt(
+          new_payload["totalPrice"] / data.installmentDuration,
+        ),
       };
 
       payload.basePrice = Number(payload.basePrice) || 0;

@@ -138,6 +138,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
+        minimumInstallmentAmount: parseInt(
+          calc_payload["totalPrice"] / data.installmentDuration,
+        ),
       };
       const new_payload = strip_fractional(payload);
       const response = await apiClient.patch(
