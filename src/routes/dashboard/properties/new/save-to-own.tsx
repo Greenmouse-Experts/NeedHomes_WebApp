@@ -128,6 +128,9 @@ function RouteComponent() {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
+        minimumInstallmentAmount: parseInt(
+          new_payload["totalPrice"] / data.installmentDuration,
+        ),
       };
       const upload_ = strip_save_to_own(payload);
       const response = await apiClient.post(

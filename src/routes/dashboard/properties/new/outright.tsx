@@ -87,6 +87,9 @@ function RouteComponent() {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
+        minimumInstallmentAmount: parseInt(
+          new_payload["totalPrice"] / data.installmentDuration,
+        ),
       };
       // console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
       // const payload = {
