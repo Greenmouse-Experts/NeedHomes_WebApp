@@ -212,14 +212,7 @@ function RouteComponent() {
                       )}
 
                       {/* Comments Section */}
-                      {data.allowComments && (
-                        <div>
-                          <h2 className="mb-8 text-2xl font-bold text-gray-900">
-                            Comments
-                          </h2>
-                          <Comments id={id} />
-                        </div>
-                      )}
+                      {data.allowComments && <Comments id={id} />}
                     </div>
                   </article>
                 );

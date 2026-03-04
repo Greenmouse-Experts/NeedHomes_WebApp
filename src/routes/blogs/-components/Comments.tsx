@@ -6,12 +6,12 @@ export default function Comments({ blogId }: { blogId: string }) {
   const query = useQuery({
     queryKey: ["comments", blogId],
     queryFn: async () => {
-      let resp = await apiClient.get(`/blogs/${blogId}/Comments`);
+      let resp = await apiClient.get(`/blogs/${blogId}/Com`);
       return resp.data;
     },
   });
   return (
-    <div className="">
+    <div className="ring fade rounded-box">
       <h2 className="p-4 border-b fade">Comments</h2>
       <div className="p-4">
         <QueryCompLayout query={query}>
