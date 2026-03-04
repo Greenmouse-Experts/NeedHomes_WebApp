@@ -485,15 +485,10 @@ function PropertyDetailPage() {
 
                     {/* Sidebar */}
                     <div className="space-y-4 md:space-y-6">
-                      <div className="bg-gray-50 rounded-lg p-4 md:p-6 border border-gray-200">
-                        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">
-                          Property Information
-                        </h3>
-                        <InvestmentDetails
-                          type={property.investmentModel}
-                          inv={property}
-                        />
-                      </div>
+                      <InvestmentDetails
+                        type={property.investmentModel}
+                        inv={property}
+                      />
                     </div>
                   </div>
                 </div>
