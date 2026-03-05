@@ -88,24 +88,10 @@ function RouteComponent() {
           ? new Date(data.completionDate).toISOString()
           : null,
         minimumInstallmentAmount: parseInt(
-          new_payload["totalPrice"] / data.installmentDuration,
+          calc_payload["totalPrice"] / data.installmentDuration,
         ),
       };
-      // console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
-      // const payload = {
-      //   ...data,
-      //   ...uploadedDocUrls, // Add uploaded document URLs to the payload
-      //   coverImage: coverImageUrl,
-      //   additionalFees: update_addtional_fees(data.additionalFees as any),
-      //   galleryImages: allGallery,
-      //   videos: videoUrl,
-      //   //@ts-ignore
-      //   basePrice: data.basePrice * 100,
-      //   totalPrice: totalPrice,
-      //   completionDate: data.completionDate
-      //     ? new Date(data.completionDate).toISOString()
-      //     : null,
-      // };
+
       const new_payload = strip_outright(payload);
       const response = await apiClient.post(
         `/admin/properties/outright`,
