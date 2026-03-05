@@ -123,7 +123,7 @@ export default function DefaultForm<T = any>({
   disableCompletion?: boolean;
   hideCompletion?: boolean;
   disable_base_price?: boolean;
-  disableUnis?: boolean;
+  disableUnits?: boolean;
 }) {
   const methods = form;
 
@@ -302,19 +302,21 @@ export default function DefaultForm<T = any>({
                 />
               )}
               {disableUnits ?? (
-                <Controller
-                  disabled={disableUnits}
-                  name="availableUnits"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <SimpleInput
-                      {...field}
-                      label="Units Available"
-                      type="number"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
-                />
+                <>
+                  <Controller
+                    disabled={disableUnits}
+                    name="availableUnits"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        label="Units Available"
+                        type="number"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    )}
+                  />
+                </>
               )}
             </div>
             <AdditionalFeesManager />
