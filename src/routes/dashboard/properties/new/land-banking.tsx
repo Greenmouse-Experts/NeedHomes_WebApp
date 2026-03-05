@@ -25,6 +25,7 @@ import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import calculate_fees from "../-components/calculate_fees";
+import { doc_helper } from "../../-components/upload_helpers";
 
 export const Route = createFileRoute("/dashboard/properties/new/land-banking")({
   component: RouteComponent,
@@ -127,7 +128,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-      const uploadedDocUrls = await get_docs(docUploadProps);
+      const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       data["basePrice"] = data.pricePerPlot * data["availableUnits"];
       const new_payload = calculate_fees(data, [
         "pricePerPlot",

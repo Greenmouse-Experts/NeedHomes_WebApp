@@ -111,7 +111,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-      const uploadedDocUrls = await get_docs(docUploadProps);
+      const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       data["basePrice"] = data["targetPropertyPrice"];
       const new_payload = calculate_fees(data, ["targetPropertyPrice"]);
       const new_p = new_payload;
