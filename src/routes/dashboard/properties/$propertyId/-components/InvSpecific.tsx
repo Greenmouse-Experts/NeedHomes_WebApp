@@ -80,9 +80,12 @@ export default function InvestmentDetails({
               </div>
 
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
-                <span className="text-sm text-gray-600">Min. Investment:</span>
+                <span className="text-sm text-gray-600">Min. Installment:</span>
                 <span className="text-sm font-medium text-gray-900">
-                  ₦{(property.minimumInvestment / 100)?.toLocaleString() || "0"}
+                  ₦
+                  {(
+                    property.minimumInstallmentAmount / 100
+                  )?.toLocaleString() || "0"}
                 </span>
               </div>
 
