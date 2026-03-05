@@ -78,12 +78,29 @@ export default function InvestmentDetails({
                   </span>
                 </div>
               </div>
+
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">Min. Investment:</span>
                 <span className="text-sm font-medium text-gray-900">
                   ₦{(property.minimumInvestment / 100)?.toLocaleString() || "0"}
                 </span>
               </div>
+
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">Payment Option:</span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.paymentOption || "N/A"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                <span className="text-sm text-gray-600">
+                  Installment Duration:
+                </span>
+                <span className="text-sm font-medium text-gray-900">
+                  {property.installmentDuration || "N/A"} Months
+                </span>
+              </div>
+
               {/*<div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">Exit Strategy:</span>
                 <span className="text-sm font-medium text-gray-900">
