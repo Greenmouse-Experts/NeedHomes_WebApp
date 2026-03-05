@@ -29,7 +29,7 @@ export const Route = createFileRoute("/dashboard/properties/new/save-to-own")({
 interface SaveToOwnFormValues extends DocProps {
   targetPropertyPrice: number;
   // minimumSavingsAmount: number;
-  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  savingsFrequency: "YEARLY" | "WEEKLY" | "MONTHLY";
   savingsDuration: number;
 }
 
@@ -214,7 +214,7 @@ function RouteComponent() {
                   control={methods.control}
                   render={({ field }) => (
                     <LocalSelect {...field} label="Savings Frequency">
-                      <option value="DAILY">Daily</option>
+                      <option value="YEARLY">Yearly</option>
                       <option value="WEEKLY">Weekly</option>
                       <option value="MONTHLY">Monthly</option>
                     </LocalSelect>

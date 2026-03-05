@@ -320,7 +320,7 @@ export interface ADMIN_PROPERTY_LISTING {
   holdingPeriod: number | null;
   buyBackOption: boolean | null;
   targetPropertyPrice: number;
-  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY" | null;
+  savingsFrequency: "YEARLY" | "WEEKLY" | "MONTHLY" | null;
   savingsDuration: number | null;
   createdAt: string;
   updatedAt: string;
@@ -363,7 +363,7 @@ export interface PROPERTY_DATA {
   holdingPeriod: number | null;
   buyBackOption: boolean | null;
   targetPropertyPrice: number;
-  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY" | null;
+  savingsFrequency: "YEARLY" | "WEEKLY" | "MONTHLY" | null;
   savingsDuration: number | null;
   createdAt: string;
   updatedAt: string;
@@ -406,7 +406,7 @@ export type SINGLE_PROPERTY = {
   holdingPeriod: number | null;
   buyBackOption: boolean | null;
   targetPropertyPrice: number;
-  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY" | null;
+  savingsFrequency: "YEARLY" | "WEEKLY" | "MONTHLY" | null;
   savingsDuration: number | null;
   createdAt: string;
   updatedAt: string;

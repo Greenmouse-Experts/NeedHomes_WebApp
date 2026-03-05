@@ -74,7 +74,7 @@ function RouteComponent() {
 interface SaveToOwnFormValues extends DocProps {
   targetPropertyPrice: number;
   // minimumSavingsAmount: number;
-  savingsFrequency: "DAILY" | "WEEKLY" | "MONTHLY";
+  savingsFrequency: "YEARLY" | "WEEKLY" | "MONTHLY" | "YEARLY";
   savingsDuration: number;
 }
 
@@ -211,7 +211,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                   control={methods.control}
                   render={({ field }) => (
                     <LocalSelect {...field} label="Savings Frequency">
-                      <option value="DAILY">Daily</option>
+                      <option value="YEARLY">YEARLY</option>
                       <option value="WEEKLY">Weekly</option>
                       <option value="MONTHLY">Monthly</option>
                     </LocalSelect>
