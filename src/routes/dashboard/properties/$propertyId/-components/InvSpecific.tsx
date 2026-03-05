@@ -131,7 +131,7 @@ export default function InvestmentDetails({
                     {property.savingsFrequency || "N/A"}
                   </span>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
+                {/*<div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                   <span className="text-sm text-gray-600">
                     Min. Investment:
                   </span>
@@ -140,7 +140,7 @@ export default function InvestmentDetails({
                     {(property.minimumInvestment / 100)?.toLocaleString() ||
                       "0"}
                   </span>
-                </div>
+                </div>*/}
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                   <span className="text-sm text-gray-600">
                     Target Property Price:
@@ -160,7 +160,7 @@ export default function InvestmentDetails({
                 </div>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                   <span className="text-sm text-gray-600">
-                    Installment Duration:
+                    Savings Frequency:
                   </span>
                   <span className="text-sm font-medium text-gray-900">
                     {property.installmentDuration || "N/A"}{" "}
