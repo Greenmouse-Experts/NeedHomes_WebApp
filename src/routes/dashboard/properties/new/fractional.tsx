@@ -122,7 +122,7 @@ function RouteComponent() {
       payload.totalShares = Number(payload.totalShares) || 0;
       payload.pricePerShare = Number(payload.pricePerShare) || 0;
       payload.minimumShares = Number(payload.minimumShares) || 0;
-      payload.totalPrice = Number(payload.totalPrice) || 0;
+      // payload.totalPrice = Number(payload.totalPrice) || 0;
 
       const response = await apiClient.post(
         "/admin/properties/fractional",
