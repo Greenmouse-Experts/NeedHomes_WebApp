@@ -144,34 +144,40 @@ function PropertyDetailsPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <div className="p-2 bg-white rounded-lg shrink-0">
-                        <Package className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
+                    {property.investmentModel == "OUTRIGHT_PURCHASE" ?? (
+                      <>
+                        <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="p-2 bg-white rounded-lg shrink-0">
+                            <Package className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs text-gray-500">Size</p>
+                            <p className="font-semibold text-sm md:text-base text-gray-900">
+                              {property.plotSize || "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {property.investmentModel == "OUTRIGHT_PURCHASE" ?? (
+                      <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="p-2 bg-white rounded-lg shrink-0">
+                          <Calendar className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs text-gray-500 whitespace-nowrap">
+                            Completion
+                          </p>
+                          <p className="font-semibold text-sm md:text-base text-gray-900 truncate">
+                            {property.completionDate
+                              ? new Date(
+                                  property.completionDate,
+                                ).toLocaleDateString()
+                              : "N/A"}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-xs text-gray-500">Size</p>
-                        <p className="font-semibold text-sm md:text-base text-gray-900">
-                          {property.plotSize || "N/A"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <div className="p-2 bg-white rounded-lg shrink-0">
-                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs text-gray-500 whitespace-nowrap">
-                          Completion
-                        </p>
-                        <p className="font-semibold text-sm md:text-base text-gray-900 truncate">
-                          {property.completionDate
-                            ? new Date(
-                                property.completionDate,
-                              ).toLocaleDateString()
-                            : "N/A"}
-                        </p>
-                      </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
