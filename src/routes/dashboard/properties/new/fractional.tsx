@@ -117,11 +117,11 @@ function RouteComponent() {
         ),
       };
 
-      payload.basePrice = Number(payload.basePrice) || 0;
-      payload.availableUnits = Number(payload.availableUnits) || 0;
-      payload.totalShares = Number(payload.totalShares) || 0;
-      payload.pricePerShare = Number(payload.pricePerShare) || 0;
-      payload.minimumShares = Number(payload.minimumShares) || 0;
+      // payload.basePrice = Number(payload.basePrice) || 0;
+      // payload.availableUnits = Number(payload.availableUnits) || 0;
+      // payload.totalShares = Number(payload.totalShares) || 0;
+      // payload.pricePerShare = Number(payload.pricePerShare) || 0;
+      // payload.minimumShares = Number(payload.minimumShares) || 0;
       // payload.totalPrice = Number(payload.totalPrice) || 0;
 
       const response = await apiClient.post(
@@ -168,6 +168,7 @@ function RouteComponent() {
             videoUpload={videoUpload}
             useImagesProps={useImageProps}
             form={methods as any}
+            disable_base_price
             selectImageProps={selectImageProps as any}
             mutation={mutation as any}
             onSubmit={onSubmit}
