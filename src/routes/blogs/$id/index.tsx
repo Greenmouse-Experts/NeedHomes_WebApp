@@ -212,7 +212,7 @@ function RouteComponent() {
                       )}
 
                       {/* Comments Section */}
-                      {data.allowComments && <Comments id={id} />}
+                      {data.allowComments && <Comments blogId={id} />}
                     </div>
                   </article>
                 );
