@@ -106,6 +106,7 @@ export default function DefaultForm<T = any>({
   docUpload,
   update,
   disableCompletion,
+  disableUnits,
   hideCompletion,
   disable_base_price,
 }: {
@@ -122,6 +123,7 @@ export default function DefaultForm<T = any>({
   disableCompletion?: boolean;
   hideCompletion?: boolean;
   disable_base_price?: boolean;
+  disableUnis?: boolean;
 }) {
   const methods = form;
 
@@ -299,18 +301,21 @@ export default function DefaultForm<T = any>({
                   )}
                 />
               )}
-              <Controller
-                name="availableUnits"
-                control={methods.control}
-                render={({ field }) => (
-                  <SimpleInput
-                    {...field}
-                    label="Units Available"
-                    type="number"
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
-                )}
-              />
+              {disableUnits ?? (
+                <Controller
+                  disabled={disableUnits}
+                  name="availableUnits"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <SimpleInput
+                      {...field}
+                      label="Units Available"
+                      type="number"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
+                  )}
+                />
+              )}
             </div>
             <AdditionalFeesManager />
           </section>
