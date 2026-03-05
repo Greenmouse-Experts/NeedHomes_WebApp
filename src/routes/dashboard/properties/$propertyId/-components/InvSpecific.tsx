@@ -131,7 +131,8 @@ export default function InvestmentDetails({
                     Installment Duration:
                   </span>
                   <span className="text-sm font-medium text-gray-900">
-                    {property.installmentDuration || "N/A"} Months
+                    {property.installmentDuration || "N/A"}{" "}
+                    {property.savingsFrequency}
                   </span>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
