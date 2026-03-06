@@ -183,51 +183,66 @@ function InvestmentDetailsPage() {
               </div>
 
               {/* Investment Details */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Investment Information
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex justify-between py-2 border-b border-gray-50">
-                    <span className="text-gray-600">Investment ID:</span>
-                    <span className="font-medium text-gray-900">
-                      {investment.id}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-gray-50">
-                    <span className="text-gray-600">Payment Option:</span>
-                    <span className="font-medium text-gray-900">
-                      {investment.paymentOption}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-gray-50">
-                    <span className="text-gray-600">
-                      Total Contract Amount:
-                    </span>
-                    <span className="font-medium text-gray-900">
-                      {formatCurrency(investment.totalAmount / 100)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-gray-50">
-                    <span className="text-gray-600">Last Valuation:</span>
-                    <span className="font-medium text-gray-900">
-                      {investment.lastValuationDate
-                        ? formatDate(investment.lastValuationDate)
-                        : "N/A"}
-                    </span>
-                  </div>
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Investment Information
+                  </h3>
                 </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between py-1">
+                        <span className="text-sm text-gray-500 uppercase tracking-wider font-medium">
+                          Investment ID
+                        </span>
+                        <span className="font-mono text-sm text-gray-900 bg-gray-100 px-2 py-0.5 rounded">
+                          {investment.id.split("-")[0]}...
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <span className="text-sm text-gray-500 uppercase tracking-wider font-medium">
+                          Payment Plan
+                        </span>
+                        <span className="text-sm font-semibold text-gray-900">
+                          {investment.paymentOption}
+                        </span>
+                      </div>
+                    </div>
 
-                {/* Action Button */}
-                <div className="mt-8">
-                  <Link
-                    to="/investors/properties/$propertyId"
-                    params={{ propertyId: investment.propertyId }}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-(--color-orange) text-white rounded-lg hover:bg-orange-600 transition-colors"
-                  >
-                    View Property Details
-                    <ArrowUpRight className="w-4 h-4" />
-                  </Link>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between py-1">
+                        <span className="text-sm text-gray-500 uppercase tracking-wider font-medium">
+                          Total Contract
+                        </span>
+                        <span className="text-sm font-bold text-gray-900">
+                          {formatCurrency(investment.totalAmount / 100)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <span className="text-sm text-gray-500 uppercase tracking-wider font-medium">
+                          Last Valuation
+                        </span>
+                        <span className="text-sm font-semibold text-gray-900">
+                          {investment.lastValuationDate
+                            ? formatDate(investment.lastValuationDate)
+                            : "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="mt-10 pt-6 border-t border-gray-100 flex justify-end">
+                    <Link
+                      to="/investors/properties/$propertyId"
+                      params={{ propertyId: investment.propertyId }}
+                      className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-all shadow-sm active:scale-95"
+                    >
+                      View Property Details
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </div>
                 </div>
               </div>
               {investment_type ? (
