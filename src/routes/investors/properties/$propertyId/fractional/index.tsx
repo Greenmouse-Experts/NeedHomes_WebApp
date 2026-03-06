@@ -248,7 +248,7 @@ function PropertyDetailPage() {
                     </h2>
                     <div className="p-4">
                       <div className="pt-2  border-gray-200 flex justify-between items-center">
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-sm  text-gray-900">
                           Price per share
                         </span>
                         <span className="text-lg font-bold text-(--color-orange)">

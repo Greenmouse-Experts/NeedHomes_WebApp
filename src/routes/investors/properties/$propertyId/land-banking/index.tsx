@@ -156,10 +156,10 @@ function PropertyDetailPage() {
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
+            const charge = (2 / 100) * breakdown.installmentAmount;
             form.setValue(
               "amount",
-              breakdown.installmentAmount / 100 +
-                ((2 / 100) * breakdown.installmentAmount) / 100,
+              (breakdown.installmentAmount + charge) / 100,
             );
           }
         }, []);
