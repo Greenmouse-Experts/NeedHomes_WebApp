@@ -194,12 +194,12 @@ function PropertyDetailPage() {
                         {property.propertyTitle}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    {/*<div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Base Price</span>
                       <span className="text-sm font-medium">
                         {formatCurrency(property.basePrice / 100)}
                       </span>
-                    </div>
+                    </div>*/}
                     <div className="ring rounded-box fade">
                       <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
                         Shares
