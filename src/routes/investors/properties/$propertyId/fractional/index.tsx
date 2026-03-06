@@ -242,12 +242,12 @@ function PropertyDetailPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="">
+                  <div className="ring rounded-box fade">
                     <h2 className="p-4 border-b fade  font-bold text-gray-900">
                       Shares
                     </h2>
                     <div className="p-4">
-                      <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                      <div className="pt-2  border-gray-200 flex justify-between items-center">
                         <span className="text-sm font-bold text-gray-900">
                           Price per share
                         </span>
@@ -256,10 +256,10 @@ function PropertyDetailPage() {
                         </span>
                       </div>
                       <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-sm  text-gray-900">
                           AvaialbleShares
                         </span>
-                        <span className="text-lg font-bold text-(--color-orange)">
+                        <span className="text-lg  text-(--color-orange)">
                           {breakdown.availableShares}
                         </span>
                       </div>
@@ -510,6 +510,7 @@ const InstallMentForm = ({
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-4">
           <SimpleInput
+            disabled
             {...form.register("amount", {
               valueAsNumber: true,
               min: {
