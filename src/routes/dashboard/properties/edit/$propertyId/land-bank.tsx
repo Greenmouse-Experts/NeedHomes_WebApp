@@ -203,7 +203,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 render={({ field }) => (
                   <SimpleInput
                     {...field}
-                    label="Available plot size (sqm)"
+                    label="available plot "
                     type="number"
                     step="0.01"
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
