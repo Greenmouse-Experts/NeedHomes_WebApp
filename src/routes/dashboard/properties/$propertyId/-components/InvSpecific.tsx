@@ -41,7 +41,7 @@ export default function InvestmentDetails({
                   Holding Period (Months):
                 </span>
                 <span className="text-sm font-medium text-gray-900">
-                  {property.holdingPeriod || 0}
+                  {property.holdingPeriod || "N/A"}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
