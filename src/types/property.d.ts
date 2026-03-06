@@ -46,7 +46,7 @@ export interface PROPERTY_TYPE {
   pricePerShare: number;
   minimumShares: number;
   exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "NONE";
-  avaialablePlots: string | null;
+  availablePlots: string | null;
   pricePerPlot: number | null;
   holdingPeriod: string | null;
   buyBackOption: boolean | null;

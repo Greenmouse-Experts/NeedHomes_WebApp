@@ -27,7 +27,7 @@ export default function InvestmentDetails({
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                 <span className="text-sm text-gray-600">available plot :</span>
                 <span className="text-sm font-medium text-gray-900">
-                  {property.avaialablePlots || 0}
+                  {property.availablePlots || 0}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">

@@ -37,7 +37,7 @@ interface AdditionalFee {
 }
 
 interface LandBankingProperty extends DocProps {
-  avaialablePlots: number;
+  availablePlots: number;
   pricePerPlot: number;
   holdingPeriod: number;
   buyBackOption: boolean;
@@ -53,7 +53,7 @@ function RouteComponent() {
       premiumProperty: false,
       completionDate: "",
       availableUnits: 1,
-      avaialablePlots: 0,
+      availablePlots: 0,
       pricePerPlot: 0,
       holdingPeriod: 12,
       buyBackOption: false,
@@ -210,7 +210,7 @@ function RouteComponent() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Controller
-                name="avaialablePlots"
+                name="availablePlots"
                 control={methods.control}
                 render={({ field }) => (
                   <SimpleInput
