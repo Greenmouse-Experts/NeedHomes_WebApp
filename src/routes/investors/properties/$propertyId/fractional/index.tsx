@@ -347,14 +347,14 @@ function PropertyDetailPage() {
                       </span>
                     </div>
 
-                    <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                    {/*<div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
                         Total
                       </span>
                       <span className="text-lg font-bold text-(--color-orange)">
                         {formatCurrency(breakdown.totalPrice)}
                       </span>
-                    </div>
+                    </div>*/}
                   </div>
 
                   {property.paymentOption === "INSTALLMENT" && (
