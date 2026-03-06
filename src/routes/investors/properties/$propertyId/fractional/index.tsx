@@ -122,6 +122,7 @@ function PropertyDetailPage() {
         const payAmount = form.watch("amount");
 
         const install_amount = form.watch("quantity") * property.pricePerShare;
+        const full_charge = (2 / 100) * install_amount;
         useEffect(() => {
           if (installOptions) {
             form.setValue("installment", true);
@@ -169,7 +170,7 @@ function PropertyDetailPage() {
                       }
                       toast.promise(
                         mutate.mutateAsync({
-                          amountPaid: breakdown.totalPrice * 100,
+                          amountPaid: (install_amount + full_charge) / 100,
                           quantity: form.getValues("quantity"),
                         }),
                         {
@@ -188,7 +189,7 @@ function PropertyDetailPage() {
                         : formatCurrency(
                             (property.minimumInstallmentAmount || 0) / 100,
                           )
-                      : breakdown.totalPrice.toLocaleString()}
+                      : formatCurrency((install_amount + full_charge) / 100)}
                   </Button>
                 </div>
               }
