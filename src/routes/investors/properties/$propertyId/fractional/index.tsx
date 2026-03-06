@@ -25,7 +25,7 @@ import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 
 export const Route = createFileRoute(
-  "/investors/properties/$propertyId/land-banking/",
+  "/investors/properties/$propertyId/fractional/",
 )({
   component: PropertyDetailPage,
 });
@@ -156,11 +156,7 @@ function PropertyDetailPage() {
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
-            form.setValue(
-              "amount",
-              breakdown.installmentAmount / 100 +
-                ((2 / 100) * breakdown.installmentAmount) / 100,
-            );
+            form.setValue("amount", breakdown.installmentAmount / 100);
           }
         }, []);
         return (
@@ -306,9 +302,7 @@ function PropertyDetailPage() {
                     <InstallMentForm
                       form={form}
                       duration={property["installmentDuration"]}
-                      minimumInvestmentAmount={
-                        breakdown.installmentAmount + breakdown.systemCharge
-                      }
+                      minimumInvestmentAmount={breakdown.installmentAmount}
                     />
                   </div>
                 )}
@@ -372,7 +366,7 @@ function PropertyDetailPage() {
                     </div>
                     <div className="sm:text-right">
                       <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
-                        {formatCurrency(property.totalPrice / 100)}
+                        {formatCurrency(property.basePrice / 100)}
                       </p>
                       <p className="text-xs md:text-sm text-gray-500 mt-1">
                         SKU: {property.id}
@@ -437,7 +431,7 @@ function PropertyDetailPage() {
                                 Price Per Share
                               </p>
                               <p className="text-lg font-semibold text-(--color-orange)">
-                                {formatCurrency(property.pricePerShare)}
+                                {formatCurrency(property.pricePerShare / 100)}
                               </p>
                             </div>
                             <div>
@@ -491,6 +485,7 @@ function PropertyDetailPage() {
 
                     {/* Sidebar */}
                     <div className="space-y-4 md:space-y-6">
+                      {/*{property.investmentModel}*/}
                       <InvestmentDetails
                         type={property.investmentModel}
                         inv={property}

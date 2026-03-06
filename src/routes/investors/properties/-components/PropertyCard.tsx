@@ -22,6 +22,8 @@ export default function PropertyCard({
       //@ts-ignore
       case "LAND_BANKING":
         return "/investors/properties/$propertyId/land-banking";
+      case "FRACTIONAL_OWNERSHIP":
+        return "/investors/properties/$propertyId/fractional";
       default:
         return "/investors/properties/$propertyId/default";
     }
