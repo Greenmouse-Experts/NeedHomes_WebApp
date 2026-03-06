@@ -162,7 +162,7 @@ function PropertyDetailPage() {
                       toast.promise(
                         mutate.mutateAsync({
                           amountPaid: breakdown.totalPrice * 100,
-                          quantity: 1,
+                          quantity: form.getValues("quantity"),
                         }),
                         {
                           loading: "Processing payment...",
@@ -301,7 +301,7 @@ function PropertyDetailPage() {
                                   </Button>
                                 </div>
                               </div>
-                              <div className="p-2 border-t border-gray-200 flex justify-between items-center">
+                              <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                                 <span className="text-sm text-gray-900">
                                   Cost for {currentQuantity} shares
                                 </span>
