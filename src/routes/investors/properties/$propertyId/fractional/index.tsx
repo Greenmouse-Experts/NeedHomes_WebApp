@@ -146,10 +146,11 @@ function PropertyDetailPage() {
                     onClick={() => {
                       if (payInstall) {
                         const amount = form.getValues("amount");
+                        const quantity = form.getValues("quantity");
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
-                            quantity: 1,
+                            quantity: quantity,
                           }),
                           {
                             loading: "Processing payment...",
@@ -509,7 +510,7 @@ const InstallMentForm = ({
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-4">
           <SimpleInput
-            disabled
+            // disabled
             {...form.register("amount", {
               valueAsNumber: true,
               min: {
