@@ -90,7 +90,7 @@ function LayoutComponent() {
           <h2 className="py-2  text-sm font-bold border-b fade w-full">
             Notification
           </h2>
-          <div className="py-2 line-clamp-2">{data.notification.content}</div>
+          <div className=" line-clamp-1">{data.notification.content}</div>
         </Link>,
       );
     });

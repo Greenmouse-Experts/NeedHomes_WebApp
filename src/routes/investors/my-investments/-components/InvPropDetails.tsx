@@ -1,5 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
+import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_TYPE } from "@/types/property";
@@ -123,7 +124,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                         {prop_data.availableUnits ?? "—"}
                       </div>
                     </div>
-                    <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                    {/*<div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
                       <div className="text-xs text-gray-500">
                         Minimum Investment
                       </div>
@@ -142,6 +143,13 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                             ? formatCurrency(prop_data.pricePerPlot / 100)
                             : "—"}
                       </div>
+                    </div>*/}
+
+                    <div className="col-span-2">
+                      <InvestmentDetails
+                        type={prop_data.investmentModel}
+                        inv={prop_data}
+                      />
                     </div>
                   </div>
                   {/*
