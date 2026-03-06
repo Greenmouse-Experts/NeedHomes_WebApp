@@ -156,7 +156,13 @@ function PropertyDetailPage() {
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
-            form.setValue("amount", breakdown.installmentAmount / 100);
+            // form.setValue("amount", breakdown.installmentAmount / 100);
+            //
+            const charge = (2 / 100) * breakdown.installmentAmount;
+            form.setValue(
+              "amount",
+              (breakdown.installmentAmount + charge) / 100,
+            );
           }
         }, []);
         return (
