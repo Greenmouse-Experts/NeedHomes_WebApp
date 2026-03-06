@@ -199,7 +199,29 @@ function PropertyDetailPage() {
                         {formatCurrency(property.basePrice / 100)}
                       </span>
                     </div>
-
+                    <div className="ring rounded-box fade">
+                      <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
+                        Shares
+                      </h2>
+                      <div className="p-2 space-y-2">
+                        <div className="pt-2  border-gray-200 flex justify-between items-center">
+                          <span className="text-sm  text-gray-900">
+                            Price per share
+                          </span>
+                          <span className="text-sm font-bold">
+                            {formatCurrency(breakdown.pricePerShare / 100)}
+                          </span>
+                        </div>
+                        <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                          <span className="text-sm  text-gray-900">
+                            Avaialble shares
+                          </span>
+                          <span className="text-sm  ">
+                            {breakdown.availableShares}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                     {breakdown.additionalFees.length > 0 && (
                       <section className="rounded-lg border border-gray-200 overflow-hidden">
                         <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
@@ -240,29 +262,6 @@ function PropertyDetailPage() {
                       <span className="text-lg font-bold text-(--color-orange)">
                         {formatCurrency(breakdown.totalPrice)}
                       </span>
-                    </div>
-                  </div>
-                  <div className="ring rounded-box fade">
-                    <h2 className="p-4 border-b fade  font-bold text-gray-900">
-                      Shares
-                    </h2>
-                    <div className="p-4">
-                      <div className="pt-2  border-gray-200 flex justify-between items-center">
-                        <span className="text-sm  text-gray-900">
-                          Price per share
-                        </span>
-                        <span className="text-lg font-bold text-(--color-orange)">
-                          {formatCurrency(breakdown.pricePerShare / 100)}
-                        </span>
-                      </div>
-                      <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                        <span className="text-sm  text-gray-900">
-                          AvaialbleShares
-                        </span>
-                        <span className="text-lg  text-(--color-orange)">
-                          {breakdown.availableShares}
-                        </span>
-                      </div>
                     </div>
                   </div>
 
