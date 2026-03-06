@@ -84,8 +84,9 @@ function PropertyDetailPage() {
           (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
           0,
         );
+        const price = form.watch("quantity") * (property.pricePerShare / 100);
         const systemChargeAmount =
-          (property.systemCharges.platformChargePercentage / 100) * basePrice;
+          (property.systemCharges.platformChargePercentage / 100) * price;
         const totalPrice = basePrice + additionalFeesTotal + systemChargeAmount;
 
         let breakdown: {
@@ -107,8 +108,11 @@ function PropertyDetailPage() {
         };
 
         if (property.paymentOption === "INSTALLMENT") {
-          breakdown.installmentAmount = property.minimumInstallmentAmount;
+          const charge = (2 / 100) * property.minimumInstallmentAmount;
+          breakdown.installmentAmount =
+            (property.minimumInstallmentAmount + charge) / 100;
           //@ts-ignore
+
           breakdown.installmentDuration = property.installmentDuration;
         }
 
@@ -124,11 +128,7 @@ function PropertyDetailPage() {
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
-            const charge = (2 / 100) * breakdown.installmentAmount;
-            form.setValue(
-              "amount",
-              (breakdown.installmentAmount + charge) / 100,
-            );
+            form.setValue("amount", breakdown.installmentAmount);
           }
         }, []);
         return (
@@ -235,31 +235,21 @@ function PropertyDetailPage() {
 
                         const incrementQuantity = () => {
                           field.onChange(currentQuantity + 1);
-                          form.setValue(
-                            "amount",
-                            (currentQuantity + 1) * pricePerShare,
-                          );
+                          // form.setValue(
+                          //   "amount",
+                          //   (currentQuantity + 1) * pricePerShare,
+                          // );
                         };
 
                         const decrementQuantity = () => {
                           if (currentQuantity > minimumShares) {
                             field.onChange(currentQuantity - 1);
-                            form.setValue(
-                              "amount",
-                              (currentQuantity - 1) * pricePerShare,
-                            );
+                            // form.setValue(
+                            //   "amount",
+                            //   (currentQuantity - 1) * pricePerShare,
+                            // );
                           }
                         };
-
-                        // useEffect(() => {
-                        //   if (!payInstall) {
-                        //     form.setValue("quantity", minimumShares);
-                        //     form.setValue(
-                        //       "amount",
-                        //       minimumShares * pricePerShare,
-                        //     );
-                        //   }
-                        // }, [payInstall, minimumShares, pricePerShare]);
 
                         return (
                           <div className="ring rounded-box fade">
@@ -306,7 +296,9 @@ function PropertyDetailPage() {
                                   Cost for {currentQuantity} shares
                                 </span>
                                 <span className="text-sm font-bold">
-                                  {formatCurrency(totalCost)}
+                                  {formatCurrency(
+                                    totalCost + breakdown.systemCharge,
+                                  )}
                                 </span>
                               </div>
                             </div>
@@ -360,13 +352,14 @@ function PropertyDetailPage() {
                   {property.paymentOption === "INSTALLMENT" && (
                     <div className="p-3 bg-blue-50 rounded border border-blue-100">
                       <p className="text-xs text-blue-700">
-                        You are paying the minimum installment of{" "}
-                        <span className="font-bold">
+                        You are paying in installment{" "}
+                        {/*<span className="font-bold">
                           {formatCurrency(
-                            (property.minimumInstallmentAmount || 0) / 100,
+                            breakdown.installmentAmount,
+                            // (breakdown.mi || 0) / 100,
                           )}
-                        </span>
-                        . Remaining balance will be spread over{" "}
+                        </span>*/}
+                        Remaining balance will be spread over{" "}
                         {property.installmentDuration} months.
                       </p>
                     </div>
