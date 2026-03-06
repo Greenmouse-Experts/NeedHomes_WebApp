@@ -1,12 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Calendar,
-  MapPin,
-  Percent,
-  CheckCircle2,
-  TrendingUp,
-  ChevronLeft,
-} from "lucide-react";
+import { MapPin, Percent, TrendingUp, ChevronLeft } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
@@ -19,7 +12,7 @@ import { useNavigate } from "@tanstack/react-router";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
@@ -67,36 +60,6 @@ function PropertyDetailPage() {
     },
   });
 
-  const mutateIns = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
-      let resp = await apiClient.post(
-        "/investments/installments/:paymentId/pay",
-        {
-          propertyId: propertyId,
-          amountPaid: data.amountPaid,
-          quantity: data.quantity,
-        },
-      );
-      return resp.data;
-    },
-    onSuccess: (data: ApiResponse<{ id: string }>) => {
-      closeModal();
-      navigate({
-        to: "/investors/my-investments/$investmentId",
-        params: {
-          investmentId: data.data.id,
-        },
-      });
-    },
-  });
-
-  const onSubmit = (data: { amountPaid: number; quantity: number }) => {
-    toast.promise(mutate.mutateAsync(data), {
-      loading: "Investing...",
-      success: "Investment successful!",
-      error: extract_message,
-    });
-  };
   interface OUTRIGHTDATA {
     paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
     minimumInstallmentAmount?: number;
@@ -106,6 +69,7 @@ function PropertyDetailPage() {
     defaultValues: {
       installment: false,
       amount: 0,
+      quantity: 1,
     },
   });
   // let payAmount = form.watch("amount");
@@ -115,10 +79,14 @@ function PropertyDetailPage() {
       {(data) => {
         const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
         // Calculate total price including additional fees if they exist
-        const totalPrice =
-          property.totalPrice / 100 || property.basePrice / 100;
-        const percentage_totalPrice = (2 / 100) * totalPrice;
-        const system_charge_per = (2 / 100) * (property.basePrice / 100);
+        const basePrice = property.basePrice / 100;
+        const additionalFeesTotal = (property.additionalFees || []).reduce(
+          (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
+          0,
+        );
+        const systemChargeAmount =
+          (property.systemCharges.platformChargePercentage / 100) * basePrice;
+        const totalPrice = basePrice + additionalFeesTotal + systemChargeAmount;
 
         let breakdown: {
           totalPrice: number;
@@ -127,14 +95,15 @@ function PropertyDetailPage() {
           installmentAmount?: number;
           installmentDuration?: number;
           systemCharge: number;
+          pricePerShare: number;
+          availableShares: number;
         } = {
-          totalPrice: totalPrice + system_charge_per,
+          totalPrice: totalPrice,
           additionalFees: property.additionalFees || [],
-          additionalFeesTotal: (property.additionalFees || []).reduce(
-            (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
-            0,
-          ),
-          systemCharge: system_charge_per,
+          additionalFeesTotal: additionalFeesTotal,
+          systemCharge: systemChargeAmount,
+          pricePerShare: property.pricePerShare,
+          availableShares: property.availableShares,
         };
 
         if (property.paymentOption === "INSTALLMENT") {
@@ -142,21 +111,24 @@ function PropertyDetailPage() {
           //@ts-ignore
           breakdown.installmentDuration = property.installmentDuration;
         }
-        const payOption = property.paymentOption;
+
         const payInstall = form.watch("installment");
 
         const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
         useEffect(() => {
-          const installment_value = form.getValues("installment");
-
           if (installOptions) {
             form.setValue("installment", true);
+            form.setValue("quantity", property.minimumShares);
           }
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
-            form.setValue("amount", breakdown.installmentAmount / 100);
+            const charge = (2 / 100) * breakdown.installmentAmount;
+            form.setValue(
+              "amount",
+              (breakdown.installmentAmount + charge) / 100,
+            );
           }
         }, []);
         return (
@@ -205,7 +177,7 @@ function PropertyDetailPage() {
                       ? payAmount
                         ? formatCurrency(payAmount)
                         : formatCurrency(
-                            property.minimumInstallmentAmount / 100,
+                            (property.minimumInstallmentAmount || 0) / 100,
                           )
                       : breakdown.totalPrice.toLocaleString()}
                   </Button>
@@ -253,7 +225,8 @@ function PropertyDetailPage() {
 
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">
-                        System Charge: 2%
+                        System Charge:{" "}
+                        {property.systemCharges.platformChargePercentage}%
                       </span>
                       <span className="text-sm font-medium">
                         {formatCurrency(breakdown.systemCharge)}
@@ -269,6 +242,29 @@ function PropertyDetailPage() {
                       </span>
                     </div>
                   </div>
+                  <div className="">
+                    <h2 className="p-4 border-b fade  font-bold text-gray-900">
+                      Shares
+                    </h2>
+                    <div className="p-4">
+                      <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                        <span className="text-sm font-bold text-gray-900">
+                          Price per share
+                        </span>
+                        <span className="text-lg font-bold text-(--color-orange)">
+                          {formatCurrency(breakdown.pricePerShare / 100)}
+                        </span>
+                      </div>
+                      <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                        <span className="text-sm font-bold text-gray-900">
+                          AvaialbleShares
+                        </span>
+                        <span className="text-lg font-bold text-(--color-orange)">
+                          {breakdown.availableShares}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
 
                   {property.paymentOption === "INSTALLMENT" && (
                     <div className="p-3 bg-blue-50 rounded border border-blue-100">
@@ -276,7 +272,7 @@ function PropertyDetailPage() {
                         You are paying the minimum installment of{" "}
                         <span className="font-bold">
                           {formatCurrency(
-                            property.minimumInstallmentAmount / 100,
+                            (property.minimumInstallmentAmount || 0) / 100,
                           )}
                         </span>
                         . Remaining balance will be spread over{" "}
@@ -301,8 +297,8 @@ function PropertyDetailPage() {
                     {/*{JSON.stringify(property["installmentDuration"])}*/}
                     <InstallMentForm
                       form={form}
-                      duration={property["installmentDuration"]}
-                      minimumInvestmentAmount={breakdown.installmentAmount}
+                      duration={property.installmentDuration || 0}
+                      minimumInvestmentAmount={breakdown.installmentAmount || 0}
                     />
                   </div>
                 )}
@@ -322,15 +318,6 @@ function PropertyDetailPage() {
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
                 onClick={() => {
-                  const amountToPay =
-                    property.paymentOption === "INSTALLMENT"
-                      ? property.minimumInvestmentAmount ||
-                        property.minimumInvestment ||
-                        totalPrice
-                      : totalPrice + breakdown.additionalFeesTotal;
-
-                  // methods.setValue("amountPaid", amountToPay);
-                  // methods.setValue("quantity", 1);
                   showModal();
                 }}
                 disabled={mutate.isPending}
@@ -505,10 +492,12 @@ const InstallMentForm = ({
   form,
   minimumInvestmentAmount,
   duration,
+  minimumShares,
 }: {
   form: any;
   duration: string | number;
   minimumInvestmentAmount: number;
+  minimumShares?: number;
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
@@ -519,7 +508,7 @@ const InstallMentForm = ({
   return (
     <div className="space-y-4 p-4 ring rounded-box fade">
       <div className="flex items-end gap-2">
-        <div className="flex-1">
+        <div className="flex-1 space-y-4">
           <SimpleInput
             {...form.register("amount", {
               valueAsNumber: true,
@@ -532,6 +521,19 @@ const InstallMentForm = ({
             type="number"
             placeholder={formatCurrency(minimumInvestmentAmount)}
             className="w-full"
+          />
+          <SimpleInput
+            {...form.register("quantity", {
+              valueAsNumber: true,
+              min: {
+                value: minimumShares,
+                message: `Amount must be at least ${formatCurrency(minimumShares)}`,
+              },
+            })}
+            label="Shares"
+            type="number"
+            placeholder={formatCurrency(minimumInvestmentAmount)}
+            className="w-full "
           />
           {form.formState.errors.amount && (
             <p className="text-red-500 text-sm mt-1">
