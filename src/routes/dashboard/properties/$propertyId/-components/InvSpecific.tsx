@@ -29,7 +29,7 @@ export default function InvestmentDetails({
                   Available plot size (sqm):
                 </span>
                 <span className="text-sm font-medium text-gray-900">
-                  {property.plotSize || 0}
+                  {property.avaialablePlots || 0}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">

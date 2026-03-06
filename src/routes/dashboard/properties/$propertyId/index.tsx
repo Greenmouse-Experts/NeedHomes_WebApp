@@ -153,7 +153,7 @@ function PropertyDetailsPage() {
                           <div className="min-w-0">
                             <p className="text-xs text-gray-500">Size</p>
                             <p className="font-semibold text-sm md:text-base text-gray-900">
-                              {property.plotSize || "N/A"}
+                              {property.avaialablePlots || "N/A"}
                             </p>
                           </div>
                         </div>

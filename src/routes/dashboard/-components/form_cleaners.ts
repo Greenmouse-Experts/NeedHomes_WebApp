@@ -27,7 +27,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.pricePerShare;
   delete cleaned.minimumShares;
   delete cleaned.exitWindow;
-  delete cleaned.plotSize;
+  delete cleaned.avaialablePlots;
   delete cleaned.pricePerPlot;
   delete cleaned.holdingPeriod;
   delete cleaned.buyBackOption;
@@ -66,7 +66,7 @@ export const strip_land_banking = (data: Record<string, any>) => {
 
 export const strip_fractional = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
-  delete cleaned.plotSize;
+  delete cleaned.avaialablePlots;
   delete cleaned.pricePerPlot;
   delete cleaned.holdingPeriod;
   delete cleaned.buyBackOption;
@@ -97,7 +97,7 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.profitSharingRatio;
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
-  delete cleaned.plotSize;
+  delete cleaned.avaialablePlots;
   delete cleaned.pricePerPlot;
   delete cleaned.holdingPeriod;
   delete cleaned.buyBackOption;
@@ -126,7 +126,7 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.profitSharingRatio;
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
-  delete cleaned.plotSize;
+  delete cleaned.avaialablePlots;
   delete cleaned.pricePerPlot;
   delete cleaned.holdingPeriod;
   delete cleaned.buyBackOption;

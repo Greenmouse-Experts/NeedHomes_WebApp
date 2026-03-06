@@ -69,7 +69,7 @@ function RouteComponent() {
 }
 
 interface LandBankingProperty extends DocProps {
-  plotSize: number;
+  avaialablePlots: number;
   pricePerPlot: number;
   holdingPeriod: number;
   buyBackOption: boolean;
@@ -198,7 +198,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Controller
-                name="plotSize"
+                name="avaialablePlots"
                 control={methods.control}
                 render={({ field }) => (
                   <SimpleInput

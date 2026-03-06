@@ -315,7 +315,7 @@ export interface ADMIN_PROPERTY_LISTING {
   pricePerShare: number | null;
   minimumShares: number | null;
   exitWindow: number | null;
-  plotSize: string | null;
+  avaialablePlots: string | null;
   pricePerPlot: number | null;
   holdingPeriod: number | null;
   buyBackOption: boolean | null;
@@ -358,7 +358,7 @@ export interface PROPERTY_DATA {
   pricePerShare: number | null;
   minimumShares: number | null;
   exitWindow: number | null;
-  plotSize: string | null;
+  avaialablePlots: string | null;
   pricePerPlot: number | null;
   holdingPeriod: number | null;
   buyBackOption: boolean | null;
@@ -401,7 +401,7 @@ export type SINGLE_PROPERTY = {
   pricePerShare: number | null;
   minimumShares: number | null;
   exitWindow: number | null;
-  plotSize: string | null;
+  avaialablePlots: string | null;
   pricePerPlot: number | null;
   holdingPeriod: number | null;
   buyBackOption: boolean | null;

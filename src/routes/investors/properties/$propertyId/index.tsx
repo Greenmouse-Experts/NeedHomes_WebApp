@@ -414,13 +414,13 @@ function PropertyDetailPage() {
                               </span>
                             </div>
                           )}
-                          {property.plotSize && (
+                          {property.avaialablePlots && (
                             <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                               <span className="text-sm text-gray-600">
                                 Available plot size:
                               </span>
                               <span className="text-sm font-medium text-gray-900">
-                                {property.plotSize}
+                                {property.avaialablePlots}
                               </span>
                             </div>
                           )}
