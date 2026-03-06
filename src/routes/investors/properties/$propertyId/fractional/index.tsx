@@ -168,9 +168,12 @@ function PropertyDetailPage() {
                           },
                         );
                       }
+
                       toast.promise(
                         mutate.mutateAsync({
-                          amountPaid: (install_amount + full_charge) / 100,
+                          amountPaid:
+                            (install_amount + full_charge) / 100 +
+                            breakdown.additionalFeesTotal,
                           quantity: form.getValues("quantity"),
                         }),
                         {
@@ -189,7 +192,10 @@ function PropertyDetailPage() {
                         : formatCurrency(
                             (property.minimumInstallmentAmount || 0) / 100,
                           )
-                      : formatCurrency((install_amount + full_charge) / 100)}
+                      : formatCurrency(
+                          (install_amount + full_charge) / 100 +
+                            breakdown.additionalFeesTotal,
+                        )}
                   </Button>
                 </div>
               }
