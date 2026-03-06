@@ -111,7 +111,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
-      data["basePrice"] = data.pricePerPlot * data["availableUnits"];
+      data["basePrice"] = data.pricePerPlot * data["availablePlots"];
       const edited_payload = calculate_fees(data, [
         "pricePerPlot",
         "minimumInstallmentAmount",
