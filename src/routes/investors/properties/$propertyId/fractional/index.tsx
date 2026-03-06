@@ -12,7 +12,7 @@ import { useNavigate } from "@tanstack/react-router";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
@@ -223,6 +223,97 @@ function PropertyDetailPage() {
                         </div>
                       </div>
                     </div>
+
+                    <Controller
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => {
+                        const currentQuantity = field.value;
+                        const pricePerShare = breakdown.pricePerShare / 100;
+                        const totalCost = currentQuantity * pricePerShare;
+                        const minimumShares = property.minimumShares || 1; // Default to 1 if not set
+
+                        const incrementQuantity = () => {
+                          field.onChange(currentQuantity + 1);
+                          form.setValue(
+                            "amount",
+                            (currentQuantity + 1) * pricePerShare,
+                          );
+                        };
+
+                        const decrementQuantity = () => {
+                          if (currentQuantity > minimumShares) {
+                            field.onChange(currentQuantity - 1);
+                            form.setValue(
+                              "amount",
+                              (currentQuantity - 1) * pricePerShare,
+                            );
+                          }
+                        };
+
+                        // useEffect(() => {
+                        //   if (!payInstall) {
+                        //     form.setValue("quantity", minimumShares);
+                        //     form.setValue(
+                        //       "amount",
+                        //       minimumShares * pricePerShare,
+                        //     );
+                        //   }
+                        // }, [payInstall, minimumShares, pricePerShare]);
+
+                        return (
+                          <div className="ring rounded-box fade">
+                            <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
+                              Select Shares
+                            </h2>
+                            <div className="p-2 space-y-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-900">
+                                  Quantity
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={decrementQuantity}
+                                    disabled={
+                                      field.value <= breakdown.minimumShares
+                                    }
+                                    className="px-2 py-1"
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="text-sm font-bold w-8 text-center">
+                                    {currentQuantity}
+                                  </span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={incrementQuantity}
+                                    disabled={
+                                      field.value > breakdown.availableShares
+                                    }
+                                    className="px-2 py-1"
+                                  >
+                                    +
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="p-2 border-t border-gray-200 flex justify-between items-center">
+                                <span className="text-sm text-gray-900">
+                                  Cost for {currentQuantity} shares
+                                </span>
+                                <span className="text-sm font-bold">
+                                  {formatCurrency(totalCost)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }}
+                    ></Controller>
                     {breakdown.additionalFees.length > 0 && (
                       <section className="rounded-lg border border-gray-200 overflow-hidden">
                         <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
@@ -523,19 +614,7 @@ const InstallMentForm = ({
             placeholder={formatCurrency(minimumInvestmentAmount)}
             className="w-full"
           />
-          <SimpleInput
-            {...form.register("quantity", {
-              valueAsNumber: true,
-              min: {
-                value: minimumShares,
-                message: `Amount must be at least ${formatCurrency(minimumShares)}`,
-              },
-            })}
-            label="Shares"
-            type="number"
-            placeholder={formatCurrency(minimumInvestmentAmount)}
-            className="w-full "
-          />
+
           {form.formState.errors.amount && (
             <p className="text-red-500 text-sm mt-1">
               {form.formState.errors.amount.message as string}
