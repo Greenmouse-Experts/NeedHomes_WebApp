@@ -172,8 +172,9 @@ function PropertyDetailPage() {
                       toast.promise(
                         mutate.mutateAsync({
                           amountPaid:
-                            (install_amount + full_charge) / 100 +
-                            breakdown.additionalFeesTotal,
+                            ((install_amount + full_charge) / 100 +
+                              breakdown.additionalFeesTotal) *
+                            100,
                           quantity: form.getValues("quantity"),
                         }),
                         {
