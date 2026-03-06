@@ -120,17 +120,25 @@ function PropertyDetailPage() {
 
         const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
+
+        const install_amount = form.watch("quantity") * property.pricePerShare;
         useEffect(() => {
           if (installOptions) {
             form.setValue("installment", true);
             form.setValue("quantity", property.minimumShares);
           }
         }, [installOptions]);
+
         useEffect(() => {
+          console.log("install_amount", price);
           if (breakdown.installmentAmount) {
-            form.setValue("amount", breakdown.installmentAmount);
+            const charge = (2 / 100) * install_amount;
+            form.setValue(
+              "amount",
+              (install_amount + charge) / 100 / property.installmentDuration,
+            );
           }
-        }, []);
+        }, [install_amount]);
         return (
           <>
             <Modal
@@ -539,14 +547,6 @@ function PropertyDetailPage() {
                               {property.systemCharges.platformChargePercentage}%
                             </p>
                           </div>
-                          {/*<div>
-                            <p className="text-sm text-gray-600">
-                              Partner Charge
-                            </p>
-                            <p className="text-lg font-semibold text-gray-900">
-                              {property.systemCharges.partnerChargePercentage}%
-                            </p>
-                          </div>*/}
                         </div>
                       </div>
 
