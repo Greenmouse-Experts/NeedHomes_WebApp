@@ -74,25 +74,33 @@ function LayoutComponent() {
     });
     socket.on("announcement:new", (data: Announcement) => {
       console.log("New announcement:", data);
-      return toast(
-        <Link to={`/investors/announcements/`}>
-          <h2 className="py-2  text-sm font-bold border-b fade w-full">
-            Announcement
-          </h2>
-          <div className="py-2 line-clamp-2">{data.content}</div>
-        </Link>,
-      );
+      toast("New Announcement", {
+        description: (
+          <Link to="/investors/announcements" className="block mt-2">
+            <div className="text-sm text-gray-600 line-clamp-2">
+              {data.content}
+            </div>
+            <span className="text-xs font-semibold text-blue-600 mt-2 block">
+              View Details
+            </span>
+          </Link>
+        ),
+      });
     });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
-      toast.info(
-        <Link to={`/investors/notifications/`}>
-          <h2 className="py-2  text-sm font-bold border-b fade w-full">
-            Notification
-          </h2>
-          <div className=" line-clamp-1">{data.notification.content}</div>
-        </Link>,
-      );
+      toast.info("New Notification", {
+        description: (
+          <Link to="/investors/notifications" className="block mt-2">
+            <div className="text-sm text-gray-600 line-clamp-1">
+              {data.notification.content}
+            </div>
+            <span className="text-xs font-semibold text-blue-600 mt-2 block">
+              View Notifications
+            </span>
+          </Link>
+        ),
+      });
     });
     // ✅ DISCONNECT ON UNMOUNT
     return () => {
