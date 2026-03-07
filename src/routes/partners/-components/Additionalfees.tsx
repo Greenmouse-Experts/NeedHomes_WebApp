@@ -11,6 +11,8 @@ interface AdditionalFeesProps {
 }
 
 export default function AdditionalFees({ fees }: AdditionalFeesProps) {
+  const totalAmount = fees.reduce((sum, fee) => sum + fee.amount, 0);
+
   return (
     <div className="space-y-4 ring fade p-6 rounded-box bg-base-200">
       <h3 className="text-lg font-semibold">Additional Fees</h3>
@@ -26,6 +28,15 @@ export default function AdditionalFees({ fees }: AdditionalFeesProps) {
             </span>
           </li>
         ))}
+        <li className="py-3 flex justify-between items-center font-bold">
+          <span>Total Additional Fees</span>
+          <span>
+            {new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "NGN",
+            }).format(totalAmount / 100)}
+          </span>
+        </li>
       </ul>
     </div>
   );
