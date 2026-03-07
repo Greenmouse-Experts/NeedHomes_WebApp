@@ -168,7 +168,6 @@ function PropertyDetailPage() {
                           },
                         );
                       }
-
                       toast.promise(
                         mutate.mutateAsync({
                           amountPaid:
