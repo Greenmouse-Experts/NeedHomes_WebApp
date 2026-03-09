@@ -101,13 +101,15 @@ export default function InvPaymentSchedule({
           },
         );
       },
-      // render: (item) =>
-      //   item.status === "PENDING" ? (
-      //     <span className="text-success">Pay Now</span>
-      //   ) : (
-      //     <span className="text-base-content/40">Pay Now</span>
-      //   ),
-      disabled: (item) => item.status !== "PENDING",
+      render: (item) =>
+        item.status === "PENDING" ? (
+          <span className="text-success">Pay Now</span>
+        ) : (
+          <span className=" pointer-events-none text-base-content/40">
+            Pay Now
+          </span>
+        ),
+      disable_event: (item) => item.status !== "PENDING",
     },
   ];
 

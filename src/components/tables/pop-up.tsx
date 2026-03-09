@@ -10,6 +10,7 @@ export type Actions<T = any> = {
   action: (item: T, nav: ReturnType<typeof useNavigate>) => any;
   render?: (item: T) => ReactNode | string;
   disabled?: (item: T) => boolean;
+  disable_event?: (item: T) => boolean;
 };
 type currentIndex = number;
 export default function PopUp<T>(props: {
@@ -18,6 +19,7 @@ export default function PopUp<T>(props: {
   currentIndex: currentIndex | null;
   setIndex: (index: number | null) => void;
   itemIndex: number;
+  disable_event?: (item: T) => boolean;
 }) {
   const [referenceElement, setReferenceElement] =
     useState<HTMLDivElement | null>(null);
@@ -107,8 +109,15 @@ export default function PopUp<T>(props: {
                     {" "}
                     <li key={action.key}>
                       <a
-                        onClick={() => action.action(props.item, nav)}
-                        className="text-xs"
+                        onClick={() => {
+                          if (
+                            action.disable_event &&
+                            action.disable_event(props.item)
+                          )
+                            return;
+                          action.action(props.item, nav);
+                        }}
+                        className={`text-xs ${action.disable_event && action.disable_event(props.item) ? "cursor-not-allowed" : ""}`}
                       >
                         {action.render
                           ? action.render(props.item)

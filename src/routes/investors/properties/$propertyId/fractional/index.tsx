@@ -532,14 +532,16 @@ function PropertyDetailPage() {
                                 {property.minimumShares || "N/A"}
                               </p>
                             </div>
-                            <div>
+                            {/*<div>
                               <p className="text-sm text-gray-600">
                                 Exit Window
                               </p>
                               <p className="text-lg font-semibold text-gray-900">
-                                {property.exitWindow || "N/A"}
+                                {property.exitRule ||
+                                  property.exitWindow ||
+                                  "N/A"}
                               </p>
-                            </div>
+                            </div>*/}
                           </div>
                         </div>
                       )}
