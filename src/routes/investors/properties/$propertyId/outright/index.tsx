@@ -159,10 +159,9 @@ function PropertyDetailPage() {
             // form.setValue("amount", breakdown.installmentAmount / 100);
             //
             const charge = (2 / 100) * breakdown.installmentAmount;
-            form.setValue(
-              "amount",
-              (breakdown.installmentAmount + charge) / 100,
-            );
+            let amout_total = breakdown.installmentAmount + charge / 100;
+            amout_total = Math.ceil(amout_total * 100) / 100;
+            form.setValue("amount", amout_total);
           }
         }, []);
         return (
