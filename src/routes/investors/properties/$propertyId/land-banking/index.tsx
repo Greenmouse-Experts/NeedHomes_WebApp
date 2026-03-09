@@ -37,14 +37,14 @@ function PropertyDetailPage() {
   });
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = Math.ceil(amount);
+    const fixed = parseFloat(amount.toFixed(2));
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
     mutationFn: async (data: { amountPaid: number; quantity: number }) => {
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
-        amountPaid: parseInt(data.amountPaid.toFixed()),
+        amountPaid: parseFloat(data.amountPaid.toFixed()),
         quantity: data.quantity,
       });
       return resp.data;
@@ -135,11 +135,11 @@ function PropertyDetailPage() {
           if (breakdown.installmentAmount) {
             const charge = (2 / 100) * install_amount;
 
-            const amount_total =
+            let amount_total =
               ((install_amount + charge) / 100 +
                 breakdown.additionalFeesTotal) /
-              parseInt(property.installmentDuration);
-
+              parseFloat(property.installmentDuration);
+            amount_total = Math.ceil(amount_total);
             form.setValue("amount", Number(amount_total.toFixed(2)));
           }
         }, [install_amount]);
@@ -597,7 +597,7 @@ const InstallMentForm = ({
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = Math.ceil(amount);
+    const fixed = parseFloat(amount.toFixed(2));
     return `₦ ${fixed.toLocaleString()}`;
   };
 
@@ -616,7 +616,7 @@ const InstallMentForm = ({
             })}
             label="Installment Amount"
             type="number"
-            placeholder={formatCurrency(minimumInvestmentAmount)}
+            placeholder={formatCurrency(minimumInvestmentAmount * 100)}
             className="w-full"
           />
 

@@ -44,14 +44,14 @@ function PropertyDetailPage() {
   });
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = Math.ceil(amount);
+    const fixed = parseFloat(amount.toFixed(2));
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
     mutationFn: async (data: { amountPaid: number; quantity: number }) => {
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
-        amountPaid: parseInt(data.amountPaid.toFixed()),
+        amountPaid: parseFloat(data.amountPaid.toFixed()),
         quantity: data.quantity,
       });
       return resp.data;
@@ -516,7 +516,7 @@ const InstallMentForm = ({
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = Math.ceil(amount);
+    const fixed = parseFloat(amount.toFixed(2));
     return `₦ ${fixed.toLocaleString()}`;
   };
 
