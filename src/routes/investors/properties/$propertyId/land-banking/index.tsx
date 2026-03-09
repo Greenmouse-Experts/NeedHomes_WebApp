@@ -272,7 +272,7 @@ function PropertyDetailPage() {
                         return (
                           <div className="ring rounded-box fade">
                             <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
-                              Select Shares
+                              Select Plot
                             </h2>
                             <div className="p-2 space-y-2">
                               <div className="flex justify-between items-center">
