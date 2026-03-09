@@ -37,7 +37,7 @@ function PropertyDetailPage() {
   });
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = parseInt(amount.toPrecision());
+    const fixed = parseFloat(amount.toPrecision());
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
@@ -597,7 +597,7 @@ const InstallMentForm = ({
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = parseInt(amount.toPrecision());
+    const fixed = parseFloat(amount.toPrecision());
     return `₦ ${fixed.toLocaleString()}`;
   };
 
