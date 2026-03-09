@@ -119,7 +119,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       // let basePrice = (edited_payload["pricePerPlot"] *
       //   data["availableUnits"]) as number;
 
-      // const charges = (2 / 100) * basePrice;
+      // const charges = (0 / 100) * basePrice;
       // basePrice = basePrice + charges;
       const payload = {
         ...edited_payload,

@@ -108,7 +108,7 @@ function PropertyDetailPage() {
         };
 
         if (property.paymentOption === "INSTALLMENT") {
-          const charge = (2 / 100) * property.minimumInstallmentAmount;
+          const charge = (0 / 100) * property.minimumInstallmentAmount;
           breakdown.installmentAmount =
             (property.minimumInstallmentAmount + charge) / 100;
           //@ts-ignore
@@ -122,7 +122,7 @@ function PropertyDetailPage() {
         const payAmount = form.watch("amount");
 
         const install_amount = form.watch("quantity") * property.pricePerPlot;
-        const full_charge = (2 / 100) * install_amount;
+        const full_charge = (0 / 100) * install_amount;
         useEffect(() => {
           if (installOptions) {
             form.setValue("installment", true);
@@ -133,7 +133,7 @@ function PropertyDetailPage() {
         useEffect(() => {
           console.log("install_amount", price);
           if (breakdown.installmentAmount) {
-            const charge = (2 / 100) * install_amount;
+            const charge = (0 / 100) * install_amount;
 
             let amount_total =
               ((install_amount + charge) / 100 +

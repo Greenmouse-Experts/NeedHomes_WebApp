@@ -117,8 +117,8 @@ function PropertyDetailPage() {
         // Calculate total price including additional fees if they exist
         const totalPrice =
           property.totalPrice / 100 || property.basePrice / 100;
-        const percentage_totalPrice = (2 / 100) * totalPrice;
-        const system_charge_per = (2 / 100) * (property.basePrice / 100);
+        const percentage_totalPrice = (0 / 100) * totalPrice;
+        const system_charge_per = (0 / 100) * (property.basePrice / 100);
 
         let breakdown: {
           totalPrice: number;
@@ -156,7 +156,7 @@ function PropertyDetailPage() {
         }, [installOptions]);
         useEffect(() => {
           if (breakdown.installmentAmount) {
-            const charge = (2 / 100) * breakdown.installmentAmount;
+            const charge = (0 / 100) * breakdown.installmentAmount;
             let amout_total = (breakdown.installmentAmount + charge) / 100;
             amout_total = Math.ceil(amout_total * 100) / 100;
             form.setValue("amount", amout_total);
