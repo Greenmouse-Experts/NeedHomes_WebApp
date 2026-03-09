@@ -134,10 +134,11 @@ function PropertyDetailPage() {
           console.log("install_amount", price);
           if (breakdown.installmentAmount) {
             const charge = (2 / 100) * install_amount;
-            form.setValue(
-              "amount",
-              (install_amount + charge) / 100 / property.installmentDuration,
-            );
+            const amount_total =
+              ((install_amount + charge) / 100 +
+                breakdown.additionalFeesTotal) /
+              parseInt(property.installmentDuration as any);
+            form.setValue("amount", Number(amount_total.toFixed(2)));
           }
         }, [install_amount]);
         return (
@@ -312,7 +313,9 @@ function PropertyDetailPage() {
                                 </span>
                                 <span className="text-sm font-bold">
                                   {formatCurrency(
-                                    totalCost + breakdown.systemCharge,
+                                    totalCost +
+                                      breakdown.systemCharge +
+                                      breakdown.additionalFeesTotal,
                                   )}
                                 </span>
                               </div>
