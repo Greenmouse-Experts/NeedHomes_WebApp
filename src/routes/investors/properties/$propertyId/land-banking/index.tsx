@@ -126,7 +126,7 @@ function PropertyDetailPage() {
         useEffect(() => {
           if (installOptions) {
             form.setValue("installment", true);
-            form.setValue("quantity", property.minimumShares);
+            form.setValue("quantity", 1);
           }
         }, [installOptions]);
 
