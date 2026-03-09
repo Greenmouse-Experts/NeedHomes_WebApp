@@ -97,7 +97,7 @@ function RouteComponent() {
       return resp.data;
     },
   });
-  const [filter, setFilter] = useState<"all" | "unread">("all");
+  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
   const [notifications, setNotifications] =
     useState<Notification[]>(mockNotifications);
 
@@ -200,6 +200,16 @@ function RouteComponent() {
             >
               Unread
             </button>
+            <button
+              onClick={() => setFilter("read")}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                filter === "read"
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              Read
+            </button>
           </div>
           <button
             onClick={handleMarkAllAsRead}
@@ -217,6 +227,7 @@ function RouteComponent() {
               let list = resp.data.data;
               const filteredList = list.filter((n) => {
                 if (filter === "unread") return !n.isRead;
+                if (filter === "read") return n.isRead;
                 return true;
               });
 
