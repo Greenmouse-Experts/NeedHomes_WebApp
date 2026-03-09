@@ -139,7 +139,7 @@ function PropertyDetailPage() {
               ((install_amount + charge) / 100 +
                 breakdown.additionalFeesTotal) /
               parseFloat(property.installmentDuration);
-            amount_total = Math.ceil(amount_total);
+            amount_total = Math.ceil(amount_total * 100) / 100;
             form.setValue("amount", Number(amount_total.toFixed(2)));
           }
         }, [install_amount]);

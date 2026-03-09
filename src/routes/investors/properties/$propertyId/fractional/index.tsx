@@ -134,10 +134,11 @@ function PropertyDetailPage() {
           console.log("install_amount", price);
           if (breakdown.installmentAmount) {
             const charge = (2 / 100) * install_amount;
-            const amount_total =
+            let amount_total =
               ((install_amount + charge) / 100 +
                 breakdown.additionalFeesTotal) /
-              parseFloat(property.installmentDuration as any);
+              parseFloat(property.installmentDuration);
+            amount_total = Math.ceil(amount_total * 100) / 100;
             form.setValue("amount", Number(amount_total.toFixed(2)));
           }
         }, [install_amount]);
