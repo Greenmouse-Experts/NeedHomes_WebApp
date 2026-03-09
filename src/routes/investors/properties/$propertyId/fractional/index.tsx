@@ -85,8 +85,7 @@ function PropertyDetailPage() {
           0,
         );
         const price = form.watch("quantity") * (property.pricePerShare / 100);
-        const systemChargeAmount =
-          (property.systemCharges.platformChargePercentage / 100) * price;
+        const systemChargeAmount = (0 / 100) * price;
         const totalPrice = basePrice + additionalFeesTotal + systemChargeAmount;
 
         let breakdown: {
@@ -350,8 +349,7 @@ function PropertyDetailPage() {
 
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">
-                        System Charge:{" "}
-                        {property.systemCharges.platformChargePercentage}%
+                        System Charge: {0}%
                       </span>
                       <span className="text-sm font-medium">
                         {formatCurrency(breakdown.systemCharge)}
@@ -557,7 +555,7 @@ function PropertyDetailPage() {
                               Platform Charge
                             </p>
                             <p className="text-lg font-semibold text-gray-900">
-                              {property.systemCharges.platformChargePercentage}%
+                              {0}%
                             </p>
                           </div>
                         </div>
