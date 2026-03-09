@@ -136,7 +136,9 @@ function PropertyDetailPage() {
             const charge = (2 / 100) * install_amount;
             form.setValue(
               "amount",
-              (install_amount + charge) / 100 / property.installmentDuration,
+              ((install_amount + charge) / 100 +
+                breakdown.additionalFeesTotal) /
+                property.installmentDuration,
             );
           }
         }, [install_amount]);
@@ -312,7 +314,9 @@ function PropertyDetailPage() {
                                 </span>
                                 <span className="text-sm font-bold">
                                   {formatCurrency(
-                                    totalCost + breakdown.systemCharge,
+                                    totalCost +
+                                      breakdown.systemCharge +
+                                      breakdown.additionalFeesTotal,
                                   )}
                                 </span>
                               </div>
