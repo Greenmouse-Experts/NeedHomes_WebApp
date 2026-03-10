@@ -130,20 +130,16 @@ function RouteComponent() {
     null,
   );
   const [status, setStatus] = useState<string | null>(null);
-  const [userFilter, setUserFilter] = useState<{
-    accountType: string | null;
-    verificationType: string | null;
-  }>({ accountType: null, verificationType: null });
+  const [accountType, setAccountType] = useState<string | null>(null);
   const [search, setSearch] = useState<null | string>("");
   const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
-    queryKey: ["verifications-admin", search, status, userFilter],
+    queryKey: ["verifications-admin", search, status, accountType],
     queryFn: async () => {
       let resp = await apiClient.get("admin/verifications", {
         params: {
           status,
           search,
-          accountType: userFilter.accountType,
-          verificationType: userFilter.verificationType,
+          accountType,
         },
       });
       return resp.data;
@@ -195,17 +191,20 @@ function RouteComponent() {
       key: "user",
       label: "Account Type",
       render: (_, item) => {
-        const isInvestor = item.user.accountType === "INVESTOR";
-        const isPartner = item.user.accountType === "PARTNER";
-        const cls = isInvestor ? "badge-info" : isPartner ? "badge-success" : "badge-ghost";
-        const label = isInvestor
-          ? `Investor · ${item.verificationType === "CORPORATE" ? "Corporate" : "Individual"}`
-          : isPartner
-            ? "Partner"
-            : item.user.accountType;
+        const colorMap: Record<string, string> = {
+          CORPORATE: "badge-info",
+          INDIVIDUAL: "badge-info",
+          PARTNER: "badge-success",
+        };
+        const labelMap: Record<string, string> = {
+          CORPORATE: "Investor · Corporate",
+          INDIVIDUAL: "Investor · Individual",
+          PARTNER: "Partner",
+        };
+        const key = item.user.accountType === "PARTNER" ? "PARTNER" : item.verificationType;
         return (
-          <span className={`badge badge-soft badge-sm ring fade ${cls}`}>
-            {label}
+          <span className={`badge badge-soft badge-sm ring fade ${colorMap[key] ?? "badge-ghost"}`}>
+            {labelMap[key] ?? item.user.accountType}
           </span>
         );
       },
@@ -309,15 +308,11 @@ function RouteComponent() {
     { label: "Rejected", value: "REJECTED" },
   ];
 
-  const accountTypeFilters: {
-    label: string;
-    accountType: string | null;
-    verificationType: string | null;
-  }[] = [
-    { label: "All", accountType: null, verificationType: null },
-    { label: "Investor · Corporate", accountType: "INVESTOR", verificationType: "CORPORATE" },
-    { label: "Investor · Individual", accountType: "INVESTOR", verificationType: "INDIVIDUAL" },
-    { label: "Partner", accountType: "PARTNER", verificationType: null },
+  const accountTypeFilters = [
+    { label: "All", value: null },
+    { label: "Investor · Corporate", value: "CORPORATE" },
+    { label: "Investor · Individual", value: "INDIVIDUAL" },
+    { label: "Partner", value: "PARTNER" },
   ];
 
   return (
@@ -351,25 +346,15 @@ function RouteComponent() {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm text-base-content/60 shrink-0">User Type:</span>
               <div className="flex flex-wrap gap-2">
-                {accountTypeFilters.map((f) => {
-                  const isActive =
-                    userFilter.accountType === f.accountType &&
-                    userFilter.verificationType === f.verificationType;
-                  return (
-                    <button
-                      key={f.label}
-                      onClick={() =>
-                        setUserFilter({
-                          accountType: f.accountType,
-                          verificationType: f.verificationType,
-                        })
-                      }
-                      className={`btn btn-xs ${isActive ? "btn-primary" : "btn-ghost ring fade"}`}
-                    >
-                      {f.label}
-                    </button>
-                  );
-                })}
+                {accountTypeFilters.map((f) => (
+                  <button
+                    key={f.label}
+                    onClick={() => setAccountType(f.value)}
+                    className={`btn btn-xs ${accountType === f.value ? "btn-primary" : "btn-ghost ring fade"}`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
