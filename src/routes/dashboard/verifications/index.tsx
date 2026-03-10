@@ -130,16 +130,20 @@ function RouteComponent() {
     null,
   );
   const [status, setStatus] = useState<string | null>(null);
-  const [accountType, setAccountType] = useState<string | null>(null);
+  const [userFilter, setUserFilter] = useState<{
+    accountType: string | null;
+    verificationType: string | null;
+  }>({ accountType: null, verificationType: null });
   const [search, setSearch] = useState<null | string>("");
   const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
-    queryKey: ["verifications-admin", search, status, accountType],
+    queryKey: ["verifications-admin", search, status, userFilter],
     queryFn: async () => {
       let resp = await apiClient.get("admin/verifications", {
         params: {
-          status: status,
-          search: search,
-          accountType: accountType,
+          status,
+          search,
+          accountType: userFilter.accountType,
+          verificationType: userFilter.verificationType,
         },
       });
       return resp.data;
@@ -191,17 +195,17 @@ function RouteComponent() {
       key: "user",
       label: "Account Type",
       render: (_, item) => {
-        const colorMap: Record<string, string> = {
-          INVESTOR: "badge-info",
-          PARTNER: "badge-success",
-          TENANT: "badge-warning",
-          LANDLORD: "badge-secondary",
-          INDIVIDUAL: "badge-ghost",
-        };
-        const cls = colorMap[item.user.accountType] ?? "badge-ghost";
+        const isInvestor = item.user.accountType === "INVESTOR";
+        const isPartner = item.user.accountType === "PARTNER";
+        const cls = isInvestor ? "badge-info" : isPartner ? "badge-success" : "badge-ghost";
+        const label = isInvestor
+          ? `Investor · ${item.verificationType === "CORPORATE" ? "Corporate" : "Individual"}`
+          : isPartner
+            ? "Partner"
+            : item.user.accountType;
         return (
           <span className={`badge badge-soft badge-sm ring fade ${cls}`}>
-            {item.user.accountType}
+            {label}
           </span>
         );
       },
@@ -305,13 +309,15 @@ function RouteComponent() {
     { label: "Rejected", value: "REJECTED" },
   ];
 
-  const accountTypes = [
-    { label: "All Users", value: null },
-    { label: "Investor", value: "INVESTOR" },
-    { label: "Partner", value: "PARTNER" },
-    { label: "Tenant", value: "TENANT" },
-    { label: "Landlord", value: "LANDLORD" },
-    { label: "Individual", value: "INDIVIDUAL" },
+  const accountTypeFilters: {
+    label: string;
+    accountType: string | null;
+    verificationType: string | null;
+  }[] = [
+    { label: "All", accountType: null, verificationType: null },
+    { label: "Investor · Corporate", accountType: "INVESTOR", verificationType: "CORPORATE" },
+    { label: "Investor · Individual", accountType: "INVESTOR", verificationType: "INDIVIDUAL" },
+    { label: "Partner", accountType: "PARTNER", verificationType: null },
   ];
 
   return (
@@ -343,21 +349,27 @@ function RouteComponent() {
             </div>
             {/* Account type filter */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-base-content/60 shrink-0">Account Type:</span>
+              <span className="text-sm text-base-content/60 shrink-0">User Type:</span>
               <div className="flex flex-wrap gap-2">
-                {accountTypes.map((type) => (
-                  <button
-                    key={type.label}
-                    onClick={() => setAccountType(type.value)}
-                    className={`btn btn-xs ${
-                      accountType === type.value
-                        ? "btn-primary"
-                        : "btn-ghost ring fade"
-                    }`}
-                  >
-                    {type.label}
-                  </button>
-                ))}
+                {accountTypeFilters.map((f) => {
+                  const isActive =
+                    userFilter.accountType === f.accountType &&
+                    userFilter.verificationType === f.verificationType;
+                  return (
+                    <button
+                      key={f.label}
+                      onClick={() =>
+                        setUserFilter({
+                          accountType: f.accountType,
+                          verificationType: f.verificationType,
+                        })
+                      }
+                      className={`btn btn-xs ${isActive ? "btn-primary" : "btn-ghost ring fade"}`}
+                    >
+                      {f.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
