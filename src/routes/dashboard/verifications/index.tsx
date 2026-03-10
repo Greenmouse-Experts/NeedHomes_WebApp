@@ -130,14 +130,16 @@ function RouteComponent() {
     null,
   );
   const [status, setStatus] = useState<string | null>(null);
+  const [accountType, setAccountType] = useState<string | null>(null);
   const [search, setSearch] = useState<null | string>("");
   const query = useQuery<ApiResponseV2<VERIFICATION_REQUEST[]>>({
-    queryKey: ["verifications-admin", search, status],
+    queryKey: ["verifications-admin", search, status, accountType],
     queryFn: async () => {
       let resp = await apiClient.get("admin/verifications", {
         params: {
           status: status,
           search: search,
+          accountType: accountType,
         },
       });
       return resp.data;
@@ -186,8 +188,27 @@ function RouteComponent() {
       ),
     },
     {
+      key: "user",
+      label: "Account Type",
+      render: (_, item) => {
+        const colorMap: Record<string, string> = {
+          INVESTOR: "badge-info",
+          PARTNER: "badge-success",
+          TENANT: "badge-warning",
+          LANDLORD: "badge-secondary",
+          INDIVIDUAL: "badge-ghost",
+        };
+        const cls = colorMap[item.user.accountType] ?? "badge-ghost";
+        return (
+          <span className={`badge badge-soft badge-sm ring fade ${cls}`}>
+            {item.user.accountType}
+          </span>
+        );
+      },
+    },
+    {
       key: "verificationType",
-      label: "Type",
+      label: "Verification Type",
       render: (val) => (
         <span className="badge badge-ghost badge-sm">{val}</span>
       ),
@@ -284,6 +305,15 @@ function RouteComponent() {
     { label: "Rejected", value: "REJECTED" },
   ];
 
+  const accountTypes = [
+    { label: "All Users", value: null },
+    { label: "Investor", value: "INVESTOR" },
+    { label: "Partner", value: "PARTNER" },
+    { label: "Tenant", value: "TENANT" },
+    { label: "Landlord", value: "LANDLORD" },
+    { label: "Individual", value: "INDIVIDUAL" },
+  ];
+
   return (
     <ThemeProvider>
       <>
@@ -294,20 +324,41 @@ function RouteComponent() {
               Manage and review user identity verification submissions.
             </p>
           </div>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div className="tabs tabs-boxed w-fit">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.label}
-                  className={`tab ${status === tab.value ? "tab-active" : ""}`}
-                  onClick={() => setStatus(tab.value)}
-                >
-                  {tab.label}
-                </button>
-              ))}
+          <div className="flex flex-col gap-3 mb-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="tabs tabs-boxed w-fit">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.label}
+                    className={`tab ${status === tab.value ? "tab-active" : ""}`}
+                    onClick={() => setStatus(tab.value)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              <div className="w-full md:w-72">
+                <SearchBar value={search} onChange={setSearch} />
+              </div>
             </div>
-            <div className="w-full md:w-72">
-              <SearchBar value={search} onChange={setSearch} />
+            {/* Account type filter */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-base-content/60 shrink-0">Account Type:</span>
+              <div className="flex flex-wrap gap-2">
+                {accountTypes.map((type) => (
+                  <button
+                    key={type.label}
+                    onClick={() => setAccountType(type.value)}
+                    className={`btn btn-xs ${
+                      accountType === type.value
+                        ? "btn-primary"
+                        : "btn-ghost ring fade"
+                    }`}
+                  >
+                    {type.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <PageLoader query={query}>
