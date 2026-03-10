@@ -242,9 +242,9 @@ function SignUpPartnerPage() {
                   {/*<option value="AGENCY" className="bg-gray-800">
                     Agency
                   </option>*/}
-                  <option value="OTHER" className="bg-gray-800">
+                  {/*<option value="OTHER" className="bg-gray-800">
                     Other
-                  </option>
+                  </option>*/}
                 </select>
                 {errors.partnerType && (
                   <p className="text-red-400 text-xs">
@@ -325,8 +325,14 @@ function SignUpPartnerPage() {
                   htmlFor="terms"
                   className="text-sm text-gray-300 leading-tight"
                 >
-                  By creating an account, you agree to Needhomes Privacy Policy,
-                  Terms and Conditions
+                  By creating an account, you agree to Needhomes Privacy Policy,{" "}
+                  <Link
+                    to="/terms-and-conditions"
+                    target="_blank"
+                    className="text-brand-orange hover:underline font-medium"
+                  >
+                    Terms and Conditions
+                  </Link>
                 </label>
               </div>
 

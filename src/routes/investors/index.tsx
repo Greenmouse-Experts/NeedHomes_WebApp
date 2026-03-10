@@ -7,6 +7,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
 import UserWallet from "../-components/Wallet";
 import Example from "./-components/Chart";
+import List from "../-components/test";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -105,7 +106,6 @@ function InvestorDashboard() {
           {/*<ThemeProvider></ThemeProvider>*/}
         </div>
       </div>
-
       {/* Stats Cards in Orange Box + Calendar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 h-full">
@@ -245,7 +245,6 @@ function InvestorDashboard() {
           <CalendarWidget />
         </div>
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Property */}
         <div className="lg:col-span-2">
@@ -322,7 +321,6 @@ function InvestorDashboard() {
           <UserWallet />
         </div>
       </div>
-
       {/* Monthly Analysis */}
       <Example />
     </div>

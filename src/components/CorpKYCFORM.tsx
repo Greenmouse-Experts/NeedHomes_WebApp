@@ -17,6 +17,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 interface KycFormData {
   companyName: string;
+  address: string;
   // rcNumber: string;
   cacDocument: string | null;
   tinDocument: string | null;
@@ -36,6 +37,7 @@ export default function CorpKYCFORM() {
   } = useForm<KycFormData>({
     defaultValues: {
       companyName: "",
+      address: "",
       // rcNumber: "",
       cacDocument: null,
       tinDocument: null,
@@ -67,6 +69,7 @@ export default function CorpKYCFORM() {
       const verification = kycData.data.verification;
       reset({
         companyName: verification.companyName || "",
+        address: verification.address || "",
         // rcNumber: verification.rcNumber || "",
         cacDocument: verification.cacDocument || null,
         tinDocument: verification.tinDocument || null,
@@ -112,6 +115,7 @@ export default function CorpKYCFORM() {
   const onSubmit = async (data: KycFormData) => {
     const submitData: KycFormData = {
       companyName: data.companyName,
+      address: data.address,
       // rcNumber: data.rcNumber,
       cacDocument: null,
       tinDocument: null,
@@ -230,26 +234,28 @@ export default function CorpKYCFORM() {
               )}
             </div>
 
-            {/* RC Number */}
-            {/*<div className="space-y-2">
+            {/* Address */}
+            <div className="space-y-2">
               <Label
-                htmlFor="rcNumber"
+                htmlFor="address"
                 className="text-sm font-semibold text-gray-700"
               >
-                RC Number
+                Company Address
               </Label>
               <Input
-                id="rcNumber"
-                {...register("rcNumber", { required: "RC Number is required" })}
-                placeholder="Enter RC Number"
+                id="address"
+                {...register("address", {
+                  required: "Company address is required",
+                })}
+                placeholder="Enter registered company address"
                 className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
               />
-              {errors.rcNumber && (
+              {errors.address && (
                 <p className="text-red-500 text-xs font-medium mt-1">
-                  {errors.rcNumber.message}
+                  {errors.address.message}
                 </p>
               )}
-            </div>*/}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

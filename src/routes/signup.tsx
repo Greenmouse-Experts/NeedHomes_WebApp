@@ -437,7 +437,14 @@ function SignUpPage() {
                       className="text-sm text-gray-300 leading-tight"
                     >
                       By creating an account, you agree to Needhomes Privacy
-                      Policy, Terms and Conditions
+                      Policy,{" "}
+                      <Link
+                        to="/terms-and-conditions"
+                        target="_blank"
+                        className="text-brand-orange hover:underline font-medium"
+                      >
+                        Terms and Conditions
+                      </Link>
                     </label>
                   </div>
                 </>
@@ -622,7 +629,14 @@ function SignUpPage() {
                       className="text-sm text-gray-300 leading-tight"
                     >
                       By creating an account, you agree to Needhomes Privacy
-                      Policy, Terms and Conditions
+                      Policy,{" "}
+                      <Link
+                        to="/terms-and-conditions"
+                        target="_blank"
+                        className="text-brand-orange hover:underline font-medium"
+                      >
+                        Terms and Conditions
+                      </Link>
                     </label>
                   </div>
                 </>

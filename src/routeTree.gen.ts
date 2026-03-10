@@ -39,6 +39,7 @@ import { Route as InvestorsRouteRouteImport } from './routes/investors/route'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as BlogsRouteRouteImport } from './routes/blogs/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TermsIndexRouteImport } from './routes/terms/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
 import { Route as PartnersIndexRouteImport } from './routes/partners/index'
 import { Route as InvestorsIndexRouteImport } from './routes/investors/index'
@@ -291,6 +292,11 @@ const BlogsRouteRoute = BlogsRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsIndexRoute = TermsIndexRouteImport.update({
+  id: '/terms/',
+  path: '/terms/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
@@ -933,6 +939,7 @@ export interface FileRoutesByFullPath {
   '/investors/': typeof InvestorsIndexRoute
   '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
+  '/terms/': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
@@ -1051,6 +1058,7 @@ export interface FileRoutesByTo {
   '/investors': typeof InvestorsIndexRoute
   '/partners': typeof PartnersIndexRoute
   '/recover-password': typeof RecoverPasswordIndexRoute
+  '/terms': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
@@ -1182,6 +1190,7 @@ export interface FileRoutesById {
   '/investors/': typeof InvestorsIndexRoute
   '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
+  '/terms/': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
@@ -1319,6 +1328,7 @@ export interface FileRouteTypes {
     | '/investors/'
     | '/partners/'
     | '/recover-password/'
+    | '/terms/'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/new'
     | '/dashboard/jobs/create'
@@ -1437,6 +1447,7 @@ export interface FileRouteTypes {
     | '/investors'
     | '/partners'
     | '/recover-password'
+    | '/terms'
     | '/dashboard/properties/edit'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/listed'
@@ -1567,6 +1578,7 @@ export interface FileRouteTypes {
     | '/investors/'
     | '/partners/'
     | '/recover-password/'
+    | '/terms/'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/new'
     | '/dashboard/jobs/create'
@@ -1676,6 +1688,7 @@ export interface RootRouteChildren {
   CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
+  TermsIndexRoute: typeof TermsIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
   PartnerRecoverForgotPasswordIndexRoute: typeof PartnerRecoverForgotPasswordIndexRoute
   PartnerRecoverForgotPasswordResetIndexRoute: typeof PartnerRecoverForgotPasswordResetIndexRoute
@@ -1891,6 +1904,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms/': {
+      id: '/terms/'
+      path: '/terms'
+      fullPath: '/terms/'
+      preLoaderRoute: typeof TermsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recover-password/': {
@@ -3140,6 +3160,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
+  TermsIndexRoute: TermsIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,
   PartnerRecoverForgotPasswordIndexRoute:
     PartnerRecoverForgotPasswordIndexRoute,

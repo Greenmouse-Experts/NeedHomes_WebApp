@@ -1,10 +1,7 @@
 import apiClient from "@/api/simpleApi";
 import { extract_message } from "@/helpers/apihelpers";
 import { useAuth } from "@/store/authStore";
-import {
-  useMutation,
-  type QueryObserverResult,
-} from "@tanstack/react-query";
+import { useMutation, type QueryObserverResult } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Socket } from "socket.io-client";
 import { toast } from "sonner";
@@ -13,6 +10,7 @@ interface Sender {
   id: string;
   firstName: string;
   lastName: string;
+  profilePicture?: string | null;
 }
 
 interface Message {
@@ -38,6 +36,63 @@ interface Conversation {
   updatedAt: string;
   deletedAt: string | null;
   messages: Message[];
+}
+
+function isImageUrl(content: string): boolean {
+  return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(content);
+}
+
+function Avatar({
+  isSystem,
+  sender,
+  isOwn,
+  currentUserPicture,
+}: {
+  isSystem: boolean;
+  sender: Sender;
+  isOwn: boolean;
+  currentUserPicture?: string | null;
+}) {
+  const picUrl = isOwn ? currentUserPicture : sender?.profilePicture;
+
+  if (isSystem) {
+    return (
+      <div className="chat-image avatar">
+        <div className="w-10 rounded-full ring ring-base-300 overflow-hidden bg-white flex items-center justify-center">
+          <img
+            src="/favicon.ico"
+            alt="NeedHomes"
+            className="w-full rounded-full h-full object-contain p-1"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (picUrl) {
+    return (
+      <div className="chat-image avatar">
+        <div className="w-10 rounded-full ring ring-base-300 overflow-hidden">
+          <img
+            src={picUrl}
+            alt="avatar"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="chat-image avatar placeholder">
+      <div className="ring fade rounded-full w-10 grid place-items-center bg-primary text-primary-content">
+        <span className="text-sm">
+          {sender?.firstName?.[0] || "?"}
+          {sender?.lastName?.[0] || ""}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 export default function Conversations({
@@ -80,6 +135,7 @@ export default function Conversations({
     }
 
     const onNewMessage = (message: Message) => {
+      console.log("new_message");
       setMessages((prev) => {
         if (prev.some((m) => m.id === message.id)) return prev;
         return [...prev, message];
@@ -127,14 +183,11 @@ export default function Conversations({
           <button
             disabled={mutation.isPending}
             onClick={() => {
-              toast.promise(
-                mutation.mutateAsync({ message: "Hello" }),
-                {
-                  loading: "Starting conversation...",
-                  error: extract_message,
-                  success: "Conversation started",
-                },
-              );
+              toast.promise(mutation.mutateAsync({ message: "Hello" }), {
+                loading: "Starting conversation...",
+                error: extract_message,
+                success: "Conversation started",
+              });
             }}
             className="mt-4 btn btn-primary btn-soft ring fade btn-lg"
           >
@@ -162,21 +215,22 @@ export default function Conversations({
 
       {messages.map((message) => {
         const isOwn = !message.isSystem && message.senderId === userId;
+        const isImg = isImageUrl(message.content);
+
         return (
-          <div key={message.id} className={`chat ${isOwn ? "chat-end" : "chat-start"}`}>
-            <div className="chat-image avatar placeholder ring fade rounded-full grid place-items-center p-3 bg-primary text-primary-content">
-              {message.isSystem ? (
-                <span className="text-sm">AD</span>
-              ) : (
-                <span className="text-sm">
-                  {message.sender?.firstName?.[0] || "?"}
-                  {message.sender?.lastName?.[0] || ""}
-                </span>
-              )}
-            </div>
+          <div
+            key={message.id}
+            className={`chat ${isOwn ? "chat-end" : "chat-start"}`}
+          >
+            <Avatar
+              isSystem={message.isSystem}
+              sender={message.sender}
+              isOwn={isOwn}
+              currentUserPicture={auth?.user?.profilePicture}
+            />
             <div className="chat-header">
               {message.isSystem ? (
-                <>Admin</>
+                <>NeedHomes</>
               ) : (
                 <>
                   {message.sender?.firstName} {message.sender?.lastName}
@@ -187,9 +241,19 @@ export default function Conversations({
               </time>
             </div>
             <div
-              className={`chat-bubble ${message.isSystem ? "chat-bubble-info" : ""}`}
+              className={`chat-bubble ${message.isSystem ? "chat-bubble-info" : ""} ${isImg ? "!p-1 !bg-transparent !shadow-none" : ""}`}
             >
-              {message.content}
+              {isImg ? (
+                <a href={message.content} target="_blank" rel="noreferrer">
+                  <img
+                    src={message.content}
+                    alt="shared image"
+                    className="max-w-[240px] max-h-[240px] rounded-lg object-cover cursor-zoom-in"
+                  />
+                </a>
+              ) : (
+                message.content
+              )}
             </div>
             <div className="chat-footer opacity-50">
               {message.isRead ? "Read" : "Sent"}

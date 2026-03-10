@@ -1,18 +1,17 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { Button } from "@/components/ui/Button";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { extract_message } from "@/helpers/apihelpers";
 
 interface ChargeSettings {
   id: string;
-  platformChargePercentage: number;
-  partnerChargePercentage: number;
+  agentCommissionType: "percentage" | "fixed";
+  agentCommissionValue: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -28,7 +27,7 @@ export default function Charges() {
 
   return (
     <ThemeProvider className="ring fade rounded-box">
-      <h2 className="p-4 border-b text-lg font-bold fade">Charges</h2>
+      <h2 className="p-4 border-b text-lg font-bold fade">Charges & Commission</h2>
       <div className="p-4">
         <QueryCompLayout query={query}>
           {(data) => <FormData data={data.data} />}
@@ -61,34 +60,55 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
   };
   const methods = useForm<ChargeSettings>({
     defaultValues: {
-      platformChargePercentage: data?.platformChargePercentage || 0,
-      partnerChargePercentage: data?.partnerChargePercentage || 0,
+      agentCommissionType: data?.agentCommissionType || "percentage",
+      agentCommissionValue: data?.agentCommissionValue || 0,
     },
   });
-  const { register } = methods;
+  const { register, watch } = methods;
+  const commissionType = watch("agentCommissionType");
 
   return (
     <ThemeProvider>
       <FormProvider {...methods}>
         <form className="space-y-5" onSubmit={methods.handleSubmit(onSubmit)}>
-          <SimpleInput
-            label="Platform Charge Percentage (%)"
-            type="number"
-            step="0.01"
-            {...register("platformChargePercentage", {
-              valueAsNumber: true,
-              required: "This field is required",
-            })}
-          />
-          <SimpleInput
-            label="Partner Charge Percentage (%)"
-            type="number"
-            step="0.01"
-            {...register("partnerChargePercentage", {
-              valueAsNumber: true,
-              required: "This field is required",
-            })}
-          />
+          <div className="space-y-3">
+            <h3 className="font-semibold text-sm">Agent Commission Fee</h3>
+            <p className="text-xs text-base-content/60">
+              Applied when a Partner Agent promotes and facilitates the sale of a property.
+              Automatically calculated upon transaction completion.
+            </p>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  className="radio radio-sm"
+                  value="percentage"
+                  {...register("agentCommissionType")}
+                />
+                <span className="text-sm">Percentage (%)</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  className="radio radio-sm"
+                  value="fixed"
+                  {...register("agentCommissionType")}
+                />
+                <span className="text-sm">Fixed Amount</span>
+              </label>
+            </div>
+            <SimpleInput
+              label={commissionType === "percentage" ? "Commission Rate (%)" : "Commission Amount"}
+              type="number"
+              step="0.01"
+              min="0"
+              {...register("agentCommissionValue", {
+                valueAsNumber: true,
+                required: "This field is required",
+                min: { value: 0, message: "Value must be non-negative" },
+              })}
+            />
+          </div>
           <div className="flex justify-end">
             <Button
               type="submit"

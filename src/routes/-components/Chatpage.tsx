@@ -75,6 +75,7 @@ export default function ChatPage() {
     });
 
     socket.on("chat:error", (error: { message: string }) => {
+      console.log(error);
       toast.error(error?.message || "Chat error occurred");
     });
 

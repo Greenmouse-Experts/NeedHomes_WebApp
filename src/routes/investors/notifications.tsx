@@ -1,19 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  Bell,
   Check,
   Clock,
   Info,
   AlertTriangle,
   CheckCircle2,
 } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 
 export const Route = createFileRoute("/investors/notifications")({
   component: RouteComponent,
@@ -98,8 +97,8 @@ function RouteComponent() {
     },
   });
   const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications);
+  const [selected, setSelected] = useState<Notification | null>(null);
+  const modalRef = useRef<ModalHandle>(null);
 
   const mutation = useMutation({
     mutationFn: async (fn: any) => await fn(),
@@ -119,6 +118,14 @@ function RouteComponent() {
         error: extract_message,
       },
     );
+  };
+
+  const handleOpen = (notification: Notification) => {
+    setSelected(notification);
+    modalRef.current?.open();
+    if (!notification.isRead) {
+      markRead(notification.id);
+    }
   };
 
   const handleMarkAllAsRead = () => {
@@ -245,7 +252,8 @@ function RouteComponent() {
                     return (
                       <div
                         key={notification.id}
-                        className={`p-4 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors ${
+                        onClick={() => handleOpen(notification)}
+                        className={`p-4 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors cursor-pointer ${
                           !notification.isRead ? "bg-blue-50/30" : ""
                         }`}
                       >
@@ -270,18 +278,12 @@ function RouteComponent() {
                               {notification.date}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 leading-relaxed">
+                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
                             {notification.content}
                           </p>
                         </div>
                         {!notification.isRead && (
-                          <button
-                            onClick={() => markRead(notification.id)}
-                            className="btn btn-primary btn-sm btn-soft ring fade"
-                            title="Mark as read"
-                          >
-                            Mark Read
-                          </button>
+                          <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-2" />
                         )}
                       </div>
                     );
@@ -292,6 +294,30 @@ function RouteComponent() {
           </PageLoader>
         </section>
       </div>
+
+      <Modal ref={modalRef} title={selected?.title}>
+        {selected && (
+          <div className="space-y-4">
+            <div
+              className={`flex items-center gap-3 p-3 rounded-lg ${getBgColor(selected.type)}`}
+            >
+              <div className="shrink-0">{getIcon(selected.type)}</div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  {selected.type}
+                </span>
+                <span className="text-xs text-gray-500 flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  {selected.date}
+                </span>
+              </div>
+            </div>
+            <p className="font-bold text-gray-900 leading-relaxed text-sm md:text-base">
+              {selected.content}
+            </p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
