@@ -47,11 +47,13 @@ function PartnerPropertiesList() {
     investmentModel: string | null;
     minPrice: number | null;
     maxPrice: number | null;
+    location: string | null;
   }>({
     propertyType: null,
     investmentModel: null,
     minPrice: null,
     maxPrice: null,
+    location: null,
   });
 
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
@@ -62,8 +64,9 @@ function PartnerPropertiesList() {
   const modal = useModal();
   const form = useForm({
     defaultValues: {
-      minPrice: null,
-      maxPrice: null,
+      minPrice: null as number | null,
+      maxPrice: null as number | null,
+      location: "",
     },
   });
 
@@ -104,6 +107,7 @@ function PartnerPropertiesList() {
       filters.investmentModel,
       filters.minPrice,
       filters.maxPrice,
+      filters.location,
     ],
     queryFn: async () => {
       let resp = await apiClient.get("/properties", {
@@ -114,6 +118,7 @@ function PartnerPropertiesList() {
           search,
           minPrice: filters.minPrice ? filters.minPrice * 100 : undefined,
           maxPrice: filters.maxPrice ? filters.maxPrice * 100 : undefined,
+          location: filters.location || undefined,
         },
       });
       return resp.data;
@@ -132,16 +137,17 @@ function PartnerPropertiesList() {
     }
   };
 
-  // Price filter modal submit
-  const onSubmit = (data: { minPrice?: number; maxPrice?: number }) => {
-    if (!data.minPrice && !data.maxPrice) {
-      toast.error("Please enter at least one price filter");
+  // Filter modal submit
+  const onSubmit = (data: { minPrice?: number | null; maxPrice?: number | null; location?: string }) => {
+    if (!data.minPrice && !data.maxPrice && !data.location?.trim()) {
+      toast.error("Please enter at least a price range or location");
       return;
     }
     handleFilterChange("minPrice", data.minPrice ?? null);
     handleFilterChange("maxPrice", data.maxPrice ?? null);
+    handleFilterChange("location", data.location?.trim() || null);
+    props.setPagination(1);
     modal.closeModal();
-    query.refetch();
   };
 
   // Reset all filters
@@ -151,11 +157,11 @@ function PartnerPropertiesList() {
       investmentModel: null,
       minPrice: null,
       maxPrice: null,
+      location: null,
     });
     form.reset();
     setSearch("");
     props.setPagination(1);
-    query.refetch();
   };
 
   // Show active filter tags
@@ -168,37 +174,43 @@ function PartnerPropertiesList() {
       : null,
     filters.minPrice ? `Min: ₦${filters.minPrice?.toLocaleString()}` : null,
     filters.maxPrice ? `Max: ₦${filters.maxPrice?.toLocaleString()}` : null,
+    filters.location ? `Location: ${filters.location}` : null,
   ].filter(Boolean);
 
   return (
     <ThemeProvider>
-      <Modal ref={modal.ref} title="Price Filters">
+      <Modal ref={modal.ref} title="Price & Location Filters">
         <FormProvider {...form}>
           <form
             className="space-y-4"
             onSubmit={form.handleSubmit(onSubmit as any)}
           >
             <SimpleInput
-              {...form.register("minPrice")}
-              type="number"
-              label="Min Price"
-              min={0}
-              placeholder="e.g. 1000000"
+              {...form.register("location")}
+              label="Location"
+              placeholder="e.g. Lekki, Abuja, Victoria Island"
             />
-            <SimpleInput
-              {...form.register("maxPrice")}
-              type="number"
-              label="Max Price"
-              min={0}
-              placeholder="e.g. 5000000"
-            />
+            <div className="grid grid-cols-2 gap-3">
+              <SimpleInput
+                {...form.register("minPrice")}
+                type="number"
+                label="Min Price (₦)"
+                min={0}
+                placeholder="e.g. 5000000"
+              />
+              <SimpleInput
+                {...form.register("maxPrice")}
+                type="number"
+                label="Max Price (₦)"
+                min={0}
+                placeholder="e.g. 100000000"
+              />
+            </div>
             <div className="flex items-center justify-between">
               <button
                 type="button"
                 className="btn btn-accent"
-                onClick={() => {
-                  form.reset();
-                }}
+                onClick={() => form.reset()}
               >
                 Clear
               </button>
@@ -301,7 +313,7 @@ function PartnerPropertiesList() {
               onClick={() => modal.showModal()}
               className="btn btn-primary btn-outline"
             >
-              Price
+              Price & Location
             </button>
             <button
               onClick={handleResetFilters}
@@ -312,6 +324,7 @@ function PartnerPropertiesList() {
                 !filters.investmentModel &&
                 !filters.minPrice &&
                 !filters.maxPrice &&
+                !filters.location &&
                 !search
               }
             >
