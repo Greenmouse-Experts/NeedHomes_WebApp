@@ -1,25 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Bell,
-  Check,
-  Clock,
-  Info,
-  AlertTriangle,
-  CheckCircle2,
-} from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Check, Clock, Info, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
+import PageLoader from "@/components/layout/PageLoader";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 
 export const Route = createFileRoute("/dashboard/notifications/")({
   component: RouteComponent,
 });
 
-type NotificationType = "alert" | "update" | "success" | "info";
+type NotificationType = "alert" | "update" | "success" | "INFO";
 
 interface Notification {
   id: string;
   title: string;
-  message: string;
+  content: string;
+  userId: string;
+  createdAt: string;
   type: NotificationType;
   date: string;
   isRead: boolean;
@@ -28,69 +28,112 @@ const mockNotifications: Notification[] = [
   {
     id: "1",
     title: "Investment Successful",
-    message:
+    content:
       'Your investment of N5,000,000 in "4BR Fully Detached Duplex" has been successfully processed.',
     type: "success",
     date: "2 hours ago",
     isRead: false,
+    userId: "",
+    createdAt: "",
   },
   {
     id: "2",
     title: "New Property Alert",
-    message:
+    content:
       "A new property matching your preferences has been listed in Lekki Phase 1.",
-    type: "info",
+    type: "INFO",
     date: "5 hours ago",
     isRead: false,
+    userId: "",
+    createdAt: "",
   },
   {
     id: "3",
     title: "KYC Verification Required",
-    message:
+    content:
       "Please update your identification document to complete your KYC verification.",
     type: "alert",
     date: "1 day ago",
     isRead: true,
+    userId: "",
+    createdAt: "",
   },
   {
     id: "4",
     title: "System Maintenance",
-    message:
+    content:
       "Scheduled maintenance will occur on Saturday, Jan 28th from 2:00 AM to 4:00 AM.",
     type: "update",
     date: "2 days ago",
     isRead: true,
+    userId: "",
+    createdAt: "",
   },
   {
     id: "5",
     title: "Dividend Payout",
-    message:
+    content:
       "You have received a dividend payout of N250,000 from your co-development investment.",
     type: "success",
     date: "3 days ago",
     isRead: true,
+    userId: "",
+    createdAt: "",
   },
 ];
 
 function RouteComponent() {
-  const [filter, setFilter] = useState<"all" | "unread">("all");
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications);
+  const query = useQuery<ApiResponseV2<Notification[]>>({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      let resp = await apiClient.get("/notifications");
+      return resp.data;
+    },
+  });
+  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+  const [selected, setSelected] = useState<Notification | null>(null);
+  const modalRef = useRef<ModalHandle>(null);
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)),
+  const mutation = useMutation({
+    mutationFn: async (fn: any) => await fn(),
+    onSuccess: () => {
+      query.refetch();
+    },
+  });
+
+  const markRead = (id: string) => {
+    toast.promise(
+      mutation.mutateAsync(
+        async () => await apiClient.patch(`/notifications/${id}/read`),
+      ),
+      {
+        loading: "Marking as read...",
+        success: "Notification marked as read",
+        error: extract_message,
+      },
     );
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  const handleOpen = (notification: Notification) => {
+    setSelected(notification);
+    modalRef.current?.open();
+    if (!notification.isRead) {
+      markRead(notification.id);
+    }
   };
 
-  const filteredNotifications = notifications.filter((n) => {
-    if (filter === "unread") return !n.isRead;
-    return true;
-  });
+  const handleMarkAllAsRead = () => {
+    toast.promise(
+      mutation.mutateAsync(
+        async () => await apiClient.post(`/notifications/read-all`),
+      ),
+      {
+        loading: "Marking all as read...",
+        success: "All notifications marked as read",
+        error: extract_message,
+      },
+    );
+  };
 
   const getIcon = (type: NotificationType) => {
     switch (type) {
@@ -100,9 +143,9 @@ function RouteComponent() {
         return <CheckCircle2 className="w-5 h-5 text-green-500" />;
       case "update":
         return <Clock className="w-5 h-5 text-blue-500" />;
-      case "info":
+      case "INFO":
       default:
-        return <Info className="w-5 h-5 text-[var(--color-orange)]" />;
+        return <Info className="w-5 h-5 text-(--color-orange)" />;
     }
   };
 
@@ -114,7 +157,7 @@ function RouteComponent() {
         return "bg-green-50";
       case "update":
         return "bg-blue-50";
-      case "info":
+      case "INFO":
       default:
         return "bg-orange-50";
     }
@@ -158,67 +201,117 @@ function RouteComponent() {
             >
               Unread
             </button>
+            <button
+              onClick={() => setFilter("read")}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                filter === "read"
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              Read
+            </button>
           </div>
           <button
             onClick={handleMarkAllAsRead}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--color-orange)] hover:bg-orange-50 rounded-lg transition-colors"
+            disabled
+            className="btn btn-primary btn-sm btn-ghost"
           >
             <Check className="w-4 h-4" />
             Mark all as read
           </button>
         </div>
 
-        {/* List */}
-        <div className="divide-y divide-gray-100">
-          {filteredNotifications.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No notifications found.
-            </div>
-          ) : (
-            filteredNotifications.map((notification) => (
-              <div
-                key={notification.id}
-                className={`p-4 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors ${
-                  !notification.isRead ? "bg-blue-50/30" : ""
-                }`}
-              >
-                <div
-                  className={`p-2 rounded-full flex-shrink-0 ${getBgColor(notification.type)}`}
-                >
-                  {getIcon(notification.type)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
-                    <h3
-                      className={`text-sm md:text-base font-semibold ${
-                        !notification.isRead ? "text-gray-900" : "text-gray-700"
-                      }`}
-                    >
-                      {notification.title}
-                    </h3>
-                    <span className="text-xs text-gray-500 whitespace-nowrap flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {notification.date}
-                    </span>
+        <section>
+          <PageLoader query={query}>
+            {(resp) => {
+              let list = resp.data.data;
+              const filteredList = list.filter((n) => {
+                if (filter === "unread") return !n.isRead;
+                if (filter === "read") return n.isRead;
+                return true;
+              });
+
+              if (filteredList.length === 0) {
+                return (
+                  <div className="p-8 text-center text-gray-500">
+                    No notifications found.
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {notification.message}
-                  </p>
+                );
+              }
+
+              return (
+                <div className="divide-y divide-gray-100">
+                  {filteredList.map((notification) => {
+                    return (
+                      <div
+                        key={notification.id}
+                        onClick={() => handleOpen(notification)}
+                        className={`p-4 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors cursor-pointer ${
+                          !notification.isRead ? "bg-blue-50/30" : ""
+                        }`}
+                      >
+                        <div
+                          className={`p-2 rounded-full shrink-0 ${getBgColor(notification.type)}`}
+                        >
+                          {getIcon(notification.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                            <h3
+                              className={`text-sm md:text-base font-semibold ${
+                                !notification.isRead
+                                  ? "text-gray-900"
+                                  : "text-gray-700"
+                              }`}
+                            >
+                              {notification.title}
+                            </h3>
+                            <span className="text-xs text-gray-500 whitespace-nowrap flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {notification.date}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+                            {notification.content}
+                          </p>
+                        </div>
+                        {!notification.isRead && (
+                          <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-2" />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-                {!notification.isRead && (
-                  <button
-                    onClick={() => handleMarkAsRead(notification.id)}
-                    className="p-1 hover:bg-gray-200 rounded-full transition-colors self-center"
-                    title="Mark as read"
-                  >
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  </button>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+              );
+            }}
+          </PageLoader>
+        </section>
       </div>
+
+      <Modal ref={modalRef} title={selected?.title}>
+        {selected && (
+          <div className="space-y-4">
+            <div
+              className={`flex items-center gap-3 p-3 rounded-lg ${getBgColor(selected.type)}`}
+            >
+              <div className="shrink-0">{getIcon(selected.type)}</div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  {selected.type}
+                </span>
+                <span className="text-xs text-gray-500 flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  {selected.date}
+                </span>
+              </div>
+            </div>
+            <p className="font-bold text-gray-900 leading-relaxed text-sm md:text-base">
+              {selected.content}
+            </p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
