@@ -7,7 +7,6 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
 import UserWallet from "../-components/Wallet";
 import Example from "./-components/Chart";
-import List from "../-components/test";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,

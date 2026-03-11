@@ -11,15 +11,8 @@ import {
   Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/Table";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
+import UserTransactions from "@/routes/dashboard/investors/-components/UserTransactions";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_INVESTOR_DATA } from "@/types";
@@ -346,51 +339,12 @@ function InvestorDetailsPage() {
               </div>
             </div>
 
-            {/* Placeholder for Transactions/Activity */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Recent Activity
-                </h3>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gray-50">
-                        <TableHead className="font-semibold text-xs">
-                          Type
-                        </TableHead>
-                        <TableHead className="font-semibold text-xs">
-                          Description
-                        </TableHead>
-                        <TableHead className="font-semibold text-xs">
-                          Date
-                        </TableHead>
-                        <TableHead className="font-semibold text-xs">
-                          Status
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="text-xs text-gray-900">
-                          Account
-                        </TableCell>
-                        <TableCell className="text-xs text-gray-900">
-                          User profile updated
-                        </TableCell>
-                        <TableCell className="text-xs text-gray-600">
-                          {new Date(investor.updatedAt).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          <span className="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                            Success
-                          </span>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
+            {/* Transactions */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                Transactions
+              </h3>
+              <UserTransactions id={investorId} />
             </div>
           </div>
         );
