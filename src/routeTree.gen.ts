@@ -62,6 +62,7 @@ import { Route as DashboardPartnersRouteImport } from './routes/dashboard/partne
 import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/announcements'
 import { Route as DashboardWithdrawalsRouteRouteImport } from './routes/dashboard/withdrawals/route'
 import { Route as DashboardVerificationsRouteRouteImport } from './routes/dashboard/verifications/route'
+import { Route as DashboardTransactionsRouteRouteImport } from './routes/dashboard/transactions/route'
 import { Route as DashboardSubscriptionsRouteRouteImport } from './routes/dashboard/subscriptions/route'
 import { Route as DashboardSubAdminsRouteRouteImport } from './routes/dashboard/sub-admins/route'
 import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard/properties/route'
@@ -95,7 +96,6 @@ import { Route as PartnersPropertiesPropertyIdRouteImport } from './routes/partn
 import { Route as InvestorsPropertiesPropertyIdRouteImport } from './routes/investors/properties/$propertyId'
 import { Route as InvestorsMyInvestmentsInvestmentIdRouteImport } from './routes/investors/my-investments/$investmentId'
 import { Route as DashboardTransactionsReceiptsRouteImport } from './routes/dashboard/transactions/receipts'
-import { Route as DashboardTransactionsPaymentsRouteImport } from './routes/dashboard/transactions/payments'
 import { Route as DashboardSubAdminsRolesRouteImport } from './routes/dashboard/sub-admins/roles'
 import { Route as DashboardSubAdminsPermissionsRouteImport } from './routes/dashboard/sub-admins/permissions'
 import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
@@ -108,6 +108,8 @@ import { Route as PartnersPropertiesPropertyIdIndexRouteImport } from './routes/
 import { Route as PartnerRecoverForgotPasswordIndexRouteImport } from './routes/partner/recover/forgot-password/index'
 import { Route as InvestorsPropertiesPropertyIdIndexRouteImport } from './routes/investors/properties/$propertyId/index'
 import { Route as DashboardWithdrawalsIdIndexRouteImport } from './routes/dashboard/withdrawals/$id/index'
+import { Route as DashboardTransactionsPaymentsIndexRouteImport } from './routes/dashboard/transactions/payments/index'
+import { Route as DashboardTransactionsIdIndexRouteImport } from './routes/dashboard/transactions/$id/index'
 import { Route as DashboardPropertiesPromotionsIndexRouteImport } from './routes/dashboard/properties/promotions/index'
 import { Route as DashboardPropertiesNewIndexRouteImport } from './routes/dashboard/properties/new/index'
 import { Route as DashboardPropertiesInvestmentsIndexRouteImport } from './routes/dashboard/properties/investments/index'
@@ -132,6 +134,7 @@ import { Route as InvestorsPropertiesPropertyIdOutrightIndexRouteImport } from '
 import { Route as InvestorsPropertiesPropertyIdLandBankingIndexRouteImport } from './routes/investors/properties/$propertyId/land-banking/index'
 import { Route as InvestorsPropertiesPropertyIdFractionalIndexRouteImport } from './routes/investors/properties/$propertyId/fractional/index'
 import { Route as InvestorsPropertiesPropertyIdDefaultIndexRouteImport } from './routes/investors/properties/$propertyId/default/index'
+import { Route as DashboardTransactionsPaymentsIdIndexRouteImport } from './routes/dashboard/transactions/payments/$id/index'
 import { Route as DashboardPropertiesInvestmentsIdIndexRouteImport } from './routes/dashboard/properties/investments/$id/index'
 import { Route as DashboardPartnersPartnerIdPromotionsIndexRouteImport } from './routes/dashboard/partners/$partnerId/promotions/index'
 import { Route as DashboardInvestorsCorporateInvestorIdIndexRouteImport } from './routes/dashboard/investors/corporate/$investorId/index'
@@ -411,6 +414,12 @@ const DashboardVerificationsRouteRoute =
     path: '/verifications',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const DashboardTransactionsRouteRoute =
+  DashboardTransactionsRouteRouteImport.update({
+    id: '/transactions',
+    path: '/transactions',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardSubscriptionsRouteRoute =
   DashboardSubscriptionsRouteRouteImport.update({
     id: '/subscriptions',
@@ -588,15 +597,9 @@ const InvestorsMyInvestmentsInvestmentIdRoute =
   } as any)
 const DashboardTransactionsReceiptsRoute =
   DashboardTransactionsReceiptsRouteImport.update({
-    id: '/transactions/receipts',
-    path: '/transactions/receipts',
-    getParentRoute: () => DashboardRouteRoute,
-  } as any)
-const DashboardTransactionsPaymentsRoute =
-  DashboardTransactionsPaymentsRouteImport.update({
-    id: '/transactions/payments',
-    path: '/transactions/payments',
-    getParentRoute: () => DashboardRouteRoute,
+    id: '/receipts',
+    path: '/receipts',
+    getParentRoute: () => DashboardTransactionsRouteRoute,
   } as any)
 const DashboardSubAdminsRolesRoute = DashboardSubAdminsRolesRouteImport.update({
   id: '/roles',
@@ -667,6 +670,18 @@ const DashboardWithdrawalsIdIndexRoute =
     id: '/$id/',
     path: '/$id/',
     getParentRoute: () => DashboardWithdrawalsRouteRoute,
+  } as any)
+const DashboardTransactionsPaymentsIndexRoute =
+  DashboardTransactionsPaymentsIndexRouteImport.update({
+    id: '/payments/',
+    path: '/payments/',
+    getParentRoute: () => DashboardTransactionsRouteRoute,
+  } as any)
+const DashboardTransactionsIdIndexRoute =
+  DashboardTransactionsIdIndexRouteImport.update({
+    id: '/$id/',
+    path: '/$id/',
+    getParentRoute: () => DashboardTransactionsRouteRoute,
   } as any)
 const DashboardPropertiesPromotionsIndexRoute =
   DashboardPropertiesPromotionsIndexRouteImport.update({
@@ -811,6 +826,12 @@ const InvestorsPropertiesPropertyIdDefaultIndexRoute =
     path: '/default/',
     getParentRoute: () => InvestorsPropertiesPropertyIdRoute,
   } as any)
+const DashboardTransactionsPaymentsIdIndexRoute =
+  DashboardTransactionsPaymentsIdIndexRouteImport.update({
+    id: '/payments/$id/',
+    path: '/payments/$id/',
+    getParentRoute: () => DashboardTransactionsRouteRoute,
+  } as any)
 const DashboardPropertiesInvestmentsIdIndexRoute =
   DashboardPropertiesInvestmentsIdIndexRouteImport.update({
     id: '/investments/$id/',
@@ -917,6 +938,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
   '/dashboard/subscriptions': typeof DashboardSubscriptionsRouteRouteWithChildren
+  '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/withdrawals': typeof DashboardWithdrawalsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
@@ -948,7 +970,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
   '/dashboard/sub-admins/roles': typeof DashboardSubAdminsRolesRoute
-  '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
@@ -993,6 +1014,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/investments/': typeof DashboardPropertiesInvestmentsIndexRoute
   '/dashboard/properties/new/': typeof DashboardPropertiesNewIndexRoute
   '/dashboard/properties/promotions/': typeof DashboardPropertiesPromotionsIndexRoute
+  '/dashboard/transactions/$id/': typeof DashboardTransactionsIdIndexRoute
+  '/dashboard/transactions/payments/': typeof DashboardTransactionsPaymentsIndexRoute
   '/dashboard/withdrawals/$id/': typeof DashboardWithdrawalsIdIndexRoute
   '/investors/properties/$propertyId/': typeof InvestorsPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
@@ -1008,6 +1031,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/investors/corporate/$investorId/': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
   '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
+  '/dashboard/transactions/payments/$id/': typeof DashboardTransactionsPaymentsIdIndexRoute
   '/investors/properties/$propertyId/default/': typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   '/investors/properties/$propertyId/fractional/': typeof InvestorsPropertiesPropertyIdFractionalIndexRoute
   '/investors/properties/$propertyId/land-banking/': typeof InvestorsPropertiesPropertyIdLandBankingIndexRoute
@@ -1042,6 +1066,7 @@ export interface FileRoutesByTo {
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
+  '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
   '/investors/notifications': typeof InvestorsNotificationsRoute
@@ -1064,7 +1089,6 @@ export interface FileRoutesByTo {
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
   '/dashboard/sub-admins/roles': typeof DashboardSubAdminsRolesRoute
-  '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/blogs/$id': typeof BlogsIdIndexRoute
@@ -1107,6 +1131,8 @@ export interface FileRoutesByTo {
   '/dashboard/properties/investments': typeof DashboardPropertiesInvestmentsIndexRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewIndexRoute
   '/dashboard/properties/promotions': typeof DashboardPropertiesPromotionsIndexRoute
+  '/dashboard/transactions/$id': typeof DashboardTransactionsIdIndexRoute
+  '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsIndexRoute
   '/dashboard/withdrawals/$id': typeof DashboardWithdrawalsIdIndexRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password': typeof PartnerRecoverForgotPasswordIndexRoute
@@ -1122,6 +1148,7 @@ export interface FileRoutesByTo {
   '/dashboard/investors/corporate/$investorId': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
   '/dashboard/partners/$partnerId/promotions': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id': typeof DashboardPropertiesInvestmentsIdIndexRoute
+  '/dashboard/transactions/payments/$id': typeof DashboardTransactionsPaymentsIdIndexRoute
   '/investors/properties/$propertyId/default': typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   '/investors/properties/$propertyId/fractional': typeof InvestorsPropertiesPropertyIdFractionalIndexRoute
   '/investors/properties/$propertyId/land-banking': typeof InvestorsPropertiesPropertyIdLandBankingIndexRoute
@@ -1168,6 +1195,7 @@ export interface FileRoutesById {
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
   '/dashboard/subscriptions': typeof DashboardSubscriptionsRouteRouteWithChildren
+  '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/withdrawals': typeof DashboardWithdrawalsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
@@ -1199,7 +1227,6 @@ export interface FileRoutesById {
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
   '/dashboard/sub-admins/roles': typeof DashboardSubAdminsRolesRoute
-  '/dashboard/transactions/payments': typeof DashboardTransactionsPaymentsRoute
   '/dashboard/transactions/receipts': typeof DashboardTransactionsReceiptsRoute
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
@@ -1244,6 +1271,8 @@ export interface FileRoutesById {
   '/dashboard/properties/investments/': typeof DashboardPropertiesInvestmentsIndexRoute
   '/dashboard/properties/new/': typeof DashboardPropertiesNewIndexRoute
   '/dashboard/properties/promotions/': typeof DashboardPropertiesPromotionsIndexRoute
+  '/dashboard/transactions/$id/': typeof DashboardTransactionsIdIndexRoute
+  '/dashboard/transactions/payments/': typeof DashboardTransactionsPaymentsIndexRoute
   '/dashboard/withdrawals/$id/': typeof DashboardWithdrawalsIdIndexRoute
   '/investors/properties/$propertyId/': typeof InvestorsPropertiesPropertyIdIndexRoute
   '/partner/recover/forgot-password/': typeof PartnerRecoverForgotPasswordIndexRoute
@@ -1259,6 +1288,7 @@ export interface FileRoutesById {
   '/dashboard/investors/corporate/$investorId/': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
   '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
+  '/dashboard/transactions/payments/$id/': typeof DashboardTransactionsPaymentsIdIndexRoute
   '/investors/properties/$propertyId/default/': typeof InvestorsPropertiesPropertyIdDefaultIndexRoute
   '/investors/properties/$propertyId/fractional/': typeof InvestorsPropertiesPropertyIdFractionalIndexRoute
   '/investors/properties/$propertyId/land-banking/': typeof InvestorsPropertiesPropertyIdLandBankingIndexRoute
@@ -1306,6 +1336,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties'
     | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
+    | '/dashboard/transactions'
     | '/dashboard/verifications'
     | '/dashboard/withdrawals'
     | '/dashboard/announcements'
@@ -1337,7 +1368,6 @@ export interface FileRouteTypes {
     | '/dashboard/properties/listed'
     | '/dashboard/sub-admins/permissions'
     | '/dashboard/sub-admins/roles'
-    | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/my-investments/$investmentId'
     | '/investors/properties/$propertyId'
@@ -1382,6 +1412,8 @@ export interface FileRouteTypes {
     | '/dashboard/properties/investments/'
     | '/dashboard/properties/new/'
     | '/dashboard/properties/promotions/'
+    | '/dashboard/transactions/$id/'
+    | '/dashboard/transactions/payments/'
     | '/dashboard/withdrawals/$id/'
     | '/investors/properties/$propertyId/'
     | '/partner/recover/forgot-password/'
@@ -1397,6 +1429,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/corporate/$investorId/'
     | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
+    | '/dashboard/transactions/payments/$id/'
     | '/investors/properties/$propertyId/default/'
     | '/investors/properties/$propertyId/fractional/'
     | '/investors/properties/$propertyId/land-banking/'
@@ -1431,6 +1464,7 @@ export interface FileRouteTypes {
     | '/verify'
     | '/verify-partner'
     | '/dashboard/properties'
+    | '/dashboard/transactions'
     | '/dashboard/announcements'
     | '/investors/announcements'
     | '/investors/notifications'
@@ -1453,7 +1487,6 @@ export interface FileRouteTypes {
     | '/dashboard/properties/listed'
     | '/dashboard/sub-admins/permissions'
     | '/dashboard/sub-admins/roles'
-    | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/my-investments/$investmentId'
     | '/blogs/$id'
@@ -1496,6 +1529,8 @@ export interface FileRouteTypes {
     | '/dashboard/properties/investments'
     | '/dashboard/properties/new'
     | '/dashboard/properties/promotions'
+    | '/dashboard/transactions/$id'
+    | '/dashboard/transactions/payments'
     | '/dashboard/withdrawals/$id'
     | '/investors/properties/$propertyId'
     | '/partner/recover/forgot-password'
@@ -1511,6 +1546,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/corporate/$investorId'
     | '/dashboard/partners/$partnerId/promotions'
     | '/dashboard/properties/investments/$id'
+    | '/dashboard/transactions/payments/$id'
     | '/investors/properties/$propertyId/default'
     | '/investors/properties/$propertyId/fractional'
     | '/investors/properties/$propertyId/land-banking'
@@ -1556,6 +1592,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties'
     | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
+    | '/dashboard/transactions'
     | '/dashboard/verifications'
     | '/dashboard/withdrawals'
     | '/dashboard/announcements'
@@ -1587,7 +1624,6 @@ export interface FileRouteTypes {
     | '/dashboard/properties/listed'
     | '/dashboard/sub-admins/permissions'
     | '/dashboard/sub-admins/roles'
-    | '/dashboard/transactions/payments'
     | '/dashboard/transactions/receipts'
     | '/investors/my-investments/$investmentId'
     | '/investors/properties/$propertyId'
@@ -1632,6 +1668,8 @@ export interface FileRouteTypes {
     | '/dashboard/properties/investments/'
     | '/dashboard/properties/new/'
     | '/dashboard/properties/promotions/'
+    | '/dashboard/transactions/$id/'
+    | '/dashboard/transactions/payments/'
     | '/dashboard/withdrawals/$id/'
     | '/investors/properties/$propertyId/'
     | '/partner/recover/forgot-password/'
@@ -1647,6 +1685,7 @@ export interface FileRouteTypes {
     | '/dashboard/investors/corporate/$investorId/'
     | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
+    | '/dashboard/transactions/payments/$id/'
     | '/investors/properties/$propertyId/default/'
     | '/investors/properties/$propertyId/fractional/'
     | '/investors/properties/$propertyId/land-banking/'
@@ -2067,6 +2106,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardVerificationsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/transactions': {
+      id: '/dashboard/transactions'
+      path: '/transactions'
+      fullPath: '/dashboard/transactions'
+      preLoaderRoute: typeof DashboardTransactionsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/subscriptions': {
       id: '/dashboard/subscriptions'
       path: '/subscriptions'
@@ -2293,17 +2339,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/transactions/receipts': {
       id: '/dashboard/transactions/receipts'
-      path: '/transactions/receipts'
+      path: '/receipts'
       fullPath: '/dashboard/transactions/receipts'
       preLoaderRoute: typeof DashboardTransactionsReceiptsRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/transactions/payments': {
-      id: '/dashboard/transactions/payments'
-      path: '/transactions/payments'
-      fullPath: '/dashboard/transactions/payments'
-      preLoaderRoute: typeof DashboardTransactionsPaymentsRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      parentRoute: typeof DashboardTransactionsRouteRoute
     }
     '/dashboard/sub-admins/roles': {
       id: '/dashboard/sub-admins/roles'
@@ -2388,6 +2427,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/withdrawals/$id/'
       preLoaderRoute: typeof DashboardWithdrawalsIdIndexRouteImport
       parentRoute: typeof DashboardWithdrawalsRouteRoute
+    }
+    '/dashboard/transactions/payments/': {
+      id: '/dashboard/transactions/payments/'
+      path: '/payments'
+      fullPath: '/dashboard/transactions/payments/'
+      preLoaderRoute: typeof DashboardTransactionsPaymentsIndexRouteImport
+      parentRoute: typeof DashboardTransactionsRouteRoute
+    }
+    '/dashboard/transactions/$id/': {
+      id: '/dashboard/transactions/$id/'
+      path: '/$id'
+      fullPath: '/dashboard/transactions/$id/'
+      preLoaderRoute: typeof DashboardTransactionsIdIndexRouteImport
+      parentRoute: typeof DashboardTransactionsRouteRoute
     }
     '/dashboard/properties/promotions/': {
       id: '/dashboard/properties/promotions/'
@@ -2556,6 +2609,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/investors/properties/$propertyId/default/'
       preLoaderRoute: typeof InvestorsPropertiesPropertyIdDefaultIndexRouteImport
       parentRoute: typeof InvestorsPropertiesPropertyIdRoute
+    }
+    '/dashboard/transactions/payments/$id/': {
+      id: '/dashboard/transactions/payments/$id/'
+      path: '/payments/$id'
+      fullPath: '/dashboard/transactions/payments/$id/'
+      preLoaderRoute: typeof DashboardTransactionsPaymentsIdIndexRouteImport
+      parentRoute: typeof DashboardTransactionsRouteRoute
     }
     '/dashboard/properties/investments/$id/': {
       id: '/dashboard/properties/investments/$id/'
@@ -2876,6 +2936,28 @@ const DashboardSubscriptionsRouteRouteWithChildren =
     DashboardSubscriptionsRouteRouteChildren,
   )
 
+interface DashboardTransactionsRouteRouteChildren {
+  DashboardTransactionsReceiptsRoute: typeof DashboardTransactionsReceiptsRoute
+  DashboardTransactionsIdIndexRoute: typeof DashboardTransactionsIdIndexRoute
+  DashboardTransactionsPaymentsIndexRoute: typeof DashboardTransactionsPaymentsIndexRoute
+  DashboardTransactionsPaymentsIdIndexRoute: typeof DashboardTransactionsPaymentsIdIndexRoute
+}
+
+const DashboardTransactionsRouteRouteChildren: DashboardTransactionsRouteRouteChildren =
+  {
+    DashboardTransactionsReceiptsRoute: DashboardTransactionsReceiptsRoute,
+    DashboardTransactionsIdIndexRoute: DashboardTransactionsIdIndexRoute,
+    DashboardTransactionsPaymentsIndexRoute:
+      DashboardTransactionsPaymentsIndexRoute,
+    DashboardTransactionsPaymentsIdIndexRoute:
+      DashboardTransactionsPaymentsIdIndexRoute,
+  }
+
+const DashboardTransactionsRouteRouteWithChildren =
+  DashboardTransactionsRouteRoute._addFileChildren(
+    DashboardTransactionsRouteRouteChildren,
+  )
+
 interface DashboardVerificationsRouteRouteChildren {
   DashboardVerificationsIndexRoute: typeof DashboardVerificationsIndexRoute
 }
@@ -2947,13 +3029,12 @@ interface DashboardRouteRouteChildren {
   DashboardPropertiesRouteRoute: typeof DashboardPropertiesRouteRouteWithChildren
   DashboardSubAdminsRouteRoute: typeof DashboardSubAdminsRouteRouteWithChildren
   DashboardSubscriptionsRouteRoute: typeof DashboardSubscriptionsRouteRouteWithChildren
+  DashboardTransactionsRouteRoute: typeof DashboardTransactionsRouteRouteWithChildren
   DashboardVerificationsRouteRoute: typeof DashboardVerificationsRouteRouteWithChildren
   DashboardWithdrawalsRouteRoute: typeof DashboardWithdrawalsRouteRouteWithChildren
   DashboardAnnouncementsRoute: typeof DashboardAnnouncementsRoute
   DashboardPartnersRoute: typeof DashboardPartnersRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardTransactionsPaymentsRoute: typeof DashboardTransactionsPaymentsRoute
-  DashboardTransactionsReceiptsRoute: typeof DashboardTransactionsReceiptsRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
 }
 
@@ -2968,14 +3049,13 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardSubAdminsRouteRoute: DashboardSubAdminsRouteRouteWithChildren,
   DashboardSubscriptionsRouteRoute:
     DashboardSubscriptionsRouteRouteWithChildren,
+  DashboardTransactionsRouteRoute: DashboardTransactionsRouteRouteWithChildren,
   DashboardVerificationsRouteRoute:
     DashboardVerificationsRouteRouteWithChildren,
   DashboardWithdrawalsRouteRoute: DashboardWithdrawalsRouteRouteWithChildren,
   DashboardAnnouncementsRoute: DashboardAnnouncementsRoute,
   DashboardPartnersRoute: DashboardPartnersRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardTransactionsPaymentsRoute: DashboardTransactionsPaymentsRoute,
-  DashboardTransactionsReceiptsRoute: DashboardTransactionsReceiptsRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
 }
 
