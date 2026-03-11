@@ -17,7 +17,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 interface KycFormData {
   companyName: string;
-  address: string;
+  companyAddress: string;
   // rcNumber: string;
   cacDocument: string | null;
   tinDocument: string | null;
@@ -37,7 +37,7 @@ export default function CorpKYCFORM() {
   } = useForm<KycFormData>({
     defaultValues: {
       companyName: "",
-      address: "",
+      companyAddress: "",
       // rcNumber: "",
       cacDocument: null,
       tinDocument: null,
@@ -69,7 +69,7 @@ export default function CorpKYCFORM() {
       const verification = kycData.data.verification;
       reset({
         companyName: verification.companyName || "",
-        address: verification.address || "",
+        companyAddress: verification.companyAddress || "",
         // rcNumber: verification.rcNumber || "",
         cacDocument: verification.cacDocument || null,
         tinDocument: verification.tinDocument || null,
@@ -115,7 +115,7 @@ export default function CorpKYCFORM() {
   const onSubmit = async (data: KycFormData) => {
     const submitData: KycFormData = {
       companyName: data.companyName,
-      address: data.address,
+      companyAddress: data.companyAddress,
       // rcNumber: data.rcNumber,
       cacDocument: null,
       tinDocument: null,
@@ -244,15 +244,15 @@ export default function CorpKYCFORM() {
               </Label>
               <Input
                 id="address"
-                {...register("address", {
+                {...register("companyAddress", {
                   required: "Company address is required",
                 })}
                 placeholder="Enter registered company address"
                 className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
               />
-              {errors.address && (
+              {errors.companyAddress && (
                 <p className="text-red-500 text-xs font-medium mt-1">
-                  {errors.address.message}
+                  {errors.companyAddress.message}
                 </p>
               )}
             </div>
