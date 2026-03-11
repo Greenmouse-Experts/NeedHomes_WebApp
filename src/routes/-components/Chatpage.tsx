@@ -85,6 +85,19 @@ export default function ChatPage() {
     };
   }, [auth?.accessToken]);
 
+  useEffect(() => {
+    if (query.data) {
+      const id = query.data.data.id;
+      console.log(id);
+      socketRef.current?.emit("chat:createConversation", {
+        conversationId: id,
+      });
+      // socket.emit("chat:createConversation", {
+      //   conversationId: id,
+      // });
+    }
+  }, [query.data]);
+
   return (
     <section className="h-[calc(100dvh-124px)] max-h-[calc(100dvh-124px)] flex isolate w-full">
       <div className="ring fade rounded-box flex flex-col flex-1 isolate">

@@ -10,19 +10,17 @@ import apiClient from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import ProfilePicture from "./ProfilePic";
-import CorpUserProfile from "./CorpDetails";
 
 interface ProfileFormValues {
-  firstName: string;
-  lastName: string;
+  companyName: string;
   email: string;
   phone: string;
 }
 
-export default function UserProfile() {
+export default function CorpUserProfile() {
   const [userProfile] = useAuth();
   const user = userProfile?.user;
-  const auth = userProfile;
+
   const {
     register,
     handleSubmit,
@@ -51,9 +49,7 @@ export default function UserProfile() {
       }
     },
   });
-  if (auth?.user?.accountType == "CORPORATE") {
-    return <CorpUserProfile />;
-  }
+
   const onSubmit = (data: ProfileFormValues) => {
     toast.promise(mutation.mutateAsync(data), {
       loading: "Updating profile...",
@@ -73,36 +69,24 @@ export default function UserProfile() {
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl">
         {/* Profile Picture */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="">
           {/* First Name */}
           <div className="space-y-2">
             <Label htmlFor="firstName" className="text-sm">
-              First Name
+              Company Name
             </Label>
             <Input
               id="firstName"
-              {...register("firstName", { required: "First name is required" })}
-              placeholder="First Name"
+              {...register("companyName", {
+                required: "First name is required",
+              })}
+              placeholder="Company Name"
               className="text-sm md:text-base"
             />
-            {errors.firstName && (
-              <p className="text-red-500 text-xs">{errors.firstName.message}</p>
-            )}
-          </div>
-
-          {/* Last Name */}
-          <div className="space-y-2">
-            <Label htmlFor="lastName" className="text-sm">
-              Last Name
-            </Label>
-            <Input
-              id="lastName"
-              {...register("lastName", { required: "Last name is required" })}
-              placeholder="Last Name"
-              className="text-sm md:text-base"
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-xs">{errors.lastName.message}</p>
+            {errors.companyName && (
+              <p className="text-red-500 text-xs">
+                {errors.companyName.message}
+              </p>
             )}
           </div>
         </div>
