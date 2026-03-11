@@ -129,6 +129,10 @@ import { Route as DashboardPropertiesNewCoDevelopmentRouteImport } from './route
 import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/dashboard/properties/$propertyId/edit'
 import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dashboard/partners/$partnerId/kyc'
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
+import { Route as PartnersPropertiesPropertyIdOutrightIndexRouteImport } from './routes/partners/properties/$propertyId/outright/index'
+import { Route as PartnersPropertiesPropertyIdLandBankingIndexRouteImport } from './routes/partners/properties/$propertyId/land-banking/index'
+import { Route as PartnersPropertiesPropertyIdFractionalIndexRouteImport } from './routes/partners/properties/$propertyId/fractional/index'
+import { Route as PartnersPropertiesPropertyIdDefaultIndexRouteImport } from './routes/partners/properties/$propertyId/default/index'
 import { Route as PartnerRecoverForgotPasswordResetIndexRouteImport } from './routes/partner/recover/forgot-password/reset/index'
 import { Route as InvestorsPropertiesPropertyIdOutrightIndexRouteImport } from './routes/investors/properties/$propertyId/outright/index'
 import { Route as InvestorsPropertiesPropertyIdLandBankingIndexRouteImport } from './routes/investors/properties/$propertyId/land-banking/index'
@@ -796,6 +800,30 @@ const DashboardInvestorsInvestorIdKycRoute =
     path: '/$investorId/kyc',
     getParentRoute: () => DashboardInvestorsRouteRoute,
   } as any)
+const PartnersPropertiesPropertyIdOutrightIndexRoute =
+  PartnersPropertiesPropertyIdOutrightIndexRouteImport.update({
+    id: '/outright/',
+    path: '/outright/',
+    getParentRoute: () => PartnersPropertiesPropertyIdRoute,
+  } as any)
+const PartnersPropertiesPropertyIdLandBankingIndexRoute =
+  PartnersPropertiesPropertyIdLandBankingIndexRouteImport.update({
+    id: '/land-banking/',
+    path: '/land-banking/',
+    getParentRoute: () => PartnersPropertiesPropertyIdRoute,
+  } as any)
+const PartnersPropertiesPropertyIdFractionalIndexRoute =
+  PartnersPropertiesPropertyIdFractionalIndexRouteImport.update({
+    id: '/fractional/',
+    path: '/fractional/',
+    getParentRoute: () => PartnersPropertiesPropertyIdRoute,
+  } as any)
+const PartnersPropertiesPropertyIdDefaultIndexRoute =
+  PartnersPropertiesPropertyIdDefaultIndexRouteImport.update({
+    id: '/default/',
+    path: '/default/',
+    getParentRoute: () => PartnersPropertiesPropertyIdRoute,
+  } as any)
 const PartnerRecoverForgotPasswordResetIndexRoute =
   PartnerRecoverForgotPasswordResetIndexRouteImport.update({
     id: '/partner/recover/forgot-password/reset/',
@@ -1037,6 +1065,10 @@ export interface FileRoutesByFullPath {
   '/investors/properties/$propertyId/land-banking/': typeof InvestorsPropertiesPropertyIdLandBankingIndexRoute
   '/investors/properties/$propertyId/outright/': typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
+  '/partners/properties/$propertyId/default/': typeof PartnersPropertiesPropertyIdDefaultIndexRoute
+  '/partners/properties/$propertyId/fractional/': typeof PartnersPropertiesPropertyIdFractionalIndexRoute
+  '/partners/properties/$propertyId/land-banking/': typeof PartnersPropertiesPropertyIdLandBankingIndexRoute
+  '/partners/properties/$propertyId/outright/': typeof PartnersPropertiesPropertyIdOutrightIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1154,6 +1186,10 @@ export interface FileRoutesByTo {
   '/investors/properties/$propertyId/land-banking': typeof InvestorsPropertiesPropertyIdLandBankingIndexRoute
   '/investors/properties/$propertyId/outright': typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
   '/partner/recover/forgot-password/reset': typeof PartnerRecoverForgotPasswordResetIndexRoute
+  '/partners/properties/$propertyId/default': typeof PartnersPropertiesPropertyIdDefaultIndexRoute
+  '/partners/properties/$propertyId/fractional': typeof PartnersPropertiesPropertyIdFractionalIndexRoute
+  '/partners/properties/$propertyId/land-banking': typeof PartnersPropertiesPropertyIdLandBankingIndexRoute
+  '/partners/properties/$propertyId/outright': typeof PartnersPropertiesPropertyIdOutrightIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1294,6 +1330,10 @@ export interface FileRoutesById {
   '/investors/properties/$propertyId/land-banking/': typeof InvestorsPropertiesPropertyIdLandBankingIndexRoute
   '/investors/properties/$propertyId/outright/': typeof InvestorsPropertiesPropertyIdOutrightIndexRoute
   '/partner/recover/forgot-password/reset/': typeof PartnerRecoverForgotPasswordResetIndexRoute
+  '/partners/properties/$propertyId/default/': typeof PartnersPropertiesPropertyIdDefaultIndexRoute
+  '/partners/properties/$propertyId/fractional/': typeof PartnersPropertiesPropertyIdFractionalIndexRoute
+  '/partners/properties/$propertyId/land-banking/': typeof PartnersPropertiesPropertyIdLandBankingIndexRoute
+  '/partners/properties/$propertyId/outright/': typeof PartnersPropertiesPropertyIdOutrightIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1435,6 +1475,10 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId/land-banking/'
     | '/investors/properties/$propertyId/outright/'
     | '/partner/recover/forgot-password/reset/'
+    | '/partners/properties/$propertyId/default/'
+    | '/partners/properties/$propertyId/fractional/'
+    | '/partners/properties/$propertyId/land-banking/'
+    | '/partners/properties/$propertyId/outright/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1552,6 +1596,10 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId/land-banking'
     | '/investors/properties/$propertyId/outright'
     | '/partner/recover/forgot-password/reset'
+    | '/partners/properties/$propertyId/default'
+    | '/partners/properties/$propertyId/fractional'
+    | '/partners/properties/$propertyId/land-banking'
+    | '/partners/properties/$propertyId/outright'
   id:
     | '__root__'
     | '/'
@@ -1691,6 +1739,10 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId/land-banking/'
     | '/investors/properties/$propertyId/outright/'
     | '/partner/recover/forgot-password/reset/'
+    | '/partners/properties/$propertyId/default/'
+    | '/partners/properties/$propertyId/fractional/'
+    | '/partners/properties/$propertyId/land-banking/'
+    | '/partners/properties/$propertyId/outright/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -2575,6 +2627,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsInvestorIdKycRouteImport
       parentRoute: typeof DashboardInvestorsRouteRoute
     }
+    '/partners/properties/$propertyId/outright/': {
+      id: '/partners/properties/$propertyId/outright/'
+      path: '/outright'
+      fullPath: '/partners/properties/$propertyId/outright/'
+      preLoaderRoute: typeof PartnersPropertiesPropertyIdOutrightIndexRouteImport
+      parentRoute: typeof PartnersPropertiesPropertyIdRoute
+    }
+    '/partners/properties/$propertyId/land-banking/': {
+      id: '/partners/properties/$propertyId/land-banking/'
+      path: '/land-banking'
+      fullPath: '/partners/properties/$propertyId/land-banking/'
+      preLoaderRoute: typeof PartnersPropertiesPropertyIdLandBankingIndexRouteImport
+      parentRoute: typeof PartnersPropertiesPropertyIdRoute
+    }
+    '/partners/properties/$propertyId/fractional/': {
+      id: '/partners/properties/$propertyId/fractional/'
+      path: '/fractional'
+      fullPath: '/partners/properties/$propertyId/fractional/'
+      preLoaderRoute: typeof PartnersPropertiesPropertyIdFractionalIndexRouteImport
+      parentRoute: typeof PartnersPropertiesPropertyIdRoute
+    }
+    '/partners/properties/$propertyId/default/': {
+      id: '/partners/properties/$propertyId/default/'
+      path: '/default'
+      fullPath: '/partners/properties/$propertyId/default/'
+      preLoaderRoute: typeof PartnersPropertiesPropertyIdDefaultIndexRouteImport
+      parentRoute: typeof PartnersPropertiesPropertyIdRoute
+    }
     '/partner/recover/forgot-password/reset/': {
       id: '/partner/recover/forgot-password/reset/'
       path: '/partner/recover/forgot-password/reset'
@@ -3151,12 +3231,24 @@ const InvestorsRouteRouteWithChildren = InvestorsRouteRoute._addFileChildren(
 
 interface PartnersPropertiesPropertyIdRouteChildren {
   PartnersPropertiesPropertyIdIndexRoute: typeof PartnersPropertiesPropertyIdIndexRoute
+  PartnersPropertiesPropertyIdDefaultIndexRoute: typeof PartnersPropertiesPropertyIdDefaultIndexRoute
+  PartnersPropertiesPropertyIdFractionalIndexRoute: typeof PartnersPropertiesPropertyIdFractionalIndexRoute
+  PartnersPropertiesPropertyIdLandBankingIndexRoute: typeof PartnersPropertiesPropertyIdLandBankingIndexRoute
+  PartnersPropertiesPropertyIdOutrightIndexRoute: typeof PartnersPropertiesPropertyIdOutrightIndexRoute
 }
 
 const PartnersPropertiesPropertyIdRouteChildren: PartnersPropertiesPropertyIdRouteChildren =
   {
     PartnersPropertiesPropertyIdIndexRoute:
       PartnersPropertiesPropertyIdIndexRoute,
+    PartnersPropertiesPropertyIdDefaultIndexRoute:
+      PartnersPropertiesPropertyIdDefaultIndexRoute,
+    PartnersPropertiesPropertyIdFractionalIndexRoute:
+      PartnersPropertiesPropertyIdFractionalIndexRoute,
+    PartnersPropertiesPropertyIdLandBankingIndexRoute:
+      PartnersPropertiesPropertyIdLandBankingIndexRoute,
+    PartnersPropertiesPropertyIdOutrightIndexRoute:
+      PartnersPropertiesPropertyIdOutrightIndexRoute,
   }
 
 const PartnersPropertiesPropertyIdRouteWithChildren =

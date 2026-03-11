@@ -1,26 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Calendar,
-  MapPin,
-  Percent,
   CheckCircle2,
-  TrendingUp,
-  ChevronLeft,
+  Home,
+  MapPin,
+  Package,
+  Percent,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
-import type { PROPERTY_TYPE, AdditionalFee } from "@/types/property";
-import { Button } from "@/components/ui/Button";
-import { toast } from "sonner";
-import { extract_message } from "@/helpers/apihelpers";
-import { useNavigate } from "@tanstack/react-router";
-import Modal from "@/components/modals/DialogModal";
-import { useModal } from "@/store/modals";
-import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { useForm, FormProvider } from "react-hook-form";
-import AdditionalFees from "@/routes/partners/-components/Additionalfees";
+import type { AdditionalFee, PROPERTY_TYPE } from "@/types/property";
+import AdditionalFees from "../../-components/Additionalfees";
 
 export const Route = createFileRoute("/partners/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -28,16 +20,6 @@ export const Route = createFileRoute("/partners/properties/$propertyId/")({
 
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
-  const navigate = useNavigate();
-  const { ref, showModal, closeModal } = useModal();
-
-  const methods = useForm({
-    defaultValues: {
-      amountPaid: 0,
-      quantity: 1,
-    },
-  });
-
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
     queryFn: async () => {
@@ -45,38 +27,8 @@ function PropertyDetailPage() {
       return resp.data;
     },
   });
-
-  const formatCurrency = (amount: number | null | undefined) => {
-    if (amount === null || amount === undefined) return "N/A";
+  const formatCurrency = (amount: number) => {
     return `₦${amount.toLocaleString()}`;
-  };
-
-  const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
-      let resp = await apiClient.post("/investments", {
-        propertyId: propertyId,
-        amountPaid: data.amountPaid,
-        quantity: data.quantity,
-      });
-      return resp.data;
-    },
-    onSuccess: (data: ApiResponse<{ id: string }>) => {
-      closeModal();
-      navigate({
-        to: "/investors/my-investments/$investmentId",
-        params: {
-          investmentId: data.data.id,
-        },
-      });
-    },
-  });
-
-  const onSubmit = (data: { amountPaid: number; quantity: number }) => {
-    toast.promise(mutate.mutateAsync(data), {
-      loading: "Investing...",
-      success: "Investment successful!",
-      error: extract_message,
-    });
   };
 
   return (
@@ -94,68 +46,6 @@ function PropertyDetailPage() {
 
         return (
           <>
-            <Modal
-              ref={ref}
-              title="Confirm Investment"
-              actions={
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={closeModal}>
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={methods.handleSubmit(onSubmit)}
-                    isLoading={mutate.isPending}
-                  >
-                    Confirm & Pay
-                  </Button>
-                </div>
-              }
-            >
-              <FormProvider {...methods}>
-                <form className="space-y-4">
-                  <SimpleInput
-                    label="Quantity"
-                    type="number"
-                    {...methods.register("quantity", {
-                      valueAsNumber: true,
-                      min: 1,
-                    })}
-                  />
-                  <SimpleInput
-                    label="Amount to Pay (₦)"
-                    type="number"
-                    {...methods.register("amountPaid", {
-                      valueAsNumber: true,
-                      min: 1,
-                    })}
-                  />
-                  <p className="text-sm text-gray-500">
-                    Property:{" "}
-                    <span className="font-semibold">
-                      {property.propertyTitle}
-                    </span>
-                  </p>
-                </form>
-              </FormProvider>
-            </Modal>
-            <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <Button
-                variant="primary"
-                rightIcon={<TrendingUp className="w-5 h-5" />}
-                onClick={() => {
-                  methods.setValue(
-                    "amountPaid",
-                    property.minimumInvestment || totalPrice,
-                  );
-                  showModal();
-                }}
-                disabled={mutate.isPending}
-                className="w-full sm:w-auto"
-              >
-                Invest Now
-              </Button>
-            </div>
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 {/* Media Slider */}
@@ -312,7 +202,10 @@ function PropertyDetailPage() {
                       </div>
 
                       {/* Additional Fees */}
-                      <AdditionalFees fees={property.additionalFees} />
+                      {property.additionalFees &&
+                        property.additionalFees.length > 0 && (
+                          <AdditionalFees fees={property.additionalFees} />
+                        )}
                     </div>
 
                     {/* Sidebar */}

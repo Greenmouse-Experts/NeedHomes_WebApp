@@ -138,7 +138,11 @@ function PartnerPropertiesList() {
   };
 
   // Filter modal submit
-  const onSubmit = (data: { minPrice?: number | null; maxPrice?: number | null; location?: string }) => {
+  const onSubmit = (data: {
+    minPrice?: number | null;
+    maxPrice?: number | null;
+    location?: string;
+  }) => {
     if (!data.minPrice && !data.maxPrice && !data.location?.trim()) {
       toast.error("Please enter at least a price range or location");
       return;

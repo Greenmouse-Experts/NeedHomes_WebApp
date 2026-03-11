@@ -14,10 +14,24 @@ export default function PropertyCard({
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
+  const route = (propType: typeof property.investmentModel) => {
+    switch (propType) {
+      //@ts-ignore
+      case "OUTRIGHT_PURCHASE":
+        return "/partners/properties/$propertyId/outright";
+      //@ts-ignore
+      case "LAND_BANKING":
+        return "/investors/properties/$propertyId/land-banking";
+      case "FRACTIONAL_OWNERSHIP":
+        return "/partners/properties/$propertyId/fractional";
+      default:
+        return "/partners/properties/$propertyId/default";
+    }
+  };
+  const link = route(property.investmentModel);
   return (
     <Link
-      to="/partners/properties/$propertyId"
+      to={link}
       params={{ propertyId: property.id }}
       className="card card-compact bg-base-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
     >
