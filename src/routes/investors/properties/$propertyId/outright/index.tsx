@@ -203,7 +203,7 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending}
+                    disabled={mutate.isPending || property.availableUnits === 0}
                   >
                     Confirm & Pay{" "}
                     {payInstall
@@ -255,15 +255,6 @@ function PropertyDetailPage() {
                         </ul>
                       </section>
                     )}
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">
-                        System Charge: 2%
-                      </span>
-                      <span className="text-sm font-medium">
-                        {formatCurrency(breakdown.systemCharge)}
-                      </span>
-                    </div>
 
                     <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
@@ -338,10 +329,10 @@ function PropertyDetailPage() {
                   // methods.setValue("quantity", 1);
                   showModal();
                 }}
-                disabled={mutate.isPending}
+                disabled={mutate.isPending || property.availableUnits === 0}
                 className="w-full sm:w-auto"
               >
-                Invest Now
+                {property.availableUnits === 0 ? "No Units Available" : "Invest Now"}
               </Button>
             </div>
             <div className="space-y-6">
