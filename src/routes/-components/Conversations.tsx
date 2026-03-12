@@ -241,7 +241,7 @@ export default function Conversations({
               </time>
             </div>
             <div
-              className={`chat-bubble ${message.isSystem ? "chat-bubble-info" : ""} ${isImg ? "!p-1 !bg-transparent !shadow-none" : ""}`}
+              className={`chat-bubble ${message.isSystem ? "chat-bubble-info" : isOwn ? "chat-bubble-primary" : "chat-bubble-secondary"} ${isImg ? "!p-1 !bg-transparent !shadow-none" : ""}`}
             >
               {isImg ? (
                 <a href={message.content} target="_blank" rel="noreferrer">
