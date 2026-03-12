@@ -518,10 +518,10 @@ function EditPropertyPage() {
                 </div>
               </div>
 
-              {/* Right Column - Additional Fees */}
+              {/* Right Column - Management Fees */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">Additional Fees</h3>
+                  <h3 className="text-lg font-semibold">Management Fees</h3>
                   <Button
                     size="sm"
                     onClick={() => setShowAddFeeModal(true)}

@@ -35,7 +35,7 @@ function PropertyDetailPage() {
     <PageLoader query={query}>
       {(data) => {
         const property = data.data;
-        // Calculate total price including additional fees if they exist
+        // Calculate total price including Management Fees if they exist
         const totalPrice = property.additionalFees
           ? property.basePrice +
             property.additionalFees.reduce(
@@ -201,7 +201,7 @@ function PropertyDetailPage() {
                         </div>
                       </div>
 
-                      {/* Additional Fees */}
+                      {/* Management Fees */}
                       {property.additionalFees &&
                         property.additionalFees.length > 0 && (
                           <AdditionalFees fees={property.additionalFees} />

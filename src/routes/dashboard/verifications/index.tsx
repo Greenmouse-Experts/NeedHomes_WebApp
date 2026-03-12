@@ -7,7 +7,7 @@ import { extract_message } from "@/helpers/apihelpers";
 import SearchBar from "@/routes/-components/Searchbar";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
-import type { VERIFICATION_REQUEST } from "@/types";
+import type { USER, VERIFICATION_REQUEST } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Library } from "lucide-react";
@@ -267,10 +267,30 @@ function RouteComponent() {
       key: "details",
       label: "Full Details",
       action: (item, nav) => {
-        nav({
-          to: "/dashboard/verifications/$id" as any,
-          params: { id: item.id } as any,
-        });
+        console.log(item);
+        const user = item.user as USER;
+        switch (item.verificationType) {
+          case "INDIVIDUAL":
+            nav({
+              to: "/dashboard/investors/$investorId",
+              params: { investorId: user.id } as any,
+            });
+            break;
+          case "CORPORATE":
+            nav({
+              to: "/dashboard/investors/corporate/$investorId" as any,
+              params: { investorId: user.id } as any,
+            });
+            break;
+          case "PARTNER":
+            nav({
+              to: "/dashboard/partners/$partnerId" as any,
+              params: { partnerId: user.id } as any,
+            });
+            break;
+          default:
+            break;
+        }
       },
     },
     {

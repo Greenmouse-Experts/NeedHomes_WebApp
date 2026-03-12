@@ -261,7 +261,7 @@ function PropertyDetailsPage() {
                         property.additionalFees.length > 0 && (
                           <div>
                             <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                              Additional Fees
+                              Management Fees
                             </h2>
                             <div className="bg-gray-50 rounded-lg p-4">
                               <div className="space-y-2">

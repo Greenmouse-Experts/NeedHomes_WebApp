@@ -14,7 +14,7 @@ export function AdditionalFeesManager() {
     <div className="space-y-4 bg-base-200/50 p-4 rounded-lg border border-base-300">
       <div className="flex justify-between items-center">
         <h3 className="text-sm font-bold uppercase tracking-wider opacity-70">
-          Additional Fees
+          Management Fees
         </h3>
         <button
           type="button"
@@ -58,7 +58,7 @@ export function AdditionalFeesManager() {
       ))}
       {fields.length === 0 && (
         <p className="text-xs italic opacity-50 text-center py-2">
-          No additional fees added.
+          No Management Fees added.
         </p>
       )}
     </div>

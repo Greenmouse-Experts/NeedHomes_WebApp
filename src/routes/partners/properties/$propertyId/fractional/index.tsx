@@ -78,7 +78,7 @@ function PropertyDetailPage() {
     <PageLoader query={query}>
       {(data) => {
         const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
-        // Calculate total price including additional fees if they exist
+        // Calculate total price including Management Fees if they exist
         const basePrice = property.basePrice / 100;
         const additionalFeesTotal = (property.additionalFees || []).reduce(
           (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
@@ -280,7 +280,7 @@ function PropertyDetailPage() {
                     {breakdown.additionalFees.length > 0 && (
                       <section className="rounded-lg border border-gray-200 overflow-hidden">
                         <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
-                          Additional Fees
+                          Management Fees
                         </h2>
                         <ul className="p-3 space-y-2">
                           {breakdown.additionalFees.map((fee, idx) => (
@@ -483,7 +483,7 @@ function PropertyDetailPage() {
                         </div>
                       </div>
 
-                      {/* Additional Fees */}
+                      {/* Management Fees */}
                       <AdditionalFees fees={property.additionalFees} />
                     </div>
 
