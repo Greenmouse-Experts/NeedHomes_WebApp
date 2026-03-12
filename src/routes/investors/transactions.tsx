@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
+import { usePagination } from "@/helpers/pagination";
 
 export const Route = createFileRoute("/investors/transactions")({
   component: RouteComponent,
@@ -46,7 +47,9 @@ const columns: columnType<Transaction>[] = [
     key: "type",
     label: "Type",
     render: (val: Transaction["type"]) => (
-      <span className={`badge badge-soft badge-sm ${typeBadge[val] ?? "badge-ghost"}`}>
+      <span
+        className={`badge badge-soft badge-sm ${typeBadge[val] ?? "badge-ghost"}`}
+      >
         {val}
       </span>
     ),
@@ -55,16 +58,16 @@ const columns: columnType<Transaction>[] = [
     key: "amount",
     label: "Amount",
     render: (val: number) => (
-      <span className="font-semibold">
-        ₦{val.toLocaleString("en-NG")}
-      </span>
+      <span className="font-semibold">₦{val.toLocaleString("en-NG")}</span>
     ),
   },
   {
     key: "status",
     label: "Status",
     render: (val: Transaction["status"]) => (
-      <span className={`badge badge-soft badge-sm ${statusBadge[val] ?? "badge-ghost"}`}>
+      <span
+        className={`badge badge-soft badge-sm ${statusBadge[val] ?? "badge-ghost"}`}
+      >
         {val}
       </span>
     ),
@@ -85,10 +88,15 @@ const columns: columnType<Transaction>[] = [
 ];
 
 function RouteComponent() {
+  const paginationProps = usePagination();
+
   const query = useQuery({
-    queryKey: ["transactions"],
+    queryKey: ["transactions", paginationProps.page],
     queryFn: async () => {
-      let resp = await apiClient.get("/investments/my-investments/transactions");
+      let resp = await apiClient.get(
+        "/investments/my-investments/transactions",
+        { params: { page: paginationProps.page } },
+      );
       return resp.data;
     },
   });
@@ -107,12 +115,13 @@ function RouteComponent() {
 
       <PageLoader query={query}>
         {(resp) => {
-          const data: Transaction[] = resp.data ?? [];
+          const data: Transaction[] = resp.data.data ?? [];
           return (
             <CustomTable
               data={data}
               columns={columns}
               totalCount={data.length}
+              paginationProps={paginationProps}
             />
           );
         }}
