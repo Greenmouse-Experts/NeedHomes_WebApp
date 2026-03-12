@@ -1,8 +1,7 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { readTransformValue } from "framer-motion";
-import { useEffect, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import type { Socket } from "socket.io-client";
 interface Sender {
   id: string;
@@ -43,6 +42,7 @@ export default function Messages({
   socket: RefObject<Socket>;
 }) {
   const queryClient = useQueryClient();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const query = useQuery<ApiResponse<Conversation>>({
     queryKey: ["chats", convoId],
     queryFn: async () => {
@@ -90,6 +90,12 @@ export default function Messages({
       currentSocket.off("chat:newMessage", handleMessage);
     };
   }, [convoId, socket, queryClient]);
+
+  const messageCount = query.data?.data?.messages?.length;
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messageCount]);
+
   return (
     <QueryCompLayout query={query}>
       {(data) => {
@@ -142,6 +148,7 @@ export default function Messages({
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </>
         );
       }}

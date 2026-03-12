@@ -10,8 +10,8 @@ import { get_user_value } from "@/store/authStore";
 export default function AdminConvos({ convoId }: { convoId?: string }) {
   const socketRef = useRef<Socket | null>(null);
   const auth = get_user_value();
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
 
-  const [messages, setMessages] = useState<any[]>([]);
   const query = useQuery({
     queryKey: ["convoId", convoId],
     queryFn: async () => {
@@ -47,16 +47,26 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
 
     socket.on("connect", () => {
       console.log("✅ Connected to WebSocket");
+      setIsSocketConnected(true);
+    });
+    socket.on("disconnect", () => {
+      setIsSocketConnected(false);
     });
     socket.on("connected", (data) => {
       console.log("User data:", data);
     });
-    // ✅ DISCONNECT ON UNMOUNT
     return () => {
       console.log("❌ Disconnecting socket...");
       socket.disconnect();
     };
   }, [auth?.accessToken]);
+
+  useEffect(() => {
+    if (!convoId || !isSocketConnected) return;
+    socketRef.current?.emit("chat:createConversation", {
+      conversationId: convoId,
+    });
+  }, [convoId, isSocketConnected]);
   if (!convoId) {
     return (
       <div className="flex-1  bg-base-100 flex flex-col border-l fade">
