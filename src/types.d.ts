@@ -148,13 +148,14 @@ export interface ADMIN_INVESTOR_DATA {
     idType: string;
     frontPage: string | null;
     companyName: string | null;
+    companyAddress: string | null;
     rcNumber: string | null;
     cacDocument: string | null;
     backPage: string | null;
     authorizedId: string | null;
     authorizedName: string | null;
     utilityBill: string | null;
-    address: string;
+    address: string | null;
     verificationType: string;
     status: string;
     submitedAt: string;

@@ -9,6 +9,7 @@ import {
   Calendar,
   TrendingUp,
   Share2,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
@@ -260,13 +261,28 @@ function InvestorDetailsPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="p-2 bg-indigo-100 rounded-lg">
+                            <Building2 className="w-4 h-4 text-indigo-600" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Company Name</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {investor.companyName ||
+                                investor.verification_document?.companyName ||
+                                "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                           <div className="p-2 bg-purple-100 rounded-lg">
                             <MapPin className="w-4 h-4 text-purple-600" />
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Address</p>
                             <p className="text-sm font-medium text-gray-900">
-                              {investor.verification_document?.address || "N/A"}
+                              {investor.verification_document?.companyAddress ||
+                                investor.verification_document?.address ||
+                                "N/A"}
                             </p>
                           </div>
                         </div>
