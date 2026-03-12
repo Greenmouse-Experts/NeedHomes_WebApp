@@ -197,13 +197,18 @@ function RouteComponent() {
           PARTNER: "badge-success",
         };
         const labelMap: Record<string, string> = {
-          CORPORATE: "Investor · Corporate",
-          INDIVIDUAL: "Investor · Individual",
+          CORPORATE: "Corporate",
+          INDIVIDUAL: "Individual",
           PARTNER: "Partner",
         };
-        const key = item.user.accountType === "PARTNER" ? "PARTNER" : item.verificationType;
+        const key =
+          item.user.accountType === "PARTNER"
+            ? "PARTNER"
+            : item.verificationType;
         return (
-          <span className={`badge badge-soft badge-sm ring fade ${colorMap[key] ?? "badge-ghost"}`}>
+          <span
+            className={`badge badge-soft badge-sm ring fade ${colorMap[key] ?? "badge-ghost"}`}
+          >
             {labelMap[key] ?? item.user.accountType}
           </span>
         );
@@ -223,6 +228,7 @@ function RouteComponent() {
     {
       key: "address",
       label: "Address",
+      render: (val) => <span className="line-clamp-2">{val}</span>,
     },
     {
       key: "submitedAt",
@@ -344,7 +350,9 @@ function RouteComponent() {
             </div>
             {/* Account type filter */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-base-content/60 shrink-0">User Type:</span>
+              <span className="text-sm text-base-content/60 shrink-0">
+                User Type:
+              </span>
               <div className="flex flex-wrap gap-2">
                 {accountTypeFilters.map((f) => (
                   <button

@@ -86,15 +86,11 @@ export default function ChatPage() {
   }, [auth?.accessToken]);
 
   useEffect(() => {
-    if (query.data) {
-      const id = query.data.data.id;
-      console.log(id);
+    const id = query.data?.data?.id;
+    if (id) {
       socketRef.current?.emit("chat:createConversation", {
         conversationId: id,
       });
-      // socket.emit("chat:createConversation", {
-      //   conversationId: id,
-      // });
     }
   }, [query.data]);
 
