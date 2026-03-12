@@ -139,7 +139,7 @@ function RouteComponent() {
         params: {
           status,
           search,
-          accountType,
+          verificationType: accountType,
         },
       });
       return resp.data;
