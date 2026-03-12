@@ -22,7 +22,9 @@ export default function PendingConversations({}) {
               <div className="flex flex-col divide-y divide-gray-100">
                 {chats.map((chat) => {
                   const lastMessage = chat.messages[0];
-                  const initials = `${chat.user.firstName[0]}${chat.user.lastName[0]}`;
+                  const firstName = chat?.user?.firstName ?? "Unknown";
+                  const lastName = chat?.user?.lastName ?? "Unknown";
+                  const initials = `${firstName[0]}${lastName[0]}`;
                   return (
                     <Link
                       key={chat.id}
@@ -38,7 +40,8 @@ export default function PendingConversations({}) {
                       <div className="flex-1 overflow-hidden">
                         <div className="flex items-center justify-between">
                           <span className="truncate font-medium text-gray-900">
-                            {chat.user.firstName} {chat.user.lastName}
+                            {chat.user.firstName} {chat.user.lastName}{" "}
+                            {chat.user?.companyName}
                           </span>
                           <span className="text-xs text-gray-500">
                             {new Date(chat.lastMessageAt).toLocaleTimeString(
