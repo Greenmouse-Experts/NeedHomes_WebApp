@@ -89,7 +89,7 @@ function InvestorDetailsPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                          {investor.firstName} {investor.lastName}
+                          {investor.companyName}
                         </h1>
                         <p className="text-sm text-gray-600 mb-4">
                           Investor ID: {investor.id}
@@ -265,7 +265,9 @@ function InvestorDetailsPage() {
                             <Building2 className="w-4 h-4 text-indigo-600" />
                           </div>
                           <div>
-                            <p className="text-xs text-gray-500">Company Name</p>
+                            <p className="text-xs text-gray-500">
+                              Company Name
+                            </p>
                             <p className="text-sm font-medium text-gray-900">
                               {investor.companyName ||
                                 investor.verification_document?.companyName ||
