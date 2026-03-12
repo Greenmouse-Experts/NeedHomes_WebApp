@@ -90,6 +90,11 @@ function PartnerDetailsPage() {
                             >
                               {partner.account_status}
                             </span>
+                            {partner.partnerType && (
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700">
+                                {partner.partnerType.replace(/_/g, " ")}
+                              </span>
+                            )}
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
                               <Calendar className="w-3.5 h-3.5" />
                               Joined{" "}

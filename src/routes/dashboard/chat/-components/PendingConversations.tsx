@@ -14,11 +14,15 @@ export default function PendingConversations({}) {
   return (
     <>
       <div className="">
-        <h2 className="p-4 border-b fade font-bold">Pending Convos</h2>
         <QueryCompLayout query={query}>
           {(data) => {
             const chats = data.data;
             return (
+              <>
+                <h2 className="p-4 border-b fade font-bold flex items-center justify-between">
+                  Pending Convos
+                  <span className="badge badge-primary badge-sm">{chats.length}</span>
+                </h2>
               <div className="flex flex-col divide-y divide-gray-100">
                 {chats.map((chat) => {
                   const lastMessage = chat.messages[0];
@@ -64,6 +68,7 @@ export default function PendingConversations({}) {
                   );
                 })}
               </div>
+              </>
             );
           }}
         </QueryCompLayout>
