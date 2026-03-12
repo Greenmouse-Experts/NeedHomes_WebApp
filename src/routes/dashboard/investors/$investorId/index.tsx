@@ -13,12 +13,14 @@ import {
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import UserTransactions from "@/routes/dashboard/investors/-components/UserTransactions";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_INVESTOR_DATA } from "@/types";
 import PageLoader from "@/components/layout/PageLoader";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import SimpleAvatar from "@/simpleComps/SimpleAvatar";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
 
 export const Route = createFileRoute("/dashboard/investors/$investorId/")({
   component: InvestorDetailsPage,
@@ -39,6 +41,19 @@ function InvestorDetailsPage() {
     },
   });
 
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: async () => {
+      let resp = await apiClient.post("/chat/conversations/initiate", {
+        targetUserId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      });
+      return resp.data;
+    },
+    onSuccess: (resp: ApiResponse<any>) => {
+      const data = resp.data;
+      const convoId = data.id;
+      console.log(convoId);
+    },
+  });
   return (
     <PageLoader query={query}>
       {(response) => {
@@ -319,7 +334,18 @@ function InvestorDetailsPage() {
                         >
                           See KYC
                         </Button>
-                        <Button variant="outline" className="w-full">
+                        <Button
+                          disabled={isPending}
+                          variant="outline"
+                          className="w-full"
+                          onClick={() =>
+                            toast.promise(mutateAsync, {
+                              loading: "initiating convo...",
+                              success: "Message sent successfully",
+                              error: extract_message,
+                            })
+                          }
+                        >
                           Send Message
                         </Button>
                       </div>
