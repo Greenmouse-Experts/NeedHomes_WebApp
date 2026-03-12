@@ -85,7 +85,9 @@ function RouteComponent() {
                     <div className="flex flex-col divide-y divide-gray-100">
                       {chats.map((chat) => {
                         const lastMessage = chat.messages[0];
-                        const initials = `${chat.user.firstName[0]}${chat.user.lastName[0]}`;
+                        const firstName = chat?.user?.firstName ?? "Unknown";
+                        const lastName = chat?.user?.lastName ?? "Unknown";
+                        const initials = `${firstName[0]}${lastName[0]}`;
                         return (
                           <Link
                             key={chat.id}

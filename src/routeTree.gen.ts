@@ -100,10 +100,10 @@ import { Route as DashboardSubAdminsRolesRouteImport } from './routes/dashboard/
 import { Route as DashboardSubAdminsPermissionsRouteImport } from './routes/dashboard/sub-admins/permissions'
 import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
 import { Route as DashboardPropertiesPropertyIdRouteImport } from './routes/dashboard/properties/$propertyId'
-import { Route as DashboardPartnersPartnerIdRouteImport } from './routes/dashboard/partners/$partnerId'
 import { Route as DashboardJobsCreateRouteImport } from './routes/dashboard/jobs/create'
 import { Route as DashboardPropertiesNewRouteRouteImport } from './routes/dashboard/properties/new/route'
 import { Route as DashboardPropertiesEditRouteRouteImport } from './routes/dashboard/properties/edit/route'
+import { Route as DashboardPartnersPartnerIdRouteRouteImport } from './routes/dashboard/partners/$partnerId/route'
 import { Route as PartnersPropertiesPropertyIdIndexRouteImport } from './routes/partners/properties/$propertyId/index'
 import { Route as PartnerRecoverForgotPasswordIndexRouteImport } from './routes/partner/recover/forgot-password/index'
 import { Route as InvestorsPropertiesPropertyIdIndexRouteImport } from './routes/investors/properties/$propertyId/index'
@@ -628,12 +628,6 @@ const DashboardPropertiesPropertyIdRoute =
     path: '/$propertyId',
     getParentRoute: () => DashboardPropertiesRouteRoute,
   } as any)
-const DashboardPartnersPartnerIdRoute =
-  DashboardPartnersPartnerIdRouteImport.update({
-    id: '/$partnerId',
-    path: '/$partnerId',
-    getParentRoute: () => DashboardPartnersRoute,
-  } as any)
 const DashboardJobsCreateRoute = DashboardJobsCreateRouteImport.update({
   id: '/create',
   path: '/create',
@@ -650,6 +644,12 @@ const DashboardPropertiesEditRouteRoute =
     id: '/edit',
     path: '/edit',
     getParentRoute: () => DashboardPropertiesRouteRoute,
+  } as any)
+const DashboardPartnersPartnerIdRouteRoute =
+  DashboardPartnersPartnerIdRouteRouteImport.update({
+    id: '/$partnerId',
+    path: '/$partnerId',
+    getParentRoute: () => DashboardPartnersRoute,
   } as any)
 const PartnersPropertiesPropertyIdIndexRoute =
   PartnersPropertiesPropertyIdIndexRouteImport.update({
@@ -715,7 +715,7 @@ const DashboardPartnersPartnerIdIndexRoute =
   DashboardPartnersPartnerIdIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => DashboardPartnersPartnerIdRoute,
+    getParentRoute: () => DashboardPartnersPartnerIdRouteRoute,
   } as any)
 const DashboardJobsCategoriesIndexRoute =
   DashboardJobsCategoriesIndexRouteImport.update({
@@ -792,7 +792,7 @@ const DashboardPartnersPartnerIdKycRoute =
   DashboardPartnersPartnerIdKycRouteImport.update({
     id: '/kyc',
     path: '/kyc',
-    getParentRoute: () => DashboardPartnersPartnerIdRoute,
+    getParentRoute: () => DashboardPartnersPartnerIdRouteRoute,
   } as any)
 const DashboardInvestorsInvestorIdKycRoute =
   DashboardInvestorsInvestorIdKycRouteImport.update({
@@ -870,7 +870,7 @@ const DashboardPartnersPartnerIdPromotionsIndexRoute =
   DashboardPartnersPartnerIdPromotionsIndexRouteImport.update({
     id: '/promotions/',
     path: '/promotions/',
-    getParentRoute: () => DashboardPartnersPartnerIdRoute,
+    getParentRoute: () => DashboardPartnersPartnerIdRouteRoute,
   } as any)
 const DashboardInvestorsCorporateInvestorIdIndexRoute =
   DashboardInvestorsCorporateInvestorIdIndexRouteImport.update({
@@ -990,10 +990,10 @@ export interface FileRoutesByFullPath {
   '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/terms/': typeof TermsIndexRoute
+  '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
-  '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
@@ -1255,10 +1255,10 @@ export interface FileRoutesById {
   '/partners/': typeof PartnersIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/terms/': typeof TermsIndexRoute
+  '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
-  '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteWithChildren
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
@@ -1400,10 +1400,10 @@ export interface FileRouteTypes {
     | '/partners/'
     | '/recover-password/'
     | '/terms/'
+    | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/new'
     | '/dashboard/jobs/create'
-    | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
     | '/dashboard/sub-admins/permissions'
@@ -1664,10 +1664,10 @@ export interface FileRouteTypes {
     | '/partners/'
     | '/recover-password/'
     | '/terms/'
+    | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/new'
     | '/dashboard/jobs/create'
-    | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
     | '/dashboard/sub-admins/permissions'
@@ -2424,13 +2424,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPropertiesPropertyIdRouteImport
       parentRoute: typeof DashboardPropertiesRouteRoute
     }
-    '/dashboard/partners/$partnerId': {
-      id: '/dashboard/partners/$partnerId'
-      path: '/$partnerId'
-      fullPath: '/dashboard/partners/$partnerId'
-      preLoaderRoute: typeof DashboardPartnersPartnerIdRouteImport
-      parentRoute: typeof DashboardPartnersRoute
-    }
     '/dashboard/jobs/create': {
       id: '/dashboard/jobs/create'
       path: '/create'
@@ -2451,6 +2444,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/properties/edit'
       preLoaderRoute: typeof DashboardPropertiesEditRouteRouteImport
       parentRoute: typeof DashboardPropertiesRouteRoute
+    }
+    '/dashboard/partners/$partnerId': {
+      id: '/dashboard/partners/$partnerId'
+      path: '/$partnerId'
+      fullPath: '/dashboard/partners/$partnerId'
+      preLoaderRoute: typeof DashboardPartnersPartnerIdRouteRouteImport
+      parentRoute: typeof DashboardPartnersRoute
     }
     '/partners/properties/$propertyId/': {
       id: '/partners/properties/$propertyId/'
@@ -2527,7 +2527,7 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/partners/$partnerId/'
       preLoaderRoute: typeof DashboardPartnersPartnerIdIndexRouteImport
-      parentRoute: typeof DashboardPartnersPartnerIdRoute
+      parentRoute: typeof DashboardPartnersPartnerIdRouteRoute
     }
     '/dashboard/jobs/categories/': {
       id: '/dashboard/jobs/categories/'
@@ -2618,7 +2618,7 @@ declare module '@tanstack/react-router' {
       path: '/kyc'
       fullPath: '/dashboard/partners/$partnerId/kyc'
       preLoaderRoute: typeof DashboardPartnersPartnerIdKycRouteImport
-      parentRoute: typeof DashboardPartnersPartnerIdRoute
+      parentRoute: typeof DashboardPartnersPartnerIdRouteRoute
     }
     '/dashboard/investors/$investorId/kyc': {
       id: '/dashboard/investors/$investorId/kyc'
@@ -2709,7 +2709,7 @@ declare module '@tanstack/react-router' {
       path: '/promotions'
       fullPath: '/dashboard/partners/$partnerId/promotions/'
       preLoaderRoute: typeof DashboardPartnersPartnerIdPromotionsIndexRouteImport
-      parentRoute: typeof DashboardPartnersPartnerIdRoute
+      parentRoute: typeof DashboardPartnersPartnerIdRouteRoute
     }
     '/dashboard/investors/corporate/$investorId/': {
       id: '/dashboard/investors/corporate/$investorId/'
@@ -3068,13 +3068,13 @@ const DashboardWithdrawalsRouteRouteWithChildren =
     DashboardWithdrawalsRouteRouteChildren,
   )
 
-interface DashboardPartnersPartnerIdRouteChildren {
+interface DashboardPartnersPartnerIdRouteRouteChildren {
   DashboardPartnersPartnerIdKycRoute: typeof DashboardPartnersPartnerIdKycRoute
   DashboardPartnersPartnerIdIndexRoute: typeof DashboardPartnersPartnerIdIndexRoute
   DashboardPartnersPartnerIdPromotionsIndexRoute: typeof DashboardPartnersPartnerIdPromotionsIndexRoute
 }
 
-const DashboardPartnersPartnerIdRouteChildren: DashboardPartnersPartnerIdRouteChildren =
+const DashboardPartnersPartnerIdRouteRouteChildren: DashboardPartnersPartnerIdRouteRouteChildren =
   {
     DashboardPartnersPartnerIdKycRoute: DashboardPartnersPartnerIdKycRoute,
     DashboardPartnersPartnerIdIndexRoute: DashboardPartnersPartnerIdIndexRoute,
@@ -3082,18 +3082,19 @@ const DashboardPartnersPartnerIdRouteChildren: DashboardPartnersPartnerIdRouteCh
       DashboardPartnersPartnerIdPromotionsIndexRoute,
   }
 
-const DashboardPartnersPartnerIdRouteWithChildren =
-  DashboardPartnersPartnerIdRoute._addFileChildren(
-    DashboardPartnersPartnerIdRouteChildren,
+const DashboardPartnersPartnerIdRouteRouteWithChildren =
+  DashboardPartnersPartnerIdRouteRoute._addFileChildren(
+    DashboardPartnersPartnerIdRouteRouteChildren,
   )
 
 interface DashboardPartnersRouteChildren {
-  DashboardPartnersPartnerIdRoute: typeof DashboardPartnersPartnerIdRouteWithChildren
+  DashboardPartnersPartnerIdRouteRoute: typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   DashboardPartnersIndexRoute: typeof DashboardPartnersIndexRoute
 }
 
 const DashboardPartnersRouteChildren: DashboardPartnersRouteChildren = {
-  DashboardPartnersPartnerIdRoute: DashboardPartnersPartnerIdRouteWithChildren,
+  DashboardPartnersPartnerIdRouteRoute:
+    DashboardPartnersPartnerIdRouteRouteWithChildren,
   DashboardPartnersIndexRoute: DashboardPartnersIndexRoute,
 }
 

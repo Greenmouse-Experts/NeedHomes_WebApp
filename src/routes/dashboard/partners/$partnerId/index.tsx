@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ChevronLeft,
   MoreVertical,
@@ -13,7 +13,7 @@ import {
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type { ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_PARTNER_DATA } from "@/types";
 import apiClient from "@/api/simpleApi";
@@ -21,6 +21,9 @@ import PageLoader from "@/components/layout/PageLoader";
 import SimpleAvatar from "@/simpleComps/SimpleAvatar";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import PromotedProps from "./-components/PromotedProps";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
 
 export const Route = createFileRoute("/dashboard/partners/$partnerId/")({
   component: PartnerDetailsPage,
@@ -32,12 +35,33 @@ function PartnerDetailsPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "properties">(
     "overview",
   );
+  const [message, setMessage] = useState("");
+  const modalRef = useRef<ModalHandle>(null);
 
   const query = useQuery<ApiResponse<ADMIN_PARTNER_DATA>>({
     queryKey: ["admin-partner", partnerId],
     queryFn: async () => {
       let resp = await apiClient.get("/admin/users/" + partnerId);
       return resp.data;
+    },
+  });
+
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: async (msg: string) => {
+      let resp = await apiClient.post("/chat/conversations/initiate", {
+        targetUserId: partnerId,
+        message: msg,
+      });
+      return resp.data.data.conversation as { id: string };
+    },
+    onSuccess: (conversation) => {
+      modalRef.current?.close();
+      setMessage("");
+      return navigate({
+        to: "/dashboard/chat",
+        search: { convoId: conversation.id },
+        viewTransition: true,
+      });
     },
   });
 
@@ -309,7 +333,11 @@ function PartnerDetailsPage() {
                           >
                             See KYC
                           </Button>
-                          <Button variant="outline" className="w-full">
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => modalRef.current?.open()}
+                          >
                             Send Message
                           </Button>
                         </div>
@@ -327,6 +355,37 @@ function PartnerDetailsPage() {
           );
         }}
       </PageLoader>
+      <Modal
+        ref={modalRef}
+        title="Send Message"
+        actions={
+          <>
+            <Button variant="outline" onClick={() => modalRef.current?.close()}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              disabled={isPending}
+              onClick={() =>
+                toast.promise(mutateAsync(message), {
+                  loading: "Sending message...",
+                  success: "Message sent successfully",
+                  error: extract_message,
+                })
+              }
+            >
+              {isPending ? "Sending..." : "Send"}
+            </Button>
+          </>
+        }
+      >
+        <textarea
+          className="textarea textarea-bordered w-full min-h-32 resize-none"
+          placeholder="Type your message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </Modal>
     </DashboardLayout>
   );
 }
