@@ -19,6 +19,7 @@ import {
   LogOut,
   List,
   Briefcase,
+  FileText,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
@@ -131,6 +132,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
       { label: "Create", to: "/dashboard/jobs/create", icon: Plus },
     ],
   },
+  { label: "TERMS", to: "/dashboard/terms", icon: FileText },
   { label: "CONVERSATIONS", to: "/dashboard/chat", icon: ChatBubbleLeftIcon },
   { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
   { label: "NOTIFICATIONS", to: "/dashboard/notifications", icon: Bell },

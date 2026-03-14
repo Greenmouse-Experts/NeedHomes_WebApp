@@ -439,7 +439,8 @@ function SignUpPage() {
                       By creating an account, you agree to Needhomes Privacy
                       Policy,{" "}
                       <Link
-                        to="/terms-and-conditions"
+                        to="/terms/$termsId"
+                        params={{ termsId: "INVESTOR_INDIVIDUAL" }}
                         target="_blank"
                         className="text-brand-orange hover:underline font-medium"
                       >
@@ -631,7 +632,8 @@ function SignUpPage() {
                       By creating an account, you agree to Needhomes Privacy
                       Policy,{" "}
                       <Link
-                        to="/terms-and-conditions"
+                        to="/terms/$termsId"
+                        params={{ termsId: "INVESTOR_CORPORATE" }}
                         target="_blank"
                         className="text-brand-orange hover:underline font-medium"
                       >

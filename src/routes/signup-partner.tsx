@@ -69,6 +69,7 @@ function SignUpPartnerPage() {
   });
 
   const emailValue = watch("email");
+  const partnerTypeValue = watch("partnerType");
 
   const signupMutation = useMutation({
     mutationFn: async (payload: Omit<SignupFormValues, "confirmPassword">) => {
@@ -327,7 +328,13 @@ function SignUpPartnerPage() {
                 >
                   By creating an account, you agree to Needhomes Privacy Policy,{" "}
                   <Link
-                    to="/terms-and-conditions"
+                    to="/terms/$termsId"
+                    params={{
+                      termsId:
+                        partnerTypeValue === "PROPERTY_DEVELOPER"
+                          ? "PARTNER_PROPERTY_DEVELOPER"
+                          : "PARTNER_REAL_ESTATE_AGENT",
+                    }}
                     target="_blank"
                     className="text-brand-orange hover:underline font-medium"
                   >
