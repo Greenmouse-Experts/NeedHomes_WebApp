@@ -1,9 +1,9 @@
-import { useAuth } from "@/store/authStore";
+import { useAuth, useKyc } from "@/store/authStore";
 import { Link } from "@tanstack/react-router";
 
 export default function ProfileCard() {
   const [user] = useAuth();
-
+  const [kyc] = useKyc();
   const handleLinkClick = () => {
     // Add any desired link click handling here
   };
@@ -29,9 +29,10 @@ export default function ProfileCard() {
       </div>
       <h3 className="text-gray-900 font-bold text-sm mb-1">Profile</h3>
       <p className="text-gray-500 text-xs mb-3">
-        {user?.user.firstName && user?.user.lastName
-          ? `${user.user.firstName} ${user.user.lastName}`
-          : "John Doe"}
+        {kyc?.companyName ??
+          (user?.user.firstName && user?.user.lastName
+            ? `${user.user.firstName} ${user.user.lastName}`
+            : "John Doe")}
       </p>
       <Link
         to="/investors/settings"
