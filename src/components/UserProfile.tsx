@@ -1,4 +1,4 @@
-import { useAuth, set_user_value } from "@/store/authStore";
+import { useAuth, set_user_value, useKyc } from "@/store/authStore";
 import { Avatar, AvatarFallback } from "./ui/Avatar";
 import { Button } from "./ui/Button";
 import { Label } from "./ui/Label";
@@ -21,6 +21,7 @@ interface ProfileFormValues {
 
 export default function UserProfile() {
   const [userProfile] = useAuth();
+  const [kyc] = useKyc();
   const user = userProfile?.user;
   const auth = userProfile;
   const {

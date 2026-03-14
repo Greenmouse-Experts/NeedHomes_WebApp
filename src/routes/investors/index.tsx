@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bell, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/store/authStore";
+import { useAuth, useKyc } from "@/store/authStore";
 import CalendarWidget from "@/components/CalendarWidget";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
@@ -76,7 +76,7 @@ function InvestorDashboard() {
   const maxValue = Math.max(...monthlyData.map((d) => d.value));
   const [authRecord] = useAuth();
   const user = authRecord?.user;
-
+  const [kyc] = useKyc();
   const isVerified = user?.account_verification_status === "VERIFIED";
   const profilePictureUrl =
     user?.profilePicture ||
@@ -90,7 +90,7 @@ function InvestorDashboard() {
         <div>
           <VerificationStatus />
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            Welcome, {user?.firstName?.trim() ?? "User"}
+            Welcome, {kyc.companyName ?? user?.firstName?.trim() ?? "User"}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base">
             Welcome to your investment overview and portfolio summary.

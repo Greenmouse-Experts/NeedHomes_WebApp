@@ -1,4 +1,4 @@
-import { useAuth, set_user_value } from "@/store/authStore";
+import { useAuth, set_user_value, useKyc } from "@/store/authStore";
 import { Avatar, AvatarFallback } from "./ui/Avatar";
 import { Button } from "./ui/Button";
 import { Label } from "./ui/Label";
@@ -20,7 +20,7 @@ interface ProfileFormValues {
 export default function CorpUserProfile() {
   const [userProfile] = useAuth();
   const user = userProfile?.user;
-
+  const [kyc] = useKyc();
   const {
     register,
     handleSubmit,
@@ -32,6 +32,7 @@ export default function CorpUserProfile() {
       lastName: user?.lastName || "",
       email: user?.email || "",
       phone: user?.phone,
+      companyName: kyc?.companyName,
     },
   });
 
