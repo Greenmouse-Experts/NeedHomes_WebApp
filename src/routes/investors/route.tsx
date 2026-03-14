@@ -87,6 +87,9 @@ function LayoutComponent() {
         ),
       });
     });
+    socket.on("chat:newMessage", () => {
+      return toast.info("You have a New Message");
+    });
     socket.on("notification:new", (data) => {
       console.log("New notification:", data);
       toast.info("New Notification", {

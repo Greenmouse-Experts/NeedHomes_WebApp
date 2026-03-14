@@ -103,6 +103,9 @@ function RouteComponent() {
         description: data.content,
       });
     });
+    socket.on("chat:newMessage", () => {
+      return toast.info("You have a New Message");
+    });
     // ✅ DISCONNECT ON UNMOUNT
     return () => {
       console.log("❌ Disconnecting socket...");
