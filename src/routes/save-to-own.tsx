@@ -212,7 +212,7 @@ function SaveToOwnPage() {
               </div>
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop"
+                  src="/save-to-own.jpeg"
                   alt="Save to Own"
                   className="rounded-xl shadow-2xl"
                 />

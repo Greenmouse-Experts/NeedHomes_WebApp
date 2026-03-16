@@ -214,7 +214,7 @@ function CoDevelopmentPage() {
               </div>
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&h=600&fit=crop"
+                  src="/co-dev.jpeg"
                   alt="Co-Development"
                   className="rounded-xl shadow-2xl"
                 />

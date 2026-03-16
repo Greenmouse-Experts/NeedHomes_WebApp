@@ -216,7 +216,7 @@ function LandBankingPage() {
             </div>
             <div className="relative">
               <img
-                src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop"
+                src="/land-bank.jpeg"
                 alt="Land Banking"
                 className="rounded-xl shadow-2xl"
               />

@@ -212,7 +212,7 @@ function OutrightPurchasePage() {
               </div>
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop"
+                  src="/outright.jpeg"
                   alt="Outright Purchase"
                   className="rounded-xl shadow-2xl"
                 />
