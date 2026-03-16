@@ -140,7 +140,7 @@ function PropertyDetailPage() {
               </FormProvider>
             </Modal>
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <Button
+              {/*<Button
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
                 onClick={() => {
@@ -154,7 +154,7 @@ function PropertyDetailPage() {
                 className="w-full sm:w-auto"
               >
                 Invest Now
-              </Button>
+              </Button>*/}
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
