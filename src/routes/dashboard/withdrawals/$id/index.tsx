@@ -83,8 +83,18 @@ function RouteComponent() {
         <form
           className="px-4 space-y-4"
           onSubmit={form.handleSubmit(async (data) => {
-            await call_api(() => finalize(data));
-            modalHandle.closeModal();
+            const promise = mutation.mutateAsync(() => finalize(data));
+            toast.promise(promise, {
+              loading: "loading...",
+              error: extract_message,
+              success: extract_message,
+            });
+            try {
+              await promise;
+              modalHandle.closeModal();
+            } catch {
+              // error handled by toast
+            }
           })}
         >
           <h2 className="text-center font-bold text-lg">
