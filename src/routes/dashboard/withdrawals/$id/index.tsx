@@ -14,6 +14,7 @@ import {
   Building2,
   Calendar,
   CheckCircle2,
+  CircleCheck,
   Clock,
   Hash,
   Mail,
@@ -133,6 +134,10 @@ function RouteComponent() {
               badge: "badge-info",
               icon: <Clock className="w-4 h-4" />,
             },
+            COMPLETED: {
+              badge: "badge-success",
+              icon: <CircleCheck className="w-4 h-4" />,
+            },
           };
 
           const config =
@@ -177,7 +182,7 @@ function RouteComponent() {
                           </h2>
                           <div className="flex items-baseline gap-2">
                             <span className="text-5xl font-black  text-primary tracking-tighter">
-                              ₦{resp.amount.toLocaleString()}
+                              ₦{(resp.amount / 100).toLocaleString()}
                             </span>
                             <span className="text-sm font-medium opacity-40">
                               NGN
@@ -217,10 +222,10 @@ function RouteComponent() {
                           </p>
                           <div
                             // @ts-ignore
-                            className={`badge ${statusConfig[resp.status as any].badge} ring badge-soft`}
+                            className={`badge ${statusConfig[resp.status as any]?.badge} ring badge-soft`}
                           >
                             {/*@ts-ignore*/}
-                            {statusConfig[resp.status as any].icon}{" "}
+                            {statusConfig[resp.status as any]?.icon}{" "}
                             {resp.status}
                           </div>
                         </div>
@@ -404,6 +409,32 @@ function RouteComponent() {
                               <CheckCircle2 className="w-5 h-5" />
                               <span className="font-black text-xs uppercase tracking-wider">
                                 Disbursed
+                              </span>
+                            </div>
+                            <p className=" opacity-70 uppercase tracking-tighter mb-2">
+                              Transfer Code
+                            </p>
+                            <p className="font-mono text-sm font-bold text-success">
+                              {resp.transferCode || "N/A"}
+                            </p>
+                          </div>
+                          <div className=" space-y-1 opacity-50 uppercase font-bold tracking-widest">
+                            <p>Approved By: {resp.approvedBy}</p>
+                            <p>
+                              Timestamp:{" "}
+                              {resp.approvedAt
+                                ? new Date(resp.approvedAt).toLocaleString()
+                                : "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      ) : resp.status === "COMPLETED" ? (
+                        <div className="space-y-6">
+                          <div className="p-4 bg-success/10 border border-success/20 rounded-2xl">
+                            <div className="flex items-center gap-3 mb-2 text-success">
+                              <CircleCheck className="w-5 h-5" />
+                              <span className="font-black text-xs uppercase tracking-wider">
+                                Completed
                               </span>
                             </div>
                             <p className=" opacity-70 uppercase tracking-tighter mb-2">
