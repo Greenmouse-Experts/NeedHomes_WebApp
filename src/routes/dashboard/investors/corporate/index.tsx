@@ -71,6 +71,7 @@ function InvestorsPage() {
     // },
     // { key: "lastName", label: "Last Name" },
     { key: "email", label: "Email" },
+    { key: "companyName", label: "Company Name" },
     { key: "phone", label: "Phone" },
     { key: "accountType", label: "Account Type" },
     { key: "account_status", label: "Status" },
