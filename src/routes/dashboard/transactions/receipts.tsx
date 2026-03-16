@@ -152,7 +152,7 @@ function ReceiptsPage() {
   };
 
   return (
-    <DashboardLayout title="Super Admin Dashboard" subtitle="Receipts">
+    <>
       {/* Stats Cards */}
       <div className="mb-4 md:mb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
@@ -450,6 +450,6 @@ function ReceiptsPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }

@@ -60,7 +60,7 @@ function RouteComponent() {
   };
 
   return (
-    <ThemeProvider className="p-6 bg-white shadow rounded-xl space-y-6 max-w-3xl mx-auto">
+    <ThemeProvider className="p-6 bg-white shadow rounded-xl space-y-6 container mx-auto">
       <div className="flex items-center gap-3">
         <Link to="/dashboard/terms" className="btn btn-ghost btn-sm btn-circle">
           <ArrowLeft size={16} />
