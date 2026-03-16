@@ -1,6 +1,17 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
+import {
+  AlertTriangle,
+  ArrowDownCircle,
+  Banknote,
+  CheckCircle2,
+  CircleCheck,
+  Clock,
+  Layers,
+  RefreshCw,
+  XCircle,
+} from "lucide-react";
 
 interface WithdrawalStatsData {
   counts: {
@@ -31,109 +42,140 @@ export default function WithdrawalStats() {
 
   return (
     <div className="mb-6">
-      <h2 className="text-2xl font-bold mb-4">Withdrawal Stats</h2>
       <QueryCompLayout query={query}>
         {(data) => {
           const { counts, amounts } = data.data;
+
+          const statItems = [
+            {
+              label: "Total",
+              value: counts.total,
+              icon: <Layers className="w-5 h-5" />,
+              iconBg: "bg-primary/10",
+              iconColor: "text-primary",
+              valueColor: "text-base-content",
+            },
+            {
+              label: "Completed",
+              value: counts.completed,
+              icon: <CircleCheck className="w-5 h-5" />,
+              iconBg: "bg-success/10",
+              iconColor: "text-success",
+              valueColor: "text-success",
+            },
+            {
+              label: "Pending",
+              value: counts.pending,
+              icon: <Clock className="w-5 h-5" />,
+              iconBg: "bg-warning/10",
+              iconColor: "text-warning",
+              valueColor: "text-warning",
+            },
+            {
+              label: "Processing",
+              value: counts.processing,
+              icon: <RefreshCw className="w-5 h-5" />,
+              iconBg: "bg-info/10",
+              iconColor: "text-info",
+              valueColor: "text-info",
+            },
+            {
+              label: "Approved",
+              value: counts.approved,
+              icon: <CheckCircle2 className="w-5 h-5" />,
+              iconBg: "bg-blue-500/10",
+              iconColor: "text-blue-500",
+              valueColor: "text-blue-500",
+            },
+            {
+              label: "Rejected",
+              value: counts.rejected,
+              icon: <XCircle className="w-5 h-5" />,
+              iconBg: "bg-error/10",
+              iconColor: "text-error",
+              valueColor: "text-error",
+            },
+            {
+              label: "Failed",
+              value: counts.failed,
+              icon: <AlertTriangle className="w-5 h-5" />,
+              iconBg: "bg-error/10",
+              iconColor: "text-error",
+              valueColor: "text-error",
+            },
+          ];
+
           return (
-            <div className="grid gap-6">
-              {/* Amounts Section */}
-              <section className="card bg-base-100 shadow-sm ring fade overflow-hidden">
-                <div className="px-6 py-4 border-b fade bg-base-50/50">
+            <div className="grid gap-4">
+              {/* Financial Overview */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="card bg-base-100 ring fade overflow-hidden">
+                  <div className="p-6 flex items-center gap-4">
+                    <div className="p-3 bg-warning/10 rounded-2xl shrink-0">
+                      <Clock className="w-6 h-6 text-warning" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold uppercase tracking-widest text-base-content/50 mb-1">
+                        Pending Amount
+                      </p>
+                      <p className="text-3xl font-black text-warning truncate">
+                        {amounts.pendingNaira}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="h-1 bg-warning/20">
+                    <div className="h-full w-1/2 bg-warning/60 rounded-full" />
+                  </div>
+                </div>
+
+                <div className="card bg-base-100 ring fade overflow-hidden">
+                  <div className="p-6 flex items-center gap-4">
+                    <div className="p-3 bg-success/10 rounded-2xl shrink-0">
+                      <Banknote className="w-6 h-6 text-success" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold uppercase tracking-widest text-base-content/50 mb-1">
+                        Completed Amount
+                      </p>
+                      <p className="text-3xl font-black text-success truncate">
+                        {amounts.completedNaira}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="h-1 bg-success/20">
+                    <div className="h-full w-3/4 bg-success/60 rounded-full" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Counts Grid */}
+              <section className="card bg-base-100 ring fade overflow-hidden">
+                <div className="px-6 py-4 border-b fade flex items-center gap-2">
+                  <ArrowDownCircle className="w-4 h-4 text-primary" />
                   <h3 className="text-xs font-bold uppercase tracking-widest text-base-content/60">
-                    Financial Overview
+                    Transaction Volumes
                   </h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2">
-                  <div className="p-6 flex flex-col gap-2 border-b md:border-b-0 md:border-r border-base-200 hover:bg-base-200/20 transition-colors">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-warning"></div>
-                      <span className="text-xs font-bold text-base-content/50 uppercase tracking-tighter">
-                        Pending Amount
-                      </span>
-                    </div>
-                    <div className="stat-value text-3xl text-warning">
-                      {amounts.pendingNaira}
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col gap-2 hover:bg-base-200/20 transition-colors">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-success"></div>
-                      <span className="text-xs font-bold text-base-content/50 uppercase tracking-tighter">
-                        Completed Amount
-                      </span>
-                    </div>
-                    <div className="stat-value text-3xl text-success">
-                      {amounts.completedNaira}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Counts Section */}
-              <section className="bg-base-100 ring fade rounded-box ">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 p-4 border-b fade">
-                  Transaction Volumes
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 p-4">
-                  {[
-                    {
-                      label: "Total",
-                      value: counts.total,
-                      color: "text-primary",
-                    },
-                    {
-                      label: "Completed",
-                      value: counts.completed,
-                      color: "text-success",
-                    },
-                    {
-                      label: "Pending",
-                      value: counts.pending,
-                      color: "text-warning",
-                    },
-                    {
-                      label: "Processing",
-                      value: counts.processing,
-                      color: "text-info",
-                    },
-                    {
-                      label: "Approved",
-                      value: counts.approved,
-                      color: "text-blue-500",
-                    },
-                    {
-                      label: "Failed",
-                      value: counts.failed,
-                      color: "text-error",
-                    },
-                    {
-                      label: "Rejected",
-                      value: counts.rejected,
-                      color: "text-error",
-                    },
-                  ].map((item) => (
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-px bg-base-200">
+                  {statItems.map((item) => (
                     <div
                       key={item.label}
-                      className="relative flex flex-col p-6 bg-white rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md"
+                      className="flex flex-col gap-3 p-5 bg-base-100 hover:bg-base-200/40 transition-colors"
                     >
-                      <div className="flex justify-between items-start mb-4">
-                        <span className=" font-bold uppercase tracking-widest text-slate-500">
-                          {item.label}
-                        </span>
-                        {/*<div className="p-2 bg-orange-50 rounded-xl">
-                          <span className="text-orange-500 font-bold ">$</span>
-                        </div>*/}
+                      <div
+                        className={`p-2 ${item.iconBg} rounded-xl w-fit ${item.iconColor}`}
+                      >
+                        {item.icon}
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <span
-                          className={`stat-value font-black text-slate-900`}
+                      <div>
+                        <p
+                          className={`text-2xl font-black ${item.valueColor}`}
                         >
                           {item.value.toLocaleString()}
-                        </span>
-                        <span className=" text-slate-400 font-medium">
-                          This Month
-                        </span>
+                        </p>
+                        <p className="text-xs font-bold uppercase tracking-widest text-base-content/40 mt-0.5">
+                          {item.label}
+                        </p>
                       </div>
                     </div>
                   ))}

@@ -63,11 +63,13 @@ function RouteComponent() {
       render: (value) => (
         <div
           className={`badge badge-sm badge-soft ring fade font-bold ${
-            value === "APPROVED"
+            value === "APPROVED" || value === "COMPLETED"
               ? "badge-success"
               : value === "PENDING"
                 ? "badge-warning"
-                : "badge-error"
+                : value === "PROCESSING"
+                  ? "badge-info"
+                  : "badge-error"
           }`}
         >
           {value}

@@ -82,9 +82,9 @@ function RouteComponent() {
       <Modal ref={modalHandle.ref} title="Finalize Transfer">
         <form
           className="px-4 space-y-4"
-          onSubmit={form.handleSubmit((data) => {
-            console.log(data.otp);
-            call_api(() => finalize(data));
+          onSubmit={form.handleSubmit(async (data) => {
+            await call_api(() => finalize(data));
+            modalHandle.closeModal();
           })}
         >
           <h2 className="text-center font-bold text-lg">
@@ -306,7 +306,8 @@ function RouteComponent() {
                           </div>
                         </div>
                         <h3 className="text-xl font-black tracking-tight">
-                          {resp.user.firstName} {resp.user.lastName}
+                          {resp.companyName ??
+                            `${resp.user.firstName} ${resp.user.lastName}`}
                         </h3>
                         <p className="text-xs font-medium text-base-content/40 uppercase tracking-widest mt-1">
                           Verified Customer
