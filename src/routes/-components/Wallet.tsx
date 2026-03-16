@@ -287,7 +287,7 @@ export default function UserWallet() {
                   </h4>
                   {walletData?.walletTransactions?.length > 0 ? (
                     walletData.walletTransactions
-                      .slice(0, 5)
+                      .slice(0, 3)
                       .map((transaction: WalletTransaction) => (
                         <div
                           key={transaction.id}
