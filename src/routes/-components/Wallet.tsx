@@ -260,13 +260,17 @@ export default function UserWallet() {
                   </div>
 
                   <div className="space-y-2 md:space-y-3">
-                    <Button
-                      variant="outline"
-                      className="w-full text-sm md:text-base"
-                      onClick={() => handleOpenModal("deposit")}
-                    >
-                      Deposit
-                    </Button>
+                    {auth?.user.accountType != "PARTNER" && (
+                      <>
+                        <Button
+                          variant="outline"
+                          className="w-full text-sm md:text-base"
+                          onClick={() => handleOpenModal("deposit")}
+                        >
+                          Deposit
+                        </Button>
+                      </>
+                    )}
                     <Button
                       className="w-full bg-(--color-orange) hover:bg-(--color-orange-dark) text-white text-sm md:text-base"
                       onClick={() => handleOpenModal("withdraw")}
