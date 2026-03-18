@@ -151,7 +151,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
       nav({
-        to: "/dashboard/properties/$propertyId",
+        to: "/developer/properties/$propertyId",
         params: {
           propertyId: data.data.id,
         },
@@ -277,14 +277,14 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                         control={methods.control}
                         render={({ field }) => (
                           //@ts-ignore
-                          (<SimpleInput
+                          <SimpleInput
                             {...field}
                             type="number"
                             label="Installment Duration (Months)"
                             onChange={(e) =>
                               field.onChange(e.target.valueAsNumber)
                             }
-                          />)
+                          />
                         )}
                       />
                       {/*<Controller
@@ -312,7 +312,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         </div>
       </div>
     </ThemeProvider>
-  )
+  );
 }
 
 export const get_docs = async (
