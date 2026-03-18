@@ -26,13 +26,13 @@ function ListedPropertiesPage() {
   const props = usePagination();
 
   const handleAddProperty = () => {
-    navigate({ to: "/dashboard/properties/new" });
+    navigate({ to: "/developer/properties/new" });
   };
 
   const query = useQuery<ApiResponseV2<ADMIN_PROPERTY_LISTING[]>>({
     queryKey: ["listings-admin", props.page, activeTab],
     queryFn: async () => {
-      let url = "admin/properties/all";
+      let url = "partners/properties";
       const params: any = { page: props.page };
       if (activeTab === "published") {
         params.published = true;

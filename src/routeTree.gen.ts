@@ -63,7 +63,6 @@ import { Route as InvestorsMyInvestmentsRouteImport } from './routes/investors/m
 import { Route as InvestorsAnnouncementsRouteImport } from './routes/investors/announcements'
 import { Route as DeveloperTransactionsRouteImport } from './routes/developer/transactions'
 import { Route as DeveloperSettingsRouteImport } from './routes/developer/settings'
-import { Route as DeveloperPropertiesRouteImport } from './routes/developer/properties'
 import { Route as DeveloperNotificationsRouteImport } from './routes/developer/notifications'
 import { Route as DeveloperAnnouncementsRouteImport } from './routes/developer/announcements'
 import { Route as DashboardPartnersRouteImport } from './routes/dashboard/partners'
@@ -91,6 +90,7 @@ import { Route as InvestorsMyInvestmentsIndexRouteImport } from './routes/invest
 import { Route as InvestorsChatIndexRouteImport } from './routes/investors/chat/index'
 import { Route as ForgotPasswordResetIndexRouteImport } from './routes/forgot-password/reset/index'
 import { Route as DeveloperSubscriptionsIndexRouteImport } from './routes/developer/subscriptions/index'
+import { Route as DeveloperPropertiesIndexRouteImport } from './routes/developer/properties/index'
 import { Route as DeveloperPromotionsIndexRouteImport } from './routes/developer/promotions/index'
 import { Route as DeveloperChatIndexRouteImport } from './routes/developer/chat/index'
 import { Route as DashboardWithdrawalsIndexRouteImport } from './routes/dashboard/withdrawals/index'
@@ -458,11 +458,6 @@ const DeveloperSettingsRoute = DeveloperSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => DeveloperRouteRoute,
 } as any)
-const DeveloperPropertiesRoute = DeveloperPropertiesRouteImport.update({
-  id: '/properties',
-  path: '/properties',
-  getParentRoute: () => DeveloperRouteRoute,
-} as any)
 const DeveloperNotificationsRoute = DeveloperNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
@@ -611,6 +606,12 @@ const DeveloperSubscriptionsIndexRoute =
     path: '/subscriptions/',
     getParentRoute: () => DeveloperRouteRoute,
   } as any)
+const DeveloperPropertiesIndexRoute =
+  DeveloperPropertiesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
+  } as any)
 const DeveloperPromotionsIndexRoute =
   DeveloperPromotionsIndexRouteImport.update({
     id: '/promotions/',
@@ -713,13 +714,13 @@ const DeveloperPropertiesListedRoute =
   DeveloperPropertiesListedRouteImport.update({
     id: '/listed',
     path: '/listed',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DeveloperPropertiesPropertyIdRoute =
   DeveloperPropertiesPropertyIdRouteImport.update({
     id: '/$propertyId',
     path: '/$propertyId',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DashboardTransactionsReceiptsRoute =
   DashboardTransactionsReceiptsRouteImport.update({
@@ -764,13 +765,13 @@ const DeveloperPropertiesNewRouteRoute =
   DeveloperPropertiesNewRouteRouteImport.update({
     id: '/new',
     path: '/new',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DeveloperPropertiesEditRouteRoute =
   DeveloperPropertiesEditRouteRouteImport.update({
     id: '/edit',
     path: '/edit',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DashboardPropertiesNewRouteRoute =
   DashboardPropertiesNewRouteRouteImport.update({
@@ -812,7 +813,7 @@ const DeveloperPropertiesPromotionsIndexRoute =
   DeveloperPropertiesPromotionsIndexRouteImport.update({
     id: '/promotions/',
     path: '/promotions/',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DeveloperPropertiesNewIndexRoute =
   DeveloperPropertiesNewIndexRouteImport.update({
@@ -824,7 +825,7 @@ const DeveloperPropertiesInvestmentsIndexRoute =
   DeveloperPropertiesInvestmentsIndexRouteImport.update({
     id: '/investments/',
     path: '/investments/',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DeveloperPropertiesPropertyIdIndexRoute =
   DeveloperPropertiesPropertyIdIndexRouteImport.update({
@@ -1069,7 +1070,7 @@ const DeveloperPropertiesInvestmentsIdIndexRoute =
   DeveloperPropertiesInvestmentsIdIndexRouteImport.update({
     id: '/investments/$id/',
     path: '/investments/$id/',
-    getParentRoute: () => DeveloperPropertiesRoute,
+    getParentRoute: () => DeveloperPropertiesRouteRoute,
   } as any)
 const DashboardTransactionsPaymentsIdIndexRoute =
   DashboardTransactionsPaymentsIdIndexRouteImport.update({
@@ -1218,7 +1219,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/withdrawals': typeof DashboardWithdrawalsRouteRouteWithChildren
-  '/developer/properties': typeof DeveloperPropertiesRouteWithChildren
+  '/developer/properties': typeof DeveloperPropertiesRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
   '/developer/announcements': typeof DeveloperAnnouncementsRoute
@@ -1278,6 +1279,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/withdrawals/': typeof DashboardWithdrawalsIndexRoute
   '/developer/chat/': typeof DeveloperChatIndexRoute
   '/developer/promotions/': typeof DeveloperPromotionsIndexRoute
+  '/developer/properties/': typeof DeveloperPropertiesIndexRoute
   '/developer/subscriptions/': typeof DeveloperSubscriptionsIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
   '/investors/chat/': typeof InvestorsChatIndexRoute
@@ -1382,7 +1384,6 @@ export interface FileRoutesByTo {
   '/verify-partner': typeof VerifyPartnerRoute
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
-  '/developer/properties': typeof DeveloperPropertiesRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/developer/announcements': typeof DeveloperAnnouncementsRoute
   '/developer/notifications': typeof DeveloperNotificationsRoute
@@ -1431,6 +1432,7 @@ export interface FileRoutesByTo {
   '/dashboard/withdrawals': typeof DashboardWithdrawalsIndexRoute
   '/developer/chat': typeof DeveloperChatIndexRoute
   '/developer/promotions': typeof DeveloperPromotionsIndexRoute
+  '/developer/properties': typeof DeveloperPropertiesIndexRoute
   '/developer/subscriptions': typeof DeveloperSubscriptionsIndexRoute
   '/forgot-password/reset': typeof ForgotPasswordResetIndexRoute
   '/investors/chat': typeof InvestorsChatIndexRoute
@@ -1551,7 +1553,7 @@ export interface FileRoutesById {
   '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/verifications': typeof DashboardVerificationsRouteRouteWithChildren
   '/dashboard/withdrawals': typeof DashboardWithdrawalsRouteRouteWithChildren
-  '/developer/properties': typeof DeveloperPropertiesRouteWithChildren
+  '/developer/properties': typeof DeveloperPropertiesRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
   '/developer/announcements': typeof DeveloperAnnouncementsRoute
@@ -1611,6 +1613,7 @@ export interface FileRoutesById {
   '/dashboard/withdrawals/': typeof DashboardWithdrawalsIndexRoute
   '/developer/chat/': typeof DeveloperChatIndexRoute
   '/developer/promotions/': typeof DeveloperPromotionsIndexRoute
+  '/developer/properties/': typeof DeveloperPropertiesIndexRoute
   '/developer/subscriptions/': typeof DeveloperSubscriptionsIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
   '/investors/chat/': typeof InvestorsChatIndexRoute
@@ -1792,6 +1795,7 @@ export interface FileRouteTypes {
     | '/dashboard/withdrawals/'
     | '/developer/chat/'
     | '/developer/promotions/'
+    | '/developer/properties/'
     | '/developer/subscriptions/'
     | '/forgot-password/reset/'
     | '/investors/chat/'
@@ -1896,7 +1900,6 @@ export interface FileRouteTypes {
     | '/verify-partner'
     | '/dashboard/properties'
     | '/dashboard/transactions'
-    | '/developer/properties'
     | '/dashboard/announcements'
     | '/developer/announcements'
     | '/developer/notifications'
@@ -1945,6 +1948,7 @@ export interface FileRouteTypes {
     | '/dashboard/withdrawals'
     | '/developer/chat'
     | '/developer/promotions'
+    | '/developer/properties'
     | '/developer/subscriptions'
     | '/forgot-password/reset'
     | '/investors/chat'
@@ -2124,6 +2128,7 @@ export interface FileRouteTypes {
     | '/dashboard/withdrawals/'
     | '/developer/chat/'
     | '/developer/promotions/'
+    | '/developer/properties/'
     | '/developer/subscriptions/'
     | '/forgot-password/reset/'
     | '/investors/chat/'
@@ -2622,13 +2627,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeveloperSettingsRouteImport
       parentRoute: typeof DeveloperRouteRoute
     }
-    '/developer/properties': {
-      id: '/developer/properties'
-      path: '/properties'
-      fullPath: '/developer/properties'
-      preLoaderRoute: typeof DeveloperPropertiesRouteImport
-      parentRoute: typeof DeveloperRouteRoute
-    }
     '/developer/notifications': {
       id: '/developer/notifications'
       path: '/notifications'
@@ -2818,6 +2816,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeveloperSubscriptionsIndexRouteImport
       parentRoute: typeof DeveloperRouteRoute
     }
+    '/developer/properties/': {
+      id: '/developer/properties/'
+      path: '/'
+      fullPath: '/developer/properties/'
+      preLoaderRoute: typeof DeveloperPropertiesIndexRouteImport
+      parentRoute: typeof DeveloperPropertiesRouteRoute
+    }
     '/developer/promotions/': {
       id: '/developer/promotions/'
       path: '/promotions'
@@ -2949,14 +2954,14 @@ declare module '@tanstack/react-router' {
       path: '/listed'
       fullPath: '/developer/properties/listed'
       preLoaderRoute: typeof DeveloperPropertiesListedRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/developer/properties/$propertyId': {
       id: '/developer/properties/$propertyId'
       path: '/$propertyId'
       fullPath: '/developer/properties/$propertyId'
       preLoaderRoute: typeof DeveloperPropertiesPropertyIdRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/dashboard/transactions/receipts': {
       id: '/dashboard/transactions/receipts'
@@ -3012,14 +3017,14 @@ declare module '@tanstack/react-router' {
       path: '/new'
       fullPath: '/developer/properties/new'
       preLoaderRoute: typeof DeveloperPropertiesNewRouteRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/developer/properties/edit': {
       id: '/developer/properties/edit'
       path: '/edit'
       fullPath: '/developer/properties/edit'
       preLoaderRoute: typeof DeveloperPropertiesEditRouteRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/dashboard/properties/new': {
       id: '/dashboard/properties/new'
@@ -3068,7 +3073,7 @@ declare module '@tanstack/react-router' {
       path: '/promotions'
       fullPath: '/developer/properties/promotions/'
       preLoaderRoute: typeof DeveloperPropertiesPromotionsIndexRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/developer/properties/new/': {
       id: '/developer/properties/new/'
@@ -3082,7 +3087,7 @@ declare module '@tanstack/react-router' {
       path: '/investments'
       fullPath: '/developer/properties/investments/'
       preLoaderRoute: typeof DeveloperPropertiesInvestmentsIndexRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/developer/properties/$propertyId/': {
       id: '/developer/properties/$propertyId/'
@@ -3369,7 +3374,7 @@ declare module '@tanstack/react-router' {
       path: '/investments/$id'
       fullPath: '/developer/properties/investments/$id/'
       preLoaderRoute: typeof DeveloperPropertiesInvestmentsIdIndexRouteImport
-      parentRoute: typeof DeveloperPropertiesRoute
+      parentRoute: typeof DeveloperPropertiesRouteRoute
     }
     '/dashboard/transactions/payments/$id/': {
       id: '/dashboard/transactions/payments/$id/'
@@ -3951,40 +3956,44 @@ const DeveloperPropertiesPropertyIdRouteWithChildren =
     DeveloperPropertiesPropertyIdRouteChildren,
   )
 
-interface DeveloperPropertiesRouteChildren {
+interface DeveloperPropertiesRouteRouteChildren {
   DeveloperPropertiesEditRouteRoute: typeof DeveloperPropertiesEditRouteRouteWithChildren
   DeveloperPropertiesNewRouteRoute: typeof DeveloperPropertiesNewRouteRouteWithChildren
   DeveloperPropertiesPropertyIdRoute: typeof DeveloperPropertiesPropertyIdRouteWithChildren
   DeveloperPropertiesListedRoute: typeof DeveloperPropertiesListedRoute
+  DeveloperPropertiesIndexRoute: typeof DeveloperPropertiesIndexRoute
   DeveloperPropertiesInvestmentsIndexRoute: typeof DeveloperPropertiesInvestmentsIndexRoute
   DeveloperPropertiesPromotionsIndexRoute: typeof DeveloperPropertiesPromotionsIndexRoute
   DeveloperPropertiesInvestmentsIdIndexRoute: typeof DeveloperPropertiesInvestmentsIdIndexRoute
 }
 
-const DeveloperPropertiesRouteChildren: DeveloperPropertiesRouteChildren = {
-  DeveloperPropertiesEditRouteRoute:
-    DeveloperPropertiesEditRouteRouteWithChildren,
-  DeveloperPropertiesNewRouteRoute:
-    DeveloperPropertiesNewRouteRouteWithChildren,
-  DeveloperPropertiesPropertyIdRoute:
-    DeveloperPropertiesPropertyIdRouteWithChildren,
-  DeveloperPropertiesListedRoute: DeveloperPropertiesListedRoute,
-  DeveloperPropertiesInvestmentsIndexRoute:
-    DeveloperPropertiesInvestmentsIndexRoute,
-  DeveloperPropertiesPromotionsIndexRoute:
-    DeveloperPropertiesPromotionsIndexRoute,
-  DeveloperPropertiesInvestmentsIdIndexRoute:
-    DeveloperPropertiesInvestmentsIdIndexRoute,
-}
+const DeveloperPropertiesRouteRouteChildren: DeveloperPropertiesRouteRouteChildren =
+  {
+    DeveloperPropertiesEditRouteRoute:
+      DeveloperPropertiesEditRouteRouteWithChildren,
+    DeveloperPropertiesNewRouteRoute:
+      DeveloperPropertiesNewRouteRouteWithChildren,
+    DeveloperPropertiesPropertyIdRoute:
+      DeveloperPropertiesPropertyIdRouteWithChildren,
+    DeveloperPropertiesListedRoute: DeveloperPropertiesListedRoute,
+    DeveloperPropertiesIndexRoute: DeveloperPropertiesIndexRoute,
+    DeveloperPropertiesInvestmentsIndexRoute:
+      DeveloperPropertiesInvestmentsIndexRoute,
+    DeveloperPropertiesPromotionsIndexRoute:
+      DeveloperPropertiesPromotionsIndexRoute,
+    DeveloperPropertiesInvestmentsIdIndexRoute:
+      DeveloperPropertiesInvestmentsIdIndexRoute,
+  }
 
-const DeveloperPropertiesRouteWithChildren =
-  DeveloperPropertiesRoute._addFileChildren(DeveloperPropertiesRouteChildren)
+const DeveloperPropertiesRouteRouteWithChildren =
+  DeveloperPropertiesRouteRoute._addFileChildren(
+    DeveloperPropertiesRouteRouteChildren,
+  )
 
 interface DeveloperRouteRouteChildren {
-  DeveloperPropertiesRouteRoute: typeof DeveloperPropertiesRouteRoute
+  DeveloperPropertiesRouteRoute: typeof DeveloperPropertiesRouteRouteWithChildren
   DeveloperAnnouncementsRoute: typeof DeveloperAnnouncementsRoute
   DeveloperNotificationsRoute: typeof DeveloperNotificationsRoute
-  DeveloperPropertiesRoute: typeof DeveloperPropertiesRouteWithChildren
   DeveloperSettingsRoute: typeof DeveloperSettingsRoute
   DeveloperTransactionsRoute: typeof DeveloperTransactionsRoute
   DeveloperIndexRoute: typeof DeveloperIndexRoute
@@ -3994,10 +4003,9 @@ interface DeveloperRouteRouteChildren {
 }
 
 const DeveloperRouteRouteChildren: DeveloperRouteRouteChildren = {
-  DeveloperPropertiesRouteRoute: DeveloperPropertiesRouteRoute,
+  DeveloperPropertiesRouteRoute: DeveloperPropertiesRouteRouteWithChildren,
   DeveloperAnnouncementsRoute: DeveloperAnnouncementsRoute,
   DeveloperNotificationsRoute: DeveloperNotificationsRoute,
-  DeveloperPropertiesRoute: DeveloperPropertiesRouteWithChildren,
   DeveloperSettingsRoute: DeveloperSettingsRoute,
   DeveloperTransactionsRoute: DeveloperTransactionsRoute,
   DeveloperIndexRoute: DeveloperIndexRoute,

@@ -33,7 +33,8 @@ export const Route = createRootRoute({
     const hideHeader =
       url.pathname.startsWith("/dashboard") ||
       url.pathname.startsWith("/investors") ||
-      url.pathname.startsWith("/partners");
+      url.pathname.startsWith("/partners") ||
+      url.pathname.startsWith("/developer");
 
     return (
       <>

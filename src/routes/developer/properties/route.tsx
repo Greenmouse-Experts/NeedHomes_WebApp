@@ -9,11 +9,9 @@ export const Route = createFileRoute("/developer/properties")({
 function RouteComponent() {
   return (
     <>
-      <DashboardLayout subtitle="Propert Listing" title="SuperAdmin Dashboard">
-        <ThemeProvider>
-          <Outlet />
-        </ThemeProvider>
-      </DashboardLayout>
+      <ThemeProvider>
+        <Outlet />
+      </ThemeProvider>
     </>
   );
 }
