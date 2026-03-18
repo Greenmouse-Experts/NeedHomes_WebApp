@@ -138,7 +138,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       };
       const new_payload = strip_co_dev(payload);
       const response = await apiClient.patch(
-        `/admin/properties/${data.id}/codevelopment`,
+        `/partners/properties/${data.id}/codevelopment`,
         new_payload,
       );
       return response.data;

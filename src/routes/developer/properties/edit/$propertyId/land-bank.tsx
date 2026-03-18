@@ -137,7 +137,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
       const new_payload = strip_land_banking(payload);
       const response = await apiClient.patch(
-        `/admin/properties/${data.id}/land-Banking`,
+        `/partners/properties/${data.id}/land-banking`,
         new_payload,
       );
       return response.data;

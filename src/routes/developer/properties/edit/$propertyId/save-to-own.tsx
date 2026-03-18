@@ -131,7 +131,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       };
       const new_payload = strip_save_to_own(payload);
       const response = await apiClient.patch(
-        `/admin/properties/${data.id}/save-to-own`,
+        `/partners/properties/${data.id}/save-to-own`,
         new_payload,
       );
       return response.data;

@@ -94,7 +94,7 @@ function RouteComponent() {
 
       const new_payload = strip_outright(payload);
       const response = await apiClient.post(
-        `/admin/properties/outright`,
+        `/partners/properties/outright`,
         new_payload,
       );
       return response.data;

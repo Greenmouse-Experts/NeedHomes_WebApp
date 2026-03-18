@@ -164,7 +164,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       // }
       const new_payload = strip_outright(payload);
       const response = await apiClient.patch(
-        `/admin/properties/${data.id}/outright`,
+        `/partners/properties/${data.id}/outright`,
         new_payload,
       );
       return response.data;

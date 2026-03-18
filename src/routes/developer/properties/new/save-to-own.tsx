@@ -135,7 +135,7 @@ function RouteComponent() {
       };
       const upload_ = strip_save_to_own(payload);
       const response = await apiClient.post(
-        "/admin/properties/save-to-own",
+        "/partners/properties/save-to-own",
         upload_,
       );
       return response.data;

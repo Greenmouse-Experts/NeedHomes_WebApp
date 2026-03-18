@@ -144,7 +144,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       };
       const new_payload = strip_fractional(payload);
       const response = await apiClient.patch(
-        `/admin/properties/${data.id}/fractional`,
+        `/partners/properties/${data.id}/fractional`,
         new_payload,
       );
       return response.data;

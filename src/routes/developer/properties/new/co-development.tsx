@@ -147,7 +147,7 @@ function RouteComponent() {
       };
       delete payload.minimumInvestment;
       const response = await apiClient.post(
-        "/admin/properties/codevelopment",
+        "/partners/properties/codevelopment",
         payload,
       );
       return response.data;

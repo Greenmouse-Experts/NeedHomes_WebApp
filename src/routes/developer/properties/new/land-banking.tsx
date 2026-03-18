@@ -149,7 +149,7 @@ function RouteComponent() {
       };
 
       const response = await apiClient.post(
-        "/admin/properties/land-banking",
+        "/partners/properties/land-banking",
         payload,
       );
       return response.data;
