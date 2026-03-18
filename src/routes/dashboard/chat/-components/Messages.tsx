@@ -7,6 +7,11 @@ interface Sender {
   id: string;
   firstName: string;
   lastName: string;
+  profilePicture?: string | null;
+}
+
+function isImageUrl(content: string): boolean {
+  return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(content);
 }
 
 interface Message {
@@ -139,9 +144,19 @@ export default function Messages({
                     message.isSystem || message.sender.firstName == "Admin"
                       ? "chat-bubble-info"
                       : ""
-                  }`}
+                  } ${isImageUrl(message.content) ? "!p-1 !bg-transparent !shadow-none" : ""}`}
                 >
-                  {message.content}
+                  {isImageUrl(message.content) ? (
+                    <a href={message.content} target="_blank" rel="noreferrer">
+                      <img
+                        src={message.content}
+                        alt="shared image"
+                        className="max-w-[240px] max-h-[240px] rounded-lg object-cover cursor-zoom-in"
+                      />
+                    </a>
+                  ) : (
+                    message.content
+                  )}
                 </div>
                 <div className="chat-footer opacity-50">
                   {message.isRead ? "Read" : "Unread"}
