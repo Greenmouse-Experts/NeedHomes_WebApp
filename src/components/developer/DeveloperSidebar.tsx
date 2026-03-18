@@ -29,7 +29,7 @@ const NAV_LINKS = [
   },
   {
     to: "/developer/properties",
-    label: "Properties",
+    label: "My Properties",
     id: "properties",
     icon: Building2,
   },
