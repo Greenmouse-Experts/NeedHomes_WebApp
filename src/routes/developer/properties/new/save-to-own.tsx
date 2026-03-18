@@ -142,7 +142,7 @@ function RouteComponent() {
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
       nav({
-        to: "/dashboard/properties/$propertyId",
+        to: "/developer/properties/$propertyId",
         params: {
           propertyId: data.data.id,
         },

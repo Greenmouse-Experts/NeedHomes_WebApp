@@ -154,7 +154,7 @@ function RouteComponent() {
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
       nav({
-        to: "/dashboard/properties/$propertyId",
+        to: "/developer/properties/$propertyId",
         params: {
           propertyId: data.data.id,
         },
@@ -318,12 +318,12 @@ function RouteComponent() {
                   control={form.control}
                   render={({ field }) => (
                     //@ts-ignore
-                    (<SimpleInput
+                    <SimpleInput
                       {...field}
                       type="number"
                       label="Installment Duration (Months)"
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />)
+                    />
                   )}
                 />
                 {/*<Controller
@@ -345,5 +345,5 @@ function RouteComponent() {
         </>
       </DefaultForm>
     </ThemeProvider>
-  )
+  );
 }
