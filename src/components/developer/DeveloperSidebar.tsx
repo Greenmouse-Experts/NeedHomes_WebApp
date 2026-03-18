@@ -33,12 +33,12 @@ const NAV_LINKS = [
     id: "properties",
     icon: Building2,
   },
-  {
-    to: "/developer/promotions",
-    label: "Promotions",
-    id: "promotions",
-    icon: List,
-  },
+  // {
+  //   to: "/developer/promotions",
+  //   label: "Promotions",
+  //   id: "promotions",
+  //   icon: List,
+  // },
   {
     to: "/developer/notifications",
     label: "Notifications",
