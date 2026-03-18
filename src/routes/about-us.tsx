@@ -53,6 +53,13 @@ function RouteComponent() {
               In a world where home ownership feels out of reach, NeedHomes
               stands as a vibrant force of change
               <span className="text-brand-orange">.</span>
+              <span className="mt-4 block">
+                <img
+                  src="footer_img.jpeg"
+                  alt="NeedHomes logo"
+                  className="inline-block w-full"
+                />
+              </span>
             </h2>
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
@@ -290,47 +297,50 @@ function RouteComponent() {
         </section>
       </div>
 
-        {/* Testimonials Section */}
-        <section className="py-24 bg-white">
-          <div className="contain mx-auto px-6">
-            <div className="mb-16">
-              <p className="text-brand-orange font-medium mb-2">Testimonials</p>
-              <h2 className="text-3xl md:text-4xl font-serif font-medium text-[#333d42]">
-                Trusted by Hundreds of Satisfied Clients
-                <span className="text-brand-orange">.</span>
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  quote:
-                    "This truly feels like a dream realized. I am sincerely grateful for everything that Needhomes has done to make this possible for me.",
-                  name: "Engr. Emmanuel",
-                },
-                {
-                  quote:
-                    "They are a real estate company known for their integrity and passion in building affordable housing units for the teeming population in Nigeria.",
-                  name: "Mr. Tunde Johnson",
-                },
-                {
-                  quote:
-                    "Needhomes stands out as one of the finest real estate companies, providing reliable service and affordable, high-quality properties.",
-                  name: "Dcn. Adeoye David",
-                },
-              ].map((testimonial, i) => (
-                <div key={i} className="flex flex-col justify-between p-10 bg-[#f8f8f8] border-t-2 border-brand-orange">
-                  <p className="text-muted-foreground leading-relaxed text-sm mb-8">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
-                  <p className="font-serif font-medium text-[#333d42]">
-                    {testimonial.name}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {/* Testimonials Section */}
+      <section className="py-24 bg-white">
+        <div className="contain mx-auto px-6">
+          <div className="mb-16">
+            <p className="text-brand-orange font-medium mb-2">Testimonials</p>
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-[#333d42]">
+              Trusted by Hundreds of Satisfied Clients
+              <span className="text-brand-orange">.</span>
+            </h2>
           </div>
-        </section>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                quote:
+                  "This truly feels like a dream realized. I am sincerely grateful for everything that Needhomes has done to make this possible for me.",
+                name: "Engr. Emmanuel",
+              },
+              {
+                quote:
+                  "They are a real estate company known for their integrity and passion in building affordable housing units for the teeming population in Nigeria.",
+                name: "Mr. Tunde Johnson",
+              },
+              {
+                quote:
+                  "Needhomes stands out as one of the finest real estate companies, providing reliable service and affordable, high-quality properties.",
+                name: "Dcn. Adeoye David",
+              },
+            ].map((testimonial, i) => (
+              <div
+                key={i}
+                className="flex flex-col justify-between p-10 bg-[#f8f8f8] border-t-2 border-brand-orange"
+              >
+                <p className="text-muted-foreground leading-relaxed text-sm mb-8">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </p>
+                <p className="font-serif font-medium text-[#333d42]">
+                  {testimonial.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </>
