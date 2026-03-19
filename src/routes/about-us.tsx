@@ -342,6 +342,56 @@ function RouteComponent() {
         </div>
       </section>
 
+      {/* Our Projects Section */}
+      <section className="py-24 bg-[#f8f8f8]">
+        <div className="contain mx-auto px-6">
+          <div className="mb-16">
+            <p className="text-brand-orange font-medium mb-2">Our Projects</p>
+            <h2 className="text-3xl md:text-4xl font-serif font-medium text-[#333d42]">
+              Presented below are some of our projects
+              <span className="text-brand-orange">.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "D WESTORA APARTMENTS",
+                description:
+                  "Sophisticated apartment residences and stylish amenities in a vibrant city location.",
+              },
+              {
+                title: "CYPON BLISS COURT",
+                description:
+                  "Smart estate strategically located in the heart of one of Lagos' most popular neighborhoods.",
+              },
+              {
+                title: "HELENGRAY'S COURT",
+                description:
+                  "HelenGray's Court offers luxurious living spaces blending modern style with elegance.",
+              },
+              {
+                title: "MANDY'S COURT",
+                description:
+                  "Considering a lucrative home investment, seize the opportunity and keys to your new home now.",
+              },
+            ].map((project, i) => (
+              <div key={i} className="flex flex-col bg-white">
+                <div className="w-full aspect-[4/3] bg-gray-100" />
+                <div className="p-6 space-y-3 border-t-2 border-brand-orange flex-1">
+                  <h3 className="font-serif font-semibold text-[#333d42] text-lg leading-snug">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {project.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </>
   );

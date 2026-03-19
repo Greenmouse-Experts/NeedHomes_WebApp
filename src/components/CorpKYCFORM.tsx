@@ -14,6 +14,7 @@ import { extract_message } from "@/helpers/apihelpers";
 import type { VERIFICATION_REQUEST } from "@/types";
 import type { AxiosError } from "axios";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import GooglePlacesInput from "@/components/inputs/GooglePlacesInput";
 
 interface KycFormData {
   companyName: string;
@@ -33,6 +34,8 @@ export default function CorpKYCFORM() {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<KycFormData>({
     defaultValues: {
@@ -228,25 +231,24 @@ export default function CorpKYCFORM() {
 
             {/* Address */}
             <div className="space-y-2">
-              <Label
-                htmlFor="address"
-                className="text-sm font-semibold text-gray-700"
-              >
-                Company Address
-              </Label>
-              <Input
-                id="address"
+              <input
+                type="hidden"
                 {...register("companyAddress", {
                   required: "Company address is required",
                 })}
-                placeholder="Enter registered company address"
-                className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
               />
-              {errors.companyAddress && (
-                <p className="text-red-500 text-xs font-medium mt-1">
-                  {errors.companyAddress.message}
-                </p>
-              )}
+              <GooglePlacesInput
+                label="Company Address"
+                required
+                value={watch("companyAddress")}
+                placeholder="Enter registered company address"
+                error={errors.companyAddress?.message}
+                onLocationChange={(data) =>
+                  setValue("companyAddress", data.location, {
+                    shouldValidate: true,
+                  })
+                }
+              />
             </div>
           </div>
 

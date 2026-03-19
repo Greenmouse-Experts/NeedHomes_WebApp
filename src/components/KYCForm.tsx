@@ -15,6 +15,7 @@ import type { VERIFICATION_REQUEST } from "@/types";
 import type { AxiosError } from "axios";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import CorpKYCFORM from "./CorpKYCFORM";
+import GooglePlacesInput from "@/components/inputs/GooglePlacesInput";
 
 interface KycFormData {
   idType:
@@ -41,6 +42,8 @@ export default function KYCForm() {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<KycFormData>({
     defaultValues: {
@@ -282,25 +285,22 @@ export default function KYCForm() {
 
           {/* Address */}
           <div className="space-y-2">
-            <Label
-              htmlFor="address"
-              className="text-sm font-semibold text-gray-700"
-            >
-              Residential Address
-            </Label>
-            <Input
-              id="address"
+            <input
+              type="hidden"
               {...register("address", {
                 required: "Full residential address is required",
               })}
-              placeholder="House Number, Street Name, City, State"
-              className="rounded-xl border-2 border-gray-200 bg-gray-50/50 py-3 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
             />
-            {errors.address && (
-              <p className="text-red-500 text-xs font-medium mt-1">
-                {errors.address.message}
-              </p>
-            )}
+            <GooglePlacesInput
+              label="Residential Address"
+              required
+              value={watch("address")}
+              placeholder="House Number, Street Name, City, State"
+              error={errors.address?.message}
+              onLocationChange={(data) =>
+                setValue("address", data.location, { shouldValidate: true })
+              }
+            />
           </div>
 
           {/* Submit Button */}

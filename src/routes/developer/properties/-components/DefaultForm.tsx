@@ -1,4 +1,5 @@
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
+import GooglePlacesInput from "@/components/inputs/GooglePlacesInput";
 import {
   Controller,
   FormProvider,
@@ -164,13 +165,20 @@ export default function DefaultForm<T = any>({
                 name="location"
                 control={methods.control}
                 rules={{ required: "Location is required" }}
-                render={({ field }) => (
-                  <SimpleInput
-                    {...field}
+                render={({ field, fieldState }) => (
+                  <GooglePlacesInput
                     label="Location"
-                    placeholder="Lekki Phase 1, Lagos"
                     required
-                    icon={<MapPin size={16} />}
+                    value={field.value}
+                    placeholder="Lekki Phase 1, Lagos"
+                    error={fieldState.error?.message}
+                    onLocationChange={(data) => {
+                      field.onChange(data.location);
+                      methods.setValue("country" as any, data.country);
+                      methods.setValue("state" as any, data.state);
+                      methods.setValue("latitude" as any, data.latitude);
+                      methods.setValue("longitude" as any, data.longitude);
+                    }}
                   />
                 )}
               />
