@@ -66,7 +66,7 @@ export default function InvestmentDetails({
             label="Installment Duration"
             value={`${property.installmentDuration || "N/A"} ${property.savingsFrequency || ""}`}
           />
-          <DetailRow label="Minimum Installment Amount" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
+          <DetailRow label="minimum installment deposit" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
         </DetailsCard>
       );
 
@@ -76,7 +76,7 @@ export default function InvestmentDetails({
           <DetailRow label="Exit Strategy" value={property.exitRule || "N/A"} />
           <DetailRow label="Payment Option" value={property.paymentOption || "N/A"} />
           <DetailRow label="Installment Duration" value={`${property.installmentDuration || "N/A"} Months`} />
-          <DetailRow label="Minimum Installment Amount" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
+          <DetailRow label="minimum installment deposit" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
         </DetailsCard>
       );
 

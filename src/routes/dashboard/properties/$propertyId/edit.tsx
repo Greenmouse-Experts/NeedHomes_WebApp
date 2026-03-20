@@ -57,7 +57,7 @@ function EditPropertyPage() {
     { title: "Legal Fee", price: "27,000,000" },
     { title: "Development levy", price: "27,000,000" },
     { title: "Survey fee", price: "27,000,000" },
-    { title: "Agent Fee", price: "27,000,000" },
+    // { title: "Agent Fee", price: "27,000,000" },
     { title: "Reservation Fee", price: "27,000,000" },
   ]);
 

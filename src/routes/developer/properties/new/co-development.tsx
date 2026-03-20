@@ -334,7 +334,7 @@ function RouteComponent() {
                     <SimpleInput
                       {...field}
                       type="number"
-                      label="Minimum Installment Amount"
+                      label="minimum installment deposit"
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
