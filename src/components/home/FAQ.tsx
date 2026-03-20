@@ -200,7 +200,7 @@ export default function FAQ() {
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-sm text-gray-600">
                   <p className="font-semibold">Have More Questions?</p>
-                  <p>📩 support@needhomes.com| 📞 +234 702 500 5857</p>
+                  <p>📩 surport@needhomespdc.com| 📞 +234 702 500 5857</p>
                 </div>
                 <Button variant="primary" onClick={() => setModalOpen(false)}>
                   Close

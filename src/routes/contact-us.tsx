@@ -60,7 +60,7 @@ function RouteComponent() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-orange-500" />
-                    <span className="text-sm"> support@needhomes.com</span>
+                    <span className="text-sm"> surport@needhomespdc.com</span>
                   </div>
                 </div>
               </div>
