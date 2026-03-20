@@ -113,7 +113,7 @@ export default function Footer() {
             <img src="/need_homes_logo.png" alt="NeedHomes" className="h-18" />
             <div></div>
             <p>+234 702 500 5857</p>
-            <p>sales@needhomes.ng</p>
+            <p>surport@needhomespdc.com</p>
             <div className="flex items-center gap-3 pt-2">
               {socialLinks.map((social) => (
                 <a
