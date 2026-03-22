@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VerifyPartnerRouteImport } from './routes/verify-partner'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TestRouteImport } from './routes/test'
@@ -188,6 +189,11 @@ import { Route as DashboardPropertiesEditPropertyIdFractionalRouteImport } from 
 import { Route as DashboardPropertiesEditPropertyIdCoDevRouteImport } from './routes/dashboard/properties/edit/$propertyId/co-dev'
 import { Route as DashboardInvestorsCorporateInvestorIdKycRouteImport } from './routes/dashboard/investors/corporate/$investorId/kyc'
 
+const WaitlistRoute = WaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyPartnerRoute = VerifyPartnerRouteImport.update({
   id: '/verify-partner',
   path: '/verify-partner',
@@ -1207,6 +1213,7 @@ export interface FileRoutesByFullPath {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/waitlist': typeof WaitlistRoute
   '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
@@ -1382,6 +1389,7 @@ export interface FileRoutesByTo {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/waitlist': typeof WaitlistRoute
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
@@ -1541,6 +1549,7 @@ export interface FileRoutesById {
   '/test': typeof TestRoute
   '/verify': typeof VerifyRoute
   '/verify-partner': typeof VerifyPartnerRoute
+  '/waitlist': typeof WaitlistRoute
   '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
@@ -1723,6 +1732,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/waitlist'
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
@@ -1898,6 +1908,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/waitlist'
     | '/dashboard/properties'
     | '/dashboard/transactions'
     | '/dashboard/announcements'
@@ -2056,6 +2067,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/verify'
     | '/verify-partner'
+    | '/waitlist'
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
@@ -2237,6 +2249,7 @@ export interface RootRouteChildren {
   TestRoute: typeof TestRoute
   VerifyRoute: typeof VerifyRoute
   VerifyPartnerRoute: typeof VerifyPartnerRoute
+  WaitlistRoute: typeof WaitlistRoute
   TermsTermsIdRoute: typeof TermsTermsIdRoute
   CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
@@ -2249,6 +2262,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/waitlist': {
+      id: '/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify-partner': {
       id: '/verify-partner'
       path: '/verify-partner'
@@ -4205,6 +4225,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestRoute: TestRoute,
   VerifyRoute: VerifyRoute,
   VerifyPartnerRoute: VerifyPartnerRoute,
+  WaitlistRoute: WaitlistRoute,
   TermsTermsIdRoute: TermsTermsIdRoute,
   CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
