@@ -43,6 +43,7 @@ import { Route as BlogsRouteRouteImport } from './routes/blogs/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TermsIndexRouteImport } from './routes/terms/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
+import { Route as PropertyIndexRouteImport } from './routes/property/index'
 import { Route as PartnersIndexRouteImport } from './routes/partners/index'
 import { Route as InvestorsIndexRouteImport } from './routes/investors/index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
@@ -357,6 +358,11 @@ const TermsIndexRoute = TermsIndexRouteImport.update({
 const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
   id: '/recover-password/',
   path: '/recover-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PropertyIndexRoute = PropertyIndexRouteImport.update({
+  id: '/property/',
+  path: '/property/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnersIndexRoute = PartnersIndexRouteImport.update({
@@ -1252,6 +1258,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
   '/partners/': typeof PartnersIndexRoute
+  '/property/': typeof PropertyIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
@@ -1413,6 +1420,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/investors': typeof InvestorsIndexRoute
   '/partners': typeof PartnersIndexRoute
+  '/property': typeof PropertyIndexRoute
   '/recover-password': typeof RecoverPasswordIndexRoute
   '/terms': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
@@ -1588,6 +1596,7 @@ export interface FileRoutesById {
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/investors/': typeof InvestorsIndexRoute
   '/partners/': typeof PartnersIndexRoute
+  '/property/': typeof PropertyIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
@@ -1771,6 +1780,7 @@ export interface FileRouteTypes {
     | '/forgot-password/'
     | '/investors/'
     | '/partners/'
+    | '/property/'
     | '/recover-password/'
     | '/terms/'
     | '/dashboard/partners/$partnerId'
@@ -1932,6 +1942,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/investors'
     | '/partners'
+    | '/property'
     | '/recover-password'
     | '/terms'
     | '/dashboard/properties/edit'
@@ -2106,6 +2117,7 @@ export interface FileRouteTypes {
     | '/forgot-password/'
     | '/investors/'
     | '/partners/'
+    | '/property/'
     | '/recover-password/'
     | '/terms/'
     | '/dashboard/partners/$partnerId'
@@ -2253,6 +2265,7 @@ export interface RootRouteChildren {
   TermsTermsIdRoute: typeof TermsTermsIdRoute
   CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
+  PropertyIndexRoute: typeof PropertyIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
   TermsIndexRoute: typeof TermsIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
@@ -2498,6 +2511,13 @@ declare module '@tanstack/react-router' {
       path: '/recover-password'
       fullPath: '/recover-password/'
       preLoaderRoute: typeof RecoverPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/property/': {
+      id: '/property/'
+      path: '/property'
+      fullPath: '/property/'
+      preLoaderRoute: typeof PropertyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partners/': {
@@ -4229,6 +4249,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsTermsIdRoute: TermsTermsIdRoute,
   CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
+  PropertyIndexRoute: PropertyIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
   TermsIndexRoute: TermsIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/dashboard/properties")({
 function RouteComponent() {
   return (
     <>
-      <DashboardLayout subtitle="Propert Listing" title="SuperAdmin Dashboard">
+      <DashboardLayout subtitle="Property Listing" title="SuperAdmin Dashboard">
         <ThemeProvider>
           <Outlet />
         </ThemeProvider>

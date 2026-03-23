@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
 import type { ApiResponse, ApiResponseV2 } from "@/api/simpleApi";
 import {
-  Search,
   Filter,
   List,
   Grid,
@@ -13,8 +12,8 @@ import {
   User,
   ExternalLink,
 } from "lucide-react";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import SearchBar from "@/routes/-components/Searchbar";
 import type { INVESTOR } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { type Actions } from "@/components/tables/pop-up";
@@ -134,23 +133,13 @@ function InvestorsPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
-            <div className="relative flex-1 min-w-50 md:flex-initial md:w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search investors..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 text-sm"
-              />
+            <div>
+              <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 text-xs md:text-sm"
-            >
+            <button className="btn btn-primary ">
               <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
               <span className="hidden sm:inline">Filter</span>
-            </Button>
+            </button>
           </div>
         </div>
       </div>

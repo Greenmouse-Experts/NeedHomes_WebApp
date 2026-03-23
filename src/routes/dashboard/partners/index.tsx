@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
 import type { ApiResponse, ApiResponseV2 } from "@/api/simpleApi";
 import {
-  Search,
   Filter,
   Trash2,
   List,
@@ -16,8 +15,8 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import SearchBar from "@/routes/-components/Searchbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import type { PARTNER } from "@/types";
@@ -179,14 +178,8 @@ function PartnersPage() {
 
           {/* Search and Filters */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
-            <div className="relative flex-1 min-w-50 md:flex-initial md:w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 text-sm"
-              />
+            <div className="flex-1 min-w-50 md:flex-initial md:w-64">
+              <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
             <Button
               variant="outline"

@@ -10,7 +10,7 @@ export default function SearchBar({ value, onChange }: any) {
   });
 
   return (
-    <ThemeProvider className=" mb-4">
+    <ThemeProvider className="mb-0">
       <form
         className="flex"
         onSubmit={form.handleSubmit((data) => {
