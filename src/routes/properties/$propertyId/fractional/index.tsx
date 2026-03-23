@@ -16,6 +16,7 @@ import { Controller, useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
+import { useAuth } from "@/store/authStore";
 
 export const Route = createFileRoute(
   "/properties/$propertyId/fractional/",
@@ -26,6 +27,7 @@ export const Route = createFileRoute(
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
+  const [auth] = useAuth();
   const { ref, showModal, closeModal } = useModal();
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
@@ -151,16 +153,39 @@ function PropertyDetailPage() {
                   <Button variant="outline" onClick={closeModal}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      if (payInstall) {
-                        const amount = form.getValues("amount");
-                        const quantity = form.getValues("quantity");
-                        return toast.promise(
+                  {!auth?.accessToken ? (
+                    <Button variant="primary" onClick={() => navigate({ to: "/login" })}>
+                      Sign In to Invest
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        if (auth?.user?.accountType === "INVESTOR") {
+                          return navigate({ to: "/investors/properties/$propertyId/fractional/", params: { propertyId } });
+                        }
+                        if (payInstall) {
+                          const amount = form.getValues("amount");
+                          const quantity = form.getValues("quantity");
+                          return toast.promise(
+                            mutate.mutateAsync({
+                              amountPaid: amount * 100,
+                              quantity: quantity,
+                            }),
+                            {
+                              loading: "Processing payment...",
+                              success: "Payment successful!",
+                              error: extract_message,
+                            },
+                          );
+                        }
+                        toast.promise(
                           mutate.mutateAsync({
-                            amountPaid: amount * 100,
-                            quantity: quantity,
+                            amountPaid:
+                              ((install_amount + full_charge) / 100 +
+                                breakdown.additionalFeesTotal) *
+                              100,
+                            quantity: form.getValues("quantity"),
                           }),
                           {
                             loading: "Processing payment...",
@@ -168,36 +193,22 @@ function PropertyDetailPage() {
                             error: extract_message,
                           },
                         );
-                      }
-                      toast.promise(
-                        mutate.mutateAsync({
-                          amountPaid:
-                            ((install_amount + full_charge) / 100 +
-                              breakdown.additionalFeesTotal) *
-                            100,
-                          quantity: form.getValues("quantity"),
-                        }),
-                        {
-                          loading: "Processing payment...",
-                          success: "Payment successful!",
-                          error: extract_message,
-                        },
-                      );
-                    }}
-                    disabled={mutate.isPending}
-                  >
-                    Confirm & Pay{" "}
-                    {payInstall
-                      ? payAmount
-                        ? formatCurrency(payAmount)
+                      }}
+                      disabled={mutate.isPending}
+                    >
+                      Confirm & Pay{" "}
+                      {payInstall
+                        ? payAmount
+                          ? formatCurrency(payAmount)
+                          : formatCurrency(
+                              (property.minimumInstallmentAmount || 0) / 100,
+                            )
                         : formatCurrency(
-                            (property.minimumInstallmentAmount || 0) / 100,
-                          )
-                      : formatCurrency(
-                          (install_amount + full_charge) / 100 +
-                            breakdown.additionalFeesTotal,
-                        )}
-                  </Button>
+                            (install_amount + full_charge) / 100 +
+                              breakdown.additionalFeesTotal,
+                          )}
+                    </Button>
+                  )}
                 </div>
               }
             >

@@ -142,6 +142,11 @@ export default function Header() {
       icon: FileText,
     },
     {
+      name: "Properties",
+      icon: Building2,
+      path: "/properties",
+    },
+    {
       name: "Contact Us",
       icon: Headset,
       path: "/contact-us",

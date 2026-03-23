@@ -23,6 +23,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
+import { useAuth } from "@/store/authStore";
 
 export const Route = createFileRoute(
   "/properties/$propertyId/outright/",
@@ -33,6 +34,7 @@ export const Route = createFileRoute(
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
+  const [auth] = useAuth();
   const { ref, showModal, closeModal } = useModal();
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
@@ -174,14 +176,34 @@ function PropertyDetailPage() {
                   <Button variant="outline" onClick={closeModal}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      if (payInstall) {
-                        const amount = form.getValues("amount");
-                        return toast.promise(
+                  {!auth?.accessToken ? (
+                    <Button variant="primary" onClick={() => navigate({ to: "/login" })}>
+                      Sign In to Invest
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        if (auth?.user?.accountType === "INVESTOR") {
+                          return navigate({ to: "/investors/properties/$propertyId/outright/", params: { propertyId } });
+                        }
+                        if (payInstall) {
+                          const amount = form.getValues("amount");
+                          return toast.promise(
+                            mutate.mutateAsync({
+                              amountPaid: amount * 100,
+                              quantity: 1,
+                            }),
+                            {
+                              loading: "Processing payment...",
+                              success: "Payment successful!",
+                              error: extract_message,
+                            },
+                          );
+                        }
+                        toast.promise(
                           mutate.mutateAsync({
-                            amountPaid: amount * 100,
+                            amountPaid: breakdown.totalPrice * 100,
                             quantity: 1,
                           }),
                           {
@@ -190,30 +212,19 @@ function PropertyDetailPage() {
                             error: extract_message,
                           },
                         );
-                      }
-                      toast.promise(
-                        mutate.mutateAsync({
-                          amountPaid: breakdown.totalPrice * 100,
-                          quantity: 1,
-                        }),
-                        {
-                          loading: "Processing payment...",
-                          success: "Payment successful!",
-                          error: extract_message,
-                        },
-                      );
-                    }}
-                    disabled={mutate.isPending || property.availableUnits === 0}
-                  >
-                    Confirm & Pay{" "}
-                    {payInstall
-                      ? payAmount
-                        ? formatCurrency(payAmount)
-                        : formatCurrency(
-                            property.minimumInstallmentAmount / 100,
-                          )
-                      : breakdown.totalPrice.toLocaleString()}
-                  </Button>
+                      }}
+                      disabled={mutate.isPending || property.availableUnits === 0}
+                    >
+                      Confirm & Pay{" "}
+                      {payInstall
+                        ? payAmount
+                          ? formatCurrency(payAmount)
+                          : formatCurrency(
+                              property.minimumInstallmentAmount / 100,
+                            )
+                        : breakdown.totalPrice.toLocaleString()}
+                    </Button>
+                  )}
                 </div>
               }
             >

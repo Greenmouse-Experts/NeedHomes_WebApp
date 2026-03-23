@@ -20,6 +20,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
+import { useAuth } from "@/store/authStore";
 
 export const Route = createFileRoute("/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/properties/$propertyId/")({
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
+  const [auth] = useAuth();
   const { ref, showModal, closeModal } = useModal();
 
   const methods = useForm({
@@ -100,13 +102,25 @@ function PropertyDetailPage() {
                   <Button variant="outline" onClick={closeModal}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="primary"
-                    onClick={methods.handleSubmit(onSubmit)}
-                    isLoading={mutate.isPending}
-                  >
-                    Confirm & Pay
-                  </Button>
+                  {!auth?.accessToken ? (
+                    <Button variant="primary" onClick={() => navigate({ to: "/login" })}>
+                      Sign In to Invest
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        if (auth?.user?.accountType === "INVESTOR") {
+                          return navigate({ to: "/investors/properties/$propertyId/", params: { propertyId } });
+                        }
+                        methods.handleSubmit(onSubmit)();
+                      }}
+                      isLoading={mutate.isPending}
+                      disabled={mutate.isPending}
+                    >
+                      Confirm & Pay
+                    </Button>
+                  )}
                 </div>
               }
             >
