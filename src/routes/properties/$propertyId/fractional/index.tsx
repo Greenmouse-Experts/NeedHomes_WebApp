@@ -16,7 +16,7 @@ import { Controller, useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
-import { useAuth } from "@/store/authStore";
+import { useAuth, logout } from "@/store/authStore";
 
 export const Route = createFileRoute(
   "/properties/$propertyId/fractional/",
@@ -28,6 +28,7 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const [auth] = useAuth();
+  const isAdmin = !!auth && auth.user?.roles?.includes("ADMIN");
   const { ref, showModal, closeModal } = useModal();
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
@@ -426,13 +427,26 @@ function PropertyDetailPage() {
                 Back to Properties
               </Button>
 
+              {isAdmin && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 w-full sm:w-auto">
+                  <span>Logged in as admin — investing disabled.</span>
+                  <button
+                    type="button"
+                    className="ml-2 underline font-semibold hover:text-amber-900"
+                    onClick={() => logout()}
+                  >
+                    Log out
+                  </button>
+                </div>
+              )}
+
               <Button
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
                 onClick={() => {
                   showModal();
                 }}
-                disabled={mutate.isPending}
+                disabled={mutate.isPending || isAdmin}
                 className="w-full sm:w-auto"
               >
                 Invest Now
