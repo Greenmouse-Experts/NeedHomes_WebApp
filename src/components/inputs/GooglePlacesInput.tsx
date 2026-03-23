@@ -53,6 +53,7 @@ function loadGoogleMapsScript(): Promise<void> {
 
   scriptLoadPromise = new Promise((resolve, reject) => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    // console.log(apiKey, "api_key");
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
     script.async = true;
@@ -228,7 +229,13 @@ export default function GooglePlacesInput({
             }}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             disabled={!ready || !!mapsError}
-            placeholder={mapsError ? "Maps unavailable" : !ready ? "Loading..." : placeholder}
+            placeholder={
+              mapsError
+                ? "Maps unavailable"
+                : !ready
+                  ? "Loading..."
+                  : placeholder
+            }
             className="grow outline-none bg-transparent"
           />
         </div>
@@ -252,10 +259,10 @@ export default function GooglePlacesInput({
         )}
       </div>
 
-      {mapsError && (
-        <p className="text-error text-sm mt-1">{mapsError}</p>
+      {mapsError && <p className="text-error text-sm mt-1">{mapsError}</p>}
+      {!mapsError && error && (
+        <p className="text-error text-sm mt-1">{error}</p>
       )}
-      {!mapsError && error && <p className="text-error text-sm mt-1">{error}</p>}
     </div>
   );
 }
