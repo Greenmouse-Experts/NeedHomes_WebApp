@@ -55,7 +55,7 @@ function RouteComponent() {
               <span className="text-brand-orange">.</span>
               <span className="mt-4 block">
                 <img
-                  src="footer_img.jpeg"
+                  src="new_about.jpeg"
                   alt="NeedHomes logo"
                   className="inline-block w-full"
                 />

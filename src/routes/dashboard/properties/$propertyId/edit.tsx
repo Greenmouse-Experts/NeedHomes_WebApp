@@ -398,9 +398,7 @@ function EditPropertyPage() {
                         />
                       </svg>
                     </div>
-                    <span className="font-medium">
-                      Certificate of Ownership
-                    </span>
+                    <span className="font-medium">Property Document</span>
                   </div>
                   <Button
                     size="sm"
@@ -482,7 +480,7 @@ function EditPropertyPage() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm text-gray-600">
-                        Certificate of Ownership
+                        Property Document
                       </span>
                       <Button
                         size="sm"
