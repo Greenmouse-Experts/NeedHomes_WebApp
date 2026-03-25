@@ -22,10 +22,10 @@ export const Route = createFileRoute("/developer")({
   component: RouteComponent,
   loader: () => {
     const user = get_user_value();
-    if (user?.user?.accountType != "PARTNER") {
-      // return redirect({
-      //   to: "",
-      // });
+    if (user?.user?.accountType == "PARTNER") {
+      return redirect({
+        to: "/partners/",
+      });
     }
   },
   beforeLoad: () => {
