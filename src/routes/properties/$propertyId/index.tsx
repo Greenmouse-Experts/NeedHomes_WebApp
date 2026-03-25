@@ -104,7 +104,7 @@ function PropertyDetailPage() {
                     Cancel
                   </Button>
                   {!auth?.accessToken ? (
-                    <Button variant="primary" onClick={() => navigate({ to: "/login" })}>
+                    <Button variant="primary" onClick={() => navigate({ to: "/login", search: { redirect: window.location.pathname } })}>
                       Sign In to Invest
                     </Button>
                   ) : (

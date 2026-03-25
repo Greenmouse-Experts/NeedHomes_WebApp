@@ -28,10 +28,14 @@ interface LOGIN_RESPONSE {
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: (search.redirect as string) || "",
+  }),
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -68,6 +72,9 @@ function LoginPage() {
       // if (newUser.user.accountType == "") {
       //   return navigate({ to: "/partners" });
       // }
+      if (redirect) {
+        return navigate({ to: redirect as any });
+      }
       return navigate({ to: "/investors" });
     },
     onError: (error: AxiosError<ApiResponse>) => {
