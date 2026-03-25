@@ -142,7 +142,7 @@ export default function Header() {
       icon: FileText,
     },
     {
-      name: "Properties",
+      name: "MarketPlace",
       icon: Building2,
       path: "/properties",
     },
