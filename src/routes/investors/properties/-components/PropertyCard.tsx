@@ -53,6 +53,11 @@ export default function PropertyCard({
               Premium
             </div>
           )}
+          {property.availableUnits <= 0 && (
+            <div className="badge badge-error font-bold text-[10px] uppercase tracking-wider">
+              Sold Out
+            </div>
+          )}
         </div>
       </figure>
 
