@@ -6,7 +6,7 @@ export const Route = createFileRoute("/properties/$propertyId")({
 
 function PropertyLayout() {
   return (
-    <div className="property-container space-y-6 container mx-auto pt-12">
+    <div className="property-container px-4 space-y-6 container mx-auto pt-12">
       <Outlet />
     </div>
   );
