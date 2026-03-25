@@ -25,9 +25,7 @@ import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
 
-export const Route = createFileRoute(
-  "/properties/$propertyId/outright/",
-)({
+export const Route = createFileRoute("/properties/$propertyId/outright/")({
   component: PropertyDetailPage,
 });
 
@@ -178,7 +176,10 @@ function PropertyDetailPage() {
                     Cancel
                   </Button>
                   {!auth?.accessToken ? (
-                    <Button variant="primary" onClick={() => navigate({ to: "/login" })}>
+                    <Button
+                      variant="primary"
+                      onClick={() => navigate({ to: "/login" })}
+                    >
                       Sign In to Invest
                     </Button>
                   ) : (
@@ -186,7 +187,10 @@ function PropertyDetailPage() {
                       variant="primary"
                       onClick={() => {
                         if (auth?.user?.accountType === "INVESTOR") {
-                          return navigate({ to: "/investors/properties/$propertyId/outright/", params: { propertyId } });
+                          return navigate({
+                            to: "/investors/properties/$propertyId/outright/",
+                            params: { propertyId },
+                          });
                         }
                         if (payInstall) {
                           const amount = form.getValues("amount");
@@ -214,7 +218,9 @@ function PropertyDetailPage() {
                           },
                         );
                       }}
-                      disabled={mutate.isPending || property.availableUnits === 0}
+                      disabled={
+                        mutate.isPending || property.availableUnits === 0
+                      }
                     >
                       Confirm & Pay{" "}
                       {payInstall
@@ -354,12 +360,12 @@ function PropertyDetailPage() {
                   // methods.setValue("quantity", 1);
                   showModal();
                 }}
-                disabled={mutate.isPending || property.availableUnits === 0 || isAdmin}
+                disabled={
+                  mutate.isPending || property.availableUnits === 0 || isAdmin
+                }
                 className="w-full sm:w-auto"
               >
-                {property.availableUnits === 0
-                  ? "No Units Available"
-                  : "Invest Now"}
+                {property.availableUnits === 0 ? "Sold Out" : "Invest Now"}
               </Button>
             </div>
             <div className="space-y-6">

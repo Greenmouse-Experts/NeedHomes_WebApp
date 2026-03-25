@@ -332,9 +332,7 @@ function PropertyDetailPage() {
                 disabled={mutate.isPending || property.availableUnits === 0}
                 className="w-full sm:w-auto"
               >
-                {property.availableUnits === 0
-                  ? "No Units Available"
-                  : "Invest Now"}
+                {property.availableUnits === 0 ? "Sold Out" : "Invest Now"}
               </Button>
             </div>
             <div className="space-y-6">
