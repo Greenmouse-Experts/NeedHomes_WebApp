@@ -8,6 +8,7 @@ import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
 import BackButton from "@/components/BackButton";
+import { RichTextEditor } from "@/components/terms/RichTextEditor";
 
 export const Route = createFileRoute("/dashboard/jobs/create")({
   component: RouteComponent,
@@ -127,43 +128,35 @@ function RouteComponent() {
               })}
             />*/}
 
-            <div className="w-full space-y-2">
-              <label className="fieldset-label font-semibold">
-                <span className="text-sm">Description</span>
-              </label>
-              <textarea
-                placeholder="Enter job description"
-                className="textarea textarea-bordered w-full"
-                rows={4}
-                {...methods.register("description", {
-                  required: "Description is required",
-                })}
-              />
-              {methods.formState.errors.description && (
-                <p className="text-error text-sm mt-1">
-                  {methods.formState.errors.description.message}
-                </p>
+            <Controller
+              control={methods.control}
+              name="description"
+              rules={{ required: "Description is required" }}
+              render={({ field }) => (
+                <RichTextEditor
+                  label="Description"
+                  placeholder="Enter job description"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={methods.formState.errors.description?.message}
+                />
               )}
-            </div>
+            />
 
-            <div className="w-full space-y-2">
-              <label className="fieldset-label font-semibold">
-                <span className="text-sm">Requirements</span>
-              </label>
-              <textarea
-                placeholder="Enter job requirements (one per line)"
-                className="textarea textarea-bordered w-full"
-                rows={4}
-                {...methods.register("requirements", {
-                  required: "Requirements are required",
-                })}
-              />
-              {methods.formState.errors.requirements && (
-                <p className="text-error text-sm mt-1">
-                  {methods.formState.errors.requirements.message}
-                </p>
+            <Controller
+              control={methods.control}
+              name="requirements"
+              rules={{ required: "Requirements are required" }}
+              render={({ field }) => (
+                <RichTextEditor
+                  label="Requirements"
+                  placeholder="Enter job requirements"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={methods.formState.errors.requirements?.message}
+                />
               )}
-            </div>
+            />
 
             <button
               type="submit"

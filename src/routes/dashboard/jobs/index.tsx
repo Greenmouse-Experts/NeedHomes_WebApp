@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "sonner";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
@@ -18,6 +19,7 @@ interface Job {
   category: string;
   jobType: string;
   location: string;
+  isPublished: boolean;
   createdAt: string;
 }
 
@@ -55,6 +57,20 @@ function RouteComponent() {
   });
 
   const { refetch } = query;
+
+  const publishMutation = useMutation({
+    mutationFn: async ({ id, isPublished }: { id: string; isPublished: boolean }) => {
+      const resp = await apiClient.patch(`/careers/${id}/publish`, { isPublished });
+      return resp.data;
+    },
+    onSuccess: (_, variables) => {
+      refetch();
+      toast.success(variables.isPublished ? "Job published" : "Job unpublished");
+    },
+    onError: () => {
+      toast.error("Failed to update publish status");
+    },
+  });
   const columns: columnType<Job>[] = [
     {
       key: "title",
@@ -64,7 +80,7 @@ function RouteComponent() {
       key: "category",
       label: "Category",
       render: (value) => {
-        <>{value.name}</>;
+        return <>{value["name"]}</>;
       },
     },
     {
@@ -74,6 +90,21 @@ function RouteComponent() {
     {
       key: "location",
       label: "Location",
+    },
+    {
+      key: "isPublished",
+      label: "Status",
+      render: (value) => (
+        <span
+          className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+            value
+              ? "bg-green-100 text-green-800"
+              : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {value ? "Published" : "Draft"}
+        </span>
+      ),
     },
     {
       key: "createdAt",
@@ -95,6 +126,14 @@ function RouteComponent() {
       label: "Edit",
       action: (job) => {
         navigate({ to: `/dashboard/jobs/${job.id}/edit` });
+      },
+    },
+    {
+      key: "toggle_publish",
+      label: "Toggle Publish",
+      render: (job) => <>{job.isPublished ? "Unpublish" : "Publish"}</>,
+      action: (job) => {
+        publishMutation.mutate({ id: job.id, isPublished: !job.isPublished });
       },
     },
     {

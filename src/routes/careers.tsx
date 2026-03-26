@@ -2,46 +2,42 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Briefcase, MapPin, Clock, ArrowRight, Users } from "lucide-react";
 import Footer from "@/components/home/Footer";
 import { Card, CardContent } from "@/components/ui/Card";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/api/simpleApi";
+import type { ApiResponseV2 } from "@/api/simpleApi";
 
 export const Route = createFileRoute("/careers")({
   component: RouteComponent,
 });
 
+interface Job {
+  id: string;
+  title: string;
+  location: string;
+  jobType: string;
+  description: string;
+  requirements: string;
+  category: { id: string; name: string; type: string };
+}
+
+const JOB_TYPE_LABELS: Record<string, string> = {
+  FULL_TIME: "Full-time",
+  PART_TIME: "Part-time",
+  CONTRACT: "Contract",
+  REMOTE: "Remote",
+  HYBRID: "Hybrid",
+};
+
 function RouteComponent() {
-  const openPositions = [
-    {
-      title: "Senior Property Manager",
-      department: "Operations",
-      location: "Lagos, Nigeria",
-      type: "Full-time",
-      description:
-        "Lead our property management team and oversee day-to-day operations across our growing portfolio of real estate assets.",
+  const jobsQuery = useQuery<ApiResponseV2<Job[]>>({
+    queryKey: ["careers-public"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/careers");
+      return resp.data;
     },
-    {
-      title: "Real Estate Investment Analyst",
-      department: "Investment",
-      location: "Lagos, Nigeria",
-      type: "Full-time",
-      description:
-        "Conduct market research, financial modeling, and due diligence for new investment opportunities in the African real estate market.",
-    },
-    {
-      title: "Full Stack Developer",
-      department: "Technology",
-      location: "Remote",
-      type: "Full-time",
-      description:
-        "Build and maintain our PropTech platform, developing features that empower investors and streamline property management.",
-    },
-    {
-      title: "Marketing Manager",
-      department: "Marketing",
-      location: "Lagos, Nigeria",
-      type: "Full-time",
-      description:
-        "Drive brand awareness and investor acquisition through strategic marketing campaigns and digital initiatives.",
-    },
-  ];
+  });
+
+  const jobs: Job[] = jobsQuery.data?.data?.data ?? [];
 
   const benefits = [
     {
@@ -185,35 +181,68 @@ function RouteComponent() {
               <div className="flex items-center gap-2 text-sm">
                 <Users className="w-4 h-4 text-brand-orange" />
                 <span className="text-muted-foreground">
-                  {openPositions.length} positions available
+                  {jobs.length} position{jobs.length !== 1 ? "s" : ""} available
                 </span>
               </div>
             </div>
 
+            {jobsQuery.isLoading && (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="bg-white p-6 md:p-8 border-l-4 border-brand-orange animate-pulse"
+                  >
+                    <div className="h-7 bg-gray-200 rounded w-1/3 mb-3" />
+                    <div className="h-4 bg-gray-100 rounded w-1/2 mb-4" />
+                    <div className="h-4 bg-gray-100 rounded w-full" />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {jobsQuery.isError && (
+              <p className="text-muted-foreground">
+                Failed to load positions. Please try again later.
+              </p>
+            )}
+
+            {!jobsQuery.isLoading && !jobsQuery.isError && jobs.length === 0 && (
+              <p className="text-muted-foreground">
+                No open positions at the moment. Check back soon.
+              </p>
+            )}
+
             <div className="space-y-4">
-              {openPositions.map((position, i) => (
+              {jobs.map((job) => (
                 <div
-                  key={i}
+                  key={job.id}
                   className="bg-white p-6 md:p-8 border-l-4 border-brand-orange hover:shadow-lg transition-shadow group cursor-pointer"
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div>
                       <h3 className="text-2xl font-serif font-medium text-[#333d42] group-hover:text-brand-orange transition-colors">
-                        {position.title}
+                        {job.title}
                       </h3>
                       <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Briefcase className="w-4 h-4" />
-                          {position.department}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          {position.location}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {position.type}
-                        </span>
+                        {job.category && (
+                          <span className="flex items-center gap-1">
+                            <Briefcase className="w-4 h-4" />
+                            {job.category.name}
+                          </span>
+                        )}
+                        {job.location && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {job.location}
+                          </span>
+                        )}
+                        {job.jobType && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {JOB_TYPE_LABELS[job.jobType] ?? job.jobType}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <Link
@@ -225,7 +254,7 @@ function RouteComponent() {
                     </Link>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    {position.description}
+                    {job.description}
                   </p>
                 </div>
               ))}

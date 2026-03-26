@@ -46,19 +46,23 @@ export function RichTextEditor({
   value,
   onChange,
   error,
+  label = "Content",
+  placeholder = "Write the full terms and conditions content here…",
+  required = true,
 }: {
   value: string;
   onChange: (val: string) => void;
   error?: string;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
 }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Placeholder.configure({
-        placeholder: "Write the full terms and conditions content here…",
-      }),
+      Placeholder.configure({ placeholder }),
     ],
     content: value,
     onUpdate({ editor }) {
@@ -85,7 +89,7 @@ export function RichTextEditor({
   return (
     <div className="space-y-1.5">
       <label className="text-sm font-semibold">
-        Content <span className="text-error">*</span>
+        {label} {required && <span className="text-error">*</span>}
       </label>
       <div
         className={`border rounded-xl overflow-hidden ${error ? "border-error" : "border-base-300"}`}

@@ -168,6 +168,7 @@ import { Route as DashboardPropertiesNewFractionalRouteImport } from './routes/d
 import { Route as DashboardPropertiesNewCoDevelopmentRouteImport } from './routes/dashboard/properties/new/co-development'
 import { Route as DashboardPropertiesPropertyIdEditRouteImport } from './routes/dashboard/properties/$propertyId/edit'
 import { Route as DashboardPartnersPartnerIdKycRouteImport } from './routes/dashboard/partners/$partnerId/kyc'
+import { Route as DashboardJobsIdEditRouteImport } from './routes/dashboard/jobs/$id/edit'
 import { Route as DashboardInvestorsInvestorIdKycRouteImport } from './routes/dashboard/investors/$investorId/kyc'
 import { Route as PartnersPropertiesPropertyIdOutrightIndexRouteImport } from './routes/partners/properties/$propertyId/outright/index'
 import { Route as PartnersPropertiesPropertyIdLandBankingIndexRouteImport } from './routes/partners/properties/$propertyId/land-banking/index'
@@ -1065,6 +1066,11 @@ const DashboardPartnersPartnerIdKycRoute =
     path: '/kyc',
     getParentRoute: () => DashboardPartnersPartnerIdRouteRoute,
   } as any)
+const DashboardJobsIdEditRoute = DashboardJobsIdEditRouteImport.update({
+  id: '/$id/edit',
+  path: '/$id/edit',
+  getParentRoute: () => DashboardJobsRouteRoute,
+} as any)
 const DashboardInvestorsInvestorIdKycRoute =
   DashboardInvestorsInvestorIdKycRouteImport.update({
     id: '/$investorId/kyc',
@@ -1355,6 +1361,7 @@ export interface FileRoutesByFullPath {
   '/partners/subscriptions/': typeof PartnersSubscriptionsIndexRoute
   '/properties/$propertyId/': typeof PropertiesPropertyIdIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
+  '/dashboard/jobs/$id/edit': typeof DashboardJobsIdEditRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
@@ -1516,6 +1523,7 @@ export interface FileRoutesByTo {
   '/partners/subscriptions': typeof PartnersSubscriptionsIndexRoute
   '/properties/$propertyId': typeof PropertiesPropertyIdIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
+  '/dashboard/jobs/$id/edit': typeof DashboardJobsIdEditRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
@@ -1706,6 +1714,7 @@ export interface FileRoutesById {
   '/partners/subscriptions/': typeof PartnersSubscriptionsIndexRoute
   '/properties/$propertyId/': typeof PropertiesPropertyIdIndexRoute
   '/dashboard/investors/$investorId/kyc': typeof DashboardInvestorsInvestorIdKycRoute
+  '/dashboard/jobs/$id/edit': typeof DashboardJobsIdEditRoute
   '/dashboard/partners/$partnerId/kyc': typeof DashboardPartnersPartnerIdKycRoute
   '/dashboard/properties/$propertyId/edit': typeof DashboardPropertiesPropertyIdEditRoute
   '/dashboard/properties/new/co-development': typeof DashboardPropertiesNewCoDevelopmentRoute
@@ -1897,6 +1906,7 @@ export interface FileRouteTypes {
     | '/partners/subscriptions/'
     | '/properties/$propertyId/'
     | '/dashboard/investors/$investorId/kyc'
+    | '/dashboard/jobs/$id/edit'
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
@@ -2058,6 +2068,7 @@ export interface FileRouteTypes {
     | '/partners/subscriptions'
     | '/properties/$propertyId'
     | '/dashboard/investors/$investorId/kyc'
+    | '/dashboard/jobs/$id/edit'
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
@@ -2247,6 +2258,7 @@ export interface FileRouteTypes {
     | '/partners/subscriptions/'
     | '/properties/$propertyId/'
     | '/dashboard/investors/$investorId/kyc'
+    | '/dashboard/jobs/$id/edit'
     | '/dashboard/partners/$partnerId/kyc'
     | '/dashboard/properties/$propertyId/edit'
     | '/dashboard/properties/new/co-development'
@@ -3477,6 +3489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPartnersPartnerIdKycRouteImport
       parentRoute: typeof DashboardPartnersPartnerIdRouteRoute
     }
+    '/dashboard/jobs/$id/edit': {
+      id: '/dashboard/jobs/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/dashboard/jobs/$id/edit'
+      preLoaderRoute: typeof DashboardJobsIdEditRouteImport
+      parentRoute: typeof DashboardJobsRouteRoute
+    }
     '/dashboard/investors/$investorId/kyc': {
       id: '/dashboard/investors/$investorId/kyc'
       path: '/$investorId/kyc'
@@ -3751,6 +3770,7 @@ const DashboardInvestorsRouteRouteWithChildren =
 interface DashboardJobsRouteRouteChildren {
   DashboardJobsCreateRoute: typeof DashboardJobsCreateRoute
   DashboardJobsIndexRoute: typeof DashboardJobsIndexRoute
+  DashboardJobsIdEditRoute: typeof DashboardJobsIdEditRoute
   DashboardJobsIdIndexRoute: typeof DashboardJobsIdIndexRoute
   DashboardJobsCategoriesIndexRoute: typeof DashboardJobsCategoriesIndexRoute
 }
@@ -3758,6 +3778,7 @@ interface DashboardJobsRouteRouteChildren {
 const DashboardJobsRouteRouteChildren: DashboardJobsRouteRouteChildren = {
   DashboardJobsCreateRoute: DashboardJobsCreateRoute,
   DashboardJobsIndexRoute: DashboardJobsIndexRoute,
+  DashboardJobsIdEditRoute: DashboardJobsIdEditRoute,
   DashboardJobsIdIndexRoute: DashboardJobsIdIndexRoute,
   DashboardJobsCategoriesIndexRoute: DashboardJobsCategoriesIndexRoute,
 }
