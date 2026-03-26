@@ -95,6 +95,18 @@ function ListedPropertiesPage() {
       render: (value) => `₦${value.toLocaleString()}`,
     },
     {
+      key: "availableUnits",
+      label: "Units",
+      render: (value) =>
+        value <= 0 ? (
+          <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+            Sold Out
+          </span>
+        ) : (
+          <span>{value}</span>
+        ),
+    },
+    {
       key: "published",
       label: "Status",
       render: (value) => (
@@ -189,7 +201,7 @@ function ListedPropertiesPage() {
         );
       },
       render: (item: ADMIN_PROPERTY_LISTING) => {
-        return <>{item.published ? "Publish" : "Unpublish"}</>;
+        return <>{!item.published ? "Publish" : "Unpublish"}</>;
       },
     },
     {

@@ -93,11 +93,11 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
     id: "transaction",
     title: "TRANSACTION",
     items: [
-      {
-        label: "Receipt",
-        to: "/dashboard/transactions/receipts",
-        icon: Receipt,
-      },
+      // {
+      //   label: "Receipt",
+      //   to: "/dashboard/transactions/receipts",
+      //   icon: Receipt,
+      // },
       {
         label: "Payments",
         to: "/dashboard/transactions/payments",
