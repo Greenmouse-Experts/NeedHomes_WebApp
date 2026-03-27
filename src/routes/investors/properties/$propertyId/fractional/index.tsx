@@ -16,6 +16,7 @@ import { Controller, useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
+import AdminROI from "@/routes/-components/ROI";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/fractional/",
@@ -577,6 +578,7 @@ function PropertyDetailPage() {
                 </div>
               </div>
             </div>
+            <AdminROI property={property} />
           </>
         );
       }}

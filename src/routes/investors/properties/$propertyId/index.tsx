@@ -21,6 +21,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
+import AdminROI from "@/routes/-components/ROI";
 
 export const Route = createFileRoute("/investors/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -468,6 +469,7 @@ function PropertyDetailPage() {
                 </div>
               </div>
             </div>
+            <AdminROI property={property} />
           </>
         );
       }}
