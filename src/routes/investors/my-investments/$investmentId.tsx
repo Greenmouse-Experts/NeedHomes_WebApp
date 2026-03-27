@@ -17,6 +17,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import InvPropDetails from "./-components/InvPropDetails";
 import InvPaymentSchedule from "./-components/InvPaymentSchedule";
+import ExitStrategy from "./-components/ExitStrategy";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -251,6 +252,10 @@ function InvestmentDetailsPage() {
                   propertyId={investment.propertyId}
                 />
               ) : null}
+              <ExitStrategy
+                investment={investment}
+                propertyId={investment.propertyId}
+              />
               <InvPropDetails propId={investment.propertyId} />
             </>
           );

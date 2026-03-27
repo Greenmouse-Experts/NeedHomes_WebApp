@@ -8,6 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TrendingUp, Filter, ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
 import InvStatistics from "./-components/InvStatistics";
+import ExitStrategy from "./-components/ExitStrategy";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/investors/my-investments/")({
@@ -218,16 +219,30 @@ function RouteComponent() {
 
       {/* Investments Table */}
       <PageLoader query={query}>
-        {(data) => (
-          <CustomTable
-            //@ts-ignore
-            data={data.data.data}
-            columns={columns}
-            actions={actions}
-            paginationProps={paginationProps}
-            totalCount={data.data.length} // Adjust based on API response structure if meta exists
-          />
-        )}
+        {(data) => {
+          const investments: Investment[] = data.data.data ?? data.data ?? [];
+          return (
+            <>
+              <CustomTable
+                //@ts-ignore
+                data={investments}
+                columns={columns}
+                actions={actions}
+                paginationProps={paginationProps}
+                totalCount={data.data.length}
+              />
+              {investments
+                .filter((inv) => inv.status === "ACTIVE")
+                .map((inv) => (
+                  <ExitStrategy
+                    key={inv.id}
+                    investment={inv}
+                    propertyId={inv.propertyId}
+                  />
+                ))}
+            </>
+          );
+        }}
       </PageLoader>
     </div>
   );
