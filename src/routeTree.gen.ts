@@ -110,6 +110,7 @@ import { Route as DashboardJobsIndexRouteImport } from './routes/dashboard/jobs/
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
 import { Route as DashboardChatIndexRouteImport } from './routes/dashboard/chat/index'
 import { Route as DashboardBlogsIndexRouteImport } from './routes/dashboard/blogs/index'
+import { Route as CareersJobIdIndexRouteImport } from './routes/careers/jobId/index'
 import { Route as BlogsIdIndexRouteImport } from './routes/blogs/$id/index'
 import { Route as PartnersPropertiesPropertyIdRouteImport } from './routes/partners/properties/$propertyId'
 import { Route as InvestorsPropertiesPropertyIdRouteImport } from './routes/investors/properties/$propertyId'
@@ -723,6 +724,11 @@ const DashboardBlogsIndexRoute = DashboardBlogsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardBlogsRouteRoute,
 } as any)
+const CareersJobIdIndexRoute = CareersJobIdIndexRouteImport.update({
+  id: '/jobId/',
+  path: '/jobId/',
+  getParentRoute: () => CareersRoute,
+} as any)
 const BlogsIdIndexRoute = BlogsIdIndexRouteImport.update({
   id: '/$id/',
   path: '/$id/',
@@ -1251,7 +1257,7 @@ export interface FileRoutesByFullPath {
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
-  '/careers': typeof CareersRoute
+  '/careers': typeof CareersRouteWithChildren
   '/co-development': typeof CoDevelopmentRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
@@ -1334,6 +1340,7 @@ export interface FileRoutesByFullPath {
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRouteWithChildren
   '/blogs/$id/': typeof BlogsIdIndexRoute
+  '/careers/jobId/': typeof CareersJobIdIndexRoute
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
@@ -1436,7 +1443,7 @@ export interface FileRoutesByTo {
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
-  '/careers': typeof CareersRoute
+  '/careers': typeof CareersRouteWithChildren
   '/co-development': typeof CoDevelopmentRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
@@ -1496,6 +1503,7 @@ export interface FileRoutesByTo {
   '/developer/properties/listed': typeof DeveloperPropertiesListedRoute
   '/investors/my-investments/$investmentId': typeof InvestorsMyInvestmentsInvestmentIdRoute
   '/blogs/$id': typeof BlogsIdIndexRoute
+  '/careers/jobId': typeof CareersJobIdIndexRoute
   '/dashboard/blogs': typeof DashboardBlogsIndexRoute
   '/dashboard/chat': typeof DashboardChatIndexRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
@@ -1604,7 +1612,7 @@ export interface FileRoutesById {
   '/account-type': typeof AccountTypeRoute
   '/admin': typeof AdminRoute
   '/blog': typeof BlogRoute
-  '/careers': typeof CareersRoute
+  '/careers': typeof CareersRouteWithChildren
   '/co-development': typeof CoDevelopmentRoute
   '/contact-us': typeof ContactUsRoute
   '/faqs': typeof FaqsRoute
@@ -1687,6 +1695,7 @@ export interface FileRoutesById {
   '/investors/properties/$propertyId': typeof InvestorsPropertiesPropertyIdRouteWithChildren
   '/partners/properties/$propertyId': typeof PartnersPropertiesPropertyIdRouteWithChildren
   '/blogs/$id/': typeof BlogsIdIndexRoute
+  '/careers/jobId/': typeof CareersJobIdIndexRoute
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
@@ -1879,6 +1888,7 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId'
     | '/partners/properties/$propertyId'
     | '/blogs/$id/'
+    | '/careers/jobId/'
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/investors/'
@@ -2041,6 +2051,7 @@ export interface FileRouteTypes {
     | '/developer/properties/listed'
     | '/investors/my-investments/$investmentId'
     | '/blogs/$id'
+    | '/careers/jobId'
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/investors'
@@ -2231,6 +2242,7 @@ export interface FileRouteTypes {
     | '/investors/properties/$propertyId'
     | '/partners/properties/$propertyId'
     | '/blogs/$id/'
+    | '/careers/jobId/'
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/investors/'
@@ -2339,7 +2351,7 @@ export interface RootRouteChildren {
   AccountTypeRoute: typeof AccountTypeRoute
   AdminRoute: typeof AdminRoute
   BlogRoute: typeof BlogRoute
-  CareersRoute: typeof CareersRoute
+  CareersRoute: typeof CareersRouteWithChildren
   CoDevelopmentRoute: typeof CoDevelopmentRoute
   ContactUsRoute: typeof ContactUsRoute
   FaqsRoute: typeof FaqsRoute
@@ -3082,6 +3094,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/blogs/'
       preLoaderRoute: typeof DashboardBlogsIndexRouteImport
       parentRoute: typeof DashboardBlogsRouteRoute
+    }
+    '/careers/jobId/': {
+      id: '/careers/jobId/'
+      path: '/jobId'
+      fullPath: '/careers/jobId/'
+      preLoaderRoute: typeof CareersJobIdIndexRouteImport
+      parentRoute: typeof CareersRoute
     }
     '/blogs/$id/': {
       id: '/blogs/$id/'
@@ -4372,6 +4391,17 @@ const PartnersRouteRouteWithChildren = PartnersRouteRoute._addFileChildren(
   PartnersRouteRouteChildren,
 )
 
+interface CareersRouteChildren {
+  CareersJobIdIndexRoute: typeof CareersJobIdIndexRoute
+}
+
+const CareersRouteChildren: CareersRouteChildren = {
+  CareersJobIdIndexRoute: CareersJobIdIndexRoute,
+}
+
+const CareersRouteWithChildren =
+  CareersRoute._addFileChildren(CareersRouteChildren)
+
 interface PropertiesPropertyIdRouteChildren {
   PropertiesPropertyIdIndexRoute: typeof PropertiesPropertyIdIndexRoute
   PropertiesPropertyIdDefaultIndexRoute: typeof PropertiesPropertyIdDefaultIndexRoute
@@ -4405,7 +4435,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountTypeRoute: AccountTypeRoute,
   AdminRoute: AdminRoute,
   BlogRoute: BlogRoute,
-  CareersRoute: CareersRoute,
+  CareersRoute: CareersRouteWithChildren,
   CoDevelopmentRoute: CoDevelopmentRoute,
   ContactUsRoute: ContactUsRoute,
   FaqsRoute: FaqsRoute,

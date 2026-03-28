@@ -1,5 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
+import AdminROI from "@/routes/-components/ROI";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
@@ -37,6 +38,9 @@ export default function InvPropDetails({ propId }: { propId: string }) {
           return (
             <div className="bg-white rounded-lg shadow-md p-6 mt-8">
               {/* Header */}
+              <div className="my-4">
+                <AdminROI property={prop_data} />
+              </div>
               <div className="flex flex-col md:flex-row md:items-start gap-6">
                 <div className="md:flex-1">
                   <div className="rounded overflow-hidden border border-gray-100">

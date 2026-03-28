@@ -574,7 +574,6 @@ function PropertyDetailPage() {
                       />
                     </div>
                   </div>
-                  <AdminROI property={property} />
                 </div>
               </div>
             </div>
