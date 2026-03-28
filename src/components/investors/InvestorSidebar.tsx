@@ -6,6 +6,7 @@ import {
   Bell,
   CircleDollarSign,
   Megaphone,
+  Briefcase,
   List,
   Settings,
   LogOut,
@@ -81,6 +82,13 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "announcements",
       label: "Announcement",
       icon: <Megaphone className="size-4" />,
+      alwaysEnabled: false,
+    },
+    {
+      to: "/investors/applications",
+      activePage: "applications",
+      label: "Applications",
+      icon: <Briefcase className="size-4" />,
       alwaysEnabled: false,
     },
     // {
