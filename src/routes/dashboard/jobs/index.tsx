@@ -122,6 +122,13 @@ function RouteComponent() {
       },
     },
     {
+      key: "view_applications",
+      label: "View Applications",
+      action: (job) => {
+        navigate({ to: `/dashboard/jobs/${job.id}/applications/` });
+      },
+    },
+    {
       key: "edit",
       label: "Edit",
       action: (job) => {
