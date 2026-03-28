@@ -119,7 +119,7 @@ function RouteComponent() {
   const query = useQuery<ApiResponse<Investment[]>>({
     queryKey: ["investments-admin", props.page],
     queryFn: async () => {
-      let resp = await apiClient.get("investments/admin/all", {
+      let resp = await apiClient.get("/investments/admin/all", {
         params: {
           page: props.page,
         },
