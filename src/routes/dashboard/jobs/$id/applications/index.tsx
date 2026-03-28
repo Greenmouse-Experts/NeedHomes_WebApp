@@ -9,13 +9,14 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { usePagination } from "@/helpers/pagination";
 import type { Actions } from "@/components/tables/pop-up";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
+import StatusUpdateModal, {
+  type AppStatus,
+} from "@/components/careers/StatusUpdateModal";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/dashboard/jobs/$id/applications/")({
   component: RouteComponent,
 });
-
-type AppStatus = "PENDING" | "REVIEWED" | "SHORTLISTED" | "REJECTED";
 
 interface Application {
   id: string;
@@ -115,6 +116,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const detailsModalRef = useRef<ModalHandle>(null);
+  const statusModalRef = useRef<ModalHandle>(null);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
   const params = {
@@ -151,9 +153,8 @@ function RouteComponent() {
       queryClient.invalidateQueries({
         queryKey: ["admin-job-applications", id],
       });
-      if (selectedApp?.id === _.id || true) {
-        setSelectedApp((prev) => (prev ? { ...prev, status } : prev));
-      }
+      setSelectedApp((prev) => (prev ? { ...prev, status } : prev));
+      statusModalRef.current?.close();
       toast.success(`Status updated to ${STATUS_LABEL[status]}`);
     },
     onError: () => toast.error("Failed to update status"),
@@ -169,32 +170,12 @@ function RouteComponent() {
       },
     },
     {
-      key: "mark_reviewed",
-      label: "Mark Reviewed",
-      disabled: (item) => item.status === "REVIEWED",
-      action: (item) =>
-        statusMutation.mutate({ appId: item.id, status: "REVIEWED" }),
-    },
-    {
-      key: "shortlist",
-      label: "Shortlist",
-      disabled: (item) => item.status === "SHORTLISTED",
-      action: (item) =>
-        statusMutation.mutate({ appId: item.id, status: "SHORTLISTED" }),
-    },
-    {
-      key: "reject",
-      label: "Reject",
-      disabled: (item) => item.status === "REJECTED",
-      action: (item) =>
-        statusMutation.mutate({ appId: item.id, status: "REJECTED" }),
-    },
-    {
-      key: "reset",
-      label: "Reset to Pending",
-      disabled: (item) => item.status === "PENDING",
-      action: (item) =>
-        statusMutation.mutate({ appId: item.id, status: "PENDING" }),
+      key: "update_status",
+      label: "Update Status",
+      action: (item) => {
+        setSelectedApp(item);
+        statusModalRef.current?.open();
+      },
     },
   ];
 
@@ -327,6 +308,19 @@ function RouteComponent() {
           </div>
         )}
       </Modal>
+
+      {/* Status Update Modal */}
+      {selectedApp && (
+        <StatusUpdateModal
+          ref={statusModalRef}
+          applicantName={`${selectedApp.user?.firstName ?? selectedApp.firstName ?? ""} ${selectedApp.user?.lastName ?? selectedApp.lastName ?? ""}`.trim()}
+          currentStatus={selectedApp.status}
+          isPending={statusMutation.isPending}
+          onConfirm={(status) =>
+            statusMutation.mutate({ appId: selectedApp.id, status })
+          }
+        />
+      )}
     </ThemeProvider>
   );
 }

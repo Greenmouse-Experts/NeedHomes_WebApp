@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
@@ -7,13 +7,15 @@ import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { usePagination } from "@/helpers/pagination";
 import type { Actions } from "@/components/tables/pop-up";
+import StatusUpdateModal, {
+  type AppStatus,
+} from "@/components/careers/StatusUpdateModal";
+import type { ModalHandle } from "@/components/modals/DialogModal";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/dashboard/jobs/applications")({
   component: RouteComponent,
 });
-
-type AppStatus = "PENDING" | "REVIEWED" | "SHORTLISTED" | "REJECTED";
 
 interface Application {
   id: string;
@@ -43,6 +45,13 @@ const STATUS_BADGE: Record<AppStatus, string> = {
   REVIEWED: "bg-blue-100 text-blue-700",
   SHORTLISTED: "bg-green-100 text-green-700",
   REJECTED: "bg-red-100 text-red-700",
+};
+
+const STATUS_LABEL: Record<AppStatus, string> = {
+  PENDING: "Pending",
+  REVIEWED: "Reviewed",
+  SHORTLISTED: "Shortlisted",
+  REJECTED: "Rejected",
 };
 
 const columns: columnType<Application>[] = [
@@ -75,7 +84,7 @@ const columns: columnType<Application>[] = [
       <span
         className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${STATUS_BADGE[val] ?? "bg-gray-100 text-gray-600"}`}
       >
-        {val}
+        {STATUS_LABEL[val] ?? val}
       </span>
     ),
   },
@@ -117,6 +126,8 @@ function RouteComponent() {
   const pagination = usePagination();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const statusModalRef = useRef<ModalHandle>(null);
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
   const params = {
     page: pagination.page,
@@ -127,9 +138,7 @@ function RouteComponent() {
   const query = useQuery<ApiResponseV2<Application[]>>({
     queryKey: ["admin-applications", params],
     queryFn: async () => {
-      const resp = await apiClient.get("careers/admin/applications", {
-        params,
-      });
+      const resp = await apiClient.get("careers/admin/applications", { params });
       return resp.data;
     },
   });
@@ -144,52 +153,34 @@ function RouteComponent() {
     },
     onSuccess: (_, { status }) => {
       queryClient.invalidateQueries({ queryKey: ["admin-applications"] });
-      toast.success(`Status updated to ${status}`);
+      setSelectedApp((prev) => (prev ? { ...prev, status } : prev));
+      statusModalRef.current?.close();
+      toast.success(`Status updated to ${STATUS_LABEL[status]}`);
     },
     onError: () => toast.error("Failed to update status"),
   });
 
   const actions: Actions<Application>[] = [
     {
-      key: "mark_reviewed",
-      label: "Mark Reviewed",
-      disabled: (item) => item.status === "REVIEWED",
-      action: (item) =>
-        statusMutation.mutate({ id: item.id, status: "REVIEWED" }),
-    },
-    {
-      key: "shortlist",
-      label: "Shortlist",
-      disabled: (item) => item.status === "SHORTLISTED",
-      action: (item) =>
-        statusMutation.mutate({ id: item.id, status: "SHORTLISTED" }),
-    },
-    {
-      key: "reject",
-      label: "Reject",
-      disabled: (item) => item.status === "REJECTED",
-      action: (item) =>
-        statusMutation.mutate({ id: item.id, status: "REJECTED" }),
-    },
-    {
-      key: "reset",
-      label: "Reset to Pending",
-      disabled: (item) => item.status === "PENDING",
-      action: (item) =>
-        statusMutation.mutate({ id: item.id, status: "PENDING" }),
+      key: "update_status",
+      label: "Update Status",
+      action: (item) => {
+        setSelectedApp(item);
+        statusModalRef.current?.open();
+      },
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-      <div className="container mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">Job Applications</h1>
-        </div>
+    <ThemeProvider>
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+        <div className="container mx-auto">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900">Job Applications</h1>
+          </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="text-sm font-semibold text-gray-700 mb-4">Search</div>
-          <ThemeProvider className="flex-none">
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div className="text-sm font-semibold text-gray-700 mb-4">Search</div>
             <input
               type="text"
               placeholder="Search by name, email, or job title…"
@@ -200,27 +191,39 @@ function RouteComponent() {
               }}
               className="input input-bordered w-full max-w-md bg-gray-50"
             />
-          </ThemeProvider>
-        </div>
+          </div>
 
-        <div className="bg-white rounded-lg shadow-sm">
-          <PageLoader query={query} loadingText="Loading applications...">
-            {(resp) => {
-              const data: Application[] = resp.data?.data ?? [];
-              const meta = resp.data?.meta;
-              return (
-                <CustomTable
-                  data={data}
-                  columns={columns}
-                  actions={actions}
-                  totalCount={meta?.total ?? data.length}
-                  paginationProps={pagination}
-                />
-              );
-            }}
-          </PageLoader>
+          <div className="bg-white rounded-lg shadow-sm">
+            <PageLoader query={query} loadingText="Loading applications...">
+              {(resp) => {
+                const data: Application[] = resp.data?.data ?? [];
+                const meta = resp.data?.meta;
+                return (
+                  <CustomTable
+                    data={data}
+                    columns={columns}
+                    actions={actions}
+                    totalCount={meta?.total ?? data.length}
+                    paginationProps={pagination}
+                  />
+                );
+              }}
+            </PageLoader>
+          </div>
         </div>
       </div>
-    </div>
+
+      {selectedApp && (
+        <StatusUpdateModal
+          ref={statusModalRef}
+          applicantName={`${selectedApp.user?.firstName ?? ""} ${selectedApp.user?.lastName ?? ""}`.trim()}
+          currentStatus={selectedApp.status}
+          isPending={statusMutation.isPending}
+          onConfirm={(status) =>
+            statusMutation.mutate({ id: selectedApp.id, status })
+          }
+        />
+      )}
+    </ThemeProvider>
   );
 }
