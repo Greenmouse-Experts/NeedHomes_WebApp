@@ -1,10 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Briefcase, MapPin, Clock, ArrowRight, Users } from "lucide-react";
+import {
+  Briefcase,
+  MapPin,
+  Clock,
+  ArrowRight,
+  Users,
+  FileText,
+  Upload,
+  X,
+} from "lucide-react";
 import Footer from "@/components/home/Footer";
 import { Card, CardContent } from "@/components/ui/Card";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
-import type { ApiResponseV2 } from "@/api/simpleApi";
+import type { ApiResponseV2, ApiResponse } from "@/api/simpleApi";
+import { useRef, useState } from "react";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
+import { toast } from "sonner";
+import { useAuth } from "@/store/authStore";
 
 export const Route = createFileRoute("/careers")({
   component: RouteComponent,
@@ -20,6 +33,14 @@ interface Job {
   category: { id: string; name: string; type: string };
 }
 
+interface ApplyForm {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  coverLetter: string;
+}
+
 const JOB_TYPE_LABELS: Record<string, string> = {
   FULL_TIME: "Full-time",
   PART_TIME: "Part-time",
@@ -28,7 +49,22 @@ const JOB_TYPE_LABELS: Record<string, string> = {
   HYBRID: "Hybrid",
 };
 
+const EMPTY_FORM: ApplyForm = {
+  firstName: "",
+  lastName: "",
+  phone: "",
+  email: "",
+  coverLetter: "",
+};
+
 function RouteComponent() {
+  const [authUser] = useAuth();
+  const modalRef = useRef<ModalHandle>(null);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [form, setForm] = useState<ApplyForm>(EMPTY_FORM);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+
   const jobsQuery = useQuery<ApiResponseV2<Job[]>>({
     queryKey: ["careers-public"],
     queryFn: async () => {
@@ -36,6 +72,103 @@ function RouteComponent() {
       return resp.data;
     },
   });
+
+  const myApplicationsQuery = useQuery<ApiResponse>({
+    queryKey: ["my-applications"],
+    queryFn: async () => {
+      const resp = await apiClient.get("careers/applications/my-applications");
+      return resp.data;
+    },
+    enabled: !!authUser,
+  });
+
+  const appliedJobIds = new Set<string>(
+    (myApplicationsQuery.data?.data?.data ?? []).map((a: any) => a.jobId),
+  );
+
+  const uploadResumeMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const fd = new FormData();
+      fd.append("file", file);
+      const resp = await apiClient.post("multimedia/upload", fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return resp.data.data.url as string;
+    },
+  });
+
+  const applyMutation = useMutation({
+    mutationFn: async ({
+      jobId,
+      body,
+    }: {
+      jobId: string;
+      body: ApplyForm & { resumeUrl: string };
+    }) => {
+      const resp = await apiClient.post(`careers/${jobId}/apply`, body);
+      return resp.data;
+    },
+    onSuccess: () => {
+      toast.success("Application submitted successfully!");
+      modalRef.current?.close();
+      setForm(EMPTY_FORM);
+      setResumeFile(null);
+      setResumeUrl(null);
+      myApplicationsQuery.refetch();
+    },
+    onError: (err: any) => {
+      const msg =
+        err?.response?.data?.message ?? "Failed to submit application.";
+      toast.error(msg);
+    },
+  });
+
+  const handleApplyClick = (job: Job) => {
+    if (!authUser) {
+      toast.error("Please sign in to apply for this position.");
+      return;
+    }
+    setSelectedJob(job);
+    setForm({
+      firstName: (authUser.user as any)?.firstName ?? "",
+      lastName: (authUser.user as any)?.lastName ?? "",
+      email: (authUser.user as any)?.email ?? "",
+      phone: "",
+      coverLetter: "",
+    });
+    setResumeFile(null);
+    setResumeUrl(null);
+    modalRef.current?.open();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedJob) return;
+
+    if (!resumeFile && !resumeUrl) {
+      toast.error("Please upload your resume (PDF).");
+      return;
+    }
+
+    let url = resumeUrl;
+    if (!url && resumeFile) {
+      try {
+        url = await uploadResumeMutation.mutateAsync(resumeFile);
+        setResumeUrl(url);
+      } catch {
+        toast.error("Failed to upload resume. Please try again.");
+        return;
+      }
+    }
+
+    applyMutation.mutate({
+      jobId: selectedJob.id,
+      body: { ...form, resumeUrl: url! },
+    });
+  };
+
+  const isSubmitting =
+    uploadResumeMutation.isPending || applyMutation.isPending;
 
   const jobs: Job[] = jobsQuery.data?.data?.data ?? [];
 
@@ -214,50 +347,61 @@ function RouteComponent() {
             )}
 
             <div className="space-y-4">
-              {jobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="bg-white p-6 md:p-8 border-l-4 border-brand-orange hover:shadow-lg transition-shadow group cursor-pointer"
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                    <div>
-                      <h3 className="text-2xl font-serif font-medium text-[#333d42] group-hover:text-brand-orange transition-colors">
-                        {job.title}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-muted-foreground">
-                        {job.category && (
-                          <span className="flex items-center gap-1">
-                            <Briefcase className="w-4 h-4" />
-                            {job.category.name}
-                          </span>
-                        )}
-                        {job.location && (
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            {job.location}
-                          </span>
-                        )}
-                        {job.jobType && (
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {JOB_TYPE_LABELS[job.jobType] ?? job.jobType}
-                          </span>
-                        )}
+              {jobs.map((job) => {
+                const hasApplied = appliedJobIds.has(job.id);
+                return (
+                  <div
+                    key={job.id}
+                    className="bg-white p-6 md:p-8 border-l-4 border-brand-orange hover:shadow-lg transition-shadow group"
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                      <div>
+                        <h3 className="text-2xl font-serif font-medium text-[#333d42] group-hover:text-brand-orange transition-colors">
+                          {job.title}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-muted-foreground">
+                          {job.category && (
+                            <span className="flex items-center gap-1">
+                              <Briefcase className="w-4 h-4" />
+                              {job.category.name}
+                            </span>
+                          )}
+                          {job.location && (
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-4 h-4" />
+                              {job.location}
+                            </span>
+                          )}
+                          {job.jobType && (
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {JOB_TYPE_LABELS[job.jobType] ?? job.jobType}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                      {hasApplied ? (
+                        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-50 text-green-700 text-sm font-medium whitespace-nowrap">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                          Applied
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleApplyClick(job)}
+                          className="flex items-center gap-2 text-sm font-medium text-brand-orange hover:gap-3 transition-all whitespace-nowrap"
+                        >
+                          Apply Now
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
-                    <Link
-                      to="/contact-us"
-                      className="flex items-center gap-2 text-sm font-medium text-brand-orange hover:gap-3 transition-all whitespace-nowrap"
-                    >
-                      Apply Now
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {job.description}
+                    </p>
                   </div>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {job.description}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -314,6 +458,166 @@ function RouteComponent() {
           </div>
         </section>
       </div>
+
+      {/* Apply Modal */}
+      <Modal ref={modalRef} title={`Apply — ${selectedJob?.title ?? ""}`}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">
+                First Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                maxLength={100}
+                value={form.firstName}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, firstName: e.target.value }))
+                }
+                className="input input-bordered w-full"
+                placeholder="John"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                maxLength={100}
+                value={form.lastName}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, lastName: e.target.value }))
+                }
+                className="input input-bordered w-full"
+                placeholder="Doe"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-gray-700">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              required
+              value={form.email}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, email: e.target.value }))
+              }
+              className="input input-bordered w-full"
+              placeholder="john.doe@example.com"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-gray-700">
+              Phone Number <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              required
+              maxLength={20}
+              value={form.phone}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, phone: e.target.value }))
+              }
+              className="input input-bordered w-full"
+              placeholder="08012345678"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-gray-700">
+              Cover Letter{" "}
+              <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <textarea
+              maxLength={2000}
+              rows={4}
+              value={form.coverLetter}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, coverLetter: e.target.value }))
+              }
+              className="textarea textarea-bordered w-full resize-none"
+              placeholder="Tell us why you're a great fit for this role…"
+            />
+            <p className="text-xs text-gray-400 text-right">
+              {form.coverLetter.length}/2000
+            </p>
+          </div>
+
+          {/* Resume Upload */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-gray-700">
+              Resume / CV <span className="text-red-500">*</span>
+            </label>
+            {resumeFile ? (
+              <div className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
+                <FileText className="w-5 h-5 text-brand-orange shrink-0" />
+                <span className="text-sm text-gray-700 flex-1 truncate">
+                  {resumeFile.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResumeFile(null);
+                    setResumeUrl(null);
+                  }}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <label className="flex flex-col items-center justify-center gap-2 h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-brand-orange transition-colors">
+                <Upload className="w-5 h-5 text-gray-400" />
+                <span className="text-sm text-gray-500">
+                  Click to upload PDF (max 100MB)
+                </span>
+                <input
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setResumeFile(file);
+                      setResumeUrl(null);
+                    }
+                  }}
+                />
+              </label>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => modalRef.current?.close()}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn bg-brand-orange text-white hover:bg-brand-orange/90 border-none min-w-28"
+            >
+              {isSubmitting ? (
+                <span className="loading loading-spinner loading-sm" />
+              ) : (
+                "Submit Application"
+              )}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
       <Footer />
     </>
   );
