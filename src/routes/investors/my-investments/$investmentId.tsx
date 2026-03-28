@@ -109,7 +109,7 @@ function InvestmentDetailsPage() {
           return (
             <>
               {/* ── Hero Header ── */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden ">
                 {/* Top accent bar */}
                 <div className="h-1.5 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500" />
                 <div className="p-6">
@@ -188,7 +188,7 @@ function InvestmentDetailsPage() {
               </div>
 
               {/* ── Stats Grid ── */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 my-4">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="p-2 bg-blue-50 rounded-lg w-fit mb-3">
                     <DollarSign className="w-4 h-4 text-blue-600" />
@@ -245,11 +245,11 @@ function InvestmentDetailsPage() {
                     Investment Information
                   </h3>
                   <Link
-                    to="/investors/properties/$propertyId"
+                    to="/investors/properties/"
                     params={{ propertyId: investment.propertyId }}
                     className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-all shadow-sm active:scale-95"
                   >
-                    View Property
+                    Invest More
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
