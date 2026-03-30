@@ -114,13 +114,14 @@ export default function InvPaymentSchedule({
   ];
 
   return (
-    <ThemeProvider className="my-4 ring fade rounded-box ">
-      <h2 className="p-4 text-lg font-bold fade border-b text-current/70">
+    <ThemeProvider className="my-4 ring  fade rounded-box ">
+      <h2 className="p-4 text-lg ring rounded-t-box font-bold fade border-b text-current/70">
         Installment Schedule
       </h2>
       <QueryCompLayout query={query}>
         {(data) => (
           <CustomTable
+            ring={false}
             data={data.data as Installment[]}
             columns={columns}
             actions={getActions(query.refetch)}
