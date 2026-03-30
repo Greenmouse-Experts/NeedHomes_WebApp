@@ -18,6 +18,7 @@ import { useRef, useState } from "react";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { toast } from "sonner";
 import { useAuth } from "@/store/authStore";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/careers")({
   component: RouteComponent,
@@ -340,11 +341,13 @@ function RouteComponent() {
               </p>
             )}
 
-            {!jobsQuery.isLoading && !jobsQuery.isError && jobs.length === 0 && (
-              <p className="text-muted-foreground">
-                No open positions at the moment. Check back soon.
-              </p>
-            )}
+            {!jobsQuery.isLoading &&
+              !jobsQuery.isError &&
+              jobs.length === 0 && (
+                <p className="text-muted-foreground">
+                  No open positions at the moment. Check back soon.
+                </p>
+              )}
 
             <div className="space-y-4">
               {jobs.map((job) => {
@@ -461,161 +464,163 @@ function RouteComponent() {
 
       {/* Apply Modal */}
       <Modal ref={modalRef} title={`Apply — ${selectedJob?.title ?? ""}`}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-gray-700">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                maxLength={100}
-                value={form.firstName}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, firstName: e.target.value }))
-                }
-                className="input input-bordered w-full"
-                placeholder="John"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-gray-700">
-                Last Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                maxLength={100}
-                value={form.lastName}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, lastName: e.target.value }))
-                }
-                className="input input-bordered w-full"
-                placeholder="Doe"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-700">
-              Email Address <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, email: e.target.value }))
-              }
-              className="input input-bordered w-full"
-              placeholder="john.doe@example.com"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-700">
-              Phone Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="tel"
-              required
-              maxLength={20}
-              value={form.phone}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, phone: e.target.value }))
-              }
-              className="input input-bordered w-full"
-              placeholder="08012345678"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-700">
-              Cover Letter{" "}
-              <span className="text-gray-400 font-normal">(optional)</span>
-            </label>
-            <textarea
-              maxLength={2000}
-              rows={4}
-              value={form.coverLetter}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, coverLetter: e.target.value }))
-              }
-              className="textarea textarea-bordered w-full resize-none"
-              placeholder="Tell us why you're a great fit for this role…"
-            />
-            <p className="text-xs text-gray-400 text-right">
-              {form.coverLetter.length}/2000
-            </p>
-          </div>
-
-          {/* Resume Upload */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-700">
-              Resume / CV <span className="text-red-500">*</span>
-            </label>
-            {resumeFile ? (
-              <div className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
-                <FileText className="w-5 h-5 text-brand-orange shrink-0" />
-                <span className="text-sm text-gray-700 flex-1 truncate">
-                  {resumeFile.name}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setResumeFile(null);
-                    setResumeUrl(null);
-                  }}
-                  className="text-gray-400 hover:text-red-500 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <label className="flex flex-col items-center justify-center gap-2 h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-brand-orange transition-colors">
-                <Upload className="w-5 h-5 text-gray-400" />
-                <span className="text-sm text-gray-500">
-                  Click to upload PDF (max 100MB)
-                </span>
+        <ThemeProvider>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-gray-700">
+                  First Name <span className="text-red-500">*</span>
+                </label>
                 <input
-                  type="file"
-                  accept=".pdf,application/pdf"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setResumeFile(file);
-                      setResumeUrl(null);
-                    }
-                  }}
+                  type="text"
+                  required
+                  maxLength={100}
+                  value={form.firstName}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, firstName: e.target.value }))
+                  }
+                  className="input input-bordered w-full"
+                  placeholder="John"
                 />
-              </label>
-            )}
-          </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-gray-700">
+                  Last Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  maxLength={100}
+                  value={form.lastName}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, lastName: e.target.value }))
+                  }
+                  className="input input-bordered w-full"
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => modalRef.current?.close()}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn bg-brand-orange text-white hover:bg-brand-orange/90 border-none min-w-28"
-            >
-              {isSubmitting ? (
-                <span className="loading loading-spinner loading-sm" />
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                }
+                className="input input-bordered w-full"
+                placeholder="john.doe@example.com"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                required
+                maxLength={20}
+                value={form.phone}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, phone: e.target.value }))
+                }
+                className="input input-bordered w-full"
+                placeholder="08012345678"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">
+                Cover Letter{" "}
+                <span className="text-gray-400 font-normal">(optional)</span>
+              </label>
+              <textarea
+                maxLength={2000}
+                rows={4}
+                value={form.coverLetter}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, coverLetter: e.target.value }))
+                }
+                className="textarea textarea-bordered w-full resize-none"
+                placeholder="Tell us why you're a great fit for this role…"
+              />
+              <p className="text-xs text-gray-400 text-right">
+                {form.coverLetter.length}/2000
+              </p>
+            </div>
+
+            {/* Resume Upload */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-gray-700">
+                Resume / CV <span className="text-red-500">*</span>
+              </label>
+              {resumeFile ? (
+                <div className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
+                  <FileText className="w-5 h-5 text-brand-orange shrink-0" />
+                  <span className="text-sm text-gray-700 flex-1 truncate">
+                    {resumeFile.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setResumeFile(null);
+                      setResumeUrl(null);
+                    }}
+                    className="text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               ) : (
-                "Submit Application"
+                <label className="flex flex-col items-center justify-center gap-2 h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-brand-orange transition-colors">
+                  <Upload className="w-5 h-5 text-gray-400" />
+                  <span className="text-sm text-gray-500">
+                    Click to upload PDF (max 100MB)
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setResumeFile(file);
+                        setResumeUrl(null);
+                      }
+                    }}
+                  />
+                </label>
               )}
-            </button>
-          </div>
-        </form>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => modalRef.current?.close()}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn bg-brand-orange text-white hover:bg-brand-orange/90 border-none min-w-28"
+              >
+                {isSubmitting ? (
+                  <span className="loading loading-spinner loading-sm" />
+                ) : (
+                  "Submit Application"
+                )}
+              </button>
+            </div>
+          </form>
+        </ThemeProvider>
       </Modal>
 
       <Footer />

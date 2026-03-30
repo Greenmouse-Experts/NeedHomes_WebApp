@@ -353,14 +353,16 @@ function PartnerPropertiesList() {
           Browse and manage your real estate partnership opportunities.
         </p>
       </div>
-      <SearchBar
-        value={search}
-        onChange={(val) => {
-          setSearch(val);
-          props.setPagination(1);
-        }}
-        placeholder="Search by title, location, or description"
-      />
+      <div className="mb-4">
+        <SearchBar
+          value={search}
+          onChange={(val) => {
+            setSearch(val);
+            props.setPagination(1);
+          }}
+          placeholder="Search by title, location, or description"
+        />
+      </div>
       <PageLoader query={query}>
         {(response) => {
           const properties = response.data.data || [];

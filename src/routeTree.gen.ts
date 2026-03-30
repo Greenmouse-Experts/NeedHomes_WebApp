@@ -63,6 +63,7 @@ import { Route as InvestorsSettingsRouteImport } from './routes/investors/settin
 import { Route as InvestorsPropertiesRouteImport } from './routes/investors/properties'
 import { Route as InvestorsNotificationsRouteImport } from './routes/investors/notifications'
 import { Route as InvestorsMyInvestmentsRouteImport } from './routes/investors/my-investments'
+import { Route as InvestorsApplicationsRouteImport } from './routes/investors/applications'
 import { Route as InvestorsAnnouncementsRouteImport } from './routes/investors/announcements'
 import { Route as DeveloperTransactionsRouteImport } from './routes/developer/transactions'
 import { Route as DeveloperSettingsRouteImport } from './routes/developer/settings'
@@ -124,6 +125,7 @@ import { Route as DashboardSubAdminsPermissionsRouteImport } from './routes/dash
 import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboard/properties/listed'
 import { Route as DashboardPropertiesPropertyIdRouteImport } from './routes/dashboard/properties/$propertyId'
 import { Route as DashboardJobsCreateRouteImport } from './routes/dashboard/jobs/create'
+import { Route as DashboardJobsApplicationsRouteImport } from './routes/dashboard/jobs/applications'
 import { Route as DeveloperPropertiesNewRouteRouteImport } from './routes/developer/properties/new/route'
 import { Route as DeveloperPropertiesEditRouteRouteImport } from './routes/developer/properties/edit/route'
 import { Route as DashboardPropertiesNewRouteRouteImport } from './routes/dashboard/properties/new/route'
@@ -185,6 +187,7 @@ import { Route as DeveloperPropertiesInvestmentsIdIndexRouteImport } from './rou
 import { Route as DashboardTransactionsPaymentsIdIndexRouteImport } from './routes/dashboard/transactions/payments/$id/index'
 import { Route as DashboardPropertiesInvestmentsIdIndexRouteImport } from './routes/dashboard/properties/investments/$id/index'
 import { Route as DashboardPartnersPartnerIdPromotionsIndexRouteImport } from './routes/dashboard/partners/$partnerId/promotions/index'
+import { Route as DashboardJobsIdApplicationsIndexRouteImport } from './routes/dashboard/jobs/$id/applications/index'
 import { Route as DashboardInvestorsCorporateInvestorIdIndexRouteImport } from './routes/dashboard/investors/corporate/$investorId/index'
 import { Route as DashboardBlogsIdEditIndexRouteImport } from './routes/dashboard/blogs/$id/edit/index'
 import { Route as DashboardBlogsIdDetailsIndexRouteImport } from './routes/dashboard/blogs/$id/details/index'
@@ -468,6 +471,11 @@ const InvestorsNotificationsRoute = InvestorsNotificationsRouteImport.update({
 const InvestorsMyInvestmentsRoute = InvestorsMyInvestmentsRouteImport.update({
   id: '/my-investments',
   path: '/my-investments',
+  getParentRoute: () => InvestorsRouteRoute,
+} as any)
+const InvestorsApplicationsRoute = InvestorsApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
   getParentRoute: () => InvestorsRouteRoute,
 } as any)
 const InvestorsAnnouncementsRoute = InvestorsAnnouncementsRouteImport.update({
@@ -805,6 +813,12 @@ const DashboardJobsCreateRoute = DashboardJobsCreateRouteImport.update({
   path: '/create',
   getParentRoute: () => DashboardJobsRouteRoute,
 } as any)
+const DashboardJobsApplicationsRoute =
+  DashboardJobsApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => DashboardJobsRouteRoute,
+  } as any)
 const DeveloperPropertiesNewRouteRoute =
   DeveloperPropertiesNewRouteRouteImport.update({
     id: '/new',
@@ -1169,6 +1183,12 @@ const DashboardPartnersPartnerIdPromotionsIndexRoute =
     path: '/promotions/',
     getParentRoute: () => DashboardPartnersPartnerIdRouteRoute,
   } as any)
+const DashboardJobsIdApplicationsIndexRoute =
+  DashboardJobsIdApplicationsIndexRouteImport.update({
+    id: '/$id/applications/',
+    path: '/$id/applications/',
+    getParentRoute: () => DashboardJobsRouteRoute,
+  } as any)
 const DashboardInvestorsCorporateInvestorIdIndexRoute =
   DashboardInvestorsCorporateInvestorIdIndexRouteImport.update({
     id: '/corporate/$investorId/',
@@ -1307,6 +1327,7 @@ export interface FileRoutesByFullPath {
   '/developer/settings': typeof DeveloperSettingsRoute
   '/developer/transactions': typeof DeveloperTransactionsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
+  '/investors/applications': typeof InvestorsApplicationsRoute
   '/investors/my-investments': typeof InvestorsMyInvestmentsRouteWithChildren
   '/investors/notifications': typeof InvestorsNotificationsRoute
   '/investors/properties': typeof InvestorsPropertiesRouteWithChildren
@@ -1334,6 +1355,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
   '/developer/properties/edit': typeof DeveloperPropertiesEditRouteRouteWithChildren
   '/developer/properties/new': typeof DeveloperPropertiesNewRouteRouteWithChildren
+  '/dashboard/jobs/applications': typeof DashboardJobsApplicationsRoute
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
@@ -1432,6 +1454,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blogs/$id/details/': typeof DashboardBlogsIdDetailsIndexRoute
   '/dashboard/blogs/$id/edit/': typeof DashboardBlogsIdEditIndexRoute
   '/dashboard/investors/corporate/$investorId/': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
+  '/dashboard/jobs/$id/applications/': typeof DashboardJobsIdApplicationsIndexRoute
   '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
   '/dashboard/transactions/payments/$id/': typeof DashboardTransactionsPaymentsIdIndexRoute
@@ -1482,6 +1505,7 @@ export interface FileRoutesByTo {
   '/developer/settings': typeof DeveloperSettingsRoute
   '/developer/transactions': typeof DeveloperTransactionsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
+  '/investors/applications': typeof InvestorsApplicationsRoute
   '/investors/notifications': typeof InvestorsNotificationsRoute
   '/investors/settings': typeof InvestorsSettingsRoute
   '/partners/announcements': typeof PartnersAnnouncementsRoute
@@ -1502,6 +1526,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/developer/properties/edit': typeof DeveloperPropertiesEditRouteRouteWithChildren
+  '/dashboard/jobs/applications': typeof DashboardJobsApplicationsRoute
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
   '/dashboard/sub-admins/permissions': typeof DashboardSubAdminsPermissionsRoute
@@ -1596,6 +1621,7 @@ export interface FileRoutesByTo {
   '/dashboard/blogs/$id/details': typeof DashboardBlogsIdDetailsIndexRoute
   '/dashboard/blogs/$id/edit': typeof DashboardBlogsIdEditIndexRoute
   '/dashboard/investors/corporate/$investorId': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
+  '/dashboard/jobs/$id/applications': typeof DashboardJobsIdApplicationsIndexRoute
   '/dashboard/partners/$partnerId/promotions': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id': typeof DashboardPropertiesInvestmentsIdIndexRoute
   '/dashboard/transactions/payments/$id': typeof DashboardTransactionsPaymentsIdIndexRoute
@@ -1664,6 +1690,7 @@ export interface FileRoutesById {
   '/developer/settings': typeof DeveloperSettingsRoute
   '/developer/transactions': typeof DeveloperTransactionsRoute
   '/investors/announcements': typeof InvestorsAnnouncementsRoute
+  '/investors/applications': typeof InvestorsApplicationsRoute
   '/investors/my-investments': typeof InvestorsMyInvestmentsRouteWithChildren
   '/investors/notifications': typeof InvestorsNotificationsRoute
   '/investors/properties': typeof InvestorsPropertiesRouteWithChildren
@@ -1691,6 +1718,7 @@ export interface FileRoutesById {
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
   '/developer/properties/edit': typeof DeveloperPropertiesEditRouteRouteWithChildren
   '/developer/properties/new': typeof DeveloperPropertiesNewRouteRouteWithChildren
+  '/dashboard/jobs/applications': typeof DashboardJobsApplicationsRoute
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
@@ -1789,6 +1817,7 @@ export interface FileRoutesById {
   '/dashboard/blogs/$id/details/': typeof DashboardBlogsIdDetailsIndexRoute
   '/dashboard/blogs/$id/edit/': typeof DashboardBlogsIdEditIndexRoute
   '/dashboard/investors/corporate/$investorId/': typeof DashboardInvestorsCorporateInvestorIdIndexRoute
+  '/dashboard/jobs/$id/applications/': typeof DashboardJobsIdApplicationsIndexRoute
   '/dashboard/partners/$partnerId/promotions/': typeof DashboardPartnersPartnerIdPromotionsIndexRoute
   '/dashboard/properties/investments/$id/': typeof DashboardPropertiesInvestmentsIdIndexRoute
   '/dashboard/transactions/payments/$id/': typeof DashboardTransactionsPaymentsIdIndexRoute
@@ -1858,6 +1887,7 @@ export interface FileRouteTypes {
     | '/developer/settings'
     | '/developer/transactions'
     | '/investors/announcements'
+    | '/investors/applications'
     | '/investors/my-investments'
     | '/investors/notifications'
     | '/investors/properties'
@@ -1885,6 +1915,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new'
     | '/developer/properties/edit'
     | '/developer/properties/new'
+    | '/dashboard/jobs/applications'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
@@ -1983,6 +2014,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/$id/details/'
     | '/dashboard/blogs/$id/edit/'
     | '/dashboard/investors/corporate/$investorId/'
+    | '/dashboard/jobs/$id/applications/'
     | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
     | '/dashboard/transactions/payments/$id/'
@@ -2033,6 +2065,7 @@ export interface FileRouteTypes {
     | '/developer/settings'
     | '/developer/transactions'
     | '/investors/announcements'
+    | '/investors/applications'
     | '/investors/notifications'
     | '/investors/settings'
     | '/partners/announcements'
@@ -2053,6 +2086,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/dashboard/properties/edit'
     | '/developer/properties/edit'
+    | '/dashboard/jobs/applications'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/listed'
     | '/dashboard/sub-admins/permissions'
@@ -2147,6 +2181,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/$id/details'
     | '/dashboard/blogs/$id/edit'
     | '/dashboard/investors/corporate/$investorId'
+    | '/dashboard/jobs/$id/applications'
     | '/dashboard/partners/$partnerId/promotions'
     | '/dashboard/properties/investments/$id'
     | '/dashboard/transactions/payments/$id'
@@ -2214,6 +2249,7 @@ export interface FileRouteTypes {
     | '/developer/settings'
     | '/developer/transactions'
     | '/investors/announcements'
+    | '/investors/applications'
     | '/investors/my-investments'
     | '/investors/notifications'
     | '/investors/properties'
@@ -2241,6 +2277,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new'
     | '/developer/properties/edit'
     | '/developer/properties/new'
+    | '/dashboard/jobs/applications'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/$propertyId'
     | '/dashboard/properties/listed'
@@ -2339,6 +2376,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/$id/details/'
     | '/dashboard/blogs/$id/edit/'
     | '/dashboard/investors/corporate/$investorId/'
+    | '/dashboard/jobs/$id/applications/'
     | '/dashboard/partners/$partnerId/promotions/'
     | '/dashboard/properties/investments/$id/'
     | '/dashboard/transactions/payments/$id/'
@@ -2780,6 +2818,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestorsMyInvestmentsRouteImport
       parentRoute: typeof InvestorsRouteRoute
     }
+    '/investors/applications': {
+      id: '/investors/applications'
+      path: '/applications'
+      fullPath: '/investors/applications'
+      preLoaderRoute: typeof InvestorsApplicationsRouteImport
+      parentRoute: typeof InvestorsRouteRoute
+    }
     '/investors/announcements': {
       id: '/investors/announcements'
       path: '/announcements'
@@ -3205,6 +3250,13 @@ declare module '@tanstack/react-router' {
       path: '/create'
       fullPath: '/dashboard/jobs/create'
       preLoaderRoute: typeof DashboardJobsCreateRouteImport
+      parentRoute: typeof DashboardJobsRouteRoute
+    }
+    '/dashboard/jobs/applications': {
+      id: '/dashboard/jobs/applications'
+      path: '/applications'
+      fullPath: '/dashboard/jobs/applications'
+      preLoaderRoute: typeof DashboardJobsApplicationsRouteImport
       parentRoute: typeof DashboardJobsRouteRoute
     }
     '/developer/properties/new': {
@@ -3634,6 +3686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPartnersPartnerIdPromotionsIndexRouteImport
       parentRoute: typeof DashboardPartnersPartnerIdRouteRoute
     }
+    '/dashboard/jobs/$id/applications/': {
+      id: '/dashboard/jobs/$id/applications/'
+      path: '/$id/applications'
+      fullPath: '/dashboard/jobs/$id/applications/'
+      preLoaderRoute: typeof DashboardJobsIdApplicationsIndexRouteImport
+      parentRoute: typeof DashboardJobsRouteRoute
+    }
     '/dashboard/investors/corporate/$investorId/': {
       id: '/dashboard/investors/corporate/$investorId/'
       path: '/corporate/$investorId'
@@ -3808,19 +3867,23 @@ const DashboardInvestorsRouteRouteWithChildren =
   )
 
 interface DashboardJobsRouteRouteChildren {
+  DashboardJobsApplicationsRoute: typeof DashboardJobsApplicationsRoute
   DashboardJobsCreateRoute: typeof DashboardJobsCreateRoute
   DashboardJobsIndexRoute: typeof DashboardJobsIndexRoute
   DashboardJobsIdEditRoute: typeof DashboardJobsIdEditRoute
   DashboardJobsIdIndexRoute: typeof DashboardJobsIdIndexRoute
   DashboardJobsCategoriesIndexRoute: typeof DashboardJobsCategoriesIndexRoute
+  DashboardJobsIdApplicationsIndexRoute: typeof DashboardJobsIdApplicationsIndexRoute
 }
 
 const DashboardJobsRouteRouteChildren: DashboardJobsRouteRouteChildren = {
+  DashboardJobsApplicationsRoute: DashboardJobsApplicationsRoute,
   DashboardJobsCreateRoute: DashboardJobsCreateRoute,
   DashboardJobsIndexRoute: DashboardJobsIndexRoute,
   DashboardJobsIdEditRoute: DashboardJobsIdEditRoute,
   DashboardJobsIdIndexRoute: DashboardJobsIdIndexRoute,
   DashboardJobsCategoriesIndexRoute: DashboardJobsCategoriesIndexRoute,
+  DashboardJobsIdApplicationsIndexRoute: DashboardJobsIdApplicationsIndexRoute,
 }
 
 const DashboardJobsRouteRouteWithChildren =
@@ -4317,6 +4380,7 @@ const InvestorsPropertiesRouteWithChildren =
 
 interface InvestorsRouteRouteChildren {
   InvestorsAnnouncementsRoute: typeof InvestorsAnnouncementsRoute
+  InvestorsApplicationsRoute: typeof InvestorsApplicationsRoute
   InvestorsMyInvestmentsRoute: typeof InvestorsMyInvestmentsRouteWithChildren
   InvestorsNotificationsRoute: typeof InvestorsNotificationsRoute
   InvestorsPropertiesRoute: typeof InvestorsPropertiesRouteWithChildren
@@ -4330,6 +4394,7 @@ interface InvestorsRouteRouteChildren {
 
 const InvestorsRouteRouteChildren: InvestorsRouteRouteChildren = {
   InvestorsAnnouncementsRoute: InvestorsAnnouncementsRoute,
+  InvestorsApplicationsRoute: InvestorsApplicationsRoute,
   InvestorsMyInvestmentsRoute: InvestorsMyInvestmentsRouteWithChildren,
   InvestorsNotificationsRoute: InvestorsNotificationsRoute,
   InvestorsPropertiesRoute: InvestorsPropertiesRouteWithChildren,
