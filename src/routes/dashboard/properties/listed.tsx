@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Search, Plus, Filter, Printer } from "lucide-react";
+import { Plus, Filter, Printer } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
@@ -12,25 +11,33 @@ import type { Actions } from "@/components/tables/pop-up";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { usePagination } from "@/helpers/pagination";
+import SearchBar from "@/routes/-components/Searchbar";
 
 export const Route = createFileRoute("/dashboard/properties/listed")({
   component: ListedPropertiesPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    search: (search.search as string) || "",
+  }),
 });
 
 type FilterTab = "all" | "published" | "unpublished";
 
 function ListedPropertiesPage() {
   const navigate = useNavigate();
+  const { search: searchQuery } = Route.useSearch();
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const props = usePagination();
+
+  const handleSearch = (value: string) => {
+    navigate({ to: ".", search: (prev) => ({ ...prev, search: value }) });
+  };
 
   const handleAddProperty = () => {
     navigate({ to: "/dashboard/properties/new" });
   };
 
   const query = useQuery<ApiResponseV2<ADMIN_PROPERTY_LISTING[]>>({
-    queryKey: ["listings-admin", props.page, activeTab],
+    queryKey: ["listings-admin", props.page, activeTab, searchQuery],
     queryFn: async () => {
       let url = "admin/properties/all";
       const params: any = { page: props.page };
@@ -38,6 +45,9 @@ function ListedPropertiesPage() {
         params.published = true;
       } else if (activeTab === "unpublished") {
         params.published = false;
+      }
+      if (searchQuery) {
+        params.search = searchQuery;
       }
       let resp = await apiClient.get(url, { params });
       return resp.data;
@@ -276,15 +286,8 @@ function ListedPropertiesPage() {
         </div>
 
         <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex-1 max-w-md">
+            <SearchBar value={searchQuery} onChange={handleSearch} />
           </div>
           <div className="flex items-center gap-2">
             <Button
