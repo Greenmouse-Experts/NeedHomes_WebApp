@@ -20,6 +20,7 @@ import {
   List,
   Briefcase,
   FileText,
+  ClipboardList,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
@@ -133,6 +134,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
       { label: "Applications", to: "/dashboard/jobs/applications", icon: List },
     ],
   },
+  { label: "WAITLIST", to: "/dashboard/waitlist", icon: ClipboardList },
   { label: "TERMS", to: "/dashboard/terms", icon: FileText },
   { label: "CONVERSATIONS", to: "/dashboard/chat", icon: ChatBubbleLeftIcon },
   { label: "ANNOUNCEMENT", to: "/dashboard/announcements", icon: Megaphone },
