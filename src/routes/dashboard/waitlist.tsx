@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { ClipboardList } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/dashboard/waitlist")({
   component: WaitlistPage,
@@ -83,7 +84,7 @@ function WaitlistPage() {
   ];
 
   return (
-    <>
+    <ThemeProvider>
       <DashboardLayout title="Super Admin Dashboard" subtitle="waitlist">
         <section className="bg-base-100 ring fade shadow rounded-t-box">
           <div className="p-6 border-b border-gray-200">
@@ -118,6 +119,6 @@ function WaitlistPage() {
           )}
         </PageLoader>
       </DashboardLayout>
-    </>
+    </ThemeProvider>
   );
 }
