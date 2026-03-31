@@ -94,6 +94,12 @@ const dropdownMenus = {
       description: "Step-by-step guide",
       icon: "📖",
     },
+    {
+      name: "MarketPlace",
+      path: "/properties",
+      description: "Browse available properties",
+      icon: "🏪",
+    },
   ],
   Support: [
     {
@@ -140,11 +146,6 @@ export default function Header() {
     {
       name: "Resources",
       icon: FileText,
-    },
-    {
-      name: "MarketPlace",
-      icon: Building2,
-      path: "/properties",
     },
     {
       name: "Contact Us",
@@ -195,7 +196,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center h-full">
+        <div className="hidden lg:flex items-center h-full">
           {links.map((link, index) => {
             // If link has a path, render as direct link
             if (link.path) {
