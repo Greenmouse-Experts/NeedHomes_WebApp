@@ -9,6 +9,7 @@ import { usePagination } from "@/helpers/pagination";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { ClipboardList } from "lucide-react";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 export const Route = createFileRoute("/dashboard/waitlist")({
   component: WaitlistPage,
@@ -83,38 +84,40 @@ function WaitlistPage() {
 
   return (
     <>
-      <section className="bg-base-100 ring fade shadow rounded-t-box">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3 mb-1">
-            <ClipboardList className="w-6 h-6 text-(--color-orange)" />
-            <h2 className="text-xl font-semibold">Waitlist</h2>
+      <DashboardLayout title="Super Admin Dashboard" subtitle="waitlist">
+        <section className="bg-base-100 ring fade shadow rounded-t-box">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center gap-3 mb-1">
+              <ClipboardList className="w-6 h-6 text-(--color-orange)" />
+              <h2 className="text-xl font-semibold">Waitlist</h2>
+            </div>
+            <p className="text-sm text-gray-500">
+              Users who have joined the waitlist
+            </p>
           </div>
-          <p className="text-sm text-gray-500">
-            Users who have joined the waitlist
-          </p>
-        </div>
 
-        <div className="p-4 border-b border-gray-200">
-          <div className="max-w-md">
-            <SearchBar value={searchQuery} onChange={handleSearch} />
+          <div className="p-4 border-b border-gray-200">
+            <div className="max-w-md">
+              <SearchBar value={searchQuery} onChange={handleSearch} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <PageLoader query={query}>
-        {(data) => (
-          <div className="bg-white rounded-lg shadow-sm">
-            <CustomTable
-              //@ts-ignore
-              data={data.data.data}
-              columns={columns}
-              actions={actions}
-              ring={false}
-              paginationProps={props}
-            />
-          </div>
-        )}
-      </PageLoader>
+        <PageLoader query={query}>
+          {(data) => (
+            <div className="bg-white rounded-lg shadow-sm">
+              <CustomTable
+                //@ts-ignore
+                data={data.data.data}
+                columns={columns}
+                actions={actions}
+                ring={false}
+                paginationProps={props}
+              />
+            </div>
+          )}
+        </PageLoader>
+      </DashboardLayout>
     </>
   );
 }

@@ -69,6 +69,7 @@ import { Route as DeveloperTransactionsRouteImport } from './routes/developer/tr
 import { Route as DeveloperSettingsRouteImport } from './routes/developer/settings'
 import { Route as DeveloperNotificationsRouteImport } from './routes/developer/notifications'
 import { Route as DeveloperAnnouncementsRouteImport } from './routes/developer/announcements'
+import { Route as DashboardWaitlistRouteImport } from './routes/dashboard/waitlist'
 import { Route as DashboardPartnersRouteImport } from './routes/dashboard/partners'
 import { Route as DashboardAnnouncementsRouteImport } from './routes/dashboard/announcements'
 import { Route as DeveloperPropertiesRouteRouteImport } from './routes/developer/properties/route'
@@ -502,6 +503,11 @@ const DeveloperAnnouncementsRoute = DeveloperAnnouncementsRouteImport.update({
   id: '/announcements',
   path: '/announcements',
   getParentRoute: () => DeveloperRouteRoute,
+} as any)
+const DashboardWaitlistRoute = DashboardWaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardPartnersRoute = DashboardPartnersRouteImport.update({
   id: '/partners',
@@ -1322,6 +1328,7 @@ export interface FileRoutesByFullPath {
   '/developer/properties': typeof DeveloperPropertiesRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
+  '/dashboard/waitlist': typeof DashboardWaitlistRoute
   '/developer/announcements': typeof DeveloperAnnouncementsRoute
   '/developer/notifications': typeof DeveloperNotificationsRoute
   '/developer/settings': typeof DeveloperSettingsRoute
@@ -1500,6 +1507,7 @@ export interface FileRoutesByTo {
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
   '/dashboard/transactions': typeof DashboardTransactionsRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
+  '/dashboard/waitlist': typeof DashboardWaitlistRoute
   '/developer/announcements': typeof DeveloperAnnouncementsRoute
   '/developer/notifications': typeof DeveloperNotificationsRoute
   '/developer/settings': typeof DeveloperSettingsRoute
@@ -1685,6 +1693,7 @@ export interface FileRoutesById {
   '/developer/properties': typeof DeveloperPropertiesRouteRouteWithChildren
   '/dashboard/announcements': typeof DashboardAnnouncementsRoute
   '/dashboard/partners': typeof DashboardPartnersRouteWithChildren
+  '/dashboard/waitlist': typeof DashboardWaitlistRoute
   '/developer/announcements': typeof DeveloperAnnouncementsRoute
   '/developer/notifications': typeof DeveloperNotificationsRoute
   '/developer/settings': typeof DeveloperSettingsRoute
@@ -1882,6 +1891,7 @@ export interface FileRouteTypes {
     | '/developer/properties'
     | '/dashboard/announcements'
     | '/dashboard/partners'
+    | '/dashboard/waitlist'
     | '/developer/announcements'
     | '/developer/notifications'
     | '/developer/settings'
@@ -2060,6 +2070,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties'
     | '/dashboard/transactions'
     | '/dashboard/announcements'
+    | '/dashboard/waitlist'
     | '/developer/announcements'
     | '/developer/notifications'
     | '/developer/settings'
@@ -2244,6 +2255,7 @@ export interface FileRouteTypes {
     | '/developer/properties'
     | '/dashboard/announcements'
     | '/dashboard/partners'
+    | '/dashboard/waitlist'
     | '/developer/announcements'
     | '/developer/notifications'
     | '/developer/settings'
@@ -2859,6 +2871,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/developer/announcements'
       preLoaderRoute: typeof DeveloperAnnouncementsRouteImport
       parentRoute: typeof DeveloperRouteRoute
+    }
+    '/dashboard/waitlist': {
+      id: '/dashboard/waitlist'
+      path: '/waitlist'
+      fullPath: '/dashboard/waitlist'
+      preLoaderRoute: typeof DashboardWaitlistRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/partners': {
       id: '/dashboard/partners'
@@ -4156,6 +4175,7 @@ interface DashboardRouteRouteChildren {
   DashboardWithdrawalsRouteRoute: typeof DashboardWithdrawalsRouteRouteWithChildren
   DashboardAnnouncementsRoute: typeof DashboardAnnouncementsRoute
   DashboardPartnersRoute: typeof DashboardPartnersRouteWithChildren
+  DashboardWaitlistRoute: typeof DashboardWaitlistRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
 }
@@ -4178,6 +4198,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardWithdrawalsRouteRoute: DashboardWithdrawalsRouteRouteWithChildren,
   DashboardAnnouncementsRoute: DashboardAnnouncementsRoute,
   DashboardPartnersRoute: DashboardPartnersRouteWithChildren,
+  DashboardWaitlistRoute: DashboardWaitlistRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
 }
