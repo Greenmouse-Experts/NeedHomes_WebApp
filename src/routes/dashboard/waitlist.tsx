@@ -3,11 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
-import type { Actions } from "@/components/tables/pop-up";
 import SearchBar from "@/routes/-components/Searchbar";
 import { usePagination } from "@/helpers/pagination";
-import { toast } from "sonner";
-import { extract_message } from "@/helpers/apihelpers";
 import { ClipboardList } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
@@ -22,11 +19,7 @@ export const Route = createFileRoute("/dashboard/waitlist")({
 interface WaitlistEntry {
   id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
   createdAt: string;
-  [key: string]: any;
 }
 
 function WaitlistPage() {
@@ -39,7 +32,7 @@ function WaitlistPage() {
     queryFn: async () => {
       const params: any = { page: props.page };
       if (searchQuery) params.search = searchQuery;
-      const resp = await apiClient.get("admin/waitlist", { params });
+      const resp = await apiClient.get("/waitlist/admin/entries", { params });
       return resp.data;
     },
   });
@@ -49,37 +42,11 @@ function WaitlistPage() {
   };
 
   const columns: columnType<WaitlistEntry>[] = [
-    { key: "firstName", label: "First Name" },
-    { key: "lastName", label: "Last Name" },
     { key: "email", label: "Email" },
-    { key: "phone", label: "Phone" },
     {
       key: "createdAt",
       label: "Date Joined",
       render: (value) => new Date(value).toLocaleDateString(),
-    },
-  ];
-
-  const actions: Actions[] = [
-    {
-      key: "delete",
-      label: "Remove",
-      action: (item: WaitlistEntry) => {
-        toast.promise(
-          async () => {
-            const resp = await apiClient.delete(`admin/waitlist/${item.id}`);
-            return resp.data;
-          },
-          {
-            loading: "Removing...",
-            success: () => {
-              query.refetch();
-              return "Entry removed from waitlist";
-            },
-            error: extract_message,
-          },
-        );
-      },
     },
   ];
 
@@ -111,7 +78,6 @@ function WaitlistPage() {
                 //@ts-ignore
                 data={data.data.data}
                 columns={columns}
-                actions={actions}
                 ring={false}
                 paginationProps={props}
               />
