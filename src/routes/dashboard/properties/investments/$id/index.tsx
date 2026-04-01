@@ -90,8 +90,7 @@ function RouteComponent() {
     },
   });
 
-  const formatCurrency = (amount: number) =>
-    `₦${amount.toLocaleString()}`;
+  const formatCurrency = (amount: number) => `₦${amount.toLocaleString()}`;
 
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
@@ -280,7 +279,10 @@ function RouteComponent() {
                         label: "Installment",
                         value: isInstallment ? "Yes" : "No",
                       },
-                      { label: "Last Updated", value: formatDate(inv.updatedAt) },
+                      {
+                        label: "Last Updated",
+                        value: formatDate(inv.updatedAt),
+                      },
                     ].map(({ label, value, bold }) => (
                       <div
                         key={label}
@@ -314,19 +316,26 @@ function RouteComponent() {
                           <p className="font-semibold text-gray-900">
                             {inv.user.firstName} {inv.user.lastName}
                           </p>
-                          <p className="text-sm text-gray-500">{inv.user.email}</p>
+                          <p className="text-sm text-gray-500">
+                            {inv.user.email}
+                          </p>
                         </div>
                       </div>
                       <div className="divide-y divide-gray-50">
                         {[
-                          { label: "Account Type", value: inv.user.accountType },
+                          {
+                            label: "Account Type",
+                            value: inv.user.accountType,
+                          },
                           { label: "User ID", value: inv.user.id, mono: true },
                         ].map(({ label, value, mono }) => (
                           <div
                             key={label}
                             className="flex items-center justify-between px-6 py-3.5"
                           >
-                            <span className="text-sm text-gray-500">{label}</span>
+                            <span className="text-sm text-gray-500">
+                              {label}
+                            </span>
                             <div className="flex items-center gap-1">
                               <span
                                 className={`text-sm font-medium text-gray-700 truncate max-w-[200px] ${mono ? "font-mono" : ""}`}
@@ -375,7 +384,11 @@ function RouteComponent() {
                     )}
                     <div className="divide-y divide-gray-50 flex-1">
                       {[
-                        { label: "Title", value: inv.property.propertyTitle, bold: true },
+                        {
+                          label: "Title",
+                          value: inv.property.propertyTitle,
+                          bold: true,
+                        },
                         { label: "Type", value: inv.property.propertyType },
                         { label: "Model", value: inv.property.investmentModel },
                         { label: "Location", value: inv.property.location },
