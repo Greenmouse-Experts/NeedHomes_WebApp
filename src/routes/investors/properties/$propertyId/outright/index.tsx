@@ -18,12 +18,8 @@ import { extract_message } from "@/helpers/apihelpers";
 import { useNavigate } from "@tanstack/react-router";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
-import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
-import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
-import AdminROI from "@/routes/-components/ROI";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/outright/",
@@ -49,11 +45,10 @@ function PropertyDetailPage() {
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+    mutationFn: async (data: { amountPaid: number }) => {
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
         amountPaid: parseFloat(data.amountPaid.toFixed()),
-        quantity: data.quantity,
       });
       return resp.data;
     },
@@ -67,104 +62,23 @@ function PropertyDetailPage() {
       });
     },
   });
-
-  const mutateIns = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
-      let resp = await apiClient.post(
-        "/investments/installments/:paymentId/pay",
-        {
-          propertyId: propertyId,
-          amountPaid: data.amountPaid,
-          quantity: data.quantity,
-        },
-      );
-      return resp.data;
-    },
-    onSuccess: (data: ApiResponse<{ id: string }>) => {
-      closeModal();
-      navigate({
-        to: "/investors/my-investments/$investmentId",
-        params: {
-          investmentId: data.data.id,
-        },
-      });
-    },
-  });
-
-  const onSubmit = (data: { amountPaid: number; quantity: number }) => {
-    toast.promise(mutate.mutateAsync(data), {
-      loading: "Investing...",
-      success: "Investment successful!",
-      error: extract_message,
-    });
-  };
-  interface OUTRIGHTDATA {
-    paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
-    minimumInstallmentAmount?: number;
-    installmentDuraion?: number;
-  }
-  const form = useForm({
-    defaultValues: {
-      installment: false,
-      amount: 0,
-    },
-  });
-  // let payAmount = form.watch("amount");
 
   return (
     <PageLoader query={query}>
       {(data) => {
-        const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
-        // Calculate total price including Management Fees if they exist
+        const property = data.data as PROPERTY_TYPE;
         const totalPrice =
           property.totalPrice / 100 || property.basePrice / 100;
-        const percentage_totalPrice = (0 / 100) * totalPrice;
-        const system_charge_per = (0 / 100) * (property.basePrice / 100);
-
-        let breakdown: {
-          totalPrice: number;
-          additionalFees: AdditionalFee[];
-          additionalFeesTotal: number;
-          installmentAmount?: number;
-          installmentDuration?: number;
-          systemCharge: number;
-        } = {
-          totalPrice: totalPrice + system_charge_per,
+        const additionalFeesTotal = (property.additionalFees || []).reduce(
+          (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
+          0,
+        );
+        const breakdown = {
+          totalPrice,
           additionalFees: property.additionalFees || [],
-          additionalFeesTotal: (property.additionalFees || []).reduce(
-            (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
-            0,
-          ),
-          systemCharge: system_charge_per,
+          additionalFeesTotal,
         };
-
-        if (property.paymentOption === "INSTALLMENT") {
-          breakdown.installmentAmount = property.minimumInstallmentAmount;
-          //@ts-ignore
-          breakdown.installmentDuration = property.installmentDuration;
-        }
-        const payOption = property.paymentOption;
-        const payInstall = form.watch("installment");
-
-        const installOptions = property.paymentOption == "INSTALLMENT";
-        const payAmount = form.watch("amount");
-        useEffect(() => {
-          const installment_value = form.getValues("installment");
-
-          if (installOptions) {
-            form.setValue("installment", true);
-          }
-        }, [installOptions]);
-        useEffect(() => {
-          if (breakdown.installmentAmount) {
-            // form.setValue("amount", breakdown.installmentAmount / 100);
-            //
-            const charge = (0 / 100) * breakdown.installmentAmount;
-            let amout_total = (breakdown.installmentAmount + charge) / 100;
-            amout_total = Math.ceil(amout_total * 100) / 100;
-            form.setValue("amount", amout_total);
-          }
-        }, []);
+        const fullAmountKobo = Math.round(totalPrice * 100);
         return (
           <>
             <Modal
@@ -178,25 +92,8 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
-                      if (payInstall) {
-                        const amount = form.getValues("amount");
-                        return toast.promise(
-                          mutate.mutateAsync({
-                            amountPaid: amount * 100,
-                            quantity: 1,
-                          }),
-                          {
-                            loading: "Processing payment...",
-                            success: "Payment successful!",
-                            error: extract_message,
-                          },
-                        );
-                      }
                       toast.promise(
-                        mutate.mutateAsync({
-                          amountPaid: breakdown.totalPrice * 100,
-                          quantity: 1,
-                        }),
+                        mutate.mutateAsync({ amountPaid: fullAmountKobo }),
                         {
                           loading: "Processing payment...",
                           success: "Payment successful!",
@@ -206,14 +103,7 @@ function PropertyDetailPage() {
                     }}
                     disabled={mutate.isPending || property.availableUnits === 0}
                   >
-                    Confirm & Pay{" "}
-                    {payInstall
-                      ? payAmount
-                        ? formatCurrency(payAmount)
-                        : formatCurrency(
-                            property.minimumInstallmentAmount / 100,
-                          )
-                      : breakdown.totalPrice.toLocaleString()}
+                    Confirm & Pay {formatCurrency(breakdown.totalPrice)}
                   </Button>
                 </div>
               }
@@ -267,42 +157,6 @@ function PropertyDetailPage() {
                     </div>
                   </div>
 
-                  {property.paymentOption === "INSTALLMENT" && (
-                    <div className="p-3 bg-blue-50 rounded border border-blue-100">
-                      <p className="text-xs text-blue-700">
-                        You are paying the minimum installment of{" "}
-                        <span className="font-bold">
-                          {formatCurrency(
-                            property.minimumInstallmentAmount / 100,
-                          )}
-                        </span>
-                        . Remaining balance will be spread over{" "}
-                        {property.installmentDuration} months.
-                      </p>
-                    </div>
-                  )}
-                </div>
-                {installOptions && (
-                  <div className="flex gap-2 items-center mt-2">
-                    <input
-                      disabled={installOptions}
-                      {...form.register("installment")}
-                      type="checkbox"
-                      className="checkbox checkbox-sm"
-                    />
-                    <h2 className="text-sm">Pay Installmentally</h2>
-                  </div>
-                )}
-                {payInstall && (
-                  <div className="mt-4">
-                    {/*{JSON.stringify(property["installmentDuration"])}*/}
-                    <InstallMentForm
-                      form={form}
-                      duration={property["installmentDuration"]}
-                      minimumInvestmentAmount={breakdown.installmentAmount}
-                    />
-                  </div>
-                )}
               </section>
             </Modal>
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -318,18 +172,7 @@ function PropertyDetailPage() {
               <Button
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
-                onClick={() => {
-                  const amountToPay =
-                    property.paymentOption === "INSTALLMENT"
-                      ? property.minimumInvestmentAmount ||
-                        property.minimumInvestment ||
-                        totalPrice
-                      : totalPrice + breakdown.additionalFeesTotal;
-
-                  // methods.setValue("amountPaid", amountToPay);
-                  // methods.setValue("quantity", 1);
-                  showModal();
-                }}
+                onClick={showModal}
                 disabled={mutate.isPending || property.availableUnits === 0}
                 className="w-full sm:w-auto"
               >
@@ -474,52 +317,3 @@ function PropertyDetailPage() {
     </PageLoader>
   );
 }
-const InstallMentForm = ({
-  form,
-  minimumInvestmentAmount,
-  duration,
-}: {
-  form: any;
-  duration: string | number;
-  minimumInvestmentAmount: number;
-}) => {
-  const formatCurrency = (amount: number | null | undefined) => {
-    if (amount === null || amount === undefined) return "N/A";
-    const fixed = parseFloat(amount.toFixed(2));
-    return `₦ ${fixed.toLocaleString()}`;
-  };
-
-  return (
-    <div className="space-y-4 p-4 ring rounded-box fade">
-      <div className="flex items-end gap-2">
-        <div className="flex-1">
-          <SimpleInput
-            {...form.register("amount", {
-              valueAsNumber: true,
-              min: {
-                value: minimumInvestmentAmount,
-                message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
-              },
-            })}
-            label="Installment Amount"
-            type="number"
-            placeholder={formatCurrency(minimumInvestmentAmount)}
-            className="w-full"
-          />
-          {form.formState.errors.amount && (
-            <p className="text-red-500 text-sm mt-1">
-              {form.formState.errors.amount.message as string}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <p className=" text-gray-600/60 text-sm ">
-        <span className="font-semibold text-gray-900/60 ">
-          The balance payment can be made anytime without waiting for
-          installment date
-        </span>
-      </p>
-    </div>
-  );
-};

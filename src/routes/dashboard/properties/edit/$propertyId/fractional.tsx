@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { uploadImage } from "@/api/imageApi";
@@ -51,15 +51,7 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const form_data = data.data;
-          const exists = form_data?.minimumInstallmentAmount;
-          let new_data = edit_cleaner(form_data as any, ["pricePerShare"]);
-          if (exists) {
-            new_data = {
-              ...new_data,
-              //@ts-ignore
-              minimumInstallmentAmount: new_data.minimumInstallmentAmount / 100,
-            };
-          }
+          const new_data = edit_cleaner(form_data as any, ["pricePerShare"]);
           return (
             <>
               <FormField defaultValue={new_data} />
@@ -76,6 +68,7 @@ interface FractionalPropertyFormValues extends DocProps {
   pricePerShare: number;
   exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "MATURITY";
   minimumShares: number;
+  maxInvestors?: number | null;
 }
 function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   const docUpload = useDocumentUpload(defaultValue as any);
@@ -98,18 +91,12 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       ...defaultValue,
     },
   });
-  const paymentOption = useWatch({
-    control: methods.control,
-    name: "paymentOption",
-  });
   const mutation = useMutation({
     mutationFn: async (data: FractionalPropertyFormValues) => {
       let coverImageUrl = await get_cover_image(selectImageProps);
       if (!coverImageUrl) throw new Error("A cover image is required.");
       const allGallery = await gallery_helper(useImageProps);
-      // Handle Document Uploads
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
-      // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
       const totalPrice =
         Number(data.basePrice) +
@@ -119,18 +106,13 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
               0,
             )
           : 0);
-      console.log("data_b4_spread", JSON.parse(JSON.stringify(data)));
-      const keys = [
-        "pricePerShare",
-        "minimumInstallmentAmount",
-      ] as (typeof data)[string];
+      const keys = ["pricePerShare"] as (typeof data)[string];
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const calc_payload = calculate_fees(data, keys);
-      console.log("calc_base", calc_payload["basePrice"]);
 
       const payload = {
         ...calc_payload,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
@@ -138,9 +120,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          calc_payload["totalPrice"] / data.installmentDuration,
-        ),
+        maxInvestors: data.maxInvestors ?? null,
       };
       const new_payload = strip_fractional(payload);
       const response = await apiClient.patch(
@@ -260,17 +240,23 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       </LocalSelect>
                     )}
                   />
-                  {/*<Controller
-                    name="paymentOption"
+                  <Controller
+                    name="maxInvestors"
                     control={methods.control}
                     render={({ field }) => (
-                      <LocalSelect {...field} label="Payment Option">
-                        <option value="FULL_PAYMENT">Full Payment</option>
-                        <option value="INSTALLMENT">Installment</option>
-                      </LocalSelect>
+                      <SimpleInput
+                        {...field}
+                        value={field.value ?? ""}
+                        label="Max Investors (optional)"
+                        type="number"
+                        placeholder="Leave empty for no cap"
+                        onChange={(e) => {
+                          const val = (e as any).target?.value;
+                          field.onChange(val === "" ? null : Number(val));
+                        }}
+                      />
                     )}
                   />
-                 */}
                 </div>
               </section>
               {/* 5. Investment-Specific Details */}

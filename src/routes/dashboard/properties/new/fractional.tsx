@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { uploadImage } from "@/api/imageApi";
@@ -26,6 +26,7 @@ interface FractionalPropertyFormValues extends DocProps {
   pricePerShare: number;
   exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "MATURITY";
   minimumShares: number;
+  maxInvestors?: number | null;
 }
 function RouteComponent() {
   const methods = useForm<FractionalPropertyFormValues>({
@@ -33,12 +34,8 @@ function RouteComponent() {
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
       premiumProperty: false,
-      paymentOption: "FULL_PAYMENT",
+      maxInvestors: null,
     },
-  });
-  const paymentOption = useWatch({
-    control: methods.control,
-    name: "paymentOption",
   });
   const nav = useNavigate();
   const docUpload = useDocumentUpload();
@@ -96,10 +93,7 @@ function RouteComponent() {
       ];
       const uploadedDocUrls = await get_docs(docUploadProps);
       console.log("Uploaded Doc URLs:", uploadedDocUrls);
-      const keys = [
-        "pricePerShare",
-        "minimumInstallmentAmount",
-      ] as (typeof data)[string];
+      const keys = ["pricePerShare"] as (typeof data)[string];
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const new_payload = calculate_fees(data, keys);
 
@@ -112,9 +106,7 @@ function RouteComponent() {
           : null,
         videos: videoUrl || data.videos,
         ...uploadedDocUrls,
-        minimumInstallmentAmount: parseInt(
-          new_payload["totalPrice"] / data.installmentDuration,
-        ),
+        ...(data.maxInvestors != null && { maxInvestors: data.maxInvestors }),
       };
 
       // payload.basePrice = Number(payload.basePrice) || 0;
@@ -241,50 +233,23 @@ function RouteComponent() {
                       </LocalSelect>
                     )}
                   />
-                  {/*<Controller
-                    name="paymentOption"
+                  <Controller
+                    name="maxInvestors"
                     control={methods.control}
                     render={({ field }) => (
-                      <LocalSelect {...field} label="Payment Option">
-                        <option value="FULL_PAYMENT">Full Payment</option>
-                        <option value="INSTALLMENT">Installment</option>
-                      </LocalSelect>
-                    )}
-                  />*/}
-                  {paymentOption === "INSTALLMENT" && (
-                    <>
-                      <Controller
-                        name="installmentDuration"
-                        control={methods.control}
-                        render={({ field }) => (
-                          //@ts-ignore
-                          <SimpleInput
-                            {...field}
-                            type="number"
-                            label="Installment Duration (Months)"
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        )}
+                      <SimpleInput
+                        {...field}
+                        value={field.value ?? ""}
+                        label="Max Investors (optional)"
+                        type="number"
+                        placeholder="Leave empty for no cap"
+                        onChange={(e) => {
+                          const val = (e as any).target?.value;
+                          field.onChange(val === "" ? null : Number(val));
+                        }}
                       />
-                      {/*<Controller
-                        name="minimumInstallmentAmount"
-                        control={methods.control}
-                        render={({ field }) => (
-                          //@ts-ignore
-                          <SimpleInput
-                            {...field}
-                            type="number"
-                            label="minimum installment deposit"
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        )}
-                      />*/}
-                    </>
-                  )}
+                    )}
+                  />
                 </div>
               </section>
               {/* 5. Investment-Specific Details */}

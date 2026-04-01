@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useImages, useSelectImage } from "@/helpers/images";
@@ -36,26 +36,14 @@ interface AdditionalFee {
   amount: number;
 }
 
-interface OutrightPropertyFormValues extends DocProps {
-  paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
-  installmentDuration: number | null;
-  minimumInstallmentAmount: number | null;
-}
+interface OutrightPropertyFormValues extends DocProps {}
 
 function RouteComponent() {
   const methods = useForm<OutrightPropertyFormValues>({
     defaultValues: {
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
-      paymentOption: "FULL_PAYMENT",
-      installmentDuration: null,
-      minimumInstallmentAmount: null,
     },
-  });
-
-  const paymentOption = useWatch({
-    control: methods.control,
-    name: "paymentOption",
   });
 
   const selectProps = useSelectImage(null as any);
@@ -80,16 +68,13 @@ function RouteComponent() {
 
       let payload = {
         ...calc_payload,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          calc_payload["totalPrice"] / data.installmentDuration,
-        ),
       };
 
       const new_payload = strip_outright(payload);
