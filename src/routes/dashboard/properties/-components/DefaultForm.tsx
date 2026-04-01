@@ -110,6 +110,7 @@ export default function DefaultForm<T = any>({
   disableUnits,
   hideCompletion,
   disable_base_price,
+  base_price_label = "Base Price",
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -125,6 +126,7 @@ export default function DefaultForm<T = any>({
   hideCompletion?: boolean;
   disable_base_price?: boolean;
   disableUnits?: boolean;
+  base_price_label?: string;
 }) {
   const methods = form;
 
@@ -301,7 +303,7 @@ export default function DefaultForm<T = any>({
                   render={({ field }) => (
                     <SimpleInput
                       {...field}
-                      label="Base Price"
+                      label={base_price_label}
                       type="number"
                       icon={<span>₦</span>}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}

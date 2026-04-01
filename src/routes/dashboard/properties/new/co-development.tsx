@@ -134,17 +134,16 @@ function RouteComponent() {
       const new_payload = calculate_fees(data, keys);
       const payload = {
         ...new_payload,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        videos: videoUrl, // Add uploaded video URL to the payload
+        videos: videoUrl,
+        productCost: new_payload["basePrice"],
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          new_payload["totalPrice"] / data.installmentDuration,
-        ),
       };
+      delete payload.basePrice;
       delete payload.minimumInvestment;
       const response = await apiClient.post(
         "/admin/properties/codevelopment",
@@ -276,7 +275,7 @@ function RouteComponent() {
         form={form as any}
         selectImageProps={selectImageProps as any}
         disableCompletion={true}
-        // hideCompletion
+        base_price_label="Product Cost"
         mutation={mutation as any}
         onSubmit={onSubmit}
       >

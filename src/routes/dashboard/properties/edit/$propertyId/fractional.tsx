@@ -117,6 +117,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         galleryImages: allGallery,
         videos: videoUrl,
         totalPrice: totalPrice * 100,
+        productCost: calc_payload["basePrice"],
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,

@@ -125,16 +125,14 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const calculatedFees = calculate_fees(data, keys);
       const payload = {
         ...calculatedFees,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
+        productCost: calculatedFees["basePrice"],
         completionDate: data.completionDate
           ? new Date(data.completionDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          calculatedFees["totalPrice"] / data.installmentDuration,
-        ),
       };
       const new_payload = strip_co_dev(payload);
       const response = await apiClient.patch(
@@ -180,6 +178,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         useImagesProps={useImageProps}
         form={form as any}
         selectImageProps={selectImageProps as any}
+        base_price_label="Product Cost"
         mutation={mutation as any}
         onSubmit={onSubmit}
       >

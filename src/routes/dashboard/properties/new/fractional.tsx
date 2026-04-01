@@ -99,6 +99,7 @@ function RouteComponent() {
 
       const payload: any = {
         ...new_payload,
+        productCost: new_payload["basePrice"],
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         completionDate: data.completionDate

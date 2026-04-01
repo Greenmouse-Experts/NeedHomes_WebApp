@@ -24,6 +24,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
   // delete cleaned.installmentDuration;
+  delete cleaned.basePrice;
   delete cleaned.totalShares;
   delete cleaned.minimumInvestment;
   delete cleaned.pricePerShare;
@@ -68,6 +69,7 @@ export const strip_land_banking = (data: Record<string, any>) => {
 
 export const strip_fractional = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
+  delete cleaned.basePrice;
   delete cleaned.availablePlots;
   delete cleaned.pricePerPlot;
   delete cleaned.holdingPeriod;
