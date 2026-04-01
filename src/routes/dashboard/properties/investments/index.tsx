@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { usePagination } from "@/helpers/pagination";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Filter, Printer, Search } from "lucide-react";
 import { useState } from "react";
 
@@ -114,6 +114,7 @@ const actions: Actions[] = [
 ];
 
 function RouteComponent() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const props = usePagination();
   const query = useQuery<ApiResponse<Investment[]>>({
@@ -186,6 +187,12 @@ function RouteComponent() {
               columns={columns}
               data={filteredData}
               actions={actions}
+              onRowClick={(item) =>
+                navigate({
+                  to: "/dashboard/properties/investments/$investmentId",
+                  params: { investmentId: item.id },
+                })
+              }
             />
           );
         }}

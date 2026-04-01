@@ -17,10 +17,12 @@ interface CustomTableProps {
   ring?: boolean;
   totalCount?: number;
   paginationProps?: ReturnType<typeof usePagination>;
+  onRowClick?: (item: any) => void;
 }
 
 export default function CustomTable(props: CustomTableProps) {
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const { onRowClick } = props;
   const pagination = props?.paginationProps;
   const page = pagination?.page || 1;
   const pageSize = pagination?.pageSize || 10;
@@ -66,7 +68,8 @@ export default function CustomTable(props: CustomTableProps) {
                   return (
                     <tr
                       key={rowIdx}
-                      className="hover:bg-base-300 border-base-300"
+                      className={`hover:bg-base-300 border-base-300 ${onRowClick ? "cursor-pointer" : ""}`}
+                      onClick={() => onRowClick?.(item)}
                     >
                       {props.columns?.map((col, colIdx) => (
                         <td
