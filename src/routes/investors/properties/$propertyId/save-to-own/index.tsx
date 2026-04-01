@@ -332,7 +332,8 @@ function PropertyDetailPage() {
                       <span className="font-bold">
                         {formatCurrency(minimumInstallment)}
                       </span>{" "}
-                      ({savingsDuration} months, {savingsFrequency.toLowerCase()})
+                      ({savingsDuration} months,{" "}
+                      {savingsFrequency.toLowerCase()})
                     </p>
                   </div>
                 </div>
