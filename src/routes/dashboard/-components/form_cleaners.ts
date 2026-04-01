@@ -135,5 +135,8 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.published;
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
+  delete cleaned.savingsFrequency;
+  delete cleaned.savingsDuration;
+
   return cleaned;
 };
