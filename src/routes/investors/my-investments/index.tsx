@@ -4,7 +4,7 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { type Actions } from "@/components/tables/pop-up";
 import { usePagination } from "@/helpers/pagination";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { TrendingUp, Filter, ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
 import InvStatistics from "./-components/InvStatistics";
@@ -42,6 +42,7 @@ interface Investment {
 }
 
 function RouteComponent() {
+  const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
   const paginationProps = usePagination();
@@ -227,6 +228,9 @@ function RouteComponent() {
                 //@ts-ignore
                 data={investments}
                 columns={columns}
+                onRowClick={(item) =>
+                  navigate({ to: "/investors/my-investments/$investmentId", params: { investmentId: item.id } })
+                }
                 actions={actions}
                 paginationProps={paginationProps}
                 totalCount={data.data.length}
