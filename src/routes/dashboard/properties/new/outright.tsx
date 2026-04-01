@@ -1,22 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
-import { Trash2, Layers, Home } from "lucide-react";
+import { Layers, Home } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import type { DocProps } from "@/types/form";
 import { useDocumentUpload } from "../../-components/DocumentUpload";
-import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
+import { useVideoUpload } from "../../-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
-import { get_docs } from "./fractional";
-import { uploadFile } from "@/api/fileApi";
 import {
   doc_helper,
   gallery_helper,
@@ -124,31 +119,7 @@ function RouteComponent() {
             mutation={mutation as any}
             onSubmit={onSubmit}
           >
-            <>
-              <section className="space-y-6">
-                <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                    <Layers size={20} />
-                  </div>
-                  <h2 className="text-lg font-bold">
-                    4. Outright Purchase Details
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/*<Controller
-                      name="paymentOption"
-                      control={methods.control}
-                      render={({ field }) => (
-                        <LocalSelect {...field} label="Payment Option">
-                          <option value="FULL_PAYMENT">Full Payment</option>
-                          <option value="INSTALLMENT">Installment</option>
-                        </LocalSelect>
-                      )}
-                    />*/}
-                </div>
-              </section>
-            </>
+            <></>
           </DefaultForm>
         </div>
       </div>

@@ -215,31 +215,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             mutation={mutation as any}
             onSubmit={onSubmit}
           >
-            <>
-              <section className="space-y-6">
-                <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                    <Layers size={20} />
-                  </div>
-                  <h2 className="text-lg font-bold">
-                    4. Outright Purchase Details
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/*<Controller
-                    name="paymentOption"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <LocalSelect {...field} label="Payment Option">
-                        <option value="FULL_PAYMENT">Full Payment</option>
-                        <option value="INSTALLMENT">Installment</option>
-                      </LocalSelect>
-                    )}
-                  />*/}
-                </div>
-              </section>
-            </>
+            <></>
           </DefaultForm>
         </div>
       </div>
