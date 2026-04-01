@@ -156,7 +156,7 @@ function PropertyDetailPage() {
                       </span>
                     </div>
                   </div>
-
+                </div>
               </section>
             </Modal>
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">

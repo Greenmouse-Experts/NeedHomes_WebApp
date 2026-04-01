@@ -210,7 +210,7 @@ function RouteComponent() {
                     />
                   )}
                 />
-                <Controller
+                {/*<Controller
                   name="savingsFrequency"
                   control={methods.control}
                   render={({ field }) => (
@@ -220,11 +220,11 @@ function RouteComponent() {
                       <option value="MONTHLY">Monthly</option>
                     </LocalSelect>
                   )}
-                />
+                />*/}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
+                {/*<Controller
                   name="savingsDuration"
                   control={methods.control}
                   render={({ field }) => (
@@ -236,7 +236,7 @@ function RouteComponent() {
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
-                />
+                />*/}
                 {/*<Controller
                   name="paymentOption"
                   control={methods.control}
