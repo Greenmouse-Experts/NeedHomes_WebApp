@@ -206,7 +206,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                     />
                   )}
                 />
-                <Controller
+                {/*<Controller
                   name="savingsFrequency"
                   control={methods.control}
                   render={({ field }) => (
@@ -216,11 +216,11 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       <option value="MONTHLY">Monthly</option>
                     </LocalSelect>
                   )}
-                />
+                />*/}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
+                {/*<Controller
                   name="savingsDuration"
                   control={methods.control}
                   render={({ field }) => (
@@ -232,7 +232,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
-                />
+                />*/}
                 {/*<Controller
                   name="paymentOption"
                   control={methods.control}
