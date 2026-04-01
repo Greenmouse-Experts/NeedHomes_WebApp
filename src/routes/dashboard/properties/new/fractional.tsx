@@ -241,7 +241,7 @@ function RouteComponent() {
                       </LocalSelect>
                     )}
                   />
-                  <Controller
+                  {/*<Controller
                     name="paymentOption"
                     control={methods.control}
                     render={({ field }) => (
@@ -250,7 +250,7 @@ function RouteComponent() {
                         <option value="INSTALLMENT">Installment</option>
                       </LocalSelect>
                     )}
-                  />
+                  />*/}
                   {paymentOption === "INSTALLMENT" && (
                     <>
                       <Controller

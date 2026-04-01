@@ -227,7 +227,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Controller
+                  {/*<Controller
                     name="paymentOption"
                     control={methods.control}
                     render={({ field }) => (
@@ -236,41 +236,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                         <option value="INSTALLMENT">Installment</option>
                       </LocalSelect>
                     )}
-                  />
-                  {paymentOption === "INSTALLMENT" && (
-                    <>
-                      <Controller
-                        name="installmentDuration"
-                        control={methods.control}
-                        render={({ field }) => (
-                          //@ts-ignore
-                          <SimpleInput
-                            {...field}
-                            type="number"
-                            label="Installment Duration (Months)"
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        )}
-                      />
-                      {/*<Controller
-                        name="minimumInstallmentAmount"
-                        control={methods.control}
-                        render={({ field }) => (
-                          //@ts-ignore
-                          <SimpleInput
-                            {...field}
-                            type="number"
-                            label="minimum installment deposit"
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        )}
-                      />*/}
-                    </>
-                  )}
+                  />*/}
                 </div>
               </section>
             </>

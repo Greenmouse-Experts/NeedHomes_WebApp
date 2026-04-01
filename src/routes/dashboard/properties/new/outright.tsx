@@ -151,50 +151,16 @@ function RouteComponent() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Controller
-                    name="paymentOption"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <LocalSelect {...field} label="Payment Option">
-                        <option value="FULL_PAYMENT">Full Payment</option>
-                        <option value="INSTALLMENT">Installment</option>
-                      </LocalSelect>
-                    )}
-                  />
-                  {paymentOption === "INSTALLMENT" && (
-                    <>
-                      <Controller
-                        name="installmentDuration"
-                        control={methods.control}
-                        render={({ field }) => (
-                          //@ts-ignore
-                          <SimpleInput
-                            {...field}
-                            type="number"
-                            label="Installment Duration (Months)"
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        )}
-                      />
-                      {/*<Controller
-                        name="minimumInstallmentAmount"
-                        control={methods.control}
-                        render={({ field }) => (
-                          //@ts-ignore
-                          <SimpleInput
-                            {...field}
-                            type="number"
-                            label="minimum installment deposit"
-                            onChange={(e) =>
-                              field.onChange(e.target.valueAsNumber)
-                            }
-                          />
-                        )}
-                      />*/}
-                    </>
-                  )}
+                  {/*<Controller
+                      name="paymentOption"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <LocalSelect {...field} label="Payment Option">
+                          <option value="FULL_PAYMENT">Full Payment</option>
+                          <option value="INSTALLMENT">Installment</option>
+                        </LocalSelect>
+                      )}
+                    />*/}
                 </div>
               </section>
             </>
