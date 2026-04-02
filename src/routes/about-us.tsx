@@ -374,7 +374,7 @@ function RouteComponent() {
                   "HelenGray's Court offers luxurious living spaces blending modern style with elegance.",
               },
               {
-                img: undefined,
+                img: "/mandys.jpeg",
                 title: "MANDY'S COURT",
                 description:
                   "Considering a lucrative home investment, seize the opportunity and keys to your new home now.",
