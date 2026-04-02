@@ -228,9 +228,7 @@ function PropertyDetailPage() {
                                 </span>
                                 <span className="text-sm font-bold">
                                   {formatCurrency(
-                                    totalCost +
-                                      breakdown.systemCharge +
-                                      breakdown.additionalFeesTotal,
+                                    totalCost + breakdown.additionalFeesTotal,
                                   )}
                                 </span>
                               </div>
@@ -261,7 +259,7 @@ function PropertyDetailPage() {
                         </ul>
                       </section>
                     )}
-
+                    {/*
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">
                         System Charge: {0}%
@@ -269,7 +267,7 @@ function PropertyDetailPage() {
                       <span className="text-sm font-medium">
                         {formatCurrency(breakdown.systemCharge)}
                       </span>
-                    </div>
+                    </div>*/}
 
                     {/*<div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
@@ -280,7 +278,6 @@ function PropertyDetailPage() {
                       </span>
                     </div>*/}
                   </div>
-
                 </div>
               </section>
             </Modal>
