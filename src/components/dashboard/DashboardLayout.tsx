@@ -83,6 +83,11 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
         icon: HomeIcon,
       },
       {
+        label: "Exit Requests",
+        to: "/dashboard/exit-requests",
+        icon: LogOut,
+      },
+      {
         label: "Promotions",
         to: "/dashboard/properties/promotions",
         icon: HomeIcon,

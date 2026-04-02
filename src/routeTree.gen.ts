@@ -110,6 +110,7 @@ import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/p
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications/index'
 import { Route as DashboardJobsIndexRouteImport } from './routes/dashboard/jobs/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
+import { Route as DashboardExitRequestsIndexRouteImport } from './routes/dashboard/exit-requests/index'
 import { Route as DashboardChatIndexRouteImport } from './routes/dashboard/chat/index'
 import { Route as DashboardBlogsIndexRouteImport } from './routes/dashboard/blogs/index'
 import { Route as CareersJobIdIndexRouteImport } from './routes/careers/jobId/index'
@@ -156,6 +157,7 @@ import { Route as DashboardJobsCategoriesIndexRouteImport } from './routes/dashb
 import { Route as DashboardJobsIdIndexRouteImport } from './routes/dashboard/jobs/$id/index'
 import { Route as DashboardInvestorsCorporateIndexRouteImport } from './routes/dashboard/investors/corporate/index'
 import { Route as DashboardInvestorsInvestorIdIndexRouteImport } from './routes/dashboard/investors/$investorId/index'
+import { Route as DashboardExitRequestsExitRequestIdIndexRouteImport } from './routes/dashboard/exit-requests/$exitRequestId/index'
 import { Route as DashboardBlogsCreateIndexRouteImport } from './routes/dashboard/blogs/create/index'
 import { Route as DashboardBlogsCategoriesIndexRouteImport } from './routes/dashboard/blogs/categories/index'
 import { Route as DeveloperPropertiesNewSaveToOwnRouteImport } from './routes/developer/properties/new/save-to-own'
@@ -731,6 +733,12 @@ const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardInvestorsRouteRoute,
 } as any)
+const DashboardExitRequestsIndexRoute =
+  DashboardExitRequestsIndexRouteImport.update({
+    id: '/exit-requests/',
+    path: '/exit-requests/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardChatIndexRoute = DashboardChatIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -998,6 +1006,12 @@ const DashboardInvestorsInvestorIdIndexRoute =
     id: '/$investorId/',
     path: '/$investorId/',
     getParentRoute: () => DashboardInvestorsRouteRoute,
+  } as any)
+const DashboardExitRequestsExitRequestIdIndexRoute =
+  DashboardExitRequestsExitRequestIdIndexRouteImport.update({
+    id: '/exit-requests/$exitRequestId/',
+    path: '/exit-requests/$exitRequestId/',
+    getParentRoute: () => DashboardRouteRoute,
   } as any)
 const DashboardBlogsCreateIndexRoute =
   DashboardBlogsCreateIndexRouteImport.update({
@@ -1386,6 +1400,7 @@ export interface FileRoutesByFullPath {
   '/careers/jobId/': typeof CareersJobIdIndexRoute
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
+  '/dashboard/exit-requests/': typeof DashboardExitRequestsIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -1430,6 +1445,7 @@ export interface FileRoutesByFullPath {
   '/developer/properties/new/save-to-own': typeof DeveloperPropertiesNewSaveToOwnRoute
   '/dashboard/blogs/categories/': typeof DashboardBlogsCategoriesIndexRoute
   '/dashboard/blogs/create/': typeof DashboardBlogsCreateIndexRoute
+  '/dashboard/exit-requests/$exitRequestId/': typeof DashboardExitRequestsExitRequestIdIndexRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/jobs/$id/': typeof DashboardJobsIdIndexRoute
@@ -1555,6 +1571,7 @@ export interface FileRoutesByTo {
   '/careers/jobId': typeof CareersJobIdIndexRoute
   '/dashboard/blogs': typeof DashboardBlogsIndexRoute
   '/dashboard/chat': typeof DashboardChatIndexRoute
+  '/dashboard/exit-requests': typeof DashboardExitRequestsIndexRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/jobs': typeof DashboardJobsIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
@@ -1599,6 +1616,7 @@ export interface FileRoutesByTo {
   '/developer/properties/new/save-to-own': typeof DeveloperPropertiesNewSaveToOwnRoute
   '/dashboard/blogs/categories': typeof DashboardBlogsCategoriesIndexRoute
   '/dashboard/blogs/create': typeof DashboardBlogsCreateIndexRoute
+  '/dashboard/exit-requests/$exitRequestId': typeof DashboardExitRequestsExitRequestIdIndexRoute
   '/dashboard/investors/$investorId': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/jobs/$id': typeof DashboardJobsIdIndexRoute
@@ -1753,6 +1771,7 @@ export interface FileRoutesById {
   '/careers/jobId/': typeof CareersJobIdIndexRoute
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
+  '/dashboard/exit-requests/': typeof DashboardExitRequestsIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -1797,6 +1816,7 @@ export interface FileRoutesById {
   '/developer/properties/new/save-to-own': typeof DeveloperPropertiesNewSaveToOwnRoute
   '/dashboard/blogs/categories/': typeof DashboardBlogsCategoriesIndexRoute
   '/dashboard/blogs/create/': typeof DashboardBlogsCreateIndexRoute
+  '/dashboard/exit-requests/$exitRequestId/': typeof DashboardExitRequestsExitRequestIdIndexRoute
   '/dashboard/investors/$investorId/': typeof DashboardInvestorsInvestorIdIndexRoute
   '/dashboard/investors/corporate/': typeof DashboardInvestorsCorporateIndexRoute
   '/dashboard/jobs/$id/': typeof DashboardJobsIdIndexRoute
@@ -1952,6 +1972,7 @@ export interface FileRouteTypes {
     | '/careers/jobId/'
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
+    | '/dashboard/exit-requests/'
     | '/dashboard/investors/'
     | '/dashboard/jobs/'
     | '/dashboard/notifications/'
@@ -1996,6 +2017,7 @@ export interface FileRouteTypes {
     | '/developer/properties/new/save-to-own'
     | '/dashboard/blogs/categories/'
     | '/dashboard/blogs/create/'
+    | '/dashboard/exit-requests/$exitRequestId/'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/jobs/$id/'
@@ -2121,6 +2143,7 @@ export interface FileRouteTypes {
     | '/careers/jobId'
     | '/dashboard/blogs'
     | '/dashboard/chat'
+    | '/dashboard/exit-requests'
     | '/dashboard/investors'
     | '/dashboard/jobs'
     | '/dashboard/notifications'
@@ -2165,6 +2188,7 @@ export interface FileRouteTypes {
     | '/developer/properties/new/save-to-own'
     | '/dashboard/blogs/categories'
     | '/dashboard/blogs/create'
+    | '/dashboard/exit-requests/$exitRequestId'
     | '/dashboard/investors/$investorId'
     | '/dashboard/investors/corporate'
     | '/dashboard/jobs/$id'
@@ -2318,6 +2342,7 @@ export interface FileRouteTypes {
     | '/careers/jobId/'
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
+    | '/dashboard/exit-requests/'
     | '/dashboard/investors/'
     | '/dashboard/jobs/'
     | '/dashboard/notifications/'
@@ -2362,6 +2387,7 @@ export interface FileRouteTypes {
     | '/developer/properties/new/save-to-own'
     | '/dashboard/blogs/categories/'
     | '/dashboard/blogs/create/'
+    | '/dashboard/exit-requests/$exitRequestId/'
     | '/dashboard/investors/$investorId/'
     | '/dashboard/investors/corporate/'
     | '/dashboard/jobs/$id/'
@@ -3172,6 +3198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsIndexRouteImport
       parentRoute: typeof DashboardInvestorsRouteRoute
     }
+    '/dashboard/exit-requests/': {
+      id: '/dashboard/exit-requests/'
+      path: '/exit-requests'
+      fullPath: '/dashboard/exit-requests/'
+      preLoaderRoute: typeof DashboardExitRequestsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/chat/': {
       id: '/dashboard/chat/'
       path: '/'
@@ -3493,6 +3526,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/investors/$investorId/'
       preLoaderRoute: typeof DashboardInvestorsInvestorIdIndexRouteImport
       parentRoute: typeof DashboardInvestorsRouteRoute
+    }
+    '/dashboard/exit-requests/$exitRequestId/': {
+      id: '/dashboard/exit-requests/$exitRequestId/'
+      path: '/exit-requests/$exitRequestId'
+      fullPath: '/dashboard/exit-requests/$exitRequestId/'
+      preLoaderRoute: typeof DashboardExitRequestsExitRequestIdIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/blogs/create/': {
       id: '/dashboard/blogs/create/'
@@ -4197,7 +4237,9 @@ interface DashboardRouteRouteChildren {
   DashboardPartnersRoute: typeof DashboardPartnersRouteWithChildren
   DashboardWaitlistRoute: typeof DashboardWaitlistRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardExitRequestsIndexRoute: typeof DashboardExitRequestsIndexRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
+  DashboardExitRequestsExitRequestIdIndexRoute: typeof DashboardExitRequestsExitRequestIdIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
@@ -4220,7 +4262,10 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardPartnersRoute: DashboardPartnersRouteWithChildren,
   DashboardWaitlistRoute: DashboardWaitlistRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardExitRequestsIndexRoute: DashboardExitRequestsIndexRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
+  DashboardExitRequestsExitRequestIdIndexRoute:
+    DashboardExitRequestsExitRequestIdIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
