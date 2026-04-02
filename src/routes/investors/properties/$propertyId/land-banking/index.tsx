@@ -545,21 +545,6 @@ function PropertyDetailPage() {
                       )}
 
                       {/* System Charges */}
-                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          System Charges
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-sm text-gray-600">
-                              Platform Charge
-                            </p>
-                            <p className="text-lg font-semibold text-gray-900">
-                              {0}%
-                            </p>
-                          </div>
-                        </div>
-                      </div>
 
                       {/* Management Fees */}
                       <AdditionalFees fees={property.additionalFees} />

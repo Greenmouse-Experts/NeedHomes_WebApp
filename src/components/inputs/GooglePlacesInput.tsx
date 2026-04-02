@@ -53,7 +53,7 @@ function loadGoogleMapsScript(): Promise<void> {
 
   scriptLoadPromise = new Promise((resolve, reject) => {
     const apiKey = import.meta.env.VITE_GREEN_MOUSE_KEY;
-    // console.log(apiKey, "api_key");
+    console.log(apiKey, "api_key");
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
     script.async = true;
