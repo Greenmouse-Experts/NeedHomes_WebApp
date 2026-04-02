@@ -191,7 +191,7 @@ function PropertyDetailPage() {
                           amountPaid: minimumInstallment * 100,
                           quantity: 1,
                           savingsFrequency,
-                          savingsDuration,
+                          savingsDuration: Number(savingsDuration),
                         }),
                         {
                           loading: "Processing payment...",
@@ -307,7 +307,7 @@ function PropertyDetailPage() {
                         <label
                           key={dur}
                           className={`flex-1 flex items-center justify-center gap-1 p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
-                            savingsDuration === dur
+                            Number(savingsDuration) === dur
                               ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
                               : "border-gray-200 text-gray-600 hover:border-gray-300"
                           }`}
@@ -320,7 +320,7 @@ function PropertyDetailPage() {
                               valueAsNumber: true,
                             })}
                           />
-                          {dur}m
+                          {dur}{savingsFrequency === "WEEKLY" ? "w" : "m"}
                         </label>
                       ))}
                     </div>
@@ -332,7 +332,8 @@ function PropertyDetailPage() {
                       <span className="font-bold">
                         {formatCurrency(minimumInstallment)}
                       </span>{" "}
-                      ({savingsDuration} months,{" "}
+                      ({savingsDuration}{" "}
+                      {savingsFrequency === "WEEKLY" ? "weeks" : "months"},{" "}
                       {savingsFrequency.toLowerCase()})
                     </p>
                   </div>

@@ -1,3 +1,4 @@
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/investors/properties")({
@@ -6,8 +7,8 @@ export const Route = createFileRoute("/investors/properties")({
 
 function PropertiesLayout() {
   return (
-    <div className="space-y-6">
+    <ThemeProvider className="space-y-6">
       <Outlet />
-    </div>
+    </ThemeProvider>
   );
 }
