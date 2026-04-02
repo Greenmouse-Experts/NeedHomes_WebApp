@@ -199,7 +199,7 @@ function RouteComponent() {
                     render={({ field }) => (
                       <SimpleInput
                         {...field}
-                        label="Price Per Share"
+                        label="Price Per Slot"
                         type="number"
                         icon={<span>₦</span>}
                         onChange={(e) =>

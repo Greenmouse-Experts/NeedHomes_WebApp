@@ -139,7 +139,7 @@ export default function InvestmentDetails({
             value={property?.totalShares?.toLocaleString() || "N/A"}
           />
           <DetailRow
-            label="Price Per Share"
+            label="Price Per Slot"
             value={`₦${(property?.pricePerShare / 100).toLocaleString() || "0"}`}
           />
           <DetailRow

@@ -25,9 +25,7 @@ import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
 
-export const Route = createFileRoute(
-  "/properties/$propertyId/default/",
-)({
+export const Route = createFileRoute("/properties/$propertyId/default/")({
   component: PropertyDetailPage,
 });
 
@@ -176,7 +174,15 @@ function PropertyDetailPage() {
                     Cancel
                   </Button>
                   {!auth?.accessToken ? (
-                    <Button variant="primary" onClick={() => navigate({ to: "/login", search: { redirect: window.location.pathname } })}>
+                    <Button
+                      variant="primary"
+                      onClick={() =>
+                        navigate({
+                          to: "/login",
+                          search: { redirect: window.location.pathname },
+                        })
+                      }
+                    >
                       Sign In to Invest
                     </Button>
                   ) : (
@@ -184,7 +190,10 @@ function PropertyDetailPage() {
                       variant="primary"
                       onClick={() => {
                         if (auth?.user?.accountType === "INVESTOR") {
-                          return navigate({ to: "/investors/properties/$propertyId/default/", params: { propertyId } });
+                          return navigate({
+                            to: "/investors/properties/$propertyId/default/",
+                            params: { propertyId },
+                          });
                         }
                         if (payInstall) {
                           const amount = form.getValues("amount");
@@ -447,7 +456,7 @@ function PropertyDetailPage() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">
-                                Price Per Share
+                                Price Per Slot
                               </p>
                               <p className="text-lg font-semibold text-(--color-orange)">
                                 {formatCurrency(property.pricePerShare / 100)}

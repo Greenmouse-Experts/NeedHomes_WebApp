@@ -138,7 +138,7 @@ function PropertyDetailPage() {
                       <div className="p-2 space-y-2">
                         <div className="pt-2  border-gray-200 flex justify-between items-center">
                           <span className="text-sm  text-gray-900">
-                            Price per share
+                            Price Per Slot
                           </span>
                           <span className="text-sm font-bold">
                             {formatCurrency(breakdown.pricePerShare / 100)}
@@ -392,7 +392,7 @@ function PropertyDetailPage() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">
-                                Price Per Share
+                                Price Per Slot
                               </p>
                               <p className="text-lg font-semibold text-(--color-orange)">
                                 {formatCurrency(property.pricePerShare / 100)}

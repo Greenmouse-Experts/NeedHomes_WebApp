@@ -8,7 +8,13 @@ const keys = [
   "SAVE_TO_OWN",
 ] as const;
 
-function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
       <span className="text-sm text-gray-600">{label}</span>
@@ -39,34 +45,70 @@ export default function InvestmentDetails({
     case "LAND_BANKING":
       return (
         <DetailsCard>
-          <DetailRow label="Available Plots" value={property.availablePlots || 0} />
-          <DetailRow label="Price Per Plot" value={`₦${property.pricePerPlot?.toLocaleString() || "0"}`} />
-          <DetailRow label="Holding Period (Months)" value={property.holdingPeriod || "N/A"} />
-          <DetailRow label="Buy-Back Option (Guaranteed Exit)" value={property.buyBackOption ? "Yes" : "No"} />
-          <DetailRow label="Payment Option" value={property.paymentOption || "N/A"} />
+          <DetailRow
+            label="Available Plots"
+            value={property.availablePlots || 0}
+          />
+          <DetailRow
+            label="Price Per Plot"
+            value={`₦${property.pricePerPlot?.toLocaleString() || "0"}`}
+          />
+          <DetailRow
+            label="Holding Period (Months)"
+            value={property.holdingPeriod || "N/A"}
+          />
+          <DetailRow
+            label="Buy-Back Option (Guaranteed Exit)"
+            value={property.buyBackOption ? "Yes" : "No"}
+          />
+          <DetailRow
+            label="Payment Option"
+            value={property.paymentOption || "N/A"}
+          />
         </DetailsCard>
       );
 
     case "OUTRIGHT_PURCHASE":
       return (
         <DetailsCard>
-          <DetailRow label="Payment Option" value={property.paymentOption || "N/A"} />
-          <DetailRow label="Min. Installment" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
-          <DetailRow label="Installment Duration" value={`${property.installmentDuration || "N/A"} Months`} />
+          <DetailRow
+            label="Payment Option"
+            value={property.paymentOption || "N/A"}
+          />
+          <DetailRow
+            label="Min. Installment"
+            value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
+          />
+          <DetailRow
+            label="Installment Duration"
+            value={`${property.installmentDuration || "N/A"} Months`}
+          />
         </DetailsCard>
       );
 
     case "SAVE_TO_OWN":
       return (
         <DetailsCard>
-          <DetailRow label="Savings Frequency" value={property.savingsFrequency || "N/A"} />
-          <DetailRow label="Target Property Price" value={`₦${(property.targetPropertyPrice / 100)?.toLocaleString() || "0"}`} />
-          <DetailRow label="Payment Option" value={property.paymentOption || "N/A"} />
+          <DetailRow
+            label="Savings Frequency"
+            value={property.savingsFrequency || "N/A"}
+          />
+          <DetailRow
+            label="Target Property Price"
+            value={`₦${(property.targetPropertyPrice / 100)?.toLocaleString() || "0"}`}
+          />
+          <DetailRow
+            label="Payment Option"
+            value={property.paymentOption || "N/A"}
+          />
           <DetailRow
             label="Installment Duration"
             value={`${property.installmentDuration || "N/A"} ${property.savingsFrequency || ""}`}
           />
-          <DetailRow label="minimum installment deposit" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
+          <DetailRow
+            label="minimum installment deposit"
+            value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
+          />
         </DetailsCard>
       );
 
@@ -74,36 +116,65 @@ export default function InvestmentDetails({
       return (
         <DetailsCard>
           <DetailRow label="Exit Strategy" value={property.exitRule || "N/A"} />
-          <DetailRow label="Payment Option" value={property.paymentOption || "N/A"} />
-          <DetailRow label="Installment Duration" value={`${property.installmentDuration || "N/A"} Months`} />
-          <DetailRow label="minimum installment deposit" value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`} />
+          <DetailRow
+            label="Payment Option"
+            value={property.paymentOption || "N/A"}
+          />
+          <DetailRow
+            label="Installment Duration"
+            value={`${property.installmentDuration || "N/A"} Months`}
+          />
+          <DetailRow
+            label="minimum installment deposit"
+            value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
+          />
         </DetailsCard>
       );
 
     case "FRACTIONAL_OWNERSHIP":
       return (
         <DetailsCard>
-          <DetailRow label="Total Shares" value={property?.totalShares?.toLocaleString() || "N/A"} />
-          <DetailRow label="Price Per Share" value={`₦${(property?.pricePerShare / 100).toLocaleString() || "0"}`} />
-          <DetailRow label="Payment Option" value={property?.paymentOption || "N/A"} />
+          <DetailRow
+            label="Total Shares"
+            value={property?.totalShares?.toLocaleString() || "N/A"}
+          />
+          <DetailRow
+            label="Price Per Slot"
+            value={`₦${(property?.pricePerShare / 100).toLocaleString() || "0"}`}
+          />
+          <DetailRow
+            label="Payment Option"
+            value={property?.paymentOption || "N/A"}
+          />
           {/* @ts-ignore */}
-          <DetailRow label="Platform Charge" value={`${property?.systemCharges?.platformChargePercentage || 0}%`} />
+          <DetailRow
+            label="Platform Charge"
+            value={`${property?.systemCharges?.platformChargePercentage || 0}%`}
+          />
         </DetailsCard>
       );
 
     default:
       return (
         <DetailsCard>
-          <DetailRow label="Min. Investment" value={`₦${property.minimumInvestment?.toLocaleString() || "N/A"}`} />
+          <DetailRow
+            label="Min. Investment"
+            value={`₦${property.minimumInvestment?.toLocaleString() || "N/A"}`}
+          />
           <DetailRow label="Exit Window" value={property.exitWindow} />
           {property.profitSharingRatio && (
             <div className="pt-3 border-t border-gray-200">
               <span className="text-sm text-gray-600">Profit Sharing:</span>
-              <p className="text-sm font-medium text-gray-900 mt-1">{property.profitSharingRatio}</p>
+              <p className="text-sm font-medium text-gray-900 mt-1">
+                {property.profitSharingRatio}
+              </p>
             </div>
           )}
           {/* @ts-ignore */}
-          <DetailRow label="Platform Charge" value={`${property.systemCharges?.platformChargePercentage || 0}%`} />
+          <DetailRow
+            label="Platform Charge"
+            value={`${property.systemCharges?.platformChargePercentage || 0}%`}
+          />
         </DetailsCard>
       );
   }

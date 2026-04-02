@@ -320,7 +320,8 @@ function PropertyDetailPage() {
                               valueAsNumber: true,
                             })}
                           />
-                          {dur}{savingsFrequency === "WEEKLY" ? "w" : "m"}
+                          {dur}
+                          {savingsFrequency === "WEEKLY" ? "w" : "m"}
                         </label>
                       ))}
                     </div>
@@ -460,7 +461,7 @@ function PropertyDetailPage() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">
-                                Price Per Share
+                                Price Per Slot
                               </p>
                               <p className="text-lg font-semibold text-(--color-orange)">
                                 {formatCurrency(property.pricePerShare / 100)}
