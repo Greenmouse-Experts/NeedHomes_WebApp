@@ -166,7 +166,6 @@ export default function ExitStrategy({
       {(propData) => {
         const property = propData.data;
         if (!property) return null;
-
         return (
           <>
             <Modal
