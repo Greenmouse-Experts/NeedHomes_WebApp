@@ -5,6 +5,7 @@ import { uploadFile } from "@/api/fileApi";
 import type { useVideoUpload } from "./VideoUpload";
 import type { DocProps } from "@/types/form";
 import type { AdditionalFee } from "@/types/property";
+import type { TitleDocument } from "./DocumentUpload";
 
 export const get_cover_image = async (
   selectImageProps: ReturnType<typeof useSelectImage>,
@@ -44,11 +45,40 @@ export const doc_helper = async (
     }
   }
 
+  // propertyDocument
+  let propertyDocumentUrl: string | undefined;
+  const pd = documents.propertyDocument;
+  const pdPrev = prevDocs.propertyDocument;
+  if (pd instanceof File) {
+    propertyDocumentUrl = await uploadFile(pd);
+  } else if (typeof pd === "string") {
+    propertyDocumentUrl = pd;
+  } else if (typeof pdPrev === "string") {
+    propertyDocumentUrl = pdPrev;
+  }
+
+  // propertyTitleDocuments
+  const uploadedTitleDocs: { type: string; documentUrl: string }[] = [];
+  for (const td of (data.titleDocuments as TitleDocument[])) {
+    if (!td.type) continue;
+    let url: string | undefined;
+    if (td.file instanceof File) {
+      url = await uploadFile(td.file);
+    } else if (typeof td.file === "string") {
+      url = td.file;
+    }
+    if (url) uploadedTitleDocs.push({ type: td.type, documentUrl: url });
+  }
+
   return {
     certificate: uploaded_docs.certificate,
     surveyPlanDocument: uploaded_docs.surveyPlanDocument,
     transferDocument: uploaded_docs.transferDocument,
     brochure: uploaded_docs.brochure,
+    buildingPermitNumber: data.buildingPermitNumber || undefined,
+    propertyDocument: propertyDocumentUrl,
+    propertyTitleDocuments:
+      uploadedTitleDocs.length > 0 ? uploadedTitleDocs : undefined,
   };
 };
 
