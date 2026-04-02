@@ -32,6 +32,9 @@ interface Investment {
   returnPercentage: number;
   totalAmount: number;
   totalReturns: number;
+  property?: {
+    investmentModel: string;
+  };
 }
 
 interface ExitRequest {
@@ -147,6 +150,10 @@ export default function ExitStrategy({
   });
 
   if (investment.status !== "ACTIVE") return null;
+
+  const NON_EXITABLE = ["FRACTIONAL_OWNERSHIP", "OUTRIGHT_PURCHASE"];
+  if (NON_EXITABLE.includes(investment.property?.investmentModel ?? ""))
+    return null;
 
   const allRequests = exitRequestsQuery.data?.data?.data ?? [];
 
