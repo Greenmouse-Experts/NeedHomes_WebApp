@@ -322,7 +322,7 @@ export default function DefaultForm<T = any>({
                     render={({ field }) => (
                       <SimpleInput
                         {...field}
-                        label="Units Available"
+                        label="Slots Available"
                         type="number"
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
