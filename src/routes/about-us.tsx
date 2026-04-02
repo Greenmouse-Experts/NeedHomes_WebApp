@@ -357,27 +357,39 @@ function RouteComponent() {
             {[
               {
                 title: "D WESTORA APARTMENTS",
+                img: "/westoria.jpeg",
                 description:
                   "Sophisticated apartment residences and stylish amenities in a vibrant city location.",
               },
               {
+                img: undefined,
                 title: "CYPON BLISS COURT",
                 description:
                   "Smart estate strategically located in the heart of one of Lagos' most popular neighborhoods.",
               },
               {
+                img: "/helengray.jpeg",
                 title: "HELENGRAY'S COURT",
                 description:
                   "HelenGray's Court offers luxurious living spaces blending modern style with elegance.",
               },
               {
+                img: undefined,
                 title: "MANDY'S COURT",
                 description:
                   "Considering a lucrative home investment, seize the opportunity and keys to your new home now.",
               },
             ].map((project, i) => (
               <div key={i} className="flex flex-col bg-white">
-                <div className="w-full aspect-[4/3] bg-gray-100" />
+                <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden">
+                  {project.img && (
+                    <img
+                      src={project.img}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
                 <div className="p-6 space-y-3 border-t-2 border-brand-orange flex-1">
                   <h3 className="font-serif font-semibold text-[#333d42] text-lg leading-snug">
                     {project.title}
