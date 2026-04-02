@@ -83,6 +83,7 @@ import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard
 import { Route as DashboardNotificationsRouteRouteImport } from './routes/dashboard/notifications/route'
 import { Route as DashboardJobsRouteRouteImport } from './routes/dashboard/jobs/route'
 import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
+import { Route as DashboardExitRequestsRouteRouteImport } from './routes/dashboard/exit-requests/route'
 import { Route as DashboardChatRouteRouteImport } from './routes/dashboard/chat/route'
 import { Route as DashboardBlogsRouteRouteImport } from './routes/dashboard/blogs/route'
 import { Route as PropertiesPropertyIdIndexRouteImport } from './routes/properties/$propertyId/index'
@@ -584,6 +585,12 @@ const DashboardInvestorsRouteRoute = DashboardInvestorsRouteRouteImport.update({
   path: '/investors',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardExitRequestsRouteRoute =
+  DashboardExitRequestsRouteRouteImport.update({
+    id: '/exit-requests',
+    path: '/exit-requests',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardChatRouteRoute = DashboardChatRouteRouteImport.update({
   id: '/chat',
   path: '/chat',
@@ -735,9 +742,9 @@ const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
 } as any)
 const DashboardExitRequestsIndexRoute =
   DashboardExitRequestsIndexRouteImport.update({
-    id: '/exit-requests/',
-    path: '/exit-requests/',
-    getParentRoute: () => DashboardRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardExitRequestsRouteRoute,
   } as any)
 const DashboardChatIndexRoute = DashboardChatIndexRouteImport.update({
   id: '/',
@@ -1009,9 +1016,9 @@ const DashboardInvestorsInvestorIdIndexRoute =
   } as any)
 const DashboardExitRequestsExitRequestIdIndexRoute =
   DashboardExitRequestsExitRequestIdIndexRouteImport.update({
-    id: '/exit-requests/$exitRequestId/',
-    path: '/exit-requests/$exitRequestId/',
-    getParentRoute: () => DashboardRouteRoute,
+    id: '/$exitRequestId/',
+    path: '/$exitRequestId/',
+    getParentRoute: () => DashboardExitRequestsRouteRoute,
   } as any)
 const DashboardBlogsCreateIndexRoute =
   DashboardBlogsCreateIndexRouteImport.update({
@@ -1336,6 +1343,7 @@ export interface FileRoutesByFullPath {
   '/waitlist': typeof WaitlistRoute
   '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
+  '/dashboard/exit-requests': typeof DashboardExitRequestsRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
@@ -1707,6 +1715,7 @@ export interface FileRoutesById {
   '/waitlist': typeof WaitlistRoute
   '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
+  '/dashboard/exit-requests': typeof DashboardExitRequestsRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
@@ -1908,6 +1917,7 @@ export interface FileRouteTypes {
     | '/waitlist'
     | '/dashboard/blogs'
     | '/dashboard/chat'
+    | '/dashboard/exit-requests'
     | '/dashboard/investors'
     | '/dashboard/jobs'
     | '/dashboard/notifications'
@@ -2278,6 +2288,7 @@ export interface FileRouteTypes {
     | '/waitlist'
     | '/dashboard/blogs'
     | '/dashboard/chat'
+    | '/dashboard/exit-requests'
     | '/dashboard/investors'
     | '/dashboard/jobs'
     | '/dashboard/notifications'
@@ -3009,6 +3020,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/exit-requests': {
+      id: '/dashboard/exit-requests'
+      path: '/exit-requests'
+      fullPath: '/dashboard/exit-requests'
+      preLoaderRoute: typeof DashboardExitRequestsRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/chat': {
       id: '/dashboard/chat'
       path: '/chat'
@@ -3200,10 +3218,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/exit-requests/': {
       id: '/dashboard/exit-requests/'
-      path: '/exit-requests'
+      path: '/'
       fullPath: '/dashboard/exit-requests/'
       preLoaderRoute: typeof DashboardExitRequestsIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      parentRoute: typeof DashboardExitRequestsRouteRoute
     }
     '/dashboard/chat/': {
       id: '/dashboard/chat/'
@@ -3529,10 +3547,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/exit-requests/$exitRequestId/': {
       id: '/dashboard/exit-requests/$exitRequestId/'
-      path: '/exit-requests/$exitRequestId'
+      path: '/$exitRequestId'
       fullPath: '/dashboard/exit-requests/$exitRequestId/'
       preLoaderRoute: typeof DashboardExitRequestsExitRequestIdIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      parentRoute: typeof DashboardExitRequestsRouteRoute
     }
     '/dashboard/blogs/create/': {
       id: '/dashboard/blogs/create/'
@@ -3917,6 +3935,23 @@ const DashboardChatRouteRouteChildren: DashboardChatRouteRouteChildren = {
 const DashboardChatRouteRouteWithChildren =
   DashboardChatRouteRoute._addFileChildren(DashboardChatRouteRouteChildren)
 
+interface DashboardExitRequestsRouteRouteChildren {
+  DashboardExitRequestsIndexRoute: typeof DashboardExitRequestsIndexRoute
+  DashboardExitRequestsExitRequestIdIndexRoute: typeof DashboardExitRequestsExitRequestIdIndexRoute
+}
+
+const DashboardExitRequestsRouteRouteChildren: DashboardExitRequestsRouteRouteChildren =
+  {
+    DashboardExitRequestsIndexRoute: DashboardExitRequestsIndexRoute,
+    DashboardExitRequestsExitRequestIdIndexRoute:
+      DashboardExitRequestsExitRequestIdIndexRoute,
+  }
+
+const DashboardExitRequestsRouteRouteWithChildren =
+  DashboardExitRequestsRouteRoute._addFileChildren(
+    DashboardExitRequestsRouteRouteChildren,
+  )
+
 interface DashboardInvestorsRouteRouteChildren {
   DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
   DashboardInvestorsInvestorIdKycRoute: typeof DashboardInvestorsInvestorIdKycRoute
@@ -4223,6 +4258,7 @@ const DashboardPartnersRouteWithChildren =
 interface DashboardRouteRouteChildren {
   DashboardBlogsRouteRoute: typeof DashboardBlogsRouteRouteWithChildren
   DashboardChatRouteRoute: typeof DashboardChatRouteRouteWithChildren
+  DashboardExitRequestsRouteRoute: typeof DashboardExitRequestsRouteRouteWithChildren
   DashboardInvestorsRouteRoute: typeof DashboardInvestorsRouteRouteWithChildren
   DashboardJobsRouteRoute: typeof DashboardJobsRouteRouteWithChildren
   DashboardNotificationsRouteRoute: typeof DashboardNotificationsRouteRouteWithChildren
@@ -4237,14 +4273,13 @@ interface DashboardRouteRouteChildren {
   DashboardPartnersRoute: typeof DashboardPartnersRouteWithChildren
   DashboardWaitlistRoute: typeof DashboardWaitlistRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardExitRequestsIndexRoute: typeof DashboardExitRequestsIndexRoute
   DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
-  DashboardExitRequestsExitRequestIdIndexRoute: typeof DashboardExitRequestsExitRequestIdIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardBlogsRouteRoute: DashboardBlogsRouteRouteWithChildren,
   DashboardChatRouteRoute: DashboardChatRouteRouteWithChildren,
+  DashboardExitRequestsRouteRoute: DashboardExitRequestsRouteRouteWithChildren,
   DashboardInvestorsRouteRoute: DashboardInvestorsRouteRouteWithChildren,
   DashboardJobsRouteRoute: DashboardJobsRouteRouteWithChildren,
   DashboardNotificationsRouteRoute:
@@ -4262,10 +4297,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardPartnersRoute: DashboardPartnersRouteWithChildren,
   DashboardWaitlistRoute: DashboardWaitlistRoute,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardExitRequestsIndexRoute: DashboardExitRequestsIndexRoute,
   DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
-  DashboardExitRequestsExitRequestIdIndexRoute:
-    DashboardExitRequestsExitRequestIdIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

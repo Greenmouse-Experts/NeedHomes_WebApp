@@ -2,15 +2,16 @@ import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
-import { Input } from "@/components/ui/Input";
 import { usePagination } from "@/helpers/pagination";
+import SearchBar from "@/routes/-components/Searchbar";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Search } from "lucide-react";
-import { useState } from "react";
 
 export const Route = createFileRoute("/dashboard/exit-requests/")({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>) => ({
+    search: (search.search as string) ?? "",
+  }),
 });
 
 type ExitStatus = "PENDING" | "APPROVED" | "REJECTED";
@@ -130,11 +131,11 @@ const columns: columnType<ExitRequest>[] = [
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
+  const { search } = Route.useSearch();
   const props = usePagination();
 
   const query = useQuery<ApiResponseV2<ExitRequest[]>>({
-    queryKey: ["exit-requests-admin", props.page],
+    queryKey: ["exit-requests-admin", props.page, search],
     queryFn: async () => {
       const resp = await apiClient.get("/investments/admin/exit-requests", {
         params: { page: props.page, limit: 20, search: search || undefined },
@@ -165,16 +166,12 @@ function RouteComponent() {
       </div>
 
       <div className="p-4 border-b border-base-200">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40" />
-          <Input
-            type="text"
-            placeholder="Search by name or email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+        <SearchBar
+          value={search}
+          onChange={(val: string) =>
+            navigate({ to: ".", search: { search: val } })
+          }
+        />
       </div>
 
       <PageLoader query={query}>
