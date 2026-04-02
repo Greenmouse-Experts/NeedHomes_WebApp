@@ -362,7 +362,7 @@ function RouteComponent() {
                   "Sophisticated apartment residences and stylish amenities in a vibrant city location.",
               },
               {
-                img: undefined,
+                img: "/cyphon.jpeg",
                 title: "CYPON BLISS COURT",
                 description:
                   "Smart estate strategically located in the heart of one of Lagos' most popular neighborhoods.",
