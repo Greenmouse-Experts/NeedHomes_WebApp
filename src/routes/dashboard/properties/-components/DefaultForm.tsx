@@ -110,7 +110,7 @@ export default function DefaultForm<T = any>({
   disableUnits,
   hideCompletion,
   disable_base_price,
-  base_price_label = "Base Price",
+  base_price_label = "Product Cost",
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;

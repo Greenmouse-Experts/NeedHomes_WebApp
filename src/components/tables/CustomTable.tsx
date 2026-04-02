@@ -36,7 +36,7 @@ export default function CustomTable(props: CustomTableProps) {
     <ThemeProvider>
       <div
         className={
-          "bg-base-100 shadow-xl  ring ring-current/20 " +
+          "bg-base-100 shadow-md  ring ring-current/20 " +
           (ring ? " rounded-box " : "rounded-b-box")
         }
       >

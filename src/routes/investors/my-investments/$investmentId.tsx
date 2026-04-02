@@ -19,6 +19,7 @@ import PageLoader from "@/components/layout/PageLoader";
 import InvPropDetails from "./-components/InvPropDetails";
 import InvPaymentSchedule from "./-components/InvPaymentSchedule";
 import ExitStrategy from "./-components/ExitStrategy";
+import Resell from "./-components/Resell";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -186,7 +187,6 @@ function InvestmentDetailsPage() {
                   </div>
                 </div>
               </div>
-
               {/* ── Stats Grid ── */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 my-4">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
@@ -237,7 +237,6 @@ function InvestmentDetailsPage() {
                   </p>
                 </div>
               </div>
-
               {/* ── Investment Information ── */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
@@ -289,7 +288,6 @@ function InvestmentDetailsPage() {
                   ))}
                 </div>
               </div>
-
               {investment_type ? (
                 <InvPaymentSchedule
                   id={investmentId}
@@ -300,6 +298,10 @@ function InvestmentDetailsPage() {
                 investment={investment}
                 propertyId={investment.propertyId}
               />
+
+              <div className="mt-8">
+                <Resell investment={investment} />
+              </div>
               <InvPropDetails propId={investment.propertyId} />
             </>
           );

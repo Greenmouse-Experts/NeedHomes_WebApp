@@ -229,21 +229,15 @@ function RouteComponent() {
                 data={investments}
                 columns={columns}
                 onRowClick={(item) =>
-                  navigate({ to: "/investors/my-investments/$investmentId", params: { investmentId: item.id } })
+                  navigate({
+                    to: "/investors/my-investments/$investmentId",
+                    params: { investmentId: item.id },
+                  })
                 }
                 actions={actions}
                 paginationProps={paginationProps}
                 totalCount={data.data.length}
               />
-              {investments
-                .filter((inv) => inv.status === "ACTIVE")
-                .map((inv) => (
-                  <ExitStrategy
-                    key={inv.id}
-                    investment={inv}
-                    propertyId={inv.propertyId}
-                  />
-                ))}
             </>
           );
         }}
