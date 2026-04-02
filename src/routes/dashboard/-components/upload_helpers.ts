@@ -3,7 +3,6 @@ import type { useImages, useSelectImage } from "@/helpers/images";
 import type { useDocumentUpload } from "./DocumentUpload";
 import { uploadFile } from "@/api/fileApi";
 import type { useVideoUpload } from "./VideoUpload";
-import type { DocProps } from "@/types/form";
 import type { AdditionalFee } from "@/types/property";
 import type { TitleDocument } from "./DocumentUpload";
 
@@ -25,25 +24,6 @@ export const doc_helper = async (
   data: ReturnType<typeof useDocumentUpload>,
 ) => {
   const { documents, prevDocs } = data;
-  const doc_keys = Object.keys({ ...documents, ...prevDocs }) as Array<
-    keyof typeof documents
-  >;
-
-  const uploaded_docs: Record<string, string> = {};
-  for (const key of doc_keys) {
-    const current_doc = documents[key];
-    const old_doc = prevDocs[key];
-
-    if (current_doc instanceof File) {
-      console.log(`uploading ${key}`);
-      const uploaded = await uploadFile(current_doc);
-      uploaded_docs[key] = uploaded;
-    } else if (typeof current_doc === "string") {
-      uploaded_docs[key] = current_doc;
-    } else if (typeof old_doc === "string") {
-      uploaded_docs[key] = old_doc;
-    }
-  }
 
   // propertyDocument
   let propertyDocumentUrl: string | undefined;
@@ -59,7 +39,7 @@ export const doc_helper = async (
 
   // propertyTitleDocuments
   const uploadedTitleDocs: { type: string; documentUrl: string }[] = [];
-  for (const td of (data.titleDocuments as TitleDocument[])) {
+  for (const td of data.titleDocuments as TitleDocument[]) {
     if (!td.type) continue;
     let url: string | undefined;
     if (td.file instanceof File) {
@@ -71,10 +51,6 @@ export const doc_helper = async (
   }
 
   return {
-    certificate: uploaded_docs.certificate,
-    surveyPlanDocument: uploaded_docs.surveyPlanDocument,
-    transferDocument: uploaded_docs.transferDocument,
-    brochure: uploaded_docs.brochure,
     buildingPermitNumber: data.buildingPermitNumber || undefined,
     propertyDocument: propertyDocumentUrl,
     propertyTitleDocuments:

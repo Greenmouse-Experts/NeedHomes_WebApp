@@ -10,10 +10,6 @@ import {
 } from "lucide-react";
 
 interface Documents<T = any> {
-  certificate?: T | File | string;
-  surveyPlanDocument?: T | File | string;
-  transferDocument?: T | File | string;
-  brochure?: T | File | string;
   propertyDocument?: T | File | string;
 }
 
@@ -31,27 +27,6 @@ const TITLE_DOC_TYPES = [
   { value: "OTHERS", label: "Others" },
 ];
 
-const legacyDocTypes: Array<keyof Omit<Documents, "propertyDocument">> = [
-  "certificate",
-  "surveyPlanDocument",
-  "transferDocument",
-  "brochure",
-];
-
-const getLegacyLabel = (docType: keyof Documents) => {
-  switch (docType) {
-    case "certificate":
-      return "Certificate of Ownership";
-    case "surveyPlanDocument":
-      return "Survey Plan Document";
-    case "transferDocument":
-      return "Transfer of Ownership Document";
-    case "brochure":
-      return "Brochure / Fact Sheet";
-    default:
-      return "";
-  }
-};
 
 function FileRow({
   file,
@@ -142,26 +117,6 @@ export const DocumentUpload = (props: {
   return (
     <div className="flex flex-col gap-6 fade p-6 border rounded-lg shadow-md bg-white">
       <h3 className="text-xl font-bold text-gray-800">Upload Documents</h3>
-
-      {/* ── Legacy documents ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {legacyDocTypes.map((docType) => (
-          <div
-            key={docType}
-            className="flex flex-col gap-2 p-3 fade border rounded-md bg-gray-50"
-          >
-            <span className="text-sm font-medium text-gray-700">
-              {getLegacyLabel(docType)}
-            </span>
-            <FileRow
-              file={documents[docType] as File | string | null}
-              prevUrl={prevDocs[docType] as string | undefined}
-              onUpload={(f) => handleFileChange(docType, f)}
-              onRemove={() => removeFile(docType)}
-            />
-          </div>
-        ))}
-      </div>
 
       {/* ── Building Permit Number ── */}
       <div className="flex flex-col gap-2">
