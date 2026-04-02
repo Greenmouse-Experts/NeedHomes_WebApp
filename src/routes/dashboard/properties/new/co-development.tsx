@@ -276,6 +276,7 @@ function RouteComponent() {
         selectImageProps={selectImageProps as any}
         disableCompletion={true}
         base_price_label="Product Cost"
+        completion_date_label="Project Duration"
         mutation={mutation as any}
         onSubmit={onSubmit}
       >

@@ -111,6 +111,7 @@ export default function DefaultForm<T = any>({
   hideCompletion,
   disable_base_price,
   base_price_label = "Product Cost",
+  completion_date_label = "Completion Date",
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -127,6 +128,7 @@ export default function DefaultForm<T = any>({
   disable_base_price?: boolean;
   disableUnits?: boolean;
   base_price_label?: string;
+  completion_date_label?: string;
 }) {
   const methods = form;
 
@@ -224,7 +226,7 @@ export default function DefaultForm<T = any>({
                           : field.value
                       }
                       // disabled={disableCompletion}
-                      label={`Completion Date`}
+                      label={completion_date_label}
                       type="date"
                       icon={<Calendar size={16} />}
                     />

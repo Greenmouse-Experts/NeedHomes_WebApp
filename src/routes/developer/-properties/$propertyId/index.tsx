@@ -325,7 +325,7 @@ function PropertyDetailPage() {
                           </div>
                           <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                             <span className="text-sm text-gray-600">
-                              Available Units:
+                              Available Slots:
                             </span>
                             <span className="text-sm font-medium text-gray-900">
                               {property.availableUnits}
@@ -459,8 +459,8 @@ function PropertyDetailPage() {
               </div>
             </div>
           </>
-        )
+        );
       }}
     </PageLoader>
-  )
+  );
 }

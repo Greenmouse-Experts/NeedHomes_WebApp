@@ -78,7 +78,7 @@ function RouteComponent() {
     },
     {
       key: "unitsBought",
-      label: "Units",
+      label: "Slots",
     },
     {
       key: "paymentOption",

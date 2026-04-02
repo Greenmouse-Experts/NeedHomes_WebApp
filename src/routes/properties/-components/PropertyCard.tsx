@@ -102,7 +102,7 @@ export default function PropertyCard({
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-base-content/40">
               <Calendar className="w-3 h-3" />
-              {property.availableUnits} Units Left
+              {property.availableUnits} Slots Left
             </div>
             <div className="btn btn-ghost btn-xs text-primary group-hover:translate-x-1 transition-transform p-0 mt-1">
               Details <ArrowRight className="w-3 h-3 ml-1" />

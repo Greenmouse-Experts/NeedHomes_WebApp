@@ -104,7 +104,15 @@ function PropertyDetailPage() {
                     Cancel
                   </Button>
                   {!auth?.accessToken ? (
-                    <Button variant="primary" onClick={() => navigate({ to: "/login", search: { redirect: window.location.pathname } })}>
+                    <Button
+                      variant="primary"
+                      onClick={() =>
+                        navigate({
+                          to: "/login",
+                          search: { redirect: window.location.pathname },
+                        })
+                      }
+                    >
                       Sign In to Invest
                     </Button>
                   ) : (
@@ -112,7 +120,10 @@ function PropertyDetailPage() {
                       variant="primary"
                       onClick={() => {
                         if (auth?.user?.accountType === "INVESTOR") {
-                          return navigate({ to: "/investors/properties/$propertyId/", params: { propertyId } });
+                          return navigate({
+                            to: "/investors/properties/$propertyId/",
+                            params: { propertyId },
+                          });
                         }
                         methods.handleSubmit(onSubmit)();
                       }}
@@ -347,7 +358,7 @@ function PropertyDetailPage() {
                           </div>
                           <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2">
                             <span className="text-sm text-gray-600">
-                              Available Units:
+                              Available Slots:
                             </span>
                             <span className="text-sm font-medium text-gray-900">
                               {property.availableUnits}

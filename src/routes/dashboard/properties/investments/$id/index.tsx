@@ -225,7 +225,7 @@ function RouteComponent() {
                     <BarChart3 className="w-4 h-4 text-purple-600" />
                   </div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
-                    Units Bought
+                    Slots Bought
                   </p>
                   <p className="text-xl font-bold text-gray-900">
                     {inv.unitsBought}

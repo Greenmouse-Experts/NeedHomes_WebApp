@@ -106,7 +106,7 @@ function ListedPropertiesPage() {
     },
     {
       key: "availableUnits",
-      label: "Units",
+      label: "Slots",
       render: (value) =>
         value <= 0 ? (
           <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">

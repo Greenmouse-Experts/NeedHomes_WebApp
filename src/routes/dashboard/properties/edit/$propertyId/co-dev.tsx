@@ -179,6 +179,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         form={form as any}
         selectImageProps={selectImageProps as any}
         base_price_label="Product Cost"
+        completion_date_label="Project Duration"
         mutation={mutation as any}
         onSubmit={onSubmit}
       >

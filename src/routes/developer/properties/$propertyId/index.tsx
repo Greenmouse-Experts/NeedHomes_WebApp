@@ -127,7 +127,7 @@ function PropertyDetailsPage() {
                         <Package className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-gray-500">Units</p>
+                        <p className="text-xs text-gray-500">Slots</p>
                         <p className="font-semibold text-sm md:text-base text-gray-900">
                           {property.availableUnits} Available
                         </p>

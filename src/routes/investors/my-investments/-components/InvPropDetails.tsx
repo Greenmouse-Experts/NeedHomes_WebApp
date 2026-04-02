@@ -122,7 +122,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                     </div>
                     <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
                       <div className="text-xs text-gray-500">
-                        Available Units
+                        Available Slots
                       </div>
                       <div className="mt-1 font-medium text-gray-900">
                         {prop_data.availableUnits ?? "—"}
