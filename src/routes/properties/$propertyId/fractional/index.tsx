@@ -43,14 +43,17 @@ function PropertyDetailPage() {
   };
   const mutate = useMutation({
     mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+      const ref = localStorage.getItem(`ref_${propertyId}`);
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
         amountPaid: parseFloat(data.amountPaid.toFixed()),
         quantity: data.quantity,
+        ...(ref ? { referralCode: ref } : {}),
       });
       return resp.data;
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
+      localStorage.removeItem(`ref_${propertyId}`);
       closeModal();
       navigate({
         to: "/investors/my-investments/$investmentId",
