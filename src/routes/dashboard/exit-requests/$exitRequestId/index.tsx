@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute(
   "/dashboard/exit-requests/$exitRequestId/",
@@ -115,7 +116,7 @@ function RouteComponent() {
     queryKey: ["exit-request", exitRequestId],
     queryFn: async () => {
       const resp = await apiClient.get(
-        `/investments/exit-requests/${exitRequestId}`,
+        `/investments/admin/exit-requests/${exitRequestId}`,
       );
       return resp.data;
     },
@@ -124,7 +125,8 @@ function RouteComponent() {
   const approveMutation = useMutation({
     mutationFn: async () => {
       const kobo = Math.round(parseFloat(exitAmountNaira) * 100);
-      if (isNaN(kobo) || kobo <= 0) throw new Error("Enter a valid exit amount");
+      if (isNaN(kobo) || kobo <= 0)
+        throw new Error("Enter a valid exit amount");
       await apiClient.patch(
         `/investments/admin/exit-requests/${exitRequestId}/approve`,
         {
@@ -135,7 +137,9 @@ function RouteComponent() {
     },
     onSuccess: () => {
       toast.success("Exit request approved and wallet credited");
-      queryClient.invalidateQueries({ queryKey: ["exit-request", exitRequestId] });
+      queryClient.invalidateQueries({
+        queryKey: ["exit-request", exitRequestId],
+      });
       queryClient.invalidateQueries({ queryKey: ["exit-requests-admin"] });
       approveRef.current?.close();
       setExitAmountNaira("");
@@ -154,7 +158,9 @@ function RouteComponent() {
     },
     onSuccess: () => {
       toast.success("Exit request rejected");
-      queryClient.invalidateQueries({ queryKey: ["exit-request", exitRequestId] });
+      queryClient.invalidateQueries({
+        queryKey: ["exit-request", exitRequestId],
+      });
       queryClient.invalidateQueries({ queryKey: ["exit-requests-admin"] });
       rejectRef.current?.close();
       setRejectNote("");
@@ -178,7 +184,7 @@ function RouteComponent() {
           const isPending = req.status === "PENDING";
 
           return (
-            <>
+            <ThemeProvider className="space-y-4">
               {/* Approve Modal */}
               <Modal
                 ref={approveRef}
@@ -211,7 +217,9 @@ function RouteComponent() {
                   </div>
 
                   <div className="p-3 bg-base-200 rounded-box text-sm space-y-1">
-                    <p className="text-base-content/60">Current Value (reference)</p>
+                    <p className="text-base-content/60">
+                      Current Value (reference)
+                    </p>
                     <p className="text-lg font-bold">
                       {formatNaira(req.investment?.currentValue ?? 0)}
                     </p>
@@ -298,7 +306,7 @@ function RouteComponent() {
               </Modal>
 
               {/* Header card */}
-              <div className="card bg-base-100 shadow-sm ring fade overflow-hidden">
+              <div className="card bg-base-100 shadow-sm ring fade overflow-hidden ">
                 <div className="h-1.5 bg-gradient-to-r from-orange-400 via-amber-500 to-yellow-400" />
                 <div className="card-body">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -357,10 +365,9 @@ function RouteComponent() {
                   },
                   {
                     icon: DollarSign,
-                    color:
-                      req.exitAmount
-                        ? "bg-emerald-50 text-emerald-600"
-                        : "bg-gray-50 text-gray-400",
+                    color: req.exitAmount
+                      ? "bg-emerald-50 text-emerald-600"
+                      : "bg-gray-50 text-gray-400",
                     label: "Exit Payout",
                     value: req.exitAmount ? formatNaira(req.exitAmount) : "—",
                   },
@@ -436,10 +443,11 @@ function RouteComponent() {
                       },
                       {
                         label: "Model",
-                        value: req.investment?.property?.investmentModel?.replace(
-                          /_/g,
-                          " ",
-                        ),
+                        value:
+                          req.investment?.property?.investmentModel?.replace(
+                            /_/g,
+                            " ",
+                          ),
                       },
                       {
                         label: "Total Contract",
@@ -516,7 +524,7 @@ function RouteComponent() {
                   </div>
                 </div>
               </div>
-            </>
+            </ThemeProvider>
           );
         }}
       </PageLoader>

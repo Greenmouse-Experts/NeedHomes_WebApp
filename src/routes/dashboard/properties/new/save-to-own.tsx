@@ -53,7 +53,7 @@ function RouteComponent() {
       // certificate: "",
       // surveyPlanDocument: "",
       // transferDocument: "",
-      paymentOption: "INSTALLMENT",
+      // paymentOption: "INSTALLMENT",
       // brochure: "",
       videos: "",
     },
