@@ -7,6 +7,12 @@ export const stripped_unneeded = (data: Record<string, any>) => {
   delete copy.updatedAt;
   delete copy.uploadedByPartnerId;
   delete copy.uploadStatus;
+  delete copy.maxInvestors;
+  delete copy.isResell;
+  delete copy.resellStatus;
+  delete copy.resellerId;
+  delete copy.originalInvestmentId;
+
   const new_add_fees = copy.additionalFees.map((item) => {
     return {
       label: item.label,
