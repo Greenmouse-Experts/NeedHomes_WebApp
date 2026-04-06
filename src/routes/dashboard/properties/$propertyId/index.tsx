@@ -320,16 +320,13 @@ function PropertyDetailsPage() {
                         <RenderDocuments
                           documents={[
                             { label: "Certificate", url: property.certificate },
-                            {
-                              label: "Survey Plan",
-                              url: property.surveyPlanDocument,
-                            },
+                            { label: "Survey Plan", url: property.surveyPlanDocument },
                             { label: "Brochure", url: property.brochure },
-                            {
-                              label: "Transfer Document",
-                              url: property.transferDocument,
-                            },
+                            { label: "Transfer Document", url: property.transferDocument },
                           ]}
+                          buildingPermitNumber={property.buildingPermitNumber}
+                          propertyDocument={property.propertyDocument}
+                          propertyTitleDocuments={property.propertyTitleDocuments}
                         />
                       </div>
                     </div>

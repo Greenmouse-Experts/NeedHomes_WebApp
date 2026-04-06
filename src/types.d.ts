@@ -303,6 +303,9 @@ export interface ADMIN_PROPERTY_LISTING {
   surveyPlanDocument: string | null;
   brochure: string | null;
   transferDocument: string | null;
+  buildingPermitNumber: string | null;
+  propertyDocument: string | null;
+  propertyTitleDocuments: { type: string; documentUrl: string }[] | null;
   basePrice: number;
   availableUnits: number;
   totalPrice: number;
