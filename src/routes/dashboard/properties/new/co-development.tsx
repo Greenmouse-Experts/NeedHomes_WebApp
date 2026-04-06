@@ -90,34 +90,9 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-
+      const docUploadProps = docUpload;
       // Handle Document Uploads
-      const uploadedDocUrls: Partial<DocProps> = {};
-      for (const docType in docUpload.documents) {
-        const file =
-          docUpload.documents[docType as keyof typeof docUpload.documents];
-        if (file) {
-          const uploaded = await uploadImage(file as any); // Assuming uploadImage can handle any file type and returns a URL
-          if (uploaded.data?.url) {
-            // Map the document type from useDocumentUpload to DocProps keys
-            switch (docType) {
-              case "certificate":
-                uploadedDocUrls.certificate = uploaded.data.url;
-                break;
-              case "surveyPlanDocument":
-                uploadedDocUrls.surveyPlanDocument = uploaded.data.url;
-                break;
-              case "transferDocument":
-                uploadedDocUrls.transferDocument = uploaded.data.url;
-                break;
-              case "brochure":
-                uploadedDocUrls.brochure = uploaded.data.url;
-                break;
-            }
-          }
-        }
-      }
-
+      const uploadedDocUrls = await get_docs(docUploadProps);
       // Handle Video Upload
       let videoUrl = "";
       if (videoUpload.videoFile) {
@@ -160,93 +135,7 @@ function RouteComponent() {
       });
     },
   });
-  //
-  // const mutation = useMutation({
-  //   mutationFn: async (data: CoDevelopmentFormValues) => {
-  //     let coverImageUrl = "";
-  //     const selectProps = selectImageProps;
-  //     const { newImages, images } = useImageProps;
-  //     const docUploadProps = docUpload;
-  //     const videoProps = videoUpload;
-  //     if (selectProps.image) {
-  //       const uploaded = await uploadImage(selectProps.image);
-  //       coverImageUrl = uploaded.data?.url || "";
-  //     } else if (selectProps.prev) {
-  //       coverImageUrl = selectProps.prev;
-  //     }
 
-  //     const uploadedGalleryUrls: string[] = [];
-  //     if (newImages && newImages.length > 0) {
-  //       for (const img of newImages) {
-  //         const uploaded = await uploadImage(img);
-  //         if (uploaded.data?.url) uploadedGalleryUrls.push(uploaded.data.url);
-  //       }
-  //     }
-
-  //     if (!coverImageUrl && images && images.length > 0) {
-  //       coverImageUrl = images[0].url;
-  //     }
-
-  //     if (!coverImageUrl && uploadedGalleryUrls.length > 0) {
-  //       coverImageUrl = uploadedGalleryUrls[0];
-  //     }
-
-  //     if (!coverImageUrl && data.coverImage) {
-  //       coverImageUrl = data.coverImage;
-  //     }
-
-  //     if (!coverImageUrl) throw new Error("A cover image is required.");
-
-  //     let videoUrl = "";
-  //     if (videoProps.videoFile) {
-  //       try {
-  //         const url = await uploadFile(videoProps.videoFile);
-  //         videoUrl = url || "";
-  //       } catch (e) {}
-  //     }
-
-  //     const allGallery = [
-  //       ...(images || []).map((img) => img.url),
-  //       ...uploadedGalleryUrls,
-  //     ];
-  //     const uploadedDocUrls = await get_docs(docUploadProps);
-
-  //     const totalPrice =
-  //       Number(data.basePrice) +
-  //       (data.additionalFees
-  //         ? data.additionalFees.reduce(
-  //             (acc, fee) => acc + (Number(fee.amount) || 0),
-  //             0,
-  //           )
-  //         : 0);
-
-  //     const payload = {
-  //       ...data,
-  //       ...uploadedDocUrls,
-  //       coverImage: coverImageUrl,
-  //       galleryImages: allGallery,
-  //       videos: videoUrl,
-  //       totalPrice,
-  //       completionDate: data.completionDate
-  //         ? new Date(data.completionDate).toISOString()
-  //         : null,
-  //     };
-
-  //     const response = await apiClient.post(
-  //       "/admin/properties/land-banking",
-  //       payload,
-  //     );
-  //     return response.data;
-  //   },
-  //   onSuccess: (data: ApiResponse<{ id: string }>) => {
-  //     nav({
-  //       to: "/dashboard/properties/$propertyId",
-  //       params: {
-  //         propertyId: data.data.id,
-  //       },
-  //     });
-  //   },
-  // });
   const onSubmit = (data: CoDevelopmentFormValues) => {
     console.log(data);
     //@ts-ignore
