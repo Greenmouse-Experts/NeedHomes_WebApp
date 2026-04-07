@@ -70,6 +70,7 @@ function PropertyDetailPage() {
     defaultValues: {
       installment: false,
       amount: 0,
+      ration: 3,
       quantity: 1,
       installmentDuration: 3,
     },
@@ -342,15 +343,6 @@ function PropertyDetailPage() {
                         </ul>
                       </section>
                     )}
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">
-                        System Charge: {0}%
-                      </span>
-                      <span className="text-sm font-medium">
-                        {formatCurrency(breakdown.systemCharge)}
-                      </span>
-                    </div>
 
                     {/*<div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
