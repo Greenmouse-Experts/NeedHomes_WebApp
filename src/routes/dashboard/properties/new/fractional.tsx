@@ -102,9 +102,10 @@ function RouteComponent() {
         productCost: new_payload["basePrice"],
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        startDate: data.startDate
+          ? new Date(data.startDate).toISOString()
           : null,
+        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
         videos: videoUrl || data.videos,
         ...uploadedDocUrls,
         ...(data.maxInvestors != null && { maxInvestors: data.maxInvestors }),
@@ -162,6 +163,7 @@ function RouteComponent() {
             useImagesProps={useImageProps}
             form={methods as any}
             disable_base_price
+            showDateRange
             selectImageProps={selectImageProps as any}
             mutation={mutation as any}
             onSubmit={onSubmit}

@@ -114,9 +114,10 @@ function RouteComponent() {
         galleryImages: allGallery,
         videos: videoUrl,
         productCost: new_payload["basePrice"],
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        startDate: data.startDate
+          ? new Date(data.startDate).toISOString()
           : null,
+        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
       };
       delete payload.basePrice;
       delete payload.minimumInvestment;
@@ -165,7 +166,7 @@ function RouteComponent() {
         selectImageProps={selectImageProps as any}
         disableCompletion={true}
         base_price_label="Product Cost"
-        completion_date_label="Project Duration"
+        showDateRange
         mutation={mutation as any}
         onSubmit={onSubmit}
       >

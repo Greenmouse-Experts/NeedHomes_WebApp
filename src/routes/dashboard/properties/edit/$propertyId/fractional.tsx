@@ -118,9 +118,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         videos: videoUrl,
         totalPrice: totalPrice * 100,
         productCost: calc_payload["basePrice"],
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        startDate: data.startDate
+          ? new Date(data.startDate).toISOString()
           : null,
+        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
         maxInvestors: data.maxInvestors ?? null,
       };
       const new_payload = strip_fractional(payload);
@@ -169,6 +170,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             videoUpload={videoUpload}
             useImagesProps={useImageProps}
             form={methods as any}
+            showDateRange
             selectImageProps={selectImageProps as any}
             mutation={mutation as any}
             onSubmit={onSubmit}

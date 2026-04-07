@@ -127,9 +127,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        startDate: data.startDate
+          ? new Date(data.startDate).toISOString()
           : null,
+        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
         minimumInstallmentAmount: parseInt(
           edited_payload["totalPrice"] / data.installmentDuration,
         ),
@@ -181,6 +182,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           update
           disableUnits
           disable_base_price
+          showDateRange
           docUpload={docUpload}
           videoUpload={videoUpload}
           useImagesProps={useImageProps}

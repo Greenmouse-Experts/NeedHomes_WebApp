@@ -130,9 +130,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         galleryImages: allGallery,
         videos: videoUrl,
         productCost: calculatedFees["basePrice"],
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        startDate: data.startDate
+          ? new Date(data.startDate).toISOString()
           : null,
+        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
       };
       const new_payload = strip_co_dev(payload);
       const response = await apiClient.patch(
@@ -179,7 +180,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         form={form as any}
         selectImageProps={selectImageProps as any}
         base_price_label="Product Cost"
-        completion_date_label="Project Duration"
+        showDateRange
         mutation={mutation as any}
         onSubmit={onSubmit}
       >
