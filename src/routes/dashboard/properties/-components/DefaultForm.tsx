@@ -112,6 +112,7 @@ export default function DefaultForm<T = any>({
   disable_base_price,
   base_price_label = "Product Cost",
   completion_date_label = "Completion Date",
+  units_label = "Slots Available",
   showDateRange,
 }: {
   //@ts-ignore
@@ -130,6 +131,7 @@ export default function DefaultForm<T = any>({
   disableUnits?: boolean;
   base_price_label?: string;
   completion_date_label?: string;
+  units_label?: string;
   showDateRange?: boolean;
 }) {
   const methods = form;
@@ -360,7 +362,7 @@ export default function DefaultForm<T = any>({
                     render={({ field }) => (
                       <SimpleInput
                         {...field}
-                        label="Slots Available"
+                        label={units_label}
                         type="number"
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />

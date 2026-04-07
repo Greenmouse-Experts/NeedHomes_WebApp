@@ -166,6 +166,7 @@ function RouteComponent() {
         selectImageProps={selectImageProps as any}
         disableCompletion={true}
         base_price_label="Product Cost"
+        units_label="Unit Available"
         showDateRange
         mutation={mutation as any}
         onSubmit={onSubmit}
@@ -180,7 +181,7 @@ function RouteComponent() {
           <div className="grid md:grid-cols-2  gap-4">
             <LocalSelect
               {...form.register("exitRule")}
-              label="Exit Strategy"
+              label="Exit Investment"
               value={form.watch("exitRule") ?? ""}
             >
               <option value="ANYTIME">Anytime (Liquid)</option>
