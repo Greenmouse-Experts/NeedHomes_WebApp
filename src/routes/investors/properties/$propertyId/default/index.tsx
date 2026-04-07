@@ -19,7 +19,7 @@ import { useNavigate } from "@tanstack/react-router";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
@@ -107,9 +107,10 @@ function PropertyDetailPage() {
     defaultValues: {
       installment: false,
       amount: 0,
+      quantity: 1,
+      installmentDuration: 3,
     },
   });
-  // let payAmount = form.watch("amount");
 
   return (
     <PageLoader query={query}>
@@ -143,26 +144,21 @@ function PropertyDetailPage() {
           //@ts-ignore
           breakdown.installmentDuration = property.installmentDuration;
         }
-        const payOption = property.paymentOption;
         const payInstall = form.watch("installment");
-
-        const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
-        useEffect(() => {
-          const installment_value = form.getValues("installment");
+        const quantity = form.watch("quantity");
+        const installmentDuration = form.watch("installmentDuration");
 
-          if (installOptions) {
-            form.setValue("installment", true);
-          }
-        }, [installOptions]);
+        const pricePerUnit = property.basePrice / 100;
+        const unit_total = quantity * pricePerUnit;
+        const full_total = unit_total + breakdown.additionalFeesTotal;
+
         useEffect(() => {
-          if (breakdown.installmentAmount) {
-            const charge = (0 / 100) * breakdown.installmentAmount;
-            let amout_total = (breakdown.installmentAmount + charge) / 100;
-            amout_total = Math.ceil(amout_total * 100) / 100;
-            form.setValue("amount", amout_total);
+          if (payInstall) {
+            const per_installment = full_total / installmentDuration;
+            form.setValue("amount", Math.ceil(per_installment * 100) / 100);
           }
-        }, []);
+        }, [unit_total, installmentDuration, payInstall]);
         return (
           <>
             <Modal
@@ -181,7 +177,7 @@ function PropertyDetailPage() {
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
-                            quantity: 1,
+                            quantity,
                           }),
                           {
                             loading: "Processing payment...",
@@ -192,8 +188,8 @@ function PropertyDetailPage() {
                       }
                       toast.promise(
                         mutate.mutateAsync({
-                          amountPaid: breakdown.totalPrice * 100,
-                          quantity: 1,
+                          amountPaid: full_total * 100,
+                          quantity,
                         }),
                         {
                           loading: "Processing payment...",
@@ -206,12 +202,8 @@ function PropertyDetailPage() {
                   >
                     Confirm & Pay{" "}
                     {payInstall
-                      ? payAmount
-                        ? formatCurrency(payAmount)
-                        : formatCurrency(
-                            property.minimumInstallmentAmount / 100,
-                          )
-                      : breakdown.totalPrice.toLocaleString()}
+                      ? formatCurrency(payAmount)
+                      : formatCurrency(full_total)}
                   </Button>
                 </div>
               }
@@ -225,12 +217,101 @@ function PropertyDetailPage() {
                         {property.propertyTitle}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Base Price</span>
-                      <span className="text-sm font-medium">
-                        {formatCurrency(property.basePrice / 100)}
-                      </span>
+
+                    <div className="ring rounded-box fade">
+                      <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
+                        Units
+                      </h2>
+                      <div className="p-2 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-900">
+                            Price per unit
+                          </span>
+                          <span className="text-sm font-bold">
+                            {formatCurrency(pricePerUnit)}
+                          </span>
+                        </div>
+                        <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                          <span className="text-sm text-gray-900">
+                            Available units
+                          </span>
+                          <span className="text-sm">
+                            {property.availableUnits ?? "N/A"}
+                          </span>
+                        </div>
+                      </div>
                     </div>
+
+                    <Controller
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => {
+                        const currentQuantity = field.value;
+                        const availableUnits = property.availableUnits || 1;
+                        return (
+                          <div className="ring rounded-box fade">
+                            <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
+                              Units to Buy
+                            </h2>
+                            <div className="p-2 space-y-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-900">
+                                  Quantity
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                      field.onChange(
+                                        Math.max(1, currentQuantity - 1),
+                                      )
+                                    }
+                                    disabled={currentQuantity <= 1}
+                                    className="px-2 py-1"
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="text-sm font-bold w-8 text-center">
+                                    {currentQuantity}
+                                  </span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                      field.onChange(
+                                        Math.min(
+                                          availableUnits,
+                                          currentQuantity + 1,
+                                        ),
+                                      )
+                                    }
+                                    disabled={currentQuantity >= availableUnits}
+                                    className="px-2 py-1"
+                                  >
+                                    +
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+                                <span className="text-sm text-gray-900">
+                                  Cost for {currentQuantity} unit
+                                  {currentQuantity > 1 ? "s" : ""}
+                                </span>
+                                <span className="text-sm font-bold">
+                                  {formatCurrency(
+                                    currentQuantity * pricePerUnit +
+                                      breakdown.additionalFeesTotal,
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }}
+                    />
 
                     {breakdown.additionalFees.length > 0 && (
                       <section className="rounded-lg border border-gray-200 overflow-hidden">
@@ -254,50 +335,21 @@ function PropertyDetailPage() {
                         </ul>
                       </section>
                     )}
-
-                    <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                      <span className="text-sm font-bold text-gray-900">
-                        Total
-                      </span>
-                      <span className="text-lg font-bold text-(--color-orange)">
-                        {formatCurrency(breakdown.totalPrice)}
-                      </span>
-                    </div>
                   </div>
-
-                  {property.paymentOption === "INSTALLMENT" && (
-                    <div className="p-3 bg-blue-50 rounded border border-blue-100">
-                      <p className="text-xs text-blue-700">
-                        You are paying the minimum installment of{" "}
-                        <span className="font-bold">
-                          {formatCurrency(
-                            property.minimumInstallmentAmount / 100,
-                          )}
-                        </span>
-                        . Remaining balance will be spread over{" "}
-                        {property.installmentDuration} months.
-                      </p>
-                    </div>
-                  )}
                 </div>
-                {installOptions && (
-                  <div className="flex gap-2 items-center mt-2">
-                    <input
-                      disabled={installOptions}
-                      {...form.register("installment")}
-                      type="checkbox"
-                      className="checkbox checkbox-sm"
-                    />
-                    <h2 className="text-sm">Pay Installmentally</h2>
-                  </div>
-                )}
+                <div className="flex gap-2 items-center mt-4">
+                  <input
+                    {...form.register("installment")}
+                    type="checkbox"
+                    className="checkbox checkbox-sm"
+                  />
+                  <h2 className="text-sm">Pay Installmentally</h2>
+                </div>
                 {payInstall && (
                   <div className="mt-4">
-                    {/*{JSON.stringify(property["installmentDuration"])}*/}
                     <InstallMentForm
                       form={form}
-                      duration={property["installmentDuration"]}
-                      minimumInvestmentAmount={breakdown.installmentAmount}
+                      minimumInvestmentAmount={payAmount}
                     />
                   </div>
                 )}
@@ -476,10 +528,8 @@ function PropertyDetailPage() {
 const InstallMentForm = ({
   form,
   minimumInvestmentAmount,
-  duration,
 }: {
   form: any;
-  duration: string | number;
   minimumInvestmentAmount: number;
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
@@ -487,34 +537,50 @@ const InstallMentForm = ({
     const fixed = parseFloat(amount.toFixed(2));
     return `₦ ${fixed.toLocaleString()}`;
   };
+  const selectedDuration = form.watch("installmentDuration");
 
   return (
     <div className="space-y-4 p-4 ring rounded-box fade">
-      <div className="flex items-end gap-2">
-        <div className="flex-1">
-          <SimpleInput
-            {...form.register("amount", {
-              valueAsNumber: true,
-              min: {
-                value: minimumInvestmentAmount,
-                message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
-              },
-            })}
-            label="Installment Amount"
-            type="number"
-            placeholder={formatCurrency(minimumInvestmentAmount)}
-            className="w-full"
-          />
-          {form.formState.errors.amount && (
-            <p className="text-red-500 text-sm mt-1">
-              {form.formState.errors.amount.message as string}
-            </p>
-          )}
+      <div>
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Installment Duration (months)
+        </p>
+        <div className="flex gap-3">
+          {([3, 6, 12] as const).map((dur) => (
+            <label
+              key={dur}
+              className={`flex-1 flex items-center justify-center p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                Number(selectedDuration) === dur
+                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                  : "border-gray-200 text-gray-600 hover:border-gray-300"
+              }`}
+            >
+              <input
+                type="radio"
+                className="hidden"
+                value={dur}
+                {...form.register("installmentDuration", {
+                  valueAsNumber: true,
+                })}
+              />
+              {dur}m
+            </label>
+          ))}
         </div>
       </div>
 
-      <p className=" text-gray-600/60 text-sm ">
-        <span className="font-semibold text-gray-900/60 ">
+      <div className="flex-1 space-y-1">
+        <SimpleInput
+          {...form.register("amount", { valueAsNumber: true })}
+          label="Installment Amount"
+          type="number"
+          placeholder={formatCurrency(minimumInvestmentAmount)}
+          className="w-full"
+        />
+      </div>
+
+      <p className="text-gray-600/60 text-sm">
+        <span className="font-semibold text-gray-900/60">
           The balance payment can be made anytime without waiting for
           installment date
         </span>
