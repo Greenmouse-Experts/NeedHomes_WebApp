@@ -20,6 +20,7 @@ import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
+import Maps from "@/routes/investors/properties/-components/Maps";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/outright/",
@@ -202,6 +203,13 @@ function PropertyDetailPage() {
                         <span className="text-sm md:text-lg">
                           {property.location}
                         </span>
+                      </div>
+                      <div className="mt-3">
+                        <Maps
+                          location={property.location}
+                          latitude={property.latitude}
+                          longitude={property.longitude}
+                        />
                       </div>
                     </div>
                     <div className="sm:text-right">
