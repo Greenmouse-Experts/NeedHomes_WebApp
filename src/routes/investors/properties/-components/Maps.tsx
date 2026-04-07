@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { MapPin } from "lucide-react";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 
 // Fix default marker icons broken by bundlers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -22,22 +23,13 @@ export default function Maps({
   latitude?: number | null;
   longitude?: number | null;
 }) {
-  const [open, setOpen] = useState(false);
+  const modalRef = useRef<ModalHandle>(null);
   const hasCoords = latitude != null && longitude != null;
 
   return (
-    <div className="space-y-3">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="btn btn-outline btn-sm gap-2"
-      >
-        <MapPin size={16} />
-        {open ? "Hide Map" : "View on Map"}
-      </button>
-
-      {open && (
-        <div className="rounded-lg overflow-hidden border border-gray-200 h-64 w-full">
+    <>
+      <Modal ref={modalRef} title={location ?? "Property Location"}>
+        <div className="h-96 w-full rounded-lg overflow-hidden">
           {hasCoords ? (
             <MapContainer
               center={[latitude!, longitude!]}
@@ -59,7 +51,16 @@ export default function Maps({
             </div>
           )}
         </div>
-      )}
-    </div>
+      </Modal>
+
+      <button
+        type="button"
+        onClick={() => modalRef.current?.open()}
+        className="btn btn-outline btn-sm gap-2"
+      >
+        <MapPin size={16} />
+        View on Map
+      </button>
+    </>
   );
 }
