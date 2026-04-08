@@ -208,7 +208,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
               <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
               <option value="NOT_ALLOWED">Not Allowed</option>
             </LocalSelect>
-            <Controller
+            {/*<Controller
               name="paymentOption"
               control={form.control}
               render={({ field }) => (
@@ -247,7 +247,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                   )}
                 />*/}
               </>
-            )}
+            )}*/}
           </div>
         </>
       </DefaultForm>
