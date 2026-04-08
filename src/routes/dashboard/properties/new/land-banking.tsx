@@ -143,7 +143,9 @@ function RouteComponent() {
         projectStartDate: data.projectStartDate
           ? new Date(data.projectStartDate).toISOString()
           : null,
-        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
+          : null,
         minimumInstallmentAmount: parseInt(
           new_payload["totalPrice"] / data.installmentDuration,
         ),

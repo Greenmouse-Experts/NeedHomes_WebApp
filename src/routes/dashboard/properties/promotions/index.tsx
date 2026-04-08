@@ -16,7 +16,7 @@ const DUMMY_DATA = [
     property: "Oceanview Apartments",
     discount: "10%",
     projectStartDate: "2023-06-01",
-    endDate: "2023-08-31",
+    projectEndDate: "2023-08-31",
     status: "Active",
   },
   {
@@ -25,7 +25,7 @@ const DUMMY_DATA = [
     property: "Skyline Tower",
     discount: "5%",
     projectStartDate: "2023-11-01",
-    endDate: "2023-12-31",
+    projectEndDate: "2023-12-31",
     status: "Expired",
   },
   {
@@ -34,7 +34,7 @@ const DUMMY_DATA = [
     property: "Green Valley Estate",
     discount: "$2,000 Off",
     projectStartDate: "2023-12-15",
-    endDate: "2024-01-05",
+    projectEndDate: "2024-01-05",
     status: "Scheduled",
   },
 ];
@@ -44,7 +44,7 @@ const columns: columnType[] = [
   { key: "property", label: "Property" },
   { key: "discount", label: "Discount" },
   { key: "projectStartDate", label: "Start Date" },
-  { key: "endDate", label: "End Date" },
+  { key: "projectEndDate", label: "End Date" },
   {
     key: "status",
     label: "Status",

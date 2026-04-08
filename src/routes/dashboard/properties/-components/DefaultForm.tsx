@@ -236,7 +236,7 @@ export default function DefaultForm<T = any>({
                     )}
                   />
                   <Controller
-                    name="endDate"
+                    name="projectEndDate"
                     control={methods.control}
                     render={({ field }) => (
                       <SimpleInput

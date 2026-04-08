@@ -121,7 +121,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         projectStartDate: data.projectStartDate
           ? new Date(data.projectStartDate).toISOString()
           : null,
-        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
+          : null,
         maxInvestors: data.maxInvestors ?? null,
       };
       const new_payload = strip_fractional(payload);

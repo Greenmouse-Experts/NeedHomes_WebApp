@@ -130,7 +130,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         projectStartDate: data.projectStartDate
           ? new Date(data.projectStartDate).toISOString()
           : null,
-        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
+          : null,
         minimumInstallmentAmount: parseInt(
           edited_payload["totalPrice"] / data.installmentDuration,
         ),

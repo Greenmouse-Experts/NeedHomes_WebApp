@@ -110,7 +110,7 @@ function RouteComponent() {
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [projectStartDate, setprojectStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [projectEndDate, setprojectEndDate] = useState("");
   const [exporting, setExporting] = useState(false);
 
   const params = {
@@ -119,7 +119,7 @@ function RouteComponent() {
     ...(status && { status }),
     ...(search && { search }),
     ...(projectStartDate && { projectStartDate }),
-    ...(endDate && { endDate }),
+    ...(projectEndDate && { projectEndDate }),
   };
 
   const query = useQuery({
@@ -138,7 +138,7 @@ function RouteComponent() {
         ...(status && { status }),
         ...(search && { search }),
         ...(projectStartDate && { projectStartDate }),
-        ...(endDate && { endDate }),
+        ...(projectEndDate && { projectEndDate }),
       };
       const resp = await apiClient.get("wallet-trx/export", {
         params: exportParams,
@@ -219,12 +219,16 @@ function RouteComponent() {
               </div>
               <input
                 type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                value={projectEndDate}
+                onChange={(e) => setprojectEndDate(e.target.value)}
                 className="input input-bordered w-full"
               />
             </div>
-            {(type || status || search || projectStartDate || endDate) && (
+            {(type ||
+              status ||
+              search ||
+              projectStartDate ||
+              projectEndDate) && (
               <button
                 className="btn btn-outline btn-sm self-end h-[42px]"
                 onClick={() => {
@@ -232,7 +236,7 @@ function RouteComponent() {
                   setStatus("");
                   setSearch("");
                   setprojectStartDate("");
-                  setEndDate("");
+                  setprojectEndDate("");
                 }}
               >
                 Clear

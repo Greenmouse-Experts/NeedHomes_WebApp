@@ -133,7 +133,9 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         projectStartDate: data.projectStartDate
           ? new Date(data.projectStartDate).toISOString()
           : null,
-        endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
+          : null,
       };
       const new_payload = strip_co_dev(payload);
       const response = await apiClient.patch(

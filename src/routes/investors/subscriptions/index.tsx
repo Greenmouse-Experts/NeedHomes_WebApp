@@ -266,7 +266,7 @@ interface CurrentPlan {
   userId: string;
   planId: string;
   projectStartDate: string;
-  endDate: string;
+  projectEndDate: string;
   autoRenew: boolean;
   isActive: boolean;
   createdAt: string;
@@ -334,10 +334,10 @@ const CurrentPlan = () => {
                         <p className="text-sm text-muted-foreground">
                           {sub_data.autoRenew
                             ? `Renews automatically on ${new Date(
-                                sub_data.endDate,
+                                sub_data.projectEndDate,
                               ).toLocaleDateString()}`
                             : `Expires on ${new Date(
-                                sub_data.endDate,
+                                sub_data.projectEndDate,
                               ).toLocaleDateString()}`}
                           . Started on{" "}
                           {new Date(
