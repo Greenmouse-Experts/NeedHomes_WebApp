@@ -265,7 +265,7 @@ interface CurrentPlan {
   id: string;
   userId: string;
   planId: string;
-  startDate: string;
+  projectStartDate: string;
   endDate: string;
   autoRenew: boolean;
   isActive: boolean;
@@ -340,7 +340,9 @@ const CurrentPlan = () => {
                                 sub_data.endDate,
                               ).toLocaleDateString()}`}
                           . Started on{" "}
-                          {new Date(sub_data.startDate).toLocaleDateString()}
+                          {new Date(
+                            sub_data.projectStartDate,
+                          ).toLocaleDateString()}
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted-foreground mt-4">
                           <div className="flex items-center gap-2">

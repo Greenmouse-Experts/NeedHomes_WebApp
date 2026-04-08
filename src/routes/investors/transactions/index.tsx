@@ -52,7 +52,9 @@ const columns: columnType<Transaction>[] = [
     key: "type",
     label: "Type",
     render: (val: Transaction["type"]) => (
-      <span className={`badge badge-soft badge-sm ${typeBadge[val] ?? "badge-ghost"}`}>
+      <span
+        className={`badge badge-soft badge-sm ${typeBadge[val] ?? "badge-ghost"}`}
+      >
         {val}
       </span>
     ),
@@ -61,14 +63,18 @@ const columns: columnType<Transaction>[] = [
     key: "amount",
     label: "Amount",
     render: (val: number) => (
-      <span className="font-semibold">₦{(val / 100).toLocaleString("en-NG", { minimumFractionDigits: 2 })}</span>
+      <span className="font-semibold">
+        ₦{(val / 100).toLocaleString("en-NG", { minimumFractionDigits: 2 })}
+      </span>
     ),
   },
   {
     key: "status",
     label: "Status",
     render: (val: Transaction["status"]) => (
-      <span className={`badge badge-soft badge-sm ${statusBadge[val] ?? "badge-ghost"}`}>
+      <span
+        className={`badge badge-soft badge-sm ${statusBadge[val] ?? "badge-ghost"}`}
+      >
         {val}
       </span>
     ),
@@ -103,7 +109,7 @@ function RouteComponent() {
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
-  const [startDate, setStartDate] = useState("");
+  const [projectStartDate, setprojectStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [exporting, setExporting] = useState(false);
 
@@ -112,7 +118,7 @@ function RouteComponent() {
     ...(type && { type }),
     ...(status && { status }),
     ...(search && { search }),
-    ...(startDate && { startDate }),
+    ...(projectStartDate && { projectStartDate }),
     ...(endDate && { endDate }),
   };
 
@@ -131,7 +137,7 @@ function RouteComponent() {
         ...(type && { type }),
         ...(status && { status }),
         ...(search && { search }),
-        ...(startDate && { startDate }),
+        ...(projectStartDate && { projectStartDate }),
         ...(endDate && { endDate }),
       };
       const resp = await apiClient.get("wallet-trx/export", {
@@ -176,12 +182,12 @@ function RouteComponent() {
       {/* Filters */}
       <ThemeProvider className="bg-white border border-gray-200 rounded-xl p-4 flex-none">
         <div className="flex flex-col gap-3">
-          <SearchBar value={search} onChange={(val: string) => setSearch(val)} />
+          <SearchBar
+            value={search}
+            onChange={(val: string) => setSearch(val)}
+          />
           <div className="flex flex-wrap gap-3 items-end">
-            <LocalSelect
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
+            <LocalSelect value={type} onChange={(e) => setType(e.target.value)}>
               <option value="">All Types</option>
               <option value="DEPOSIT">Deposit</option>
               <option value="INVESTMENT">Investment</option>
@@ -202,8 +208,8 @@ function RouteComponent() {
               </div>
               <input
                 type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                value={projectStartDate}
+                onChange={(e) => setprojectStartDate(e.target.value)}
                 className="input input-bordered w-full"
               />
             </div>
@@ -218,14 +224,14 @@ function RouteComponent() {
                 className="input input-bordered w-full"
               />
             </div>
-            {(type || status || search || startDate || endDate) && (
+            {(type || status || search || projectStartDate || endDate) && (
               <button
                 className="btn btn-outline btn-sm self-end h-[42px]"
                 onClick={() => {
                   setType("");
                   setStatus("");
                   setSearch("");
-                  setStartDate("");
+                  setprojectStartDate("");
                   setEndDate("");
                 }}
               >

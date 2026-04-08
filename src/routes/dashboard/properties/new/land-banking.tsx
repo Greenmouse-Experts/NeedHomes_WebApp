@@ -140,8 +140,8 @@ function RouteComponent() {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        startDate: data.startDate
-          ? new Date(data.startDate).toISOString()
+        projectStartDate: data.projectStartDate
+          ? new Date(data.projectStartDate).toISOString()
           : null,
         endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
         minimumInstallmentAmount: parseInt(

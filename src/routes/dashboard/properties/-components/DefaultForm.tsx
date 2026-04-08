@@ -219,7 +219,7 @@ export default function DefaultForm<T = any>({
               {hideCompletion ? null : showDateRange ? (
                 <>
                   <Controller
-                    name="startDate"
+                    name="projectStartDate"
                     control={methods.control}
                     render={({ field }) => (
                       <SimpleInput
