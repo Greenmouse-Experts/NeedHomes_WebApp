@@ -167,7 +167,7 @@ function RouteComponent() {
         form={form as any}
         selectImageProps={selectImageProps as any}
         disableCompletion={true}
-        base_price_label="Product Cost"
+        base_price_label="Project Cost"
         units_label="Unit Available"
         showDateRange
         mutation={mutation as any}

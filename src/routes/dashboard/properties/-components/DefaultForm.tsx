@@ -110,7 +110,7 @@ export default function DefaultForm<T = any>({
   disableUnits,
   hideCompletion,
   disable_base_price,
-  base_price_label = "Product Cost",
+  base_price_label = "Project Cost",
   completion_date_label = "Completion Date",
   units_label = "Slots Available",
   showDateRange,

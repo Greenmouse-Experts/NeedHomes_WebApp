@@ -181,7 +181,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         useImagesProps={useImageProps}
         form={form as any}
         selectImageProps={selectImageProps as any}
-        base_price_label="Product Cost"
+        base_price_label="Project Cost"
         units_label="Unit Available"
         showDateRange
         mutation={mutation as any}
