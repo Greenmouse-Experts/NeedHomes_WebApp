@@ -10,8 +10,9 @@ import { extract_message } from "@/helpers/apihelpers";
 
 interface ChargeSettings {
   id: string;
-  agentCommissionType: "percentage" | "fixed";
-  agentCommissionValue: number;
+  platformChargePercentage: number;
+  partnerChargePercentage: number;
+  defaulterChargePercentage: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -60,53 +61,41 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
   };
   const methods = useForm<ChargeSettings>({
     defaultValues: {
-      agentCommissionType: data?.agentCommissionType || "percentage",
-      agentCommissionValue: data?.agentCommissionValue || 0,
+      platformChargePercentage: data?.platformChargePercentage ?? 0,
+      partnerChargePercentage: data?.partnerChargePercentage ?? 0,
+      defaulterChargePercentage: data?.defaulterChargePercentage ?? 0,
     },
   });
-  const { register, watch } = methods;
-  const commissionType = watch("agentCommissionType");
+  const { register } = methods;
 
   return (
     <ThemeProvider>
       <FormProvider {...methods}>
         <form className="space-y-5" onSubmit={methods.handleSubmit(onSubmit)}>
-          <div className="space-y-3">
-            <h3 className="font-semibold text-sm">Agent Commission Fee</h3>
-            <p className="text-xs text-base-content/60">
-              Applied when a Partner Agent promotes and facilitates the sale of a property.
-              Automatically calculated upon transaction completion.
-            </p>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  className="radio radio-sm"
-                  value="percentage"
-                  {...register("agentCommissionType")}
-                />
-                <span className="text-sm">Percentage (%)</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  className="radio radio-sm"
-                  value="fixed"
-                  {...register("agentCommissionType")}
-                />
-                <span className="text-sm">Fixed Amount</span>
-              </label>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <SimpleInput
-              label={commissionType === "percentage" ? "Commission Rate (%)" : "Commission Amount"}
+              label="Platform Charge (%)"
               type="number"
               step="0.01"
               min="0"
-              {...register("agentCommissionValue", {
-                valueAsNumber: true,
-                required: "This field is required",
-                min: { value: 0, message: "Value must be non-negative" },
-              })}
+              max="100"
+              {...register("platformChargePercentage", { valueAsNumber: true })}
+            />
+            <SimpleInput
+              label="Partner Charge (%)"
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              {...register("partnerChargePercentage", { valueAsNumber: true })}
+            />
+            <SimpleInput
+              label="Defaulter Charge (%)"
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              {...register("defaulterChargePercentage", { valueAsNumber: true })}
             />
           </div>
           <div className="flex justify-end">
