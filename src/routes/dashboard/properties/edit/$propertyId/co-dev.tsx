@@ -208,46 +208,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
               <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
               <option value="NOT_ALLOWED">Not Allowed</option>
             </LocalSelect>
-            {/*<Controller
-              name="paymentOption"
-              control={form.control}
-              render={({ field }) => (
-                <LocalSelect {...field} label="Payment Option">
-                  <option value="FULL_PAYMENT">Full Payment</option>
-                  <option value="INSTALLMENT">Installment</option>
-                </LocalSelect>
-              )}
-            />
-            {paymentOption === "INSTALLMENT" && (
-              <>
-                <Controller
-                  name="installmentDuration"
-                  control={form.control}
-                  render={({ field }) => (
-                    //@ts-ignore
-                    <SimpleInput
-                      {...field}
-                      type="number"
-                      label="Installment Duration (Months)"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
-                />
-                {/*<Controller
-                  name="minimumInstallmentAmount"
-                  control={form.control}
-                  render={({ field }) => (
-                    //@ts-ignore
-                    <SimpleInput
-                      {...field}
-                      type="number"
-                      label="minimum installment deposit"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
-                />*/}
-              </>
-            )}*/}
           </div>
         </>
       </DefaultForm>
