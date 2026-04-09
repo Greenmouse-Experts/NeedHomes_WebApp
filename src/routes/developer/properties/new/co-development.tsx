@@ -128,22 +128,22 @@ function RouteComponent() {
       }
       const keys = [
         "minimumInvestment",
-        "minimumInstallmentAmount",
       ] as (typeof data)[string];
-      // data["basePrice"] = data["minimumInstallmentAmount"];
       const new_payload = calculate_fees(data, keys);
       const payload = {
         ...new_payload,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        videos: videoUrl, // Add uploaded video URL to the payload
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        videos: videoUrl,
+        projectStartDate: data.projectStartDate
+          ? new Date(data.projectStartDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          new_payload["totalPrice"] / data.installmentDuration,
-        ),
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
+          : null,
+        paymentDuration: data.paymentOption === "INSTALLMENT" ? data.paymentDuration : undefined,
+        minimumFirstPaymentPercentage: data.paymentOption === "INSTALLMENT" ? data.minimumFirstPaymentPercentage : undefined,
       };
       delete payload.minimumInvestment;
       const response = await apiClient.post(
@@ -275,8 +275,7 @@ function RouteComponent() {
         useImagesProps={useImageProps}
         form={form as any}
         selectImageProps={selectImageProps as any}
-        disableCompletion={true}
-        // hideCompletion
+        showDateRange
         mutation={mutation as any}
         onSubmit={onSubmit}
       >
@@ -314,31 +313,33 @@ function RouteComponent() {
             {paymentOption === "INSTALLMENT" && (
               <>
                 <Controller
-                  name="installmentDuration"
+                  name="paymentDuration"
                   control={form.control}
                   render={({ field }) => (
                     //@ts-ignore
                     <SimpleInput
                       {...field}
                       type="number"
-                      label="Installment Duration (Months)"
+                      label="Payment Duration (Months)"
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
                 />
-                {/*<Controller
-                  name="minimumInstallmentAmount"
+                <Controller
+                  name="minimumFirstPaymentPercentage"
                   control={form.control}
                   render={({ field }) => (
                     //@ts-ignore
                     <SimpleInput
                       {...field}
                       type="number"
-                      label="minimum installment deposit"
+                      label="Minimum First Payment (%)"
+                      min={1}
+                      max={100}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                   )}
-                />*/}
+                />
               </>
             )}
           </div>

@@ -107,8 +107,11 @@ function RouteComponent() {
         ...new_payload,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        projectStartDate: data.projectStartDate
+          ? new Date(data.projectStartDate).toISOString()
+          : null,
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
           : null,
         videos: videoUrl || data.videos,
         ...uploadedDocUrls,
@@ -169,6 +172,7 @@ function RouteComponent() {
             useImagesProps={useImageProps}
             form={methods as any}
             disable_base_price
+            showDateRange
             selectImageProps={selectImageProps as any}
             mutation={mutation as any}
             onSubmit={onSubmit}

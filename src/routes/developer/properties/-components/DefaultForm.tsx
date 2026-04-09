@@ -110,6 +110,7 @@ export default function DefaultForm<T = any>({
   disableUnits,
   hideCompletion,
   disable_base_price,
+  showDateRange,
 }: {
   //@ts-ignore
   form: ReturnType<typeof useForm<T>>;
@@ -125,6 +126,7 @@ export default function DefaultForm<T = any>({
   hideCompletion?: boolean;
   disable_base_price?: boolean;
   disableUnits?: boolean;
+  showDateRange?: boolean;
 }) {
   const methods = form;
 
@@ -208,7 +210,44 @@ export default function DefaultForm<T = any>({
                   )}
                 />
               )}
-              {hideCompletion ? null : (
+              {hideCompletion ? null : showDateRange ? (
+                <>
+                  <Controller
+                    name="projectStartDate"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : field.value
+                        }
+                        label="Start Date"
+                        type="date"
+                        icon={<Calendar size={16} />}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="projectEndDate"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : field.value
+                        }
+                        label="End Date"
+                        type="date"
+                        icon={<Calendar size={16} />}
+                      />
+                    )}
+                  />
+                </>
+              ) : (
                 <Controller
                   name="completionDate"
                   control={methods.control}
@@ -221,8 +260,7 @@ export default function DefaultForm<T = any>({
                           ? new Date(field.value).toISOString().split("T")[0]
                           : field.value
                       }
-                      // disabled={disableCompletion}
-                      label={`Completion Date`}
+                      label="Completion Date"
                       type="date"
                       icon={<Calendar size={16} />}
                     />

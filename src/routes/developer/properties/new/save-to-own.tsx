@@ -126,12 +126,9 @@ function RouteComponent() {
         galleryImages: allGallery,
         videos: videoUrl,
         totalPrice: total_price,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          new_payload["totalPrice"] / data.installmentDuration,
-        ),
       };
       const upload_ = strip_save_to_own(payload);
       const response = await apiClient.post(

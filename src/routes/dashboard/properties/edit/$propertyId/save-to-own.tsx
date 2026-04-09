@@ -119,14 +119,13 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         new_p.additionalFees.reduce((acc, fee) => acc + fee.amount, 0);
       const payload = {
         ...new_p,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
         totalPrice: total_price,
-        // targetPropertyPrice: new_p.targetPropertyPrice * 100,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
           : null,
       };
       const new_payload = strip_save_to_own(payload);

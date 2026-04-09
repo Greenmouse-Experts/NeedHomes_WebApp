@@ -25,18 +25,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   Calendar,
-  DollarSign,
-  FileText,
   Home,
   Layers,
-  MapPin,
   Plus,
-  Video,
 } from "lucide-react";
 import {
   Controller,
-  FormProvider,
-  useFieldArray,
   useForm,
   useWatch,
 } from "react-hook-form";
@@ -148,12 +142,12 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       );
       let payload = {
         ...calc_payload,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
           : null,
         minimumInstallmentAmount: parseInt(minimumInstallmentAmount),
       };
@@ -215,7 +209,33 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             mutation={mutation as any}
             onSubmit={onSubmit}
           >
-            <></>
+            <section className="space-y-6">
+              <div className="flex items-center gap-2 pb-2 border-b border-base-200">
+                <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                  <Layers size={20} />
+                </div>
+                <h2 className="text-lg font-bold">4. Outright Purchase Details</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Controller
+                  name="projectEndDate"
+                  control={methods.control}
+                  render={({ field }) => (
+                    <SimpleInput
+                      {...field}
+                      value={
+                        field.value
+                          ? new Date(field.value).toISOString().split("T")[0]
+                          : field.value
+                      }
+                      label="Project End Date"
+                      type="date"
+                      icon={<Calendar size={16} />}
+                    />
+                  )}
+                />
+              </div>
+            </section>
           </DefaultForm>
         </div>
       </div>

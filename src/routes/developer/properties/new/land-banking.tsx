@@ -140,8 +140,11 @@ function RouteComponent() {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        projectStartDate: data.projectStartDate
+          ? new Date(data.projectStartDate).toISOString()
+          : null,
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
           : null,
         minimumInstallmentAmount: parseInt(
           new_payload["totalPrice"] / data.installmentDuration,
@@ -196,6 +199,7 @@ function RouteComponent() {
           videoUpload={videoUpload}
           useImagesProps={useImageProps}
           disable_base_price
+          showDateRange
           form={methods as any}
           selectImageProps={selectImageProps as any}
           mutation={mutation as any}

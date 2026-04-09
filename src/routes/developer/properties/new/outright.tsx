@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
-import { Trash2, Layers, Home } from "lucide-react";
+import { Trash2, Layers, Home, Calendar } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import type { DocProps } from "@/types/form";
 import { useDocumentUpload } from "../../-components/DocumentUpload";
@@ -80,12 +80,12 @@ function RouteComponent() {
 
       let payload = {
         ...calc_payload,
-        ...uploadedDocUrls, // Add uploaded document URLs to the payload
+        ...uploadedDocUrls,
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        completionDate: data.completionDate
-          ? new Date(data.completionDate).toISOString()
+        projectEndDate: data.projectEndDate
+          ? new Date(data.projectEndDate).toISOString()
           : null,
         minimumInstallmentAmount: parseInt(
           calc_payload["totalPrice"] / data.installmentDuration,
@@ -151,6 +151,23 @@ function RouteComponent() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Controller
+                    name="projectEndDate"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : field.value
+                        }
+                        label="Project End Date"
+                        type="date"
+                        icon={<Calendar size={16} />}
+                      />
+                    )}
+                  />
                   <Controller
                     name="paymentOption"
                     control={methods.control}
