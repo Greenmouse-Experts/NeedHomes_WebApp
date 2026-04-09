@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   TrendingUp,
   Wallet,
   Building2,
   FileText,
-  DollarSign,
-  CreditCard,
   CheckCircle2,
   Clock,
   ChevronDown,
+  Search,
+  ArrowUpDown,
 } from "lucide-react";
 import {
   AreaChart,
@@ -105,12 +106,27 @@ const actions: Actions<Transaction>[] = [
 
 function PaymentsPage() {
   const props = usePagination();
+  const [search, setSearch] = useState("");
+  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [sortBy, setSortBy] = useState<"createdAt" | "amount">("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
   const query = useQuery<ApiResponseV2<Transaction[]>>({
-    queryKey: ["admin-transactions", props.page],
+    queryKey: ["admin-transactions", props.page, search, type, status, startDate, endDate, sortBy, sortOrder],
     queryFn: async () => {
       let resp = await apiClient.get("admin/transactions/", {
         params: {
           page: props.page,
+          ...(search && { search }),
+          ...(type && { type }),
+          ...(status && { status }),
+          ...(startDate && { startDate }),
+          ...(endDate && { endDate }),
+          sortBy,
+          sortOrder,
         },
       });
       return resp.data;
@@ -146,17 +162,93 @@ function PaymentsPage() {
       {/* Stats Cards */}
       <TransStats />
 
+      {/* Filters */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 md:mb-6 space-y-3">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by reference..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="input input-bordered input-sm w-full pl-9"
+            />
+          </div>
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="select select-bordered select-sm"
+          >
+            <option value="">All Types</option>
+            <option value="DEPOSIT">Deposit</option>
+            <option value="WITHDRAWAL">Withdrawal</option>
+            <option value="INVESTMENT">Investment</option>
+          </select>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="select select-bordered select-sm"
+          >
+            <option value="">All Statuses</option>
+            <option value="PENDING">Pending</option>
+            <option value="SUCCESS">Success</option>
+            <option value="FAILED">Failed</option>
+          </select>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 items-end">
+          <div className="flex gap-2 flex-1">
+            <div className="flex-1">
+              <label className="label label-text text-xs pb-1">From</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="input input-bordered input-sm w-full"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="label label-text text-xs pb-1">To</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="input input-bordered input-sm w-full"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "createdAt" | "amount")}
+              className="select select-bordered select-sm"
+            >
+              <option value="createdAt">Sort: Date</option>
+              <option value="amount">Sort: Amount</option>
+            </select>
+            <button
+              onClick={() => setSortOrder((o) => (o === "asc" ? "desc" : "asc"))}
+              className="btn btn-sm btn-outline gap-1"
+            >
+              <ArrowUpDown className="w-3.5 h-3.5" />
+              {sortOrder === "asc" ? "Asc" : "Desc"}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Transactions Table */}
       <div className="mb-4 md:mb-6">
         <PageLoader query={query}>
           {(resp) => {
             const data: Transaction[] = resp.data?.data ?? [];
+            const total = resp.data?.meta?.total ?? data.length;
             return (
               <CustomTable
                 data={data}
                 columns={columns}
                 actions={actions}
-                totalCount={data.length}
+                totalCount={total}
                 paginationProps={props}
               />
             );

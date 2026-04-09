@@ -112,7 +112,7 @@ export default function DefaultForm<T = any>({
   disable_base_price,
   base_price_label = "Project Cost",
   completion_date_label = "Completion Date",
-  units_label = "Slots Available",
+  units_label = "Plots Available",
   showDateRange,
 }: {
   //@ts-ignore
