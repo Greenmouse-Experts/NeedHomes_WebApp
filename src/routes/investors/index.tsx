@@ -10,6 +10,7 @@ import VerificationStatus from "../-components/VerificationStatus";
 import UserWallet from "../-components/Wallet";
 import Example from "./-components/Chart";
 import InvStatistics from "./my-investments/-components/InvStatistics";
+import RecentProperties from "./-components/RecentProperty";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -194,7 +195,9 @@ function InvestorDashboard() {
                   </div>
                   <div>
                     <p className="text-xl md:text-2xl font-bold text-white">
-                      {stats ? `₦${(stats.totalInvested / 100).toLocaleString()}` : "—"}
+                      {stats
+                        ? `₦${(stats.totalInvested / 100).toLocaleString()}`
+                        : "—"}
                     </p>
                     <p className="text-xs md:text-sm text-white/90 font-medium">
                       Total Amount Invested
@@ -267,72 +270,7 @@ function InvestorDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Property */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-4 md:p-6 border-b border-gray-200">
-              <h3 className="text-base md:text-lg font-semibold text-gray-900">
-                Recent Property
-              </h3>
-            </div>
-            <div className="overflow-x-auto -mx-4 md:mx-0">
-              <div className="inline-block min-w-full align-middle px-4 md:px-0">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-3 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        #
-                      </th>
-                      <th className="px-3 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Property Type
-                      </th>
-                      <th className="px-3 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Amount
-                      </th>
-                      <th className="px-3 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">
-                        Date Added
-                      </th>
-                      <th className="px-3 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {recentProperties.map((property) => (
-                      <tr
-                        key={property.id}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-900 whitespace-nowrap">
-                          {property.id}
-                        </td>
-                        <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-900 whitespace-nowrap">
-                          {property.type}
-                        </td>
-                        <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-900 font-medium whitespace-nowrap">
-                          {property.amount}
-                        </td>
-                        <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-500 hidden sm:table-cell whitespace-nowrap">
-                          {property.date}
-                        </td>
-                        <td className="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                          <span
-                            className={`inline-flex px-2 md:px-3 py-1 rounded-full text-xs font-semibold ${
-                              property.status === "Approved"
-                                ? "bg-green-100 text-green-700"
-                                : property.status === "Pending"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {property.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <RecentProperties />
         </div>
 
         {/* Wallet */}
