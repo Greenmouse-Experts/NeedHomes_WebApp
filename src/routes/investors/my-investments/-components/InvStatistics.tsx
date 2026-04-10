@@ -39,7 +39,7 @@ export default function InvStatistics() {
             const items = [
               {
                 label: "Total Invested",
-                value: `$${stats.totalInvested.toLocaleString()}`,
+                value: `N${stats.totalInvested.toLocaleString()}`,
                 icon: Wallet,
                 color: "text-primary",
               },
@@ -61,12 +61,12 @@ export default function InvStatistics() {
                 icon: CheckCircle2,
                 color: "text-secondary",
               },
-              {
-                label: "Cancelled",
-                value: stats.cancelled,
-                icon: XCircle,
-                color: "text-error",
-              },
+              // {
+              //   label: "Cancelled",
+              //   value: stats.cancelled,
+              //   icon: XCircle,
+              //   color: "text-error",
+              // },
             ];
 
             return (

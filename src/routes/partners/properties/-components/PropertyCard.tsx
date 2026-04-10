@@ -15,18 +15,19 @@ export default function PropertyCard({
     }).format(amount);
   };
   const route = (propType: typeof property.investmentModel) => {
-    switch (propType) {
-      //@ts-ignore
-      case "OUTRIGHT_PURCHASE":
-        return "/partners/properties/$propertyId/outright";
-      //@ts-ignore
-      case "LAND_BANKING":
-        return "/investors/properties/$propertyId/land-banking";
-      case "FRACTIONAL_OWNERSHIP":
-        return "/partners/properties/$propertyId/fractional";
-      default:
-        return "/partners/properties/$propertyId/default";
-    }
+    return "/partners/properties/$propertyId/default";
+    // switch (propType) {
+    //   //@ts-ignore
+    //   case "OUTRIGHT_PURCHASE":
+    //     return "/partners/properties/$propertyId/outright";
+    //   //@ts-ignore
+    //   case "LAND_BANKING":
+    //     return "/investors/properties/$propertyId/land-banking";
+    //   case "FRACTIONAL_OWNERSHIP":
+    //     return "/partners/properties/$propertyId/fractional";
+    //   default:
+    //     return "/partners/properties/$propertyId/default";
+    // }
   };
   const link = route(property.investmentModel);
   return (
