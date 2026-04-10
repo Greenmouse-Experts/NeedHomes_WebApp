@@ -440,7 +440,7 @@ function RouteComponent() {
                       <Link
                         to="/dashboard/properties/$propertyId"
                         params={{ propertyId: req.investment.property.id }}
-                        className="btn btn-xs btn-outline gap-1"
+                        className="btn ring btn-primary btn-sm fade btn-outline gap-1"
                       >
                         View Property
                       </Link>
