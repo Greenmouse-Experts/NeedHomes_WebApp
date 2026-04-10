@@ -10,6 +10,7 @@ import {
   List,
   Settings,
   LogOut,
+  ArrowLeftRight,
 } from "lucide-react";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "./ProfileCard";
@@ -75,6 +76,13 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "chat",
       label: "chat",
       icon: <ChatBubbleLeftIcon className="size-4" />,
+      alwaysEnabled: false,
+    },
+    {
+      to: "/investors/resell",
+      activePage: "resell",
+      label: "Resell",
+      icon: <ArrowLeftRight className="size-4" />,
       alwaysEnabled: false,
     },
     {

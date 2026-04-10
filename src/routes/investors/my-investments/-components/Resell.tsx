@@ -110,8 +110,7 @@ export default function Resell({ investment }: { investment: Investment }) {
     },
   });
 
-  const allListings = listingsQuery.data?.data?.data ?? [];
-  const listing = allListings.find(
+  const listing = (listingsQuery.data?.data?.data ?? []).find(
     (l) => l.originalInvestmentId === investment.id,
   );
 

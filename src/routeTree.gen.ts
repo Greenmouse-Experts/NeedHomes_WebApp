@@ -93,6 +93,7 @@ import { Route as PartnersPromotionsIndexRouteImport } from './routes/partners/p
 import { Route as PartnersChatIndexRouteImport } from './routes/partners/chat/index'
 import { Route as InvestorsTransactionsIndexRouteImport } from './routes/investors/transactions/index'
 import { Route as InvestorsSubscriptionsIndexRouteImport } from './routes/investors/subscriptions/index'
+import { Route as InvestorsResellIndexRouteImport } from './routes/investors/resell/index'
 import { Route as InvestorsPropertiesIndexRouteImport } from './routes/investors/properties/index'
 import { Route as InvestorsMyInvestmentsIndexRouteImport } from './routes/investors/my-investments/index'
 import { Route as InvestorsChatIndexRouteImport } from './routes/investors/chat/index'
@@ -640,6 +641,11 @@ const InvestorsSubscriptionsIndexRoute =
     path: '/subscriptions/',
     getParentRoute: () => InvestorsRouteRoute,
   } as any)
+const InvestorsResellIndexRoute = InvestorsResellIndexRouteImport.update({
+  id: '/resell/',
+  path: '/resell/',
+  getParentRoute: () => InvestorsRouteRoute,
+} as any)
 const InvestorsPropertiesIndexRoute =
   InvestorsPropertiesIndexRouteImport.update({
     id: '/',
@@ -1427,6 +1433,7 @@ export interface FileRoutesByFullPath {
   '/investors/chat/': typeof InvestorsChatIndexRoute
   '/investors/my-investments/': typeof InvestorsMyInvestmentsIndexRoute
   '/investors/properties/': typeof InvestorsPropertiesIndexRoute
+  '/investors/resell/': typeof InvestorsResellIndexRoute
   '/investors/subscriptions/': typeof InvestorsSubscriptionsIndexRoute
   '/investors/transactions/': typeof InvestorsTransactionsIndexRoute
   '/partners/chat/': typeof PartnersChatIndexRoute
@@ -1598,6 +1605,7 @@ export interface FileRoutesByTo {
   '/investors/chat': typeof InvestorsChatIndexRoute
   '/investors/my-investments': typeof InvestorsMyInvestmentsIndexRoute
   '/investors/properties': typeof InvestorsPropertiesIndexRoute
+  '/investors/resell': typeof InvestorsResellIndexRoute
   '/investors/subscriptions': typeof InvestorsSubscriptionsIndexRoute
   '/investors/transactions': typeof InvestorsTransactionsIndexRoute
   '/partners/chat': typeof PartnersChatIndexRoute
@@ -1799,6 +1807,7 @@ export interface FileRoutesById {
   '/investors/chat/': typeof InvestorsChatIndexRoute
   '/investors/my-investments/': typeof InvestorsMyInvestmentsIndexRoute
   '/investors/properties/': typeof InvestorsPropertiesIndexRoute
+  '/investors/resell/': typeof InvestorsResellIndexRoute
   '/investors/subscriptions/': typeof InvestorsSubscriptionsIndexRoute
   '/investors/transactions/': typeof InvestorsTransactionsIndexRoute
   '/partners/chat/': typeof PartnersChatIndexRoute
@@ -2001,6 +2010,7 @@ export interface FileRouteTypes {
     | '/investors/chat/'
     | '/investors/my-investments/'
     | '/investors/properties/'
+    | '/investors/resell/'
     | '/investors/subscriptions/'
     | '/investors/transactions/'
     | '/partners/chat/'
@@ -2172,6 +2182,7 @@ export interface FileRouteTypes {
     | '/investors/chat'
     | '/investors/my-investments'
     | '/investors/properties'
+    | '/investors/resell'
     | '/investors/subscriptions'
     | '/investors/transactions'
     | '/partners/chat'
@@ -2372,6 +2383,7 @@ export interface FileRouteTypes {
     | '/investors/chat/'
     | '/investors/my-investments/'
     | '/investors/properties/'
+    | '/investors/resell/'
     | '/investors/subscriptions/'
     | '/investors/transactions/'
     | '/partners/chat/'
@@ -3088,6 +3100,13 @@ declare module '@tanstack/react-router' {
       path: '/subscriptions'
       fullPath: '/investors/subscriptions/'
       preLoaderRoute: typeof InvestorsSubscriptionsIndexRouteImport
+      parentRoute: typeof InvestorsRouteRoute
+    }
+    '/investors/resell/': {
+      id: '/investors/resell/'
+      path: '/resell'
+      fullPath: '/investors/resell/'
+      preLoaderRoute: typeof InvestorsResellIndexRouteImport
       parentRoute: typeof InvestorsRouteRoute
     }
     '/investors/properties/': {
@@ -4508,6 +4527,7 @@ interface InvestorsRouteRouteChildren {
   InvestorsSettingsRoute: typeof InvestorsSettingsRoute
   InvestorsIndexRoute: typeof InvestorsIndexRoute
   InvestorsChatIndexRoute: typeof InvestorsChatIndexRoute
+  InvestorsResellIndexRoute: typeof InvestorsResellIndexRoute
   InvestorsSubscriptionsIndexRoute: typeof InvestorsSubscriptionsIndexRoute
   InvestorsTransactionsIndexRoute: typeof InvestorsTransactionsIndexRoute
   InvestorsTransactionsIdIndexRoute: typeof InvestorsTransactionsIdIndexRoute
@@ -4522,6 +4542,7 @@ const InvestorsRouteRouteChildren: InvestorsRouteRouteChildren = {
   InvestorsSettingsRoute: InvestorsSettingsRoute,
   InvestorsIndexRoute: InvestorsIndexRoute,
   InvestorsChatIndexRoute: InvestorsChatIndexRoute,
+  InvestorsResellIndexRoute: InvestorsResellIndexRoute,
   InvestorsSubscriptionsIndexRoute: InvestorsSubscriptionsIndexRoute,
   InvestorsTransactionsIndexRoute: InvestorsTransactionsIndexRoute,
   InvestorsTransactionsIdIndexRoute: InvestorsTransactionsIdIndexRoute,
