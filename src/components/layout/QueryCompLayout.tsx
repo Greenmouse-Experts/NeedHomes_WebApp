@@ -5,7 +5,7 @@ import type { AxiosError } from "axios";
 import type { ApiResponse } from "@/api/simpleApi";
 import { extract_message } from "@/helpers/apihelpers";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldOff } from "lucide-react";
 
 interface QueryPageLayoutProps<TData> {
   query: QueryObserverResult<TData>;
@@ -58,21 +58,43 @@ export default function QueryCompLayout<TData>(
     );
   }
   if (props.query.error) {
-    const error = extract_message(props.query.error as AxiosError<ApiResponse>);
-    return (
-      <>
-        <div className="p-4 h-[520px] grid place-items-center bg-base-300 rounded-md">
-          <div className="p-4 space-y-4 ">
-            <div className="text-xl font-bold floating-label">{error}</div>
-            <button
-              className="btn btn-error btn-block"
-              onClick={() => props.query.refetch()}
-            >
-              Reload
-            </button>
+    const axiosError = props.query.error as AxiosError<ApiResponse>;
+    const is403 = axiosError?.response?.status === 403;
+    const error = extract_message(axiosError);
+
+    if (is403) {
+      return (
+        <div className="p-4 h-[520px] grid place-items-center bg-base-100 rounded-md border border-base-200">
+          <div className="flex flex-col items-center gap-4 text-center max-w-xs">
+            <div className="p-4 rounded-full bg-error/10 text-error">
+              <ShieldOff className="w-8 h-8" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-base-content">
+                Access Denied
+              </h3>
+              <p className="text-sm text-base-content/60">
+                You don't have permission to view this resource. Contact support
+                or a Super Admin to request access.
+              </p>
+            </div>
           </div>
         </div>
-      </>
+      );
+    }
+
+    return (
+      <div className="p-4 h-[520px] grid place-items-center bg-base-300 rounded-md">
+        <div className="p-4 space-y-4">
+          <div className="text-xl font-bold floating-label">{error}</div>
+          <button
+            className="btn btn-error btn-block"
+            onClick={() => props.query.refetch()}
+          >
+            Reload
+          </button>
+        </div>
+      </div>
     );
   }
 
