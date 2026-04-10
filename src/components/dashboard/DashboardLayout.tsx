@@ -21,6 +21,7 @@ import {
   Briefcase,
   FileText,
   ClipboardList,
+  ArrowLeftRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
@@ -86,6 +87,11 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
         label: "Exit Requests",
         to: "/dashboard/exit-requests",
         icon: LogOut,
+      },
+      {
+        label: "Resell Requests",
+        to: "/dashboard/resell",
+        icon: ArrowLeftRight,
       },
       {
         label: "Promotions",

@@ -79,6 +79,7 @@ import { Route as DashboardTransactionsRouteRouteImport } from './routes/dashboa
 import { Route as DashboardTermsRouteRouteImport } from './routes/dashboard/terms/route'
 import { Route as DashboardSubscriptionsRouteRouteImport } from './routes/dashboard/subscriptions/route'
 import { Route as DashboardSubAdminsRouteRouteImport } from './routes/dashboard/sub-admins/route'
+import { Route as DashboardResellRouteRouteImport } from './routes/dashboard/resell/route'
 import { Route as DashboardPropertiesRouteRouteImport } from './routes/dashboard/properties/route'
 import { Route as DashboardNotificationsRouteRouteImport } from './routes/dashboard/notifications/route'
 import { Route as DashboardJobsRouteRouteImport } from './routes/dashboard/jobs/route'
@@ -108,6 +109,7 @@ import { Route as DashboardTermsIndexRouteImport } from './routes/dashboard/term
 import { Route as DashboardSubscriptionsIndexRouteImport } from './routes/dashboard/subscriptions/index'
 import { Route as DashboardSubAdminsIndexRouteImport } from './routes/dashboard/sub-admins/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
+import { Route as DashboardResellIndexRouteImport } from './routes/dashboard/resell/index'
 import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/partners/index'
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications/index'
 import { Route as DashboardJobsIndexRouteImport } from './routes/dashboard/jobs/index'
@@ -564,6 +566,11 @@ const DashboardSubAdminsRouteRoute = DashboardSubAdminsRouteRouteImport.update({
   path: '/sub-admins',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardResellRouteRoute = DashboardResellRouteRouteImport.update({
+  id: '/resell',
+  path: '/resell',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardPropertiesRouteRoute =
   DashboardPropertiesRouteRouteImport.update({
     id: '/properties',
@@ -724,6 +731,11 @@ const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardResellIndexRoute = DashboardResellIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardResellRouteRoute,
 } as any)
 const DashboardPartnersIndexRoute = DashboardPartnersIndexRouteImport.update({
   id: '/',
@@ -1354,6 +1366,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
+  '/dashboard/resell': typeof DashboardResellRouteRouteWithChildren
   '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
   '/dashboard/subscriptions': typeof DashboardSubscriptionsRouteRouteWithChildren
   '/dashboard/terms': typeof DashboardTermsRouteRouteWithChildren
@@ -1419,6 +1432,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
+  '/dashboard/resell/': typeof DashboardResellIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/dashboard/sub-admins/': typeof DashboardSubAdminsIndexRoute
   '/dashboard/subscriptions/': typeof DashboardSubscriptionsIndexRoute
@@ -1591,6 +1605,7 @@ export interface FileRoutesByTo {
   '/dashboard/jobs': typeof DashboardJobsIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
   '/dashboard/partners': typeof DashboardPartnersIndexRoute
+  '/dashboard/resell': typeof DashboardResellIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
   '/dashboard/sub-admins': typeof DashboardSubAdminsIndexRoute
   '/dashboard/subscriptions': typeof DashboardSubscriptionsIndexRoute
@@ -1728,6 +1743,7 @@ export interface FileRoutesById {
   '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
   '/dashboard/properties': typeof DashboardPropertiesRouteRouteWithChildren
+  '/dashboard/resell': typeof DashboardResellRouteRouteWithChildren
   '/dashboard/sub-admins': typeof DashboardSubAdminsRouteRouteWithChildren
   '/dashboard/subscriptions': typeof DashboardSubscriptionsRouteRouteWithChildren
   '/dashboard/terms': typeof DashboardTermsRouteRouteWithChildren
@@ -1793,6 +1809,7 @@ export interface FileRoutesById {
   '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
   '/dashboard/partners/': typeof DashboardPartnersIndexRoute
+  '/dashboard/resell/': typeof DashboardResellIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/dashboard/sub-admins/': typeof DashboardSubAdminsIndexRoute
   '/dashboard/subscriptions/': typeof DashboardSubscriptionsIndexRoute
@@ -1931,6 +1948,7 @@ export interface FileRouteTypes {
     | '/dashboard/jobs'
     | '/dashboard/notifications'
     | '/dashboard/properties'
+    | '/dashboard/resell'
     | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
     | '/dashboard/terms'
@@ -1996,6 +2014,7 @@ export interface FileRouteTypes {
     | '/dashboard/jobs/'
     | '/dashboard/notifications/'
     | '/dashboard/partners/'
+    | '/dashboard/resell/'
     | '/dashboard/settings/'
     | '/dashboard/sub-admins/'
     | '/dashboard/subscriptions/'
@@ -2168,6 +2187,7 @@ export interface FileRouteTypes {
     | '/dashboard/jobs'
     | '/dashboard/notifications'
     | '/dashboard/partners'
+    | '/dashboard/resell'
     | '/dashboard/settings'
     | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
@@ -2304,6 +2324,7 @@ export interface FileRouteTypes {
     | '/dashboard/jobs'
     | '/dashboard/notifications'
     | '/dashboard/properties'
+    | '/dashboard/resell'
     | '/dashboard/sub-admins'
     | '/dashboard/subscriptions'
     | '/dashboard/terms'
@@ -2369,6 +2390,7 @@ export interface FileRouteTypes {
     | '/dashboard/jobs/'
     | '/dashboard/notifications/'
     | '/dashboard/partners/'
+    | '/dashboard/resell/'
     | '/dashboard/settings/'
     | '/dashboard/sub-admins/'
     | '/dashboard/subscriptions/'
@@ -3004,6 +3026,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSubAdminsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/resell': {
+      id: '/dashboard/resell'
+      path: '/resell'
+      fullPath: '/dashboard/resell'
+      preLoaderRoute: typeof DashboardResellRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/properties': {
       id: '/dashboard/properties'
       path: '/properties'
@@ -3206,6 +3235,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/settings/'
       preLoaderRoute: typeof DashboardSettingsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/resell/': {
+      id: '/dashboard/resell/'
+      path: '/'
+      fullPath: '/dashboard/resell/'
+      preLoaderRoute: typeof DashboardResellIndexRouteImport
+      parentRoute: typeof DashboardResellRouteRoute
     }
     '/dashboard/partners/': {
       id: '/dashboard/partners/'
@@ -4140,6 +4176,17 @@ const DashboardPropertiesRouteRouteWithChildren =
     DashboardPropertiesRouteRouteChildren,
   )
 
+interface DashboardResellRouteRouteChildren {
+  DashboardResellIndexRoute: typeof DashboardResellIndexRoute
+}
+
+const DashboardResellRouteRouteChildren: DashboardResellRouteRouteChildren = {
+  DashboardResellIndexRoute: DashboardResellIndexRoute,
+}
+
+const DashboardResellRouteRouteWithChildren =
+  DashboardResellRouteRoute._addFileChildren(DashboardResellRouteRouteChildren)
+
 interface DashboardSubAdminsRouteRouteChildren {
   DashboardSubAdminsPermissionsRoute: typeof DashboardSubAdminsPermissionsRoute
   DashboardSubAdminsRolesRoute: typeof DashboardSubAdminsRolesRoute
@@ -4282,6 +4329,7 @@ interface DashboardRouteRouteChildren {
   DashboardJobsRouteRoute: typeof DashboardJobsRouteRouteWithChildren
   DashboardNotificationsRouteRoute: typeof DashboardNotificationsRouteRouteWithChildren
   DashboardPropertiesRouteRoute: typeof DashboardPropertiesRouteRouteWithChildren
+  DashboardResellRouteRoute: typeof DashboardResellRouteRouteWithChildren
   DashboardSubAdminsRouteRoute: typeof DashboardSubAdminsRouteRouteWithChildren
   DashboardSubscriptionsRouteRoute: typeof DashboardSubscriptionsRouteRouteWithChildren
   DashboardTermsRouteRoute: typeof DashboardTermsRouteRouteWithChildren
@@ -4304,6 +4352,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardNotificationsRouteRoute:
     DashboardNotificationsRouteRouteWithChildren,
   DashboardPropertiesRouteRoute: DashboardPropertiesRouteRouteWithChildren,
+  DashboardResellRouteRoute: DashboardResellRouteRouteWithChildren,
   DashboardSubAdminsRouteRoute: DashboardSubAdminsRouteRouteWithChildren,
   DashboardSubscriptionsRouteRoute:
     DashboardSubscriptionsRouteRouteWithChildren,
