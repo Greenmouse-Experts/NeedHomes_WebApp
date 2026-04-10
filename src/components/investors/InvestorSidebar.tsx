@@ -58,6 +58,13 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       alwaysEnabled: false,
     },
     {
+      to: "/investors/resell",
+      activePage: "resell",
+      label: "Resell",
+      icon: <ArrowLeftRight className="size-4" />,
+      alwaysEnabled: false,
+    },
+    {
       to: "/investors/notifications",
       activePage: "notifications",
       label: "Notifications",
@@ -78,13 +85,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       icon: <ChatBubbleLeftIcon className="size-4" />,
       alwaysEnabled: false,
     },
-    {
-      to: "/investors/resell",
-      activePage: "resell",
-      label: "Resell",
-      icon: <ArrowLeftRight className="size-4" />,
-      alwaysEnabled: false,
-    },
+
     {
       to: "/investors/announcements",
       activePage: "announcements",
