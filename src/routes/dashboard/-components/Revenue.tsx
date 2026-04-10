@@ -1,5 +1,6 @@
 import apiClient from "@/api/simpleApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, Calendar } from "lucide-react";
 import { useState } from "react";
@@ -47,8 +48,6 @@ export default function AdminRevenue() {
   });
 
   const trend = query.data?.data;
-  const points: TrendPoint[] = trend?.data ?? [];
-  const maxTotal = Math.max(...points.map((p) => p.total), 1);
 
   return (
     <Card className="lg:col-span-2">
@@ -96,57 +95,59 @@ export default function AdminRevenue() {
       </CardHeader>
 
       <CardContent className="p-4 md:p-6">
-        {query.isLoading ? (
-          <div className="h-48 md:h-64 flex items-center justify-center text-sm text-gray-400">
-            Loading...
-          </div>
-        ) : query.isError ? (
-          <div className="h-48 md:h-64 flex items-center justify-center text-sm text-red-400">
-            Failed to load revenue data.
-          </div>
-        ) : points.length === 0 ? (
-          <div className="h-48 md:h-64 flex items-center justify-center text-sm text-gray-400">
-            No data for selected period.
-          </div>
-        ) : (
-          <>
-            <div className="h-48 md:h-64 flex items-end gap-1 md:gap-1.5 overflow-x-auto pb-1">
-              {points.map((point) => {
-                const heightPct = Math.max((point.total / maxTotal) * 100, 2);
-                return (
-                  <div
-                    key={point.date}
-                    className="flex flex-col items-center gap-1 flex-1 min-w-[28px] group"
-                  >
-                    <div className="relative w-full flex flex-col items-center">
-                      {/* Tooltip */}
-                      <div className="absolute bottom-full mb-1 hidden group-hover:flex flex-col items-center z-10 pointer-events-none">
-                        <div className="bg-gray-800 text-white text-[10px] rounded px-1.5 py-0.5 whitespace-nowrap">
-                          {formatNaira(point.total)}
-                        </div>
-                        <div className="w-1.5 h-1.5 bg-gray-800 rotate-45 -mt-0.5" />
-                      </div>
-                      <div
-                        className="w-full bg-gradient-to-t from-[var(--color-orange)] to-orange-300 rounded-t transition-all duration-300"
-                        style={{ height: `${(heightPct / 100) * (groupBy === "month" ? 256 : 192)}px` }}
-                      />
-                    </div>
-                    <span className="text-[9px] md:text-[10px] text-gray-500 truncate max-w-full">
-                      {point.date.length === 7
-                        ? new Date(point.date + "-01").toLocaleString("en", { month: "short" })
-                        : point.date.slice(5)}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+        <QueryCompLayout query={query} loadingText="Loading revenue data...">
+          {(data) => {
+            const trend = data.data;
+            const points: TrendPoint[] = trend?.data ?? [];
+            const maxTotal = Math.max(...points.map((p) => p.total), 1);
 
-            <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
-              <div className="w-2.5 h-2.5 rounded bg-[var(--color-orange)]" />
-              <span>Revenue in Naira · grouped by {groupBy}</span>
-            </div>
-          </>
-        )}
+            if (points.length === 0) {
+              return (
+                <div className="h-48 md:h-64 flex items-center justify-center text-sm text-gray-400">
+                  No data for selected period.
+                </div>
+              );
+            }
+
+            return (
+              <>
+                <div className="h-48 md:h-64 flex items-end gap-1 md:gap-1.5 overflow-x-auto pb-1">
+                  {points.map((point) => {
+                    const heightPct = Math.max((point.total / maxTotal) * 100, 2);
+                    return (
+                      <div
+                        key={point.date}
+                        className="flex flex-col items-center gap-1 flex-1 min-w-[28px] group"
+                      >
+                        <div className="relative w-full flex flex-col items-center">
+                          <div className="absolute bottom-full mb-1 hidden group-hover:flex flex-col items-center z-10 pointer-events-none">
+                            <div className="bg-gray-800 text-white text-[10px] rounded px-1.5 py-0.5 whitespace-nowrap">
+                              {formatNaira(point.total)}
+                            </div>
+                            <div className="w-1.5 h-1.5 bg-gray-800 rotate-45 -mt-0.5" />
+                          </div>
+                          <div
+                            className="w-full bg-gradient-to-t from-[var(--color-orange)] to-orange-300 rounded-t transition-all duration-300"
+                            style={{ height: `${(heightPct / 100) * (groupBy === "month" ? 256 : 192)}px` }}
+                          />
+                        </div>
+                        <span className="text-[9px] md:text-[10px] text-gray-500 truncate max-w-full">
+                          {point.date.length === 7
+                            ? new Date(point.date + "-01").toLocaleString("en", { month: "short" })
+                            : point.date.slice(5)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
+                  <div className="w-2.5 h-2.5 rounded bg-[var(--color-orange)]" />
+                  <span>Revenue in Naira · grouped by {groupBy}</span>
+                </div>
+              </>
+            );
+          }}
+        </QueryCompLayout>
       </CardContent>
     </Card>
   );
