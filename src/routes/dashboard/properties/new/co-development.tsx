@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { MutationCache, useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
@@ -55,16 +55,10 @@ function RouteComponent() {
       exitRule: "ANYTIME",
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
-      paymentOption: "FULL_PAYMENT",
-      exitRule: "ANYTIME",
       premiumProperty: false,
 
       additionalFees: [],
     },
-  });
-  const paymentOption = useWatch({
-    control: form.control,
-    name: "paymentOption",
   });
   const mutation = useMutation({
     mutationFn: async (data: CoDevelopmentFormValues) => {
@@ -116,8 +110,8 @@ function RouteComponent() {
         projectEndDate: data.projectEndDate
           ? new Date(data.projectEndDate).toISOString()
           : null,
-        paymentDuration: data.paymentOption === "INSTALLMENT" ? data.paymentDuration : undefined,
-        minimumFirstPaymentPercentage: data.paymentOption === "INSTALLMENT" ? data.minimumFirstPaymentPercentage : undefined,
+        paymentDuration: data.paymentDuration,
+        minimumFirstPaymentPercentage: data.minimumFirstPaymentPercentage,
       };
       delete payload.basePrice;
       delete payload.minimumInvestment;
@@ -193,47 +187,33 @@ function RouteComponent() {
               <option value="NOT_ALLOWED">Not Allowed</option>
             </LocalSelect>
             <Controller
-              name="paymentOption"
+              name="paymentDuration"
               control={form.control}
               render={({ field }) => (
-                <LocalSelect {...field} label="Payment Option">
-                  <option value="FULL_PAYMENT">Full Payment</option>
-                  <option value="INSTALLMENT">Installment</option>
-                </LocalSelect>
+                //@ts-ignore
+                <SimpleInput
+                  {...field}
+                  type="number"
+                  label="Payment Duration (Months)"
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
               )}
             />
-            {paymentOption === "INSTALLMENT" && (
-              <>
-                <Controller
-                  name="paymentDuration"
-                  control={form.control}
-                  render={({ field }) => (
-                    //@ts-ignore
-                    <SimpleInput
-                      {...field}
-                      type="number"
-                      label="Payment Duration (Months)"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
+            <Controller
+              name="minimumFirstPaymentPercentage"
+              control={form.control}
+              render={({ field }) => (
+                //@ts-ignore
+                <SimpleInput
+                  {...field}
+                  type="number"
+                  label="Minimum First Payment (%)"
+                  min={1}
+                  max={100}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
-                <Controller
-                  name="minimumFirstPaymentPercentage"
-                  control={form.control}
-                  render={({ field }) => (
-                    //@ts-ignore
-                    <SimpleInput
-                      {...field}
-                      type="number"
-                      label="Minimum First Payment (%)"
-                      min={1}
-                      max={100}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                    />
-                  )}
-                />
-              </>
-            )}
+              )}
+            />
           </div>
         </>
       </DefaultForm>
