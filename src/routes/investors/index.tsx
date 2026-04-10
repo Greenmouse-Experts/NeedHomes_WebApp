@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bell, CheckCircle2, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth, useKyc } from "@/store/authStore";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import CalendarWidget from "@/components/CalendarWidget";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
@@ -83,6 +85,23 @@ function InvestorDashboard() {
     user?.profilePicture ||
     "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
+  const statsQuery = useQuery<
+    ApiResponse<{
+      total: number;
+      active: number;
+      completed: number;
+      cancelled: number;
+      totalInvested: number;
+    }>
+  >({
+    queryKey: ["investments", "statistics"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/investments/my-investments/stats");
+      return resp.data;
+    },
+  });
+  const stats = statsQuery.data?.data;
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -148,10 +167,10 @@ function InvestorDashboard() {
                   </div>
                   <div>
                     <p className="text-2xl md:text-3xl font-bold text-white">
-                      10
+                      {stats?.total ?? "—"}
                     </p>
                     <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Total Property
+                      Total Investments
                     </p>
                   </div>
                 </div>
@@ -175,10 +194,10 @@ function InvestorDashboard() {
                   </div>
                   <div>
                     <p className="text-xl md:text-2xl font-bold text-white">
-                      N 20,000,000
+                      {stats ? `₦${(stats.totalInvested / 100).toLocaleString()}` : "—"}
                     </p>
                     <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Total Amount Paid
+                      Total Amount Invested
                     </p>
                   </div>
                 </div>
@@ -202,7 +221,7 @@ function InvestorDashboard() {
                   </div>
                   <div>
                     <p className="text-2xl md:text-3xl font-bold text-white">
-                      5
+                      {stats?.active ?? "—"}
                     </p>
                     <p className="text-xs md:text-sm text-white/90 font-medium">
                       Active Investments
@@ -229,10 +248,10 @@ function InvestorDashboard() {
                   </div>
                   <div>
                     <p className="text-xl md:text-2xl font-bold text-white">
-                      N 45,000,000
+                      {stats?.completed ?? "—"}
                     </p>
                     <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Portfolio Value
+                      Completed Investments
                     </p>
                   </div>
                 </div>
