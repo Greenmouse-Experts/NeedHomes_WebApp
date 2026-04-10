@@ -3,7 +3,7 @@ export interface USER {
   email: string;
   firstName: string;
   lastName: string;
-  accountType: "INDIVIDUAL" | "INVESTOR" | "PARTNER";
+  accountType: "INDIVIDUAL" | "INVESTOR" | "PARTNER" | "ADMIN";
   isEmailVerified: boolean;
   roles: string[];
   permissions: string[];
