@@ -13,6 +13,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import PageLoader from "@/components/layout/PageLoader";
 import SearchBar from "@/routes/-components/Searchbar";
 import type { INVESTOR } from "@/types";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
@@ -29,7 +30,7 @@ function InvestorsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
-  const { data, isLoading, error } = useQuery<ApiResponseV2<INVESTOR[]>>({
+  const query = useQuery<ApiResponseV2<INVESTOR[]>>({
     queryKey: ["investors", props.page],
     queryFn: async () => {
       const response = await apiClient.get(
@@ -44,7 +45,7 @@ function InvestorsPage() {
     },
   });
 
-  const investorsData = data?.data.data || [];
+  const investorsData = query.data?.data.data || [];
 
   const filteredInvestors = investorsData.filter(
     (investor) =>
@@ -144,19 +145,8 @@ function InvestorsPage() {
         </div>
       </div>
 
-      {isLoading && (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-orange"></div>
-        </div>
-      )}
-
-      {error && (
-        <div className="text-center py-20 text-red-500">
-          Failed to load investors. Please try again.
-        </div>
-      )}
-
-      {!isLoading && !error && viewMode === "list" && (
+      <PageLoader query={query}>
+      {viewMode === "list" && (
         <CustomTable
           paginationProps={props}
           data={filteredInvestors}
@@ -166,7 +156,7 @@ function InvestorsPage() {
         />
       )}
 
-      {!isLoading && !error && viewMode === "grid" && (
+      {viewMode === "grid" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredInvestors.length > 0 ? (
             filteredInvestors.map((investor) => (
@@ -236,15 +226,7 @@ function InvestorsPage() {
           )}
         </div>
       )}
-
-      {!isLoading &&
-        !error &&
-        filteredInvestors.length === 0 &&
-        viewMode === "list" && (
-          <div className="text-center py-20 text-gray-500">
-            No investors match your search.
-          </div>
-        )}
+      </PageLoader>
     </>
   );
 }

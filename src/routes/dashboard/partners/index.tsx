@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
+import PageLoader from "@/components/layout/PageLoader";
 import SearchBar from "@/routes/-components/Searchbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
@@ -35,7 +36,7 @@ function PartnersPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
-  const { data, isLoading, error } = useQuery<ApiResponseV2<PARTNER[]>>({
+  const query = useQuery<ApiResponseV2<PARTNER[]>>({
     queryKey: ["partners", props.page],
     queryFn: async () => {
       const response = await apiClient.get("admin/users?accountType=PARTNER", {
@@ -47,7 +48,7 @@ function PartnersPage() {
     },
   });
 
-  const partnersData = data?.data.data || [];
+  const partnersData = query.data?.data.data || [];
 
   const filteredPartners = partnersData.filter(
     (partner) =>
@@ -193,54 +194,28 @@ function PartnersPage() {
         </div>
       </div>
 
-      {/* Loading & Error States */}
-      {isLoading && (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-orange"></div>
-        </div>
-      )}
-
-      {error && (
-        <div className="text-center py-20 text-red-500">
-          Failed to load partners. Please try again.
-        </div>
-      )}
-
-      {/* Partners Grid/List */}
-      {!isLoading && !error && viewMode === "grid" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
-          {filteredPartners.length > 0 ? (
-            filteredPartners.map((partner) => (
-              <>
-                <PartnerListCard item={partner} />
-              </>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-10 text-gray-500">
-              No partners found.
-            </div>
-          )}
-        </div>
-      ) : (
-        <CustomTable
-          paginationProps={props}
-          data={filteredPartners}
-          columns={columns}
-          actions={actions}
-        />
-      )}
-
-      {/* Empty State for filtered results */}
-      {!isLoading &&
-        !error &&
-        filteredPartners.length === 0 &&
-        partnersData.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <p className="text-gray-500">
-              No partners found matching your search.
-            </p>
+      <PageLoader query={query}>
+        {viewMode === "grid" ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+            {filteredPartners.length > 0 ? (
+              filteredPartners.map((partner) => (
+                <PartnerListCard key={partner.id} item={partner} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-gray-500">
+                No partners found.
+              </div>
+            )}
           </div>
+        ) : (
+          <CustomTable
+            paginationProps={props}
+            data={filteredPartners}
+            columns={columns}
+            actions={actions}
+          />
         )}
+      </PageLoader>
     </DashboardLayout>
   );
 }

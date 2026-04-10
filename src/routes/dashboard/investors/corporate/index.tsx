@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
+import PageLoader from "@/components/layout/PageLoader";
 import SearchBar from "@/routes/-components/Searchbar";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import type { INVESTOR } from "@/types";
@@ -33,7 +34,7 @@ function InvestorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const props = usePagination();
-  const { data, isLoading, error } = useQuery<ApiResponseV2<INVESTOR[]>>({
+  const query = useQuery<ApiResponseV2<INVESTOR[]>>({
     queryKey: ["investors", "corporate", props.page],
     queryFn: async () => {
       const response = await apiClient.get(
@@ -48,7 +49,7 @@ function InvestorsPage() {
     },
   });
 
-  const investorsData = data?.data.data || [];
+  const investorsData = query.data?.data.data || [];
 
   const filteredInvestors = investorsData.filter(
     (investor) =>
@@ -181,21 +182,8 @@ function InvestorsPage() {
         </div>
       </div>
 
-      {/* Loading & Error States */}
-      {isLoading && (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-orange"></div>
-        </div>
-      )}
-
-      {error && (
-        <div className="text-center py-20 text-red-500">
-          Failed to load investors. Please try again.
-        </div>
-      )}
-
-      {/* Investors List View */}
-      {!isLoading && !error && viewMode === "list" && (
+      <PageLoader query={query}>
+      {viewMode === "list" && (
         <CustomTable
           data={filteredInvestors}
           columns={investorColumns}
@@ -204,8 +192,7 @@ function InvestorsPage() {
         />
       )}
 
-      {/* Investors Grid View (Placeholder - implement as needed) */}
-      {!isLoading && !error && viewMode === "grid" && (
+      {viewMode === "grid" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
           {filteredInvestors.length > 0 ? (
             filteredInvestors.map((investor) => (
@@ -275,11 +262,7 @@ function InvestorsPage() {
         </div>
       )}
 
-      {!isLoading && !error && filteredInvestors.length === 0 && (
-        <div className="text-center py-20 text-gray-500">
-          No investors match your search.
-        </div>
-      )}
+      </PageLoader>
     </>
   );
 }
