@@ -7,6 +7,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
 import UserWallet from "../-components/Wallet";
 import Example from "./-components/Chart";
+import InvStatistics from "./my-investments/-components/InvStatistics";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -320,6 +321,7 @@ function InvestorDashboard() {
           <UserWallet />
         </div>
       </div>
+      <InvStatistics />
       {/* Monthly Analysis */}
       <Example />
     </div>
