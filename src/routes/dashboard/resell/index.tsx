@@ -7,13 +7,14 @@ import { extract_message } from "@/helpers/apihelpers";
 import { usePagination } from "@/helpers/pagination";
 import SearchBar from "@/routes/-components/Searchbar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeftRight,
   CheckCircle2,
   XCircle,
   Clock,
   BadgeCheck,
+  Eye,
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -212,31 +213,40 @@ function RouteComponent() {
     {
       key: "action",
       label: "Actions",
-      render: (_, item) =>
-        item.resellStatus === "PENDING" ? (
-          <div className="flex gap-2">
-            <button
-              className="btn btn-xs btn-error btn-outline gap-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                openReject(item);
-              }}
-            >
-              <XCircle className="w-3 h-3" /> Reject
-            </button>
-            <button
-              className="btn btn-xs btn-success gap-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                openApprove(item);
-              }}
-            >
-              <CheckCircle2 className="w-3 h-3" /> Approve
-            </button>
-          </div>
-        ) : (
-          <span className="text-base-content/30 text-xs">—</span>
-        ),
+      render: (_, item) => (
+        <div className="flex gap-2 flex-wrap">
+          <Link
+            to="/dashboard/properties/investments/$id"
+            params={{ id: item.originalInvestmentId }}
+            onClick={(e) => e.stopPropagation()}
+            className="btn btn-xs btn-outline gap-1"
+          >
+            <Eye className="w-3 h-3" /> View Investment
+          </Link>
+          {item.resellStatus === "PENDING" && (
+            <>
+              <button
+                className="btn btn-xs btn-error btn-outline gap-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openReject(item);
+                }}
+              >
+                <XCircle className="w-3 h-3" /> Reject
+              </button>
+              <button
+                className="btn btn-xs btn-success gap-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openApprove(item);
+                }}
+              >
+                <CheckCircle2 className="w-3 h-3" /> Approve
+              </button>
+            </>
+          )}
+        </div>
+      ),
     },
   ];
 
