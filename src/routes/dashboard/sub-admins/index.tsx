@@ -60,7 +60,7 @@ function RouteComponent() {
 
   const suspendMutation = useMutation({
     mutationFn: async (id: string) => {
-      const resp = await apiClient.patch(`${id}/suspend`);
+      const resp = await apiClient.patch(`admin/users/${id}/suspend`);
       return resp.data;
     },
     onSuccess: () => {
@@ -70,7 +70,7 @@ function RouteComponent() {
 
   const unsuspendMutation = useMutation({
     mutationFn: async (id: string) => {
-      const resp = await apiClient.patch(`${id}/unsuspend`);
+      const resp = await apiClient.patch(`admin/users/${id}/unsuspend`);
       return resp.data;
     },
     onSuccess: () => {
