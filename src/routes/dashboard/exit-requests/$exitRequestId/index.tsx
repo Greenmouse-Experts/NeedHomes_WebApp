@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { extract_message } from "@/helpers/apihelpers";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ChevronLeft,
   CheckCircle2,
@@ -429,11 +429,22 @@ function RouteComponent() {
 
                 {/* Property info */}
                 <div className="card bg-base-100 shadow-sm border border-base-200">
-                  <div className="border-b border-base-200 px-6 py-4 flex items-center gap-2">
-                    <Home className="w-4 h-4 text-base-content/60" />
-                    <h3 className="font-semibold text-sm uppercase tracking-wider">
-                      Property
-                    </h3>
+                  <div className="border-b border-base-200 px-6 py-4 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Home className="w-4 h-4 text-base-content/60" />
+                      <h3 className="font-semibold text-sm uppercase tracking-wider">
+                        Property
+                      </h3>
+                    </div>
+                    {req.investment?.property?.id && (
+                      <Link
+                        to="/dashboard/properties/$propertyId"
+                        params={{ propertyId: req.investment.property.id }}
+                        className="btn btn-xs btn-outline gap-1"
+                      >
+                        View Property
+                      </Link>
+                    )}
                   </div>
                   <div className="divide-y divide-base-200">
                     {[
