@@ -8,7 +8,7 @@ import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleSelect from "@/simpleComps/inputs/SimpleSelect";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -26,6 +26,7 @@ interface SubAdmin {
   email: string;
   phone: string;
   createdAt: string;
+  account_status: string;
   roles: { id: string; name: string }[];
 }
 function RouteComponent() {
@@ -55,6 +56,28 @@ function RouteComponent() {
       query.refetch();
     },
   });
+  const queryClient = useQueryClient();
+
+  const suspendMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const resp = await apiClient.patch(`${id}/suspend`);
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sub-admins"] });
+    },
+  });
+
+  const unsuspendMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const resp = await apiClient.patch(`${id}/unsuspend`);
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sub-admins"] });
+    },
+  });
+
   const dialog = useModal();
   const onSubmit = (data: any) => {
     toast.promise(mutation.mutateAsync(data), {
@@ -76,6 +99,19 @@ function RouteComponent() {
         value.map((role) => role.name).join(", "),
     },
     {
+      key: "account_status",
+      label: "Status",
+      render: (value) => (
+        <span
+          className={`badge badge-soft badge-sm ${
+            value === "SUSPENDED" ? "badge-error" : "badge-success"
+          }`}
+        >
+          {value ?? "ACTIVE"}
+        </span>
+      ),
+    },
+    {
       key: "createdAt",
       label: "Created At",
       render: (value) => new Date(value).toLocaleString(),
@@ -84,19 +120,27 @@ function RouteComponent() {
 
   const actions: Actions<SubAdmin>[] = [
     {
-      key: "edit",
-      label: "Edit",
-      action: (item, nav) => {
-        // Handle edit action, e.g., navigate to edit page or open edit modal
-        toast.info(`Editing sub-admin: ${item.firstName} ${item.lastName}`);
+      key: "suspend",
+      label: "Suspend",
+      disabled: (item) => item.account_status === "SUSPENDED",
+      action: (item) => {
+        toast.promise(suspendMutation.mutateAsync(item.id), {
+          loading: "Suspending sub-admin...",
+          success: "Sub-admin suspended",
+          error: extract_message,
+        });
       },
     },
     {
-      key: "delete",
-      label: "Delete",
-      action: (item, nav) => {
-        // Handle delete action
-        toast.error(`Deleting sub-admin: ${item.firstName} ${item.lastName}`);
+      key: "unsuspend",
+      label: "Unsuspend",
+      disabled: (item) => item.account_status !== "SUSPENDED",
+      action: (item) => {
+        toast.promise(unsuspendMutation.mutateAsync(item.id), {
+          loading: "Unsuspending sub-admin...",
+          success: "Sub-admin unsuspended",
+          error: extract_message,
+        });
       },
     },
   ];
