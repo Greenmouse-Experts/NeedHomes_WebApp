@@ -21,6 +21,7 @@ import { useEffect, useRef } from "react";
 import { io, type Socket } from "socket.io-client";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
+import AdminRevenue from "./-components/Revenue";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
@@ -124,51 +125,7 @@ function DashboardIndexPage() {
       </Card>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Revenue Chart */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="p-4 md:p-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div>
-                <CardTitle className="text-base md:text-lg">
-                  Today Revenue Trend
-                </CardTitle>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xl md:text-2xl font-bold text-green-600">
-                    24.6%
-                  </span>
-                  <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600 border border-gray-300 rounded-lg px-2 md:px-3 py-1.5 md:py-2">
-                <Calendar className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">Jan 2024 - Dec 2024</span>
-                <span className="sm:hidden">2024</span>
-                <ChevronDown className="w-3 h-3 md:w-4 md:h-4" />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-4 md:p-6">
-            <div className="h-48 md:h-64 flex items-end justify-between gap-1 md:gap-2">
-              {/* Simple bar chart representation */}
-              {[40, 60, 45, 80, 65, 90, 75, 85, 70, 95, 88, 100].map(
-                (height, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 bg-gradient-to-t from-[var(--color-orange)] to-[var(--color-orange-light)] rounded-t"
-                    style={{ height: `${height}%` }}
-                  ></div>
-                ),
-              )}
-            </div>
-            <div className="mt-3 md:mt-4 text-xs md:text-sm text-gray-600">
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="w-2 h-2 md:w-3 md:h-3 bg-[var(--color-orange)] rounded"></div>
-                <span>N125.2k 12.5%</span>
-                <span className="text-gray-400">NOV 1, 2023</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
+        <AdminRevenue />
         {/* Wallet */}
         <Card>
           <CardHeader className="p-4 md:p-6">
