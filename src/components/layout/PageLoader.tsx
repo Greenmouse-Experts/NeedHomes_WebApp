@@ -1,6 +1,8 @@
 import { extract_message } from "@/helpers/apihelpers";
 import type { QueryObserverResult } from "@tanstack/react-query";
-import { Loader2, AlertCircle, RefreshCcw } from "lucide-react";
+import type { AxiosError } from "axios";
+import type { ApiResponse } from "@/api/simpleApi";
+import { Loader2, AlertCircle, RefreshCcw, ShieldOff } from "lucide-react";
 
 interface PageLoaderProps<TData> {
   children?: React.ReactNode | ((data: TData) => React.ReactNode);
@@ -53,6 +55,24 @@ export default function PageLoader<TData>(props: PageLoaderProps<TData>) {
   }
 
   if (query.isError) {
+    const is403 =
+      (query.error as AxiosError<ApiResponse>)?.response?.status === 403;
+
+    if (is403) {
+      return (
+        <div className="min-h-[40vh] w-full flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95 duration-300">
+          <div className="mb-4 rounded-full bg-error/10 p-3 text-error">
+            <ShieldOff className="h-8 w-8" />
+          </div>
+          <h3 className="text-lg font-bold text-base-content">Access Denied</h3>
+          <p className="mt-1 text-sm text-base-content/60 max-w-xs">
+            You don't have permission to view this resource. Contact support or
+            a Super Admin to request access.
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-[40vh] w-full flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95 duration-300">
         <div className="mb-4 rounded-full bg-error/10 p-3 text-error">
