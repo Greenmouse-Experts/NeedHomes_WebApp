@@ -18,7 +18,8 @@ export const Route = createFileRoute("/dashboard")({
     }
     const isAdmin = !!user.user.roles.find((item) => item == "SUPER_ADMIN");
     const accountType = user.user.accountType == "ADMIN";
-    if (!isAdmin || !accountType) {
+    console.log("accountType", accountType);
+    if (!isAdmin && !accountType) {
       throw redirect({ to: "/investors" });
     }
     // if (user.user.roles.some((item) => item != "ADMIN")) {
