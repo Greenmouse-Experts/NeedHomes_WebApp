@@ -92,6 +92,7 @@ function PropertyDetailPage() {
         const property = data.data as PROPERTY_TYPE;
 
         return (
+          <>
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               {/* Media Slider */}
@@ -240,6 +241,7 @@ function PropertyDetailPage() {
           <Modal ref={earningsModalRef} title="Your Earnings Breakdown">
             <PropertyEarnings property={property} />
           </Modal>
+          </>
         );
       }}
     </PageLoader>
