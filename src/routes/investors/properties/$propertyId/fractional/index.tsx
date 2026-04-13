@@ -165,21 +165,17 @@ function PropertyDetailPage() {
                         const totalCost = currentQuantity * pricePerShare;
                         const minimumShares = property.minimumShares || 1; // Default to 1 if not set
 
+                        const availableShares = breakdown.availableShares;
+
                         const incrementQuantity = () => {
-                          field.onChange(currentQuantity + 1);
-                          // form.setValue(
-                          //   "amount",
-                          //   (currentQuantity + 1) * pricePerShare,
-                          // );
+                          if (currentQuantity < availableShares) {
+                            field.onChange(currentQuantity + 1);
+                          }
                         };
 
                         const decrementQuantity = () => {
                           if (currentQuantity > minimumShares) {
                             field.onChange(currentQuantity - 1);
-                            // form.setValue(
-                            //   "amount",
-                            //   (currentQuantity - 1) * pricePerShare,
-                            // );
                           }
                         };
 
@@ -215,7 +211,7 @@ function PropertyDetailPage() {
                                     size="sm"
                                     onClick={incrementQuantity}
                                     disabled={
-                                      field.value > breakdown.availableShares
+                                      field.value >= breakdown.availableShares
                                     }
                                     className="px-2 py-1"
                                   >
