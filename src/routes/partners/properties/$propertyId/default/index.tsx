@@ -10,6 +10,9 @@ import { extract_message } from "@/helpers/apihelpers";
 import { useNavigate } from "@tanstack/react-router";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
+import PropertyEarnings from "../../-components/PropertyEarnings";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
+import { useRef } from "react";
 
 export const Route = createFileRoute(
   "/partners/properties/$propertyId/default/",
@@ -20,6 +23,7 @@ export const Route = createFileRoute(
 function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
+  const earningsModalRef = useRef<ModalHandle>(null);
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -140,6 +144,24 @@ function PropertyDetailPage() {
                       </div>
                     </div>
                   )}
+                  {(property as any).systemCharges?.partnerChargePercentage > 0 && (
+                    <button
+                      onClick={() => earningsModalRef.current?.open()}
+                      className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors text-left"
+                    >
+                      <div className="p-2 bg-white rounded-lg shrink-0">
+                        <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 whitespace-nowrap">
+                          Your Earnings
+                        </p>
+                        <p className="font-semibold text-sm md:text-base text-green-700 truncate">
+                          View Breakdown
+                        </p>
+                      </div>
+                    </button>
+                  )}
                 </div>
 
                 {/* Main Content */}
@@ -200,52 +222,7 @@ function PropertyDetailPage() {
                     <AdditionalFees fees={property.additionalFees} />
 
                     {/* Partner Earnings */}
-                    {(property as any).systemCharges
-                      ?.partnerChargePercentage > 0 &&
-                      (() => {
-                        const pct = (property as any).systemCharges
-                          .partnerChargePercentage;
-                        const base = property.basePrice / 100;
-                        const earning = (pct / 100) * base;
-                        return (
-                          <div className="rounded-xl border border-green-200 bg-green-50 overflow-hidden">
-                            <div className="px-5 py-3 border-b border-green-200 flex items-center gap-2">
-                              <TrendingUp className="w-4 h-4 text-green-600" />
-                              <h3 className="text-sm font-semibold text-green-800">
-                                Your Earnings from This Promotion
-                              </h3>
-                            </div>
-                            <div className="p-5 space-y-3">
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="text-gray-600">Base Price</span>
-                                <span className="font-medium">
-                                  {formatCurrency(base)}
-                                </span>
-                              </div>
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="text-gray-600">
-                                  Partner Commission Rate
-                                </span>
-                                <span className="font-medium text-green-700">
-                                  {pct}%
-                                </span>
-                              </div>
-                              <div className="pt-3 border-t border-green-200 flex items-center justify-between">
-                                <span className="text-sm font-bold text-gray-900">
-                                  Estimated Earning
-                                </span>
-                                <span className="text-xl font-bold text-green-600">
-                                  {formatCurrency(earning)}
-                                </span>
-                              </div>
-                              <p className="text-xs text-green-700/70">
-                                Credited to your wallet when an investor
-                                completes purchase via your promotion.
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })()}
+                    <PropertyEarnings property={property} />
                   </div>
 
                   {/* Sidebar */}
@@ -259,6 +236,10 @@ function PropertyDetailPage() {
               </div>
             </div>
           </div>
+
+          <Modal ref={earningsModalRef} title="Your Earnings Breakdown">
+            <PropertyEarnings property={property} />
+          </Modal>
         );
       }}
     </PageLoader>
