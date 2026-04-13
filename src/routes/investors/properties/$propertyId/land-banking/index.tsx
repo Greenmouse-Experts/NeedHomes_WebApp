@@ -247,21 +247,17 @@ function PropertyDetailPage() {
                         const totalCost = currentQuantity * pricePerPlot;
                         const minimumShares = property.minimumShares || 1; // Default to 1 if not set
 
+                        const availablePlots = breakdown.availablePlots;
+
                         const incrementQuantity = () => {
-                          field.onChange(currentQuantity + 1);
-                          // form.setValue(
-                          //   "amount",
-                          //   (currentQuantity + 1) * pricePerPlot,
-                          // );
+                          if (currentQuantity < availablePlots) {
+                            field.onChange(currentQuantity + 1);
+                          }
                         };
 
                         const decrementQuantity = () => {
                           if (currentQuantity > minimumShares) {
                             field.onChange(currentQuantity - 1);
-                            // form.setValue(
-                            //   "amount",
-                            //   (currentQuantity - 1) * pricePerPlot,
-                            // );
                           }
                         };
 
@@ -297,7 +293,7 @@ function PropertyDetailPage() {
                                     size="sm"
                                     onClick={incrementQuantity}
                                     disabled={
-                                      field.value > breakdown.availablePlots
+                                      field.value >= breakdown.availablePlots
                                     }
                                     className="px-2 py-1"
                                   >
