@@ -28,7 +28,9 @@ export default function Charges() {
 
   return (
     <ThemeProvider className="ring fade rounded-box">
-      <h2 className="p-4 border-b text-lg font-bold fade">Charges & Commission</h2>
+      <h2 className="p-4 border-b text-lg font-bold fade">
+        Charges & Commission
+      </h2>
       <div className="p-4">
         <QueryCompLayout query={query}>
           {(data) => <FormData data={data.data} />}
@@ -72,15 +74,15 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
     <ThemeProvider>
       <FormProvider {...methods}>
         <form className="space-y-5" onSubmit={methods.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <SimpleInput
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/*<SimpleInput
               label="Platform Charge (%)"
               type="number"
               step="0.01"
               min="0"
               max="100"
               {...register("platformChargePercentage", { valueAsNumber: true })}
-            />
+            />*/}
             <SimpleInput
               label="Partner Charge (%)"
               type="number"
@@ -95,7 +97,9 @@ const FormData = ({ data }: { data?: ChargeSettings }) => {
               step="0.01"
               min="0"
               max="100"
-              {...register("defaulterChargePercentage", { valueAsNumber: true })}
+              {...register("defaulterChargePercentage", {
+                valueAsNumber: true,
+              })}
             />
           </div>
           <div className="flex justify-end">
