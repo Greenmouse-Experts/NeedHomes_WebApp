@@ -113,6 +113,8 @@ export default function InvPaymentSchedule({
     },
   ];
 
+  if (query.data && !(query.data.data as Installment[]).length) return null;
+
   return (
     <ThemeProvider className="my-4 ring  fade rounded-box ">
       <h2 className="p-4 text-lg ring rounded-t-box font-bold fade border-b text-current/70">
