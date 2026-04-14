@@ -51,7 +51,7 @@ export default function InvestmentDetails({
           />
           <DetailRow
             label="Price Per Plot"
-            value={`₦${property.pricePerPlot?.toLocaleString() || "0"}`}
+            value={`₦${(property?.pricePerPlot ? property.pricePerPlot / 100 : 0)?.toLocaleString()}`}
           />
           <DetailRow
             label="Holding Period (Months)"
