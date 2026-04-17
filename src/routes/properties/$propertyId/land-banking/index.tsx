@@ -73,10 +73,11 @@ function PropertyDetailPage() {
     defaultValues: {
       installment: false,
       amount: 0,
+      ration: 3,
       quantity: 1,
+      installmentDuration: 3,
     },
   });
-  // let payAmount = form.watch("amount");
 
   return (
     <PageLoader query={query}>
@@ -123,29 +124,22 @@ function PropertyDetailPage() {
 
         const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
+        const selectedDuration = form.watch("installmentDuration");
 
         const install_amount = form.watch("quantity") * property.pricePerPlot;
         const full_charge = (0 / 100) * install_amount;
-        useEffect(() => {
-          if (installOptions) {
-            form.setValue("installment", true);
-            form.setValue("quantity", 1);
-          }
-        }, [installOptions]);
 
         useEffect(() => {
-          console.log("install_amount", price);
-          if (breakdown.installmentAmount) {
+          if (payInstall) {
             const charge = (0 / 100) * install_amount;
-
             let amount_total =
               ((install_amount + charge) / 100 +
                 breakdown.additionalFeesTotal) /
-              parseFloat(property.installmentDuration);
+              parseFloat(selectedDuration);
             amount_total = Math.ceil(amount_total * 100) / 100;
             form.setValue("amount", Number(amount_total.toFixed(2)));
           }
-        }, [install_amount]);
+        }, [install_amount, selectedDuration, payInstall]);
         return (
           <>
             <Modal
@@ -272,23 +266,18 @@ function PropertyDetailPage() {
                         const currentQuantity = field.value;
                         const pricePerPlot = breakdown.pricePerPlot / 100;
                         const totalCost = currentQuantity * pricePerPlot;
-                        const minimumShares = property.minimumShares || 1; // Default to 1 if not set
+                        const minimumShares = property.minimumShares || 1;
+                        const availablePlots = breakdown.availablePlots;
 
                         const incrementQuantity = () => {
-                          field.onChange(currentQuantity + 1);
-                          // form.setValue(
-                          //   "amount",
-                          //   (currentQuantity + 1) * pricePerPlot,
-                          // );
+                          if (currentQuantity < availablePlots) {
+                            field.onChange(currentQuantity + 1);
+                          }
                         };
 
                         const decrementQuantity = () => {
                           if (currentQuantity > minimumShares) {
                             field.onChange(currentQuantity - 1);
-                            // form.setValue(
-                            //   "amount",
-                            //   (currentQuantity - 1) * pricePerPlot,
-                            // );
                           }
                         };
 
@@ -324,7 +313,7 @@ function PropertyDetailPage() {
                                     size="sm"
                                     onClick={incrementQuantity}
                                     disabled={
-                                      field.value > breakdown.availablePlots
+                                      field.value >= breakdown.availablePlots
                                     }
                                     className="px-2 py-1"
                                   >
@@ -398,23 +387,19 @@ function PropertyDetailPage() {
                     </div>
                   )}
                 </div>
-                {installOptions && (
-                  <div className="flex gap-2 items-center mt-2">
-                    <input
-                      disabled={installOptions}
-                      {...form.register("installment")}
-                      type="checkbox"
-                      className="checkbox checkbox-sm"
-                    />
-                    <h2 className="text-sm">Pay Installmentally</h2>
-                  </div>
-                )}
+                <div className="flex gap-2 items-center mt-2">
+                  <input
+                    {...form.register("installment")}
+                    type="checkbox"
+                    className="checkbox checkbox-sm"
+                  />
+                  <h2 className="text-sm">Pay Installmentally</h2>
+                </div>
                 {payInstall && (
                   <div className="mt-4">
                     {/*{JSON.stringify(property["installmentDuration"])}*/}
                     <InstallMentForm
                       form={form}
-                      duration={property.installmentDuration || 0}
                       minimumInvestmentAmount={breakdown.installmentAmount || 0}
                     />
                   </div>
@@ -598,49 +583,71 @@ function PropertyDetailPage() {
 const InstallMentForm = ({
   form,
   minimumInvestmentAmount,
-  duration,
-  minimumShares,
 }: {
   form: any;
-  duration: string | number;
   minimumInvestmentAmount: number;
-  minimumShares?: number;
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
     const fixed = parseFloat(amount.toFixed(2));
     return `₦ ${fixed.toLocaleString()}`;
   };
+  const selectedDuration = form.watch("installmentDuration");
 
   return (
     <div className="space-y-4 p-4 ring rounded-box fade">
-      <div className="flex items-end gap-2">
-        <div className="flex-1 space-y-4">
-          <SimpleInput
-            // disabled
-            {...form.register("amount", {
-              valueAsNumber: true,
-              min: {
-                value: minimumInvestmentAmount,
-                message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
-              },
-            })}
-            label="Installment Amount"
-            type="number"
-            placeholder={formatCurrency(minimumInvestmentAmount * 100)}
-            className="w-full"
-          />
-
-          {form.formState.errors.amount && (
-            <p className="text-red-500 text-sm mt-1">
-              {form.formState.errors.amount.message as string}
-            </p>
-          )}
+      <div>
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Installment Duration (months)
+        </p>
+        <div className="flex gap-3">
+          {([3, 6, 12] as const).map((dur) => (
+            <label
+              key={dur}
+              className={`flex-1 flex items-center justify-center p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                Number(selectedDuration) === dur
+                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                  : "border-gray-200 text-gray-600 hover:border-gray-300"
+              }`}
+            >
+              <input
+                type="radio"
+                className="hidden"
+                value={dur}
+                {...form.register("installmentDuration", {
+                  valueAsNumber: true,
+                })}
+              />
+              {dur}m
+            </label>
+          ))}
         </div>
       </div>
 
-      <p className=" text-gray-600/60 text-sm ">
-        <span className="font-semibold text-gray-900/60 ">
+      <div className="flex-1 space-y-4">
+        <SimpleInput
+          {...form.register("amount", {
+            valueAsNumber: true,
+            min: {
+              value: minimumInvestmentAmount,
+              message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
+            },
+          })}
+          label="Installment Amount"
+          type="number"
+          placeholder={formatCurrency(minimumInvestmentAmount * 100)}
+          className="w-full"
+        />
+
+        {form.formState.errors.amount && (
+          <p className="text-red-500 text-sm mt-1">
+            {form.formState.errors.amount.message as string}
+          </p>
+        )}
+      </div>
+
+      <p className="text-gray-600/60 text-sm">
+        <span className="font-semibold text-gray-900/60">
           The balance payment can be made anytime without waiting for
           installment date
         </span>
