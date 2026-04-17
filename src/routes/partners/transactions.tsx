@@ -15,6 +15,7 @@ import { Select } from "@/components/ui/Select";
 
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 export const Route = createFileRoute("/partners/transactions")({
   component: RouteComponent,
@@ -135,7 +136,7 @@ function RouteComponent() {
   const hasFilters = !!(type || status || startDate || endDate || search);
 
   return (
-    <div className="flex flex-col gap-6">
+    <ThemeProvider className="flex flex-col gap-6">
       <div className="mb-2">
         <div className="flex items-center space-x-3 mb-2">
           <div className="p-2 bg-indigo-100 rounded-lg">
@@ -292,8 +293,7 @@ function RouteComponent() {
                       <div className="flex items-center gap-3">
                         <TypeIcon type={trx.type} />
                         <span className="text-sm font-medium text-gray-900">
-                          {trx.type.charAt(0) +
-                            trx.type.slice(1).toLowerCase()}
+                          {trx.type.charAt(0) + trx.type.slice(1).toLowerCase()}
                         </span>
                       </div>
                     </td>
@@ -378,6 +378,6 @@ function RouteComponent() {
           </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
