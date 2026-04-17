@@ -118,28 +118,24 @@ function PropertyDetailPage() {
     <PageLoader query={query}>
       {(data) => {
         const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
-        // Calculate total price including Management Fees if they exist
         const totalPrice =
           property.totalPrice / 100 || property.basePrice / 100;
-        const percentage_totalPrice = (0 / 100) * totalPrice;
-        const system_charge_per = (0 / 100) * (property.basePrice / 100);
-
+        const additionalFeesTotal = (property.additionalFees || []).reduce(
+          (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
+          0,
+        );
         let breakdown: {
           totalPrice: number;
           additionalFees: AdditionalFee[];
           additionalFeesTotal: number;
           installmentAmount?: number;
           installmentDuration?: number;
-          systemCharge: number;
         } = {
-          totalPrice: totalPrice + system_charge_per,
+          totalPrice,
           additionalFees: property.additionalFees || [],
-          additionalFeesTotal: (property.additionalFees || []).reduce(
-            (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
-            0,
-          ),
-          systemCharge: system_charge_per,
+          additionalFeesTotal,
         };
+        const fullAmountKobo = Math.round(totalPrice * 100);
 
         if (property.paymentOption === "INSTALLMENT") {
           breakdown.installmentAmount = property.minimumInstallmentAmount;
@@ -216,7 +212,7 @@ function PropertyDetailPage() {
                         }
                         toast.promise(
                           mutate.mutateAsync({
-                            amountPaid: breakdown.totalPrice * 100,
+                            amountPaid: fullAmountKobo,
                             quantity: 1,
                           }),
                           {
