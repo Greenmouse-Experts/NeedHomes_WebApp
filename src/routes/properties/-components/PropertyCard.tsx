@@ -24,6 +24,8 @@ export default function PropertyCard({
         return "/properties/$propertyId/land-banking";
       case "FRACTIONAL_OWNERSHIP":
         return "/properties/$propertyId/fractional";
+      case "SAVE_TO_OWN":
+        return "/properties/$propertyId/save-to-own";
       default:
         return "/properties/$propertyId/default";
     }

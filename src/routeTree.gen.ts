@@ -137,6 +137,7 @@ import { Route as DeveloperPropertiesEditRouteRouteImport } from './routes/devel
 import { Route as DashboardPropertiesNewRouteRouteImport } from './routes/dashboard/properties/new/route'
 import { Route as DashboardPropertiesEditRouteRouteImport } from './routes/dashboard/properties/edit/route'
 import { Route as DashboardPartnersPartnerIdRouteRouteImport } from './routes/dashboard/partners/$partnerId/route'
+import { Route as PropertiesPropertyIdSaveToOwnIndexRouteImport } from './routes/properties/$propertyId/save-to-own/index'
 import { Route as PropertiesPropertyIdOutrightIndexRouteImport } from './routes/properties/$propertyId/outright/index'
 import { Route as PropertiesPropertyIdLandBankingIndexRouteImport } from './routes/properties/$propertyId/land-banking/index'
 import { Route as PropertiesPropertyIdFractionalIndexRouteImport } from './routes/properties/$propertyId/fractional/index'
@@ -889,6 +890,12 @@ const DashboardPartnersPartnerIdRouteRoute =
     path: '/$partnerId',
     getParentRoute: () => DashboardPartnersRoute,
   } as any)
+const PropertiesPropertyIdSaveToOwnIndexRoute =
+  PropertiesPropertyIdSaveToOwnIndexRouteImport.update({
+    id: '/save-to-own/',
+    path: '/save-to-own/',
+    getParentRoute: () => PropertiesPropertyIdRoute,
+  } as any)
 const PropertiesPropertyIdOutrightIndexRoute =
   PropertiesPropertyIdOutrightIndexRouteImport.update({
     id: '/outright/',
@@ -1499,6 +1506,7 @@ export interface FileRoutesByFullPath {
   '/properties/$propertyId/fractional/': typeof PropertiesPropertyIdFractionalIndexRoute
   '/properties/$propertyId/land-banking/': typeof PropertiesPropertyIdLandBankingIndexRoute
   '/properties/$propertyId/outright/': typeof PropertiesPropertyIdOutrightIndexRoute
+  '/properties/$propertyId/save-to-own/': typeof PropertiesPropertyIdSaveToOwnIndexRoute
   '/dashboard/investors/corporate/$investorId/kyc': typeof DashboardInvestorsCorporateInvestorIdKycRoute
   '/dashboard/properties/edit/$propertyId/co-dev': typeof DashboardPropertiesEditPropertyIdCoDevRoute
   '/dashboard/properties/edit/$propertyId/fractional': typeof DashboardPropertiesEditPropertyIdFractionalRoute
@@ -1672,6 +1680,7 @@ export interface FileRoutesByTo {
   '/properties/$propertyId/fractional': typeof PropertiesPropertyIdFractionalIndexRoute
   '/properties/$propertyId/land-banking': typeof PropertiesPropertyIdLandBankingIndexRoute
   '/properties/$propertyId/outright': typeof PropertiesPropertyIdOutrightIndexRoute
+  '/properties/$propertyId/save-to-own': typeof PropertiesPropertyIdSaveToOwnIndexRoute
   '/dashboard/investors/corporate/$investorId/kyc': typeof DashboardInvestorsCorporateInvestorIdKycRoute
   '/dashboard/properties/edit/$propertyId/co-dev': typeof DashboardPropertiesEditPropertyIdCoDevRoute
   '/dashboard/properties/edit/$propertyId/fractional': typeof DashboardPropertiesEditPropertyIdFractionalRoute
@@ -1876,6 +1885,7 @@ export interface FileRoutesById {
   '/properties/$propertyId/fractional/': typeof PropertiesPropertyIdFractionalIndexRoute
   '/properties/$propertyId/land-banking/': typeof PropertiesPropertyIdLandBankingIndexRoute
   '/properties/$propertyId/outright/': typeof PropertiesPropertyIdOutrightIndexRoute
+  '/properties/$propertyId/save-to-own/': typeof PropertiesPropertyIdSaveToOwnIndexRoute
   '/dashboard/investors/corporate/$investorId/kyc': typeof DashboardInvestorsCorporateInvestorIdKycRoute
   '/dashboard/properties/edit/$propertyId/co-dev': typeof DashboardPropertiesEditPropertyIdCoDevRoute
   '/dashboard/properties/edit/$propertyId/fractional': typeof DashboardPropertiesEditPropertyIdFractionalRoute
@@ -2081,6 +2091,7 @@ export interface FileRouteTypes {
     | '/properties/$propertyId/fractional/'
     | '/properties/$propertyId/land-banking/'
     | '/properties/$propertyId/outright/'
+    | '/properties/$propertyId/save-to-own/'
     | '/dashboard/investors/corporate/$investorId/kyc'
     | '/dashboard/properties/edit/$propertyId/co-dev'
     | '/dashboard/properties/edit/$propertyId/fractional'
@@ -2254,6 +2265,7 @@ export interface FileRouteTypes {
     | '/properties/$propertyId/fractional'
     | '/properties/$propertyId/land-banking'
     | '/properties/$propertyId/outright'
+    | '/properties/$propertyId/save-to-own'
     | '/dashboard/investors/corporate/$investorId/kyc'
     | '/dashboard/properties/edit/$propertyId/co-dev'
     | '/dashboard/properties/edit/$propertyId/fractional'
@@ -2457,6 +2469,7 @@ export interface FileRouteTypes {
     | '/properties/$propertyId/fractional/'
     | '/properties/$propertyId/land-banking/'
     | '/properties/$propertyId/outright/'
+    | '/properties/$propertyId/save-to-own/'
     | '/dashboard/investors/corporate/$investorId/kyc'
     | '/dashboard/properties/edit/$propertyId/co-dev'
     | '/dashboard/properties/edit/$propertyId/fractional'
@@ -3431,6 +3444,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/partners/$partnerId'
       preLoaderRoute: typeof DashboardPartnersPartnerIdRouteRouteImport
       parentRoute: typeof DashboardPartnersRoute
+    }
+    '/properties/$propertyId/save-to-own/': {
+      id: '/properties/$propertyId/save-to-own/'
+      path: '/save-to-own'
+      fullPath: '/properties/$propertyId/save-to-own/'
+      preLoaderRoute: typeof PropertiesPropertyIdSaveToOwnIndexRouteImport
+      parentRoute: typeof PropertiesPropertyIdRoute
     }
     '/properties/$propertyId/outright/': {
       id: '/properties/$propertyId/outright/'
@@ -4687,6 +4707,7 @@ interface PropertiesPropertyIdRouteChildren {
   PropertiesPropertyIdFractionalIndexRoute: typeof PropertiesPropertyIdFractionalIndexRoute
   PropertiesPropertyIdLandBankingIndexRoute: typeof PropertiesPropertyIdLandBankingIndexRoute
   PropertiesPropertyIdOutrightIndexRoute: typeof PropertiesPropertyIdOutrightIndexRoute
+  PropertiesPropertyIdSaveToOwnIndexRoute: typeof PropertiesPropertyIdSaveToOwnIndexRoute
 }
 
 const PropertiesPropertyIdRouteChildren: PropertiesPropertyIdRouteChildren = {
@@ -4698,6 +4719,8 @@ const PropertiesPropertyIdRouteChildren: PropertiesPropertyIdRouteChildren = {
     PropertiesPropertyIdLandBankingIndexRoute,
   PropertiesPropertyIdOutrightIndexRoute:
     PropertiesPropertyIdOutrightIndexRoute,
+  PropertiesPropertyIdSaveToOwnIndexRoute:
+    PropertiesPropertyIdSaveToOwnIndexRoute,
 }
 
 const PropertiesPropertyIdRouteWithChildren =
