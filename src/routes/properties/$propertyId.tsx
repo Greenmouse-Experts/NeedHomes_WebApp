@@ -1,3 +1,4 @@
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 
@@ -20,8 +21,8 @@ function PropertyLayout() {
   }, [propertyId]);
 
   return (
-    <div className="property-container px-4 space-y-6 container mx-auto pt-12">
+    <ThemeProvider className="property-container px-4 space-y-6 container mx-auto pt-12">
       <Outlet />
-    </div>
+    </ThemeProvider>
   );
 }
