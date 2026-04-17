@@ -94,7 +94,9 @@ export default function PropertyCard({
               Starting From
             </span>
             <span className="text-xl font-black text-primary">
-              {formatCurrency(property.basePrice || property.totalPrice)}
+              {formatCurrency(
+                property.basePrice / 100 || property.totalPrice / 100,
+              )}
             </span>
           </div>
 
