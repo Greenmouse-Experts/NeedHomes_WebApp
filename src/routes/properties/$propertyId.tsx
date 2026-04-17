@@ -10,9 +10,12 @@ function PropertyLayout() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
+    const urlRef = params.get("ref");
+    const promotionRef = localStorage.getItem("promotionRef");
+    const ref = urlRef || promotionRef;
     if (ref) {
       localStorage.setItem(`ref_${propertyId}`, ref);
+      if (promotionRef) localStorage.removeItem("promotionRef");
     }
   }, [propertyId]);
 
