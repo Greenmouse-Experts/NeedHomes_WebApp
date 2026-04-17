@@ -2,16 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   CreditCard,
   Download,
-  Search,
   ArrowUpRight,
   ArrowDownLeft,
 } from "lucide-react";
+import SearchBar from "@/routes/-components/Searchbar";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
+
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 
@@ -153,14 +154,11 @@ function RouteComponent() {
         {/* Filters */}
         <div className="p-4 border-b border-gray-200 flex flex-col gap-3">
           <div className="flex flex-col md:flex-row md:items-center gap-3">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                placeholder="Search by reference..."
-                className="pl-9"
+            <div className="flex-1 max-w-sm">
+              <SearchBar
                 value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
+                onChange={(val: string) => {
+                  setSearch(val);
                   setPage(1);
                 }}
               />
