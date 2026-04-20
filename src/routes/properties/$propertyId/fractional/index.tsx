@@ -15,6 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
+import InvestorOnly from "../../-components/only_investors";
 
 export const Route = createFileRoute("/properties/$propertyId/fractional/")({
   component: PropertyDetailPage,
@@ -233,9 +234,7 @@ function PropertyDetailPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={incrementQuantity}
-                                    disabled={
-                                      field.value >= availableShares
-                                    }
+                                    disabled={field.value >= availableShares}
                                     className="px-2 py-1"
                                   >
                                     +
@@ -315,17 +314,19 @@ function PropertyDetailPage() {
                 </div>
               )}
 
-              <Button
-                variant="primary"
-                rightIcon={<TrendingUp className="w-5 h-5" />}
-                onClick={() => {
-                  showModal();
-                }}
-                disabled={mutate.isPending || isAdmin}
-                className="w-full sm:w-auto"
-              >
-                Invest Now
-              </Button>
+              <InvestorOnly>
+                <Button
+                  variant="primary"
+                  rightIcon={<TrendingUp className="w-5 h-5" />}
+                  onClick={() => {
+                    showModal();
+                  }}
+                  disabled={mutate.isPending || isAdmin}
+                  className="w-full sm:w-auto"
+                >
+                  Invest Now
+                </Button>
+              </InvestorOnly>
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

@@ -17,6 +17,7 @@ import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
+import InvestorOnly from "../../-components/only_investors";
 
 export const Route = createFileRoute("/properties/$propertyId/land-banking/")({
   component: PropertyDetailPage,
@@ -189,8 +190,9 @@ function PropertyDetailPage() {
                         if (payInstall) {
                           const amount = form.getValues("amount");
                           const quantity = form.getValues("quantity");
-                          const installmentFrequency =
-                            form.getValues("installmentFrequency");
+                          const installmentFrequency = form.getValues(
+                            "installmentFrequency",
+                          );
                           const installmentDuration = Number(
                             form.getValues("installmentDuration"),
                           );
@@ -451,17 +453,19 @@ function PropertyDetailPage() {
                 </div>
               )}
 
-              <Button
-                variant="primary"
-                rightIcon={<TrendingUp className="w-5 h-5" />}
-                onClick={() => {
-                  showModal();
-                }}
-                disabled={mutate.isPending || isAdmin}
-                className="w-full sm:w-auto"
-              >
-                Invest Now
-              </Button>
+              <InvestorOnly>
+                <Button
+                  variant="primary"
+                  rightIcon={<TrendingUp className="w-5 h-5" />}
+                  onClick={() => {
+                    showModal();
+                  }}
+                  disabled={mutate.isPending || isAdmin}
+                  className="w-full sm:w-auto"
+                >
+                  Invest Now
+                </Button>
+              </InvestorOnly>
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

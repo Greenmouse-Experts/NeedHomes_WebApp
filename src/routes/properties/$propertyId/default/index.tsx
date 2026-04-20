@@ -24,6 +24,7 @@ import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
+import InvestorOnly, { allow_invest } from "../../-components/only_investors";
 
 export const Route = createFileRoute("/properties/$propertyId/default/")({
   component: PropertyDetailPage,
@@ -403,26 +404,28 @@ function PropertyDetailPage() {
                 </div>
               )}
 
-              <Button
-                variant="primary"
-                rightIcon={<TrendingUp className="w-5 h-5" />}
-                onClick={() => {
-                  const amountToPay =
-                    property.paymentOption === "INSTALLMENT"
-                      ? property.minimumInvestmentAmount ||
-                        property.minimumInvestment ||
-                        totalPrice
-                      : totalPrice + breakdown.additionalFeesTotal;
+              <InvestorOnly>
+                <Button
+                  variant="primary"
+                  rightIcon={<TrendingUp className="w-5 h-5" />}
+                  onClick={() => {
+                    const amountToPay =
+                      property.paymentOption === "INSTALLMENT"
+                        ? property.minimumInvestmentAmount ||
+                          property.minimumInvestment ||
+                          totalPrice
+                        : totalPrice + breakdown.additionalFeesTotal;
 
-                  // methods.setValue("amountPaid", amountToPay);
-                  // methods.setValue("quantity", 1);
-                  showModal();
-                }}
-                disabled={mutate.isPending || isAdmin}
-                className="w-full sm:w-auto"
-              >
-                Invest Now
-              </Button>
+                    // methods.setValue("amountPaid", amountToPay);
+                    // methods.setValue("quantity", 1);
+                    showModal();
+                  }}
+                  disabled={mutate.isPending || isAdmin}
+                  className="w-full sm:w-auto"
+                >
+                  Invest Now
+                </Button>
+              </InvestorOnly>
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
