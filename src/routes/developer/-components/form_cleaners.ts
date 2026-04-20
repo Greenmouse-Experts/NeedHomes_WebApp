@@ -133,5 +133,9 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.published;
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
+  delete cleaned.paymentDuration;
+  delete cleaned.minimumFirstPaymentPercentage;
+  delete cleaned.projectStartDate;
+  // property paymentDuration should not exist, property minimumFirstPaymentPercentage should not exist, property projectStartDate should not exist
   return cleaned;
 };
