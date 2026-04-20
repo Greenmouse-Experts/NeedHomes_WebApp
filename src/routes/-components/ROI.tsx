@@ -25,7 +25,12 @@ interface PriceHistoryRecord {
 interface PriceHistoryResponse {
   statusCode: number;
   message: string;
-  data: PriceHistoryRecord[];
+  data: {
+    history: PriceHistoryRecord[];
+    formerPrice: number;
+    currentPrice: number;
+    overallRoi: number;
+  };
 }
 
 function formatNaira(kobo: number) {
@@ -69,7 +74,8 @@ export default function AdminROI({
       </div>
       <QueryCompLayout query={query} loadingText="Loading price history...">
         {(data) => {
-          const history = data?.data ?? [];
+          const { history = [], formerPrice, currentPrice, overallRoi } =
+            data?.data ?? {};
 
           if (history.length === 0) {
             return (
@@ -84,58 +90,50 @@ export default function AdminROI({
             price: h.newPrice / 100,
           }));
 
-          const currentPrice = history.at(-1)?.newPrice ?? null;
-          const formerPrice = history.at(-1)?.oldPrice ?? null;
-          const firstPrice = history[0]?.newPrice ?? null;
-
-          const roi =
-            firstPrice && currentPrice
-              ? (((currentPrice - firstPrice) / firstPrice) * 100).toFixed(2)
-              : null;
-
+          const roi = overallRoi?.toFixed(2) ?? null;
           const roiPositive = roi !== null && parseFloat(roi) >= 0;
 
           return (
             <div className="ring fade shadow rounded-box">
               <div className="grid grid-cols-2 sm:grid-cols-3 divide-x divide-y sm:divide-y-0 fade border-b">
-                {formerPrice !== null && (
-                  <div className="p-4 space-y-1">
-                    <p className="text-xs text-base-content/50 uppercase tracking-wide">
-                      Former Price
-                    </p>
-                    <p className="text-base font-semibold text-base-content">
-                      {formatNaira(formerPrice)}
-                    </p>
+                <div className="p-4 space-y-1">
+                  <p className="text-xs text-base-content/50 uppercase tracking-wide">
+                    Former Price
+                  </p>
+                  <p className="text-base font-semibold text-base-content">
+                    {formerPrice ? formatNaira(formerPrice) : "—"}
+                  </p>
+                </div>
+                <div className="p-4 space-y-1">
+                  <p className="text-xs text-base-content/50 uppercase tracking-wide">
+                    Current Price
+                  </p>
+                  <p className="text-base font-semibold text-base-content">
+                    {currentPrice ? formatNaira(currentPrice) : "—"}
+                  </p>
+                </div>
+                <div className="p-4 space-y-1">
+                  <p className="text-xs text-base-content/50 uppercase tracking-wide">
+                    Overall ROI
+                  </p>
+                  <div
+                    className={`flex items-center gap-1 font-bold text-base ${
+                      roiPositive
+                        ? "text-success"
+                        : roi !== null && parseFloat(roi) < 0
+                          ? "text-error"
+                          : "text-base-content/50"
+                    }`}
+                  >
+                    {roiPositive ? (
+                      <TrendingUp className="w-4 h-4" />
+                    ) : roi !== null && parseFloat(roi) < 0 ? (
+                      <TrendingDown className="w-4 h-4" />
+                    ) : null}
+                    {roiPositive ? "+" : ""}
+                    {roi ?? "0.00"}%
                   </div>
-                )}
-                {currentPrice !== null && (
-                  <div className="p-4 space-y-1">
-                    <p className="text-xs text-base-content/50 uppercase tracking-wide">
-                      Current Price
-                    </p>
-                    <p className="text-base font-semibold text-base-content">
-                      {formatNaira(currentPrice)}
-                    </p>
-                  </div>
-                )}
-                {roi !== null && (
-                  <div className="p-4 space-y-1">
-                    <p className="text-xs text-base-content/50 uppercase tracking-wide">
-                      Overall ROI
-                    </p>
-                    <div
-                      className={`flex items-center gap-1 font-bold text-base ${roiPositive ? "text-success" : "text-error"}`}
-                    >
-                      {roiPositive ? (
-                        <TrendingUp className="w-4 h-4" />
-                      ) : (
-                        <TrendingDown className="w-4 h-4" />
-                      )}
-                      {roiPositive ? "+" : ""}
-                      {roi}%
-                    </div>
-                  </div>
-                )}
+                </div>
               </div>
               <section className="h-72 w-full overflow-x-scroll p-4">
                 <div className="size-full min-w-[400px]">
