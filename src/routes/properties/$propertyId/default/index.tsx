@@ -442,7 +442,7 @@ function PropertyDetailPage() {
                       {/* Features */}
 
                       {/* Investment Model Specific Information */}
-                      {property.investmentModel === "FRACTIONAL_OWNERSHIP" && (
+                      {/*{property.investmentModel === "FRACTIONAL_OWNERSHIP" && (
                         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                           <h3 className="text-lg font-semibold text-gray-900 mb-4">
                             Investment Details
@@ -483,7 +483,11 @@ function PropertyDetailPage() {
                             </div>
                           </div>
                         </div>
-                      )}
+                      )}*/}
+                      {/*<InvestmentDetails
+                        type={property.investmentModel}
+                        inv={property}
+                      />*/}
 
                       {/* System Charges */}
 

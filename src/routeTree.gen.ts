@@ -53,6 +53,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as CoporateIndexRouteImport } from './routes/coporate/index'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
 import { Route as TermsTermsIdRouteImport } from './routes/terms/$termsId'
+import { Route as PropertiesPromotionClickRouteImport } from './routes/properties/promotion-click'
 import { Route as PropertiesPropertyIdRouteImport } from './routes/properties/$propertyId'
 import { Route as PartnersTransactionsRouteImport } from './routes/partners/transactions'
 import { Route as PartnersSettingsRouteImport } from './routes/partners/settings'
@@ -432,6 +433,12 @@ const TermsTermsIdRoute = TermsTermsIdRouteImport.update({
   path: '/terms/$termsId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesPromotionClickRoute =
+  PropertiesPromotionClickRouteImport.update({
+    id: '/properties/promotion-click',
+    path: '/properties/promotion-click',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PropertiesPropertyIdRoute = PropertiesPropertyIdRouteImport.update({
   id: '/properties/$propertyId',
   path: '/properties/$propertyId',
@@ -1400,6 +1407,7 @@ export interface FileRoutesByFullPath {
   '/partners/settings': typeof PartnersSettingsRoute
   '/partners/transactions': typeof PartnersTransactionsRoute
   '/properties/$propertyId': typeof PropertiesPropertyIdRouteWithChildren
+  '/properties/promotion-click': typeof PropertiesPromotionClickRoute
   '/terms/$termsId': typeof TermsTermsIdRoute
   '/blogs/': typeof BlogsIndexRoute
   '/coporate/': typeof CoporateIndexRoute
@@ -1581,6 +1589,7 @@ export interface FileRoutesByTo {
   '/partners/notifications': typeof PartnersNotificationsRoute
   '/partners/settings': typeof PartnersSettingsRoute
   '/partners/transactions': typeof PartnersTransactionsRoute
+  '/properties/promotion-click': typeof PropertiesPromotionClickRoute
   '/terms/$termsId': typeof TermsTermsIdRoute
   '/blogs': typeof BlogsIndexRoute
   '/coporate': typeof CoporateIndexRoute
@@ -1779,6 +1788,7 @@ export interface FileRoutesById {
   '/partners/settings': typeof PartnersSettingsRoute
   '/partners/transactions': typeof PartnersTransactionsRoute
   '/properties/$propertyId': typeof PropertiesPropertyIdRouteWithChildren
+  '/properties/promotion-click': typeof PropertiesPromotionClickRoute
   '/terms/$termsId': typeof TermsTermsIdRoute
   '/blogs/': typeof BlogsIndexRoute
   '/coporate/': typeof CoporateIndexRoute
@@ -1985,6 +1995,7 @@ export interface FileRouteTypes {
     | '/partners/settings'
     | '/partners/transactions'
     | '/properties/$propertyId'
+    | '/properties/promotion-click'
     | '/terms/$termsId'
     | '/blogs/'
     | '/coporate/'
@@ -2166,6 +2177,7 @@ export interface FileRouteTypes {
     | '/partners/notifications'
     | '/partners/settings'
     | '/partners/transactions'
+    | '/properties/promotion-click'
     | '/terms/$termsId'
     | '/blogs'
     | '/coporate'
@@ -2363,6 +2375,7 @@ export interface FileRouteTypes {
     | '/partners/settings'
     | '/partners/transactions'
     | '/properties/$propertyId'
+    | '/properties/promotion-click'
     | '/terms/$termsId'
     | '/blogs/'
     | '/coporate/'
@@ -2535,6 +2548,7 @@ export interface RootRouteChildren {
   VerifyPartnerRoute: typeof VerifyPartnerRoute
   WaitlistRoute: typeof WaitlistRoute
   PropertiesPropertyIdRoute: typeof PropertiesPropertyIdRouteWithChildren
+  PropertiesPromotionClickRoute: typeof PropertiesPromotionClickRoute
   TermsTermsIdRoute: typeof TermsTermsIdRoute
   CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
@@ -2855,6 +2869,13 @@ declare module '@tanstack/react-router' {
       path: '/terms/$termsId'
       fullPath: '/terms/$termsId'
       preLoaderRoute: typeof TermsTermsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/properties/promotion-click': {
+      id: '/properties/promotion-click'
+      path: '/properties/promotion-click'
+      fullPath: '/properties/promotion-click'
+      preLoaderRoute: typeof PropertiesPromotionClickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/properties/$propertyId': {
@@ -4760,6 +4781,7 @@ const rootRouteChildren: RootRouteChildren = {
   VerifyPartnerRoute: VerifyPartnerRoute,
   WaitlistRoute: WaitlistRoute,
   PropertiesPropertyIdRoute: PropertiesPropertyIdRouteWithChildren,
+  PropertiesPromotionClickRoute: PropertiesPromotionClickRoute,
   TermsTermsIdRoute: TermsTermsIdRoute,
   CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,

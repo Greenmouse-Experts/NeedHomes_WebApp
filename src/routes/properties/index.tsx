@@ -171,7 +171,6 @@ function PublicPropertiesList() {
     filters.maxPrice ? `Max: ₦${filters.maxPrice?.toLocaleString()}` : null,
     filters.location ? `Location: ${filters.location}` : null,
   ].filter(Boolean);
-
   return (
     <ThemeProvider className="container mx-auto pt-12 ">
       <Modal ref={modal.ref} title="Price & Location Filters">
