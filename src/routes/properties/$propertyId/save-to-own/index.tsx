@@ -212,7 +212,10 @@ function PropertyDetailPage() {
                             amountPaid: minimumInstallment * 100,
                             quantity: 1,
                             savingsFrequency,
-                            savingsDuration: Number(savingsDuration) as 3 | 6 | 12,
+                            savingsDuration: Number(savingsDuration) as
+                              | 3
+                              | 6
+                              | 12,
                           }),
                           {
                             loading: "Processing payment...",
@@ -278,7 +281,7 @@ function PropertyDetailPage() {
                     </div>
                   </div>
 
-                  {property.paymentOption === "INSTALLMENT" && (
+                  {/*{property.paymentOption === "INSTALLMENT" && (
                     <div className="p-3 bg-blue-50 rounded border border-blue-100">
                       <p className="text-xs text-blue-700">
                         You are paying the minimum installment of{" "}
@@ -291,7 +294,7 @@ function PropertyDetailPage() {
                         {property.installmentDuration} months.
                       </p>
                     </div>
-                  )}
+                  )}*/}
                 </div>
                 <div className="mt-4 space-y-4">
                   <div>
