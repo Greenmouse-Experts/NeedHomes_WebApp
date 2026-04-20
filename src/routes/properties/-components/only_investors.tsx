@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { get_user_value, useAuth } from "@/store/authStore";
+import { useNavigate } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import type { PropsWithChildren } from "react";
 
@@ -11,13 +12,21 @@ export const allow_invest = () => {
 
 export default function InvestorOnly(props: PropsWithChildren) {
   const [auth] = useAuth();
-
+  const nav = useNavigate();
   if (auth?.user.accountType == "INVESTOR") {
     return <div>{props.children}</div>;
   }
   return (
     <>
-      <Button variant="primary" size="md">
+      <Button
+        onClick={() => {
+          return nav({
+            to: "/login",
+          });
+        }}
+        variant="primary"
+        size="md"
+      >
         Sign In As Investor
       </Button>
     </>
