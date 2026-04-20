@@ -175,8 +175,9 @@ function PropertyDetailPage() {
                         const quantity = form.getValues("quantity");
                         const installmentFrequency =
                           form.getValues("installmentFrequency");
-                        const installmentDuration =
-                          form.getValues("installmentDuration");
+                        const installmentDuration = Number(
+                          form.getValues("installmentDuration"),
+                        );
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
