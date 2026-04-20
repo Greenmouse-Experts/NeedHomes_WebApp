@@ -66,7 +66,7 @@ function PropertyDetailPage() {
     defaultValues: {
       quantity: 1,
     },
-  });;
+  });
 
   return (
     <PageLoader query={query}>
@@ -113,12 +113,12 @@ function PropertyDetailPage() {
                     <Button
                       variant="primary"
                       onClick={() => {
-                        if (auth?.user?.accountType === "INVESTOR") {
-                          return navigate({
-                            to: "/investors/properties/$propertyId/fractional/",
-                            params: { propertyId },
-                          });
-                        }
+                        // if (auth?.user?.accountType === "INVESTOR") {
+                        //   return navigate({
+                        //     to: "/investors/properties/$propertyId/fractional/",
+                        //     params: { propertyId },
+                        //   });
+                        // }
                         toast.promise(
                           mutate.mutateAsync({
                             amountPaid: fullAmountKobo,
@@ -187,6 +187,9 @@ function PropertyDetailPage() {
                         const totalCost = currentQuantity * pricePerShare;
                         const minimumShares = property.minimumShares || 1; // Default to 1 if not set
 
+                        const availableShares =
+                          breakdown.availableShares ?? Infinity;
+
                         const incrementQuantity = () => {
                           if (currentQuantity < availableShares) {
                             field.onChange(currentQuantity + 1);
@@ -231,7 +234,7 @@ function PropertyDetailPage() {
                                     size="sm"
                                     onClick={incrementQuantity}
                                     disabled={
-                                      field.value >= breakdown.availableShares
+                                      field.value >= availableShares
                                     }
                                     className="px-2 py-1"
                                   >
@@ -286,7 +289,6 @@ function PropertyDetailPage() {
                       </span>
                     </div>*/}
                   </div>
-
                 </div>
               </section>
             </Modal>
