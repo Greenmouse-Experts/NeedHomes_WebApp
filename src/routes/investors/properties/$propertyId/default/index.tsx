@@ -375,9 +375,8 @@ function PropertyDetailPage() {
                             <span className="font-bold">
                               {property.minimumFirstPaymentPercentage}%
                             </span>{" "}
-                            of the total (
-                            {formatCurrency(minFirstDeposit!)}) upfront. You
-                            may pay more.
+                            of the total ({formatCurrency(minFirstDeposit!)})
+                            upfront. You may pay more.
                           </p>
                         </div>
                         <SimpleInput
