@@ -128,7 +128,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         projectEndDate: data.projectEndDate
           ? new Date(data.projectEndDate).toISOString()
           : null,
-        paymentDuration: data.paymentDuration,
+        // paymentDuration: data.paymentDuration,
         minimumFirstPaymentPercentage: data.minimumFirstPaymentPercentage,
       };
       const new_payload = strip_co_dev(payload);
@@ -202,7 +202,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
               <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
               <option value="NOT_ALLOWED">Not Allowed</option>
             </LocalSelect>
-            <Controller
+            {/*<Controller
               name="paymentDuration"
               control={form.control}
               render={({ field }) => (
@@ -214,7 +214,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               )}
-            />
+            />*/}
             <Controller
               name="minimumFirstPaymentPercentage"
               control={form.control}

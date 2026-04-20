@@ -110,7 +110,7 @@ function RouteComponent() {
         projectEndDate: data.projectEndDate
           ? new Date(data.projectEndDate).toISOString()
           : null,
-        paymentDuration: data.paymentDuration,
+        // paymentDuration: data.paymentDuration,
         minimumFirstPaymentPercentage: data.minimumFirstPaymentPercentage,
       };
       delete payload.basePrice;
@@ -186,7 +186,7 @@ function RouteComponent() {
               <option value="AT_EXIT_WINDOW_ONLY">At Exit Window Only</option>
               <option value="NOT_ALLOWED">Not Allowed</option>
             </LocalSelect>
-            <Controller
+            {/*<Controller
               name="paymentDuration"
               control={form.control}
               render={({ field }) => (
@@ -198,7 +198,7 @@ function RouteComponent() {
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               )}
-            />
+            />*/}
             <Controller
               name="minimumFirstPaymentPercentage"
               control={form.control}
