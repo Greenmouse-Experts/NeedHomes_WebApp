@@ -1,6 +1,7 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import { Button } from "@/components/ui/Button";
+import AdminROI from "@/routes/-components/ROI";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -358,61 +359,69 @@ function RouteComponent() {
 
               {/* ── Property Info ── */}
               {inv.property && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                  <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                      Property
-                    </h3>
-                    <Link
-                      to="/dashboard/properties/$propertyId"
-                      params={{ propertyId: inv.propertyId }}
-                      className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-all shadow-sm active:scale-95"
-                    >
-                      Manage
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                  <div className="flex flex-col md:flex-row gap-0">
-                    {inv.property.coverImage && (
-                      <div className="md:w-48 shrink-0">
-                        <img
-                          src={inv.property.coverImage}
-                          alt={inv.property.propertyTitle}
-                          className="w-full h-40 md:h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="divide-y divide-gray-50 flex-1">
-                      {[
-                        {
-                          label: "Title",
-                          value: inv.property.propertyTitle,
-                          bold: true,
-                        },
-                        { label: "Type", value: inv.property.propertyType },
-                        { label: "Model", value: inv.property.investmentModel },
-                        { label: "Location", value: inv.property.location },
-                        {
-                          label: "Base Price",
-                          value: formatCurrency(inv.property.basePrice / 100),
-                          bold: true,
-                        },
-                      ].map(({ label, value, bold }) => (
-                        <div
-                          key={label}
-                          className="flex items-center justify-between px-6 py-3.5"
-                        >
-                          <span className="text-sm text-gray-500">{label}</span>
-                          <span
-                            className={`text-sm ${bold ? "font-bold text-gray-900" : "font-medium text-gray-700"}`}
-                          >
-                            {value}
-                          </span>
+                <>
+                  <AdminROI property={inv.property} />
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                        Property
+                      </h3>
+                      <Link
+                        to="/dashboard/properties/$propertyId"
+                        params={{ propertyId: inv.propertyId }}
+                        className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-all shadow-sm active:scale-95"
+                      >
+                        Manage
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-0">
+                      {inv.property.coverImage && (
+                        <div className="md:w-48 shrink-0">
+                          <img
+                            src={inv.property.coverImage}
+                            alt={inv.property.propertyTitle}
+                            className="w-full h-40 md:h-full object-cover"
+                          />
                         </div>
-                      ))}
+                      )}
+                      <div className="divide-y divide-gray-50 flex-1">
+                        {[
+                          {
+                            label: "Title",
+                            value: inv.property.propertyTitle,
+                            bold: true,
+                          },
+                          { label: "Type", value: inv.property.propertyType },
+                          {
+                            label: "Model",
+                            value: inv.property.investmentModel,
+                          },
+                          { label: "Location", value: inv.property.location },
+                          {
+                            label: "Base Price",
+                            value: formatCurrency(inv.property.basePrice / 100),
+                            bold: true,
+                          },
+                        ].map(({ label, value, bold }) => (
+                          <div
+                            key={label}
+                            className="flex items-center justify-between px-6 py-3.5"
+                          >
+                            <span className="text-sm text-gray-500">
+                              {label}
+                            </span>
+                            <span
+                              className={`text-sm ${bold ? "font-bold text-gray-900" : "font-medium text-gray-700"}`}
+                            >
+                              {value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
           );
