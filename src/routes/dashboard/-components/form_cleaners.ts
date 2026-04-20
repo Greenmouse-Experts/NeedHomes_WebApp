@@ -95,6 +95,8 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.savingsDuration;
   delete cleaned.published;
   delete cleaned.deletedAt;
+  delete cleaned.paymentDuration;
+  delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.systemCharges;
   return cleaned;
 };
