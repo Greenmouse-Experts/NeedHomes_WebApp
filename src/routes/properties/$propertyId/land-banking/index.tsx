@@ -76,6 +76,7 @@ function PropertyDetailPage() {
       ration: 3,
       quantity: 1,
       installmentDuration: 3,
+      installmentFrequency: "MONTHLY" as "WEEKLY" | "MONTHLY",
     },
   });
 
@@ -593,12 +594,38 @@ const InstallMentForm = ({
     return `₦ ${fixed.toLocaleString()}`;
   };
   const selectedDuration = form.watch("installmentDuration");
+  const selectedFrequency = form.watch("installmentFrequency");
 
   return (
     <div className="space-y-4 p-4 ring rounded-box fade">
       <div>
         <p className="text-sm font-medium text-gray-700 mb-2">
-          Installment Duration (months)
+          Payment Frequency
+        </p>
+        <div className="flex gap-3">
+          {(["WEEKLY", "MONTHLY"] as const).map((freq) => (
+            <label
+              key={freq}
+              className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                selectedFrequency === freq
+                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                  : "border-gray-200 text-gray-600 hover:border-gray-300"
+              }`}
+            >
+              <input
+                type="radio"
+                className="hidden"
+                value={freq}
+                {...form.register("installmentFrequency")}
+              />
+              {freq.charAt(0) + freq.slice(1).toLowerCase()}
+            </label>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Installment Duration
         </p>
         <div className="flex gap-3">
           {([3, 6, 12] as const).map((dur) => (
@@ -618,7 +645,8 @@ const InstallMentForm = ({
                   valueAsNumber: true,
                 })}
               />
-              {dur}m
+              {dur}
+              {selectedFrequency === "WEEKLY" ? "w" : "m"}
             </label>
           ))}
         </div>
