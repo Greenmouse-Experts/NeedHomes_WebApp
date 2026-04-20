@@ -70,6 +70,8 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.published;
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
+  delete cleaned.paymentDuration;
+  delete cleaned.minimumFirstPaymentPercentage;
   return cleaned;
 };
 
