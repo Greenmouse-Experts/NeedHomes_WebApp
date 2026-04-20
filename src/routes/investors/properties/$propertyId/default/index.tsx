@@ -152,6 +152,7 @@ function PropertyDetailPage() {
         const payAmount = form.watch("amount");
         const quantity = form.watch("quantity");
         const installmentDuration = form.watch("installmentDuration");
+        const installmentFrequency = form.watch("installmentFrequency");
 
         const pricePerUnit = property.basePrice / 100;
         const unit_total = quantity * pricePerUnit;
@@ -391,6 +392,65 @@ function PropertyDetailPage() {
                           type="number"
                           className="w-full"
                         />
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-2">
+                            Payment Frequency
+                          </p>
+                          <div className="flex gap-3">
+                            {(["WEEKLY", "MONTHLY"] as const).map((freq) => (
+                              <label
+                                key={freq}
+                                className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                                  installmentFrequency === freq
+                                    ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                                    : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  className="hidden"
+                                  value={freq}
+                                  {...form.register("installmentFrequency")}
+                                />
+                                {freq.charAt(0) + freq.slice(1).toLowerCase()}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-2">
+                            Installment Duration
+                          </p>
+                          <div className="flex gap-3">
+                            {([3, 6, 12] as const).map((dur) => (
+                              <label
+                                key={dur}
+                                className={`flex-1 flex items-center justify-center p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                                  Number(installmentDuration) === dur
+                                    ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                                    : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  className="hidden"
+                                  value={dur}
+                                  {...form.register("installmentDuration", {
+                                    valueAsNumber: true,
+                                  })}
+                                />
+                                {dur}
+                                {installmentFrequency === "WEEKLY" ? "w" : "m"}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-gray-600/60 text-sm">
+                          <span className="font-semibold text-gray-900/60">
+                            The remaining balance will be spread over the
+                            selected schedule
+                          </span>
+                        </p>
                       </div>
                     ) : (
                       <InstallMentForm
