@@ -43,15 +43,32 @@ function PropertyDetailPage() {
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+    mutationFn: async (data: {
+      amountPaid: number;
+      quantity: number;
+      paymentOption?: string;
+      installmentFrequency?: string;
+      installmentDuration?: number;
+      referralCode?: string;
+    }) => {
+      const ref = localStorage.getItem(`ref_${propertyId}`);
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
         amountPaid: parseFloat(data.amountPaid.toFixed()),
         quantity: data.quantity,
+        ...(data.paymentOption ? { paymentOption: data.paymentOption } : {}),
+        ...(data.installmentFrequency
+          ? { installmentFrequency: data.installmentFrequency }
+          : {}),
+        ...(data.installmentDuration
+          ? { installmentDuration: data.installmentDuration }
+          : {}),
+        ...(ref ? { referralCode: ref } : {}),
       });
       return resp.data;
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
+      localStorage.removeItem(`ref_${propertyId}`);
       closeModal();
       navigate({
         to: "/investors/my-investments/$investmentId",
@@ -74,6 +91,7 @@ function PropertyDetailPage() {
       ration: 3,
       quantity: 1,
       installmentDuration: 3,
+      installmentFrequency: "MONTHLY" as "WEEKLY" | "MONTHLY",
     },
   });
   // let payAmount = form.watch("amount");
@@ -155,10 +173,17 @@ function PropertyDetailPage() {
                       if (payInstall) {
                         const amount = form.getValues("amount");
                         const quantity = form.getValues("quantity");
+                        const installmentFrequency =
+                          form.getValues("installmentFrequency");
+                        const installmentDuration =
+                          form.getValues("installmentDuration");
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
-                            quantity: quantity,
+                            quantity,
+                            paymentOption: "INSTALLMENT",
+                            installmentFrequency,
+                            installmentDuration,
                           }),
                           {
                             loading: "Processing payment...",
@@ -566,12 +591,38 @@ const InstallMentForm = ({
     return `₦ ${fixed.toLocaleString()}`;
   };
   const selectedDuration = form.watch("installmentDuration");
+  const selectedFrequency = form.watch("installmentFrequency");
 
   return (
     <div className="space-y-4 p-4 ring rounded-box fade">
       <div>
         <p className="text-sm font-medium text-gray-700 mb-2">
-          Installment Duration (months)
+          Payment Frequency
+        </p>
+        <div className="flex gap-3">
+          {(["WEEKLY", "MONTHLY"] as const).map((freq) => (
+            <label
+              key={freq}
+              className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                selectedFrequency === freq
+                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                  : "border-gray-200 text-gray-600 hover:border-gray-300"
+              }`}
+            >
+              <input
+                type="radio"
+                className="hidden"
+                value={freq}
+                {...form.register("installmentFrequency")}
+              />
+              {freq.charAt(0) + freq.slice(1).toLowerCase()}
+            </label>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Installment Duration
         </p>
         <div className="flex gap-3">
           {([3, 6, 12] as const).map((dur) => (
@@ -591,7 +642,8 @@ const InstallMentForm = ({
                   valueAsNumber: true,
                 })}
               />
-              {dur}m
+              {dur}
+              {selectedFrequency === "WEEKLY" ? "w" : "m"}
             </label>
           ))}
         </div>
