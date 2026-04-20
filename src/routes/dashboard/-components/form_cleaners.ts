@@ -122,6 +122,11 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
   //@ts-ignore
+  delete cleaned.paymentDuration;
+  delete cleaned.minimumFirstPaymentPercentage;
+  delete cleaned.projectStartDate;
+  //@ts-ignore
+
   delete cleaned.developmentStage;
   return cleaned;
 };
