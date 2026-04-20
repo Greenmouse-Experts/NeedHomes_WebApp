@@ -76,13 +76,13 @@ export default function InvestmentDetails({
             value={property.paymentOption || "N/A"}
           />
           <DetailRow
-            label="Min. Installment"
-            value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
-          />
-          <DetailRow
-            label="Installment Duration"
-            value={`${property.installmentDuration || "N/A"} Months`}
-          />
+          //   label="Min. Installment"
+          //   value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
+          // />
+          // <DetailRow
+          //   label="Installment Duration"
+          //   value={`${property.installmentDuration || "N/A"} Months`}
+          // />
         </DetailsCard>
       );
 
