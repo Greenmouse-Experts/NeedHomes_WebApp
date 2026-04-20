@@ -42,12 +42,25 @@ function PropertyDetailPage() {
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+    mutationFn: async (data: {
+      amountPaid: number;
+      quantity: number;
+      paymentOption?: string;
+      installmentFrequency?: string;
+      installmentDuration?: number;
+    }) => {
       const ref = localStorage.getItem(`ref_${propertyId}`);
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
         amountPaid: parseFloat(data.amountPaid.toFixed()),
         quantity: data.quantity,
+        ...(data.paymentOption ? { paymentOption: data.paymentOption } : {}),
+        ...(data.installmentFrequency
+          ? { installmentFrequency: data.installmentFrequency }
+          : {}),
+        ...(data.installmentDuration
+          ? { installmentDuration: data.installmentDuration }
+          : {}),
         ...(ref ? { referralCode: ref } : {}),
       });
       return resp.data;
@@ -176,10 +189,18 @@ function PropertyDetailPage() {
                         if (payInstall) {
                           const amount = form.getValues("amount");
                           const quantity = form.getValues("quantity");
+                          const installmentFrequency =
+                            form.getValues("installmentFrequency");
+                          const installmentDuration = Number(
+                            form.getValues("installmentDuration"),
+                          );
                           return toast.promise(
                             mutate.mutateAsync({
                               amountPaid: amount * 100,
-                              quantity: quantity,
+                              quantity,
+                              paymentOption: "INSTALLMENT",
+                              installmentFrequency,
+                              installmentDuration,
                             }),
                             {
                               loading: "Processing payment...",

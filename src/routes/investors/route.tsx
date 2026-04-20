@@ -4,15 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "@tanstack/react-router";
 import InvHeader from "./-components/InvHeader";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { get_kyc_value, refresh_kyc, useAuth } from "@/store/authStore";
+import {
+  get_kyc_value,
+  get_user_value,
+  refresh_kyc,
+  useAuth,
+} from "@/store/authStore";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import { BellDotIcon } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/investors")({
   component: LayoutComponent,
   beforeLoad: () => {
+    const auth = get_user_value();
+    if (auth?.user.accountType == "PARTNER")
+      return redirect({
+        to: "/partners/",
+      });
     const val = get_kyc_value();
     if (!val) return;
 
