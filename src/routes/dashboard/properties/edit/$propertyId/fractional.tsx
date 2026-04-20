@@ -98,14 +98,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       const allGallery = await gallery_helper(useImageProps);
       const uploadedDocUrls: Partial<DocProps> = await doc_helper(docUpload);
       let videoUrl = await video_helper(videoUpload);
-      const totalPrice =
-        Number(data.basePrice) +
-        (data.additionalFees
-          ? data.additionalFees.reduce(
-              (acc, fee) => acc + (Number(fee.amount) || 0),
-              0,
-            )
-          : 0);
       const keys = ["pricePerShare"] as (typeof data)[string];
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const calc_payload = calculate_fees(data, keys);
@@ -116,7 +108,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         coverImage: coverImageUrl,
         galleryImages: allGallery,
         videos: videoUrl,
-        totalPrice: totalPrice * 100,
         productCost: calc_payload["basePrice"],
         projectStartDate: data.projectStartDate
           ? new Date(data.projectStartDate).toISOString()
@@ -168,6 +159,8 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
 
           <DefaultForm
             update
+            disable_base_price
+            disableUnits
             docUpload={docUpload}
             videoUpload={videoUpload}
             useImagesProps={useImageProps}

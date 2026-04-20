@@ -165,6 +165,7 @@ function RouteComponent() {
             useImagesProps={useImageProps}
             form={methods as any}
             disable_base_price
+            disableUnits
             showDateRange
             selectImageProps={selectImageProps as any}
             mutation={mutation as any}
