@@ -110,9 +110,11 @@ function PropertyDetailPage() {
     defaultValues: {
       installment: false,
       amount: 0,
+      quantity: 1,
+      installmentDuration: 3,
+      installmentFrequency: "MONTHLY" as "WEEKLY" | "MONTHLY",
     },
   });
-  // let payAmount = form.watch("amount");
 
   return (
     <PageLoader query={query}>
@@ -146,26 +148,22 @@ function PropertyDetailPage() {
           //@ts-ignore
           breakdown.installmentDuration = property.installmentDuration;
         }
-        const payOption = property.paymentOption;
         const payInstall = form.watch("installment");
-
-        const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
-        useEffect(() => {
-          const installment_value = form.getValues("installment");
+        const quantity = form.watch("quantity");
+        const installmentDuration = form.watch("installmentDuration");
+        const installOptions = property.paymentOption === "INSTALLMENT";
 
-          if (installOptions) {
-            form.setValue("installment", true);
-          }
-        }, [installOptions]);
+        const pricePerUnit = property.basePrice / 100;
+        const unit_total = quantity * pricePerUnit;
+        const full_total = unit_total + breakdown.additionalFeesTotal;
+
         useEffect(() => {
-          if (breakdown.installmentAmount) {
-            const charge = (0 / 100) * breakdown.installmentAmount;
-            let amout_total = (breakdown.installmentAmount + charge) / 100;
-            amout_total = Math.ceil(amout_total * 100) / 100;
-            form.setValue("amount", amout_total);
+          if (payInstall) {
+            const per_installment = full_total / installmentDuration;
+            form.setValue("amount", Math.ceil(per_installment * 100) / 100);
           }
-        }, []);
+        }, [unit_total, installmentDuration, payInstall]);
         return (
           <>
             <Modal
@@ -203,7 +201,7 @@ function PropertyDetailPage() {
                           return toast.promise(
                             mutate.mutateAsync({
                               amountPaid: amount * 100,
-                              quantity: 1,
+                              quantity,
                             }),
                             {
                               loading: "Processing payment...",
@@ -214,8 +212,8 @@ function PropertyDetailPage() {
                         }
                         toast.promise(
                           mutate.mutateAsync({
-                            amountPaid: breakdown.totalPrice * 100,
-                            quantity: 1,
+                            amountPaid: full_total * 100,
+                            quantity,
                           }),
                           {
                             loading: "Processing payment...",
@@ -228,12 +226,8 @@ function PropertyDetailPage() {
                     >
                       Confirm & Pay{" "}
                       {payInstall
-                        ? payAmount
-                          ? formatCurrency(payAmount)
-                          : formatCurrency(
-                              property.minimumInstallmentAmount / 100,
-                            )
-                        : breakdown.totalPrice.toLocaleString()}
+                        ? formatCurrency(payAmount)
+                        : formatCurrency(full_total)}
                     </Button>
                   )}
                 </div>

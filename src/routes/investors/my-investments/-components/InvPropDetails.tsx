@@ -35,6 +35,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
             return (
               <div className="text-center py-8">No property data found.</div>
             );
+
           return (
             <div className="bg-white rounded-lg shadow-md p-6 mt-8">
               {/* Header */}
