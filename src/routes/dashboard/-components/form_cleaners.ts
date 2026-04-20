@@ -48,8 +48,8 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
   delete cleaned.coDevelopmentProgress;
-
-  return cleaned;
+  delete cleaned.minimumInstallmentAmount;
+  return cleaned.paymentDuration;
 };
 
 export const strip_land_banking = (data: Record<string, any>) => {

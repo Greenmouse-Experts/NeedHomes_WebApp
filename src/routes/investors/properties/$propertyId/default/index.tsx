@@ -103,6 +103,8 @@ function PropertyDetailPage() {
     paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
     minimumInstallmentAmount?: number;
     installmentDuraion?: number;
+    minimumFirstPaymentPercentage?: number;
+    investmentModel?: string;
   }
   const form = useForm({
     defaultValues: {
@@ -155,12 +157,24 @@ function PropertyDetailPage() {
         const unit_total = quantity * pricePerUnit;
         const full_total = unit_total + breakdown.additionalFeesTotal;
 
+        const isCoDev = property.investmentModel === "CO_DEVELOPMENT";
+        const minFirstDeposit =
+          isCoDev && property.minimumFirstPaymentPercentage && payInstall
+            ? full_total * (property.minimumFirstPaymentPercentage / 100)
+            : null;
+
         useEffect(() => {
-          if (payInstall) {
+          if (isCoDev && payInstall && minFirstDeposit !== null) {
+            form.setValue("amount", Math.ceil(minFirstDeposit * 100) / 100);
+          }
+        }, [full_total, isCoDev, payInstall]);
+
+        useEffect(() => {
+          if (!isCoDev && payInstall) {
             const per_installment = full_total / installmentDuration;
             form.setValue("amount", Math.ceil(per_installment * 100) / 100);
           }
-        }, [unit_total, installmentDuration, payInstall]);
+        }, [unit_total, installmentDuration, payInstall, isCoDev]);
         return (
           <>
             <Modal
@@ -349,10 +363,41 @@ function PropertyDetailPage() {
                 </div>
                 {payInstall && (
                   <div className="mt-4">
-                    <InstallMentForm
-                      form={form}
-                      minimumInvestmentAmount={payAmount}
-                    />
+                    {isCoDev ? (
+                      <div className="space-y-3 p-4 ring rounded-box fade">
+                        <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                          <p className="text-xs text-amber-800 font-medium">
+                            Minimum First Deposit Required
+                          </p>
+                          <p className="text-xs text-amber-700 mt-1">
+                            Pay at least{" "}
+                            <span className="font-bold">
+                              {property.minimumFirstPaymentPercentage}%
+                            </span>{" "}
+                            of the total (
+                            {formatCurrency(minFirstDeposit!)}) upfront. You
+                            may pay more.
+                          </p>
+                        </div>
+                        <SimpleInput
+                          {...form.register("amount", {
+                            valueAsNumber: true,
+                            min: {
+                              value: minFirstDeposit ?? 0,
+                              message: `Minimum deposit is ${formatCurrency(minFirstDeposit)}`,
+                            },
+                          })}
+                          label="Deposit Amount"
+                          type="number"
+                          className="w-full"
+                        />
+                      </div>
+                    ) : (
+                      <InstallMentForm
+                        form={form}
+                        minimumInvestmentAmount={payAmount}
+                      />
+                    )}
                   </div>
                 )}
               </section>
