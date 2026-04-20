@@ -4,6 +4,7 @@ const PROPERTY_TYPE_ROUTES: Record<string, string> = {
   OUTRIGHT_PURCHASE: "/properties/$propertyId/outright/",
   FRACTIONAL_OWNERSHIP: "/properties/$propertyId/fractional/",
   LAND_BANKING: "/properties/$propertyId/land-banking/",
+  SAVE_TO_OWN: "/properties/$propertyId/save-to-own/",
 };
 
 export const Route = createFileRoute("/property/")({

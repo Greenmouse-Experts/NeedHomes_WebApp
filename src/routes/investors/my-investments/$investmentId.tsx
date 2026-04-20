@@ -20,6 +20,7 @@ import InvPropDetails from "./-components/InvPropDetails";
 import InvPaymentSchedule from "./-components/InvPaymentSchedule";
 import ExitStrategy from "./-components/ExitStrategy";
 import Resell from "./-components/Resell";
+import AdminROI from "@/routes/-components/ROI";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -302,6 +303,7 @@ function InvestmentDetailsPage() {
               <div className="mt-8">
                 <Resell investment={investment} />
               </div>
+
               <InvPropDetails propId={investment.propertyId} />
             </>
           );
