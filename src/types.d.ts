@@ -289,10 +289,18 @@ export interface ADMIN_PROPERTY_LISTING {
     | "LAND_BANKING"
     | "OUTRIGHT_PURCHASE"
     | "CO_DEVELOPMENT";
-
   location: string;
+  country: string;
+  state: string;
+  longitude: number;
+  latitude: number;
   description: string;
-  developmentStage: "PLANNING" | "FOUNDATION" | "ROOFING" | "FINISHED";
+  developmentStage:
+    | "PLANNING"
+    | "FOUNDATION"
+    | "ROOFING"
+    | "FINISHED"
+    | "ONGOING";
   completionDate: string;
   published: boolean;
   premiumProperty: boolean;
@@ -311,24 +319,51 @@ export interface ADMIN_PROPERTY_LISTING {
   totalPrice: number;
   paymentOption: string | null;
   installmentDuration: number | null;
+  minimumInstallmentAmount: number | null;
   minimumInvestment: number | null;
   profitSharingRatio: number | null;
   projectDuration: number | null;
+  paymentDuration: number | null;
+  minimumFirstPaymentPercentage: number;
   exitRule: string | null;
   totalShares: number | null;
+  availableShares: number | null;
   pricePerShare: number | null;
   minimumShares: number | null;
   exitWindow: number | null;
+  maxInvestors: number | null;
   availablePlots: string | null;
   pricePerPlot: number | null;
   holdingPeriod: number | null;
   buyBackOption: boolean | null;
-  targetPropertyPrice: number;
+  targetPropertyPrice: number | null;
   savingsFrequency: "YEARLY" | "WEEKLY" | "MONTHLY" | null;
   savingsDuration: number | null;
+  projectStartDate: string;
+  projectEndDate: string;
   createdAt: string;
   updatedAt: string;
-  additionalFees: any[];
+  uploadedByPartnerId: string | null;
+  uploadStatus: string | null;
+  deletedAt: string | null;
+  isResell: boolean;
+  resellStatus: string | null;
+  resellerId: string | null;
+  originalInvestmentId: string | null;
+  additionalFees: {
+    id: string;
+    label: string;
+    amount: number;
+    propertyId: string;
+    createdAt: string;
+  }[];
+  systemCharges: {
+    platformChargePercentage: number;
+    partnerChargePercentage: number;
+  };
+  coDevelopmentProgress: {
+    investorCount: number;
+  };
 }
 
 export interface PROPERTY_DATA {

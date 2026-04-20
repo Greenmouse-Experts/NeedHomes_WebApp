@@ -79,10 +79,10 @@ export default function InvestmentDetails({
             label="Min. Installment"
             value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
           />
-          <DetailRow
+          {/*<DetailRow
             label="Installment Duration"
             value={`${property.installmentDuration || "N/A"} Months`}
-          />
+          />*/}
         </DetailsCard>
       );
 

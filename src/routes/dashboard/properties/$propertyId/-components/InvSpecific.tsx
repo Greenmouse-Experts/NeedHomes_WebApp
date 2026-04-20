@@ -116,17 +116,17 @@ export default function InvestmentDetails({
       return (
         <DetailsCard>
           <DetailRow label="Exit Strategy" value={property.exitRule || "N/A"} />
-          <DetailRow
+          {/*<DetailRow
             label="Payment Option"
             value={property.paymentOption || "N/A"}
-          />
-          <DetailRow
+          />*/}
+          {/*<DetailRow
             label="Installment Duration"
             value={`${property.installmentDuration || "N/A"} Months`}
-          />
+          />*/}
           <DetailRow
             label="minimum installment deposit"
-            value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
+            value={`${property.minimumFirstPaymentPercentage || "0"}%`}
           />
         </DetailsCard>
       );
