@@ -11,6 +11,8 @@ import {
 
 interface Documents<T = any> {
   propertyDocument?: T | File | string;
+  buildingPermitNumber?: string;
+  propertyTitleDocuments?: { type: string; documentUrl: string }[];
 }
 
 export interface TitleDocument {
@@ -213,8 +215,16 @@ export const DocumentUpload = (props: {
 export const useDocumentUpload = (prev?: Documents) => {
   const [documents, setDocuments] = useState<Documents>(prev || {});
   const [prevDocs, setPrevDocs] = useState<Documents<string>>(prev || {});
-  const [buildingPermitNumber, setBuildingPermitNumber] = useState("");
-  const [titleDocuments, setTitleDocuments] = useState<TitleDocument[]>([]);
+  const [buildingPermitNumber, setBuildingPermitNumber] = useState(
+    prev?.buildingPermitNumber ?? "",
+  );
+  const [titleDocuments, setTitleDocuments] = useState<TitleDocument[]>(
+    () =>
+      (prev?.propertyTitleDocuments ?? []).map((td) => ({
+        type: td.type,
+        file: td.documentUrl,
+      })),
+  );
 
   const handleFileChange = (docType: keyof Documents, file?: File) => {
     setDocuments((prev) => ({ ...prev, [docType]: file }));
