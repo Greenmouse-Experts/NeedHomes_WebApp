@@ -1,11 +1,13 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
+import { RenderDocuments } from "@/routes/-components/RenderDocuments";
 import AdminROI from "@/routes/-components/ROI";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_TYPE } from "@/types/property";
 import { useQuery } from "@tanstack/react-query";
+import { LoadDocuments } from "../../-components/LoadDocuments";
 
 export default function InvPropDetails({ propId }: { propId: string }) {
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
@@ -192,94 +194,9 @@ export default function InvPropDetails({ propId }: { propId: string }) {
               </div>
 
               {/* Documents & Media */}
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 border border-gray-100 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    Documents & Media
-                  </h3>
-                  <ul className="mt-3 space-y-2 text-sm text-gray-700">
-                    {prop_data.certificate && (
-                      <li>
-                        📄 <span className="font-medium">Certificate:</span>{" "}
-                        <a
-                          href={prop_data.certificate}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 underline ml-1"
-                        >
-                          View
-                        </a>
-                      </li>
-                    )}
-                    {prop_data.surveyPlanDocument && (
-                      <li>
-                        🗺️ <span className="font-medium">Survey Plan:</span>{" "}
-                        <a
-                          href={prop_data.surveyPlanDocument}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 underline ml-1"
-                        >
-                          View
-                        </a>
-                      </li>
-                    )}
-                    {prop_data.brochure && (
-                      <li>
-                        📘 <span className="font-medium">Brochure:</span>{" "}
-                        <a
-                          href={prop_data.brochure}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 underline ml-1"
-                        >
-                          Download
-                        </a>
-                      </li>
-                    )}
-                    {prop_data.transferDocument && (
-                      <li>
-                        🧾{" "}
-                        <span className="font-medium">Transfer Document:</span>{" "}
-                        <a
-                          href={prop_data.transferDocument}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 underline ml-1"
-                        >
-                          View
-                        </a>
-                      </li>
-                    )}
-                    {prop_data.videos && (
-                      <li>
-                        🎬{" "}
-                        <span className="font-medium">Video Presentation:</span>{" "}
-                        <a
-                          href={prop_data.videos}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 underline ml-1"
-                        >
-                          Watch
-                        </a>
-                      </li>
-                    )}
-                    {!prop_data.certificate &&
-                      !prop_data.surveyPlanDocument &&
-                      !prop_data.brochure &&
-                      !prop_data.transferDocument &&
-                      !prop_data.videos && (
-                        <li className="text-gray-500">
-                          No documents available.
-                        </li>
-                      )}
-                  </ul>
-                </div>
-                {/* Additional Details */}
-                <AdditionalFees fees={prop_data.additionalFees} />
-              </div>
-
+              <ThemeProvider className="my-4">
+                <LoadDocuments property_data={prop_data} />
+              </ThemeProvider>
               {/* Footer meta */}
               <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500">
                 <div>

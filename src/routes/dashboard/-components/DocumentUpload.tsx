@@ -21,14 +21,19 @@ export interface TitleDocument {
 }
 
 const TITLE_DOC_TYPES = [
-  { value: "CERTIFICATE_OF_OCCUPANCY", label: "Certificate of Occupancy (C of O)" },
+  {
+    value: "CERTIFICATE_OF_OCCUPANCY",
+    label: "Certificate of Occupancy (C of O)",
+  },
   { value: "GOVERNORS_CONSENT", label: "Governor's Consent" },
   { value: "GAZETTE", label: "Gazette" },
-  { value: "REGISTERED_DEED_OF_ASSIGNMENT", label: "Registered Deed of Assignment" },
+  {
+    value: "REGISTERED_DEED_OF_ASSIGNMENT",
+    label: "Registered Deed of Assignment",
+  },
   { value: "DEED_OF_CONVEYANCE", label: "Deed of Conveyance" },
   { value: "OTHERS", label: "Others" },
 ];
-
 
 function FileRow({
   file,
@@ -218,12 +223,11 @@ export const useDocumentUpload = (prev?: Documents) => {
   const [buildingPermitNumber, setBuildingPermitNumber] = useState(
     prev?.buildingPermitNumber ?? "",
   );
-  const [titleDocuments, setTitleDocuments] = useState<TitleDocument[]>(
-    () =>
-      (prev?.propertyTitleDocuments ?? []).map((td) => ({
-        type: td.type,
-        file: td.documentUrl,
-      })),
+  const [titleDocuments, setTitleDocuments] = useState<TitleDocument[]>(() =>
+    (prev?.propertyTitleDocuments ?? []).map((td) => ({
+      type: td.type,
+      file: td.documentUrl,
+    })),
   );
 
   const handleFileChange = (docType: keyof Documents, file?: File) => {
