@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
+import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/land-banking/",
@@ -173,8 +174,9 @@ function PropertyDetailPage() {
                       if (payInstall) {
                         const amount = form.getValues("amount");
                         const quantity = form.getValues("quantity");
-                        const installmentFrequency =
-                          form.getValues("installmentFrequency");
+                        const installmentFrequency = form.getValues(
+                          "installmentFrequency",
+                        );
                         const installmentDuration = Number(
                           form.getValues("installmentDuration"),
                         );
@@ -510,6 +512,8 @@ function PropertyDetailPage() {
                       {/* Amenities */}
 
                       {/* Features */}
+
+                      <LoadDocuments property_data={property} />
 
                       {/* Investment Model Specific Information */}
                       {property.investmentModel === "FRACTIONAL_OWNERSHIP" && (

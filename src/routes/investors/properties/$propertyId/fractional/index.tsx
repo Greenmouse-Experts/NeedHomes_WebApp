@@ -16,6 +16,7 @@ import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
+import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/fractional/",
@@ -421,6 +422,7 @@ function PropertyDetailPage() {
 
                       {/* Management Fees */}
                       <AdditionalFees fees={property.additionalFees} />
+                      <LoadDocuments property_data={property} />
                     </div>
 
                     {/* Sidebar */}
