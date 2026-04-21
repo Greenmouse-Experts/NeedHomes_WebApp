@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   CircleDollarSign,
   BadgeCheck,
+  TrendingUp,
 } from "lucide-react";
 import { toast } from "sonner";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
@@ -15,11 +16,19 @@ import { extract_message } from "@/helpers/apihelpers";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { Button } from "@/components/ui/Button";
 
+interface PriceHistoryData {
+  history: { id: string; priceField: string; oldPrice: number; newPrice: number; changedAt: string }[];
+  formerPrice: number;
+  currentPrice: number;
+  overallRoi: number;
+}
+
 interface Investment {
   id: string;
   status: "ACTIVE" | "PENDING" | "COMPLETED";
   amountPaid: number;
   propertyId: string;
+  currentValue: number;
 }
 
 type ResellStatus = "PENDING" | "APPROVED" | "REJECTED" | "SOLD";
@@ -79,6 +88,24 @@ export default function Resell({ investment }: { investment: Investment }) {
   const [askingPriceNaira, setAskingPriceNaira] = useState("");
   const queryClient = useQueryClient();
 
+  const priceHistoryQuery = useQuery<{ data: PriceHistoryData }>({
+    queryKey: ["price-history", investment.propertyId],
+    queryFn: async () => {
+      const resp = await apiClient.get(`properties/${investment.propertyId}/price-history`);
+      return resp.data;
+    },
+    enabled: investment.status === "COMPLETED",
+  });
+
+  const priceHistory = priceHistoryQuery.data?.data;
+  const hasHistory = priceHistory && priceHistory.history?.length > 0;
+  const fallbackNaira = investment.currentValue
+    ? investment.currentValue / 100
+    : investment.amountPaid / 100;
+  const minNaira = hasHistory ? priceHistory.formerPrice / 100 : fallbackNaira;
+  const maxNaira = hasHistory ? priceHistory.currentPrice / 100 : fallbackNaira;
+  const roi = hasHistory ? priceHistory.overallRoi?.toFixed(2) : null;
+
   const listingsQuery = useQuery<ApiResponseV2<ResellListing[]>>({
     queryKey: ["resell-listings"],
     queryFn: async () => {
@@ -92,9 +119,11 @@ export default function Resell({ investment }: { investment: Investment }) {
     mutationFn: async () => {
       const body: Record<string, number> = {};
       if (askingPriceNaira.trim()) {
-        const kobo = Math.round(parseFloat(askingPriceNaira) * 100);
-        if (isNaN(kobo) || kobo <= 0) throw new Error("Invalid asking price");
-        body.askingPrice = kobo;
+        const naira = parseFloat(askingPriceNaira);
+        if (isNaN(naira) || naira <= 0) throw new Error("Invalid asking price");
+        if (naira < minNaira) throw new Error(`Asking price must be at least ${formatNaira(minNaira * 100)}`);
+        if (naira > maxNaira) throw new Error(`Asking price cannot exceed ${formatNaira(maxNaira * 100)}`);
+        body.askingPrice = Math.round(naira * 100);
       }
       const resp = await apiClient.post(`resell/${investment.id}`, body);
       return resp.data;
@@ -147,25 +176,48 @@ export default function Resell({ investment }: { investment: Investment }) {
             </p>
           </div>
 
+          {hasHistory && (
+            <div className="grid grid-cols-3 gap-2 text-sm bg-base-200 rounded-box p-3">
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Min Price</p>
+                <p className="font-semibold">{formatNaira(priceHistory!.formerPrice)}</p>
+              </div>
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Max Price</p>
+                <p className="font-semibold">{formatNaira(priceHistory!.currentPrice)}</p>
+              </div>
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">ROI</p>
+                <p className={`font-bold flex items-center gap-1 ${parseFloat(roi!) >= 0 ? "text-success" : "text-error"}`}>
+                  <TrendingUp className="w-3 h-3" />
+                  {parseFloat(roi!) >= 0 ? "+" : ""}{roi}%
+                </p>
+              </div>
+            </div>
+          )}
+
           <fieldset className="fieldset">
             <legend className="fieldset-legend">
               Asking Price{" "}
               <span className="text-base-content/40 font-normal">
-                (optional — in ₦)
+                (in ₦)
               </span>
             </legend>
             <label className="input w-full">
               <span className="text-base-content/40">₦</span>
               <input
                 type="number"
-                min="0"
-                placeholder="Leave empty to use original price"
+                min={minNaira}
+                max={maxNaira}
+                placeholder={`${minNaira.toLocaleString()} – ${maxNaira.toLocaleString()}`}
                 value={askingPriceNaira}
                 onChange={(e) => setAskingPriceNaira(e.target.value)}
               />
             </label>
             <p className="fieldset-label">
-              If left empty, the original property base price will be used.
+              {hasHistory
+                ? `Must be between ${formatNaira(priceHistory!.formerPrice)} and ${formatNaira(priceHistory!.currentPrice)}.`
+                : `Based on your investment value: ${formatNaira(investment.amountPaid)}.`}
             </p>
           </fieldset>
         </div>
