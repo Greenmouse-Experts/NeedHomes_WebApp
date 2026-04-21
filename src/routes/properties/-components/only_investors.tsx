@@ -13,13 +13,18 @@ export const allow_invest = () => {
 export default function InvestorOnly(props: PropsWithChildren) {
   const [auth] = useAuth();
   const nav = useNavigate();
-  if (auth?.user.accountType == "INVESTOR") {
+  if (
+    auth?.user.accountType == "INDIVIDUAL" ||
+    //@ts-ignore
+    auth?.user.accountType == "CORPORATE"
+  ) {
     return <div>{props.children}</div>;
   }
   return (
     <>
       <Button
         onClick={() => {
+          //@ts-ignore
           return nav({
             to: "/login",
           });
@@ -27,6 +32,7 @@ export default function InvestorOnly(props: PropsWithChildren) {
         variant="primary"
         size="md"
       >
+        {JSON.stringify(auth?.user.accountType)}
         Sign In As Investor
       </Button>
     </>
