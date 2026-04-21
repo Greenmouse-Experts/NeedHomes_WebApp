@@ -153,7 +153,7 @@ function SignUpPartnerPage() {
                   <Input
                     id="firstName"
                     type="text"
-                    placeholder="Chidiebere"
+                    placeholder="John"
                     {...register("firstName")}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                   />
@@ -170,7 +170,7 @@ function SignUpPartnerPage() {
                   <Input
                     id="lastName"
                     type="text"
-                    placeholder="Chidiebere-Igwe"
+                    placeholder="John-doe"
                     {...register("lastName")}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                   />
@@ -190,7 +190,7 @@ function SignUpPartnerPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="tyler.igwe@gmail.com"
+                  placeholder="johndoe@gmail.com"
                   {...register("email")}
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
                 />

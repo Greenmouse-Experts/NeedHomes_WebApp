@@ -1,5 +1,6 @@
-import { FileText, ExternalLink } from "lucide-react";
+import { FileText, ExternalLink, FolderOpen } from "lucide-react";
 import type { ADMIN_PROPERTY_LISTING } from "@/types.d.ts";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 const TITLE_DOC_LABELS: Record<string, string> = {
   CERTIFICATE_OF_OCCUPANCY: "Certificate of Occupancy (C of O)",
@@ -11,27 +12,32 @@ const TITLE_DOC_LABELS: Record<string, string> = {
 };
 
 function DocLink({ url }: { url: string }) {
-  const name = url.split("/").pop() ?? "Document";
+  const name = decodeURIComponent(url.split("/").pop() ?? "Document");
   return (
-    <div className="flex items-center justify-between gap-3 bg-white p-2 rounded-md border">
-      <div className="flex items-center gap-2 grow min-w-0">
-        <FileText className="h-5 w-5 text-blue-500 shrink-0" />
-        <span className="text-sm text-gray-800 truncate">{name}</span>
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-between gap-3 p-3 rounded-xl border border-base-200 bg-base-100 hover:bg-base-200 transition-colors group"
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+          <FileText className="h-4 w-4 text-primary" />
+        </div>
+        <span className="text-sm font-medium truncate">{name}</span>
       </div>
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition-colors"
-      >
-        <ExternalLink className="h-5 w-5" />
-      </a>
-    </div>
+      <ExternalLink className="h-4 w-4 text-base-content/40 group-hover:text-primary shrink-0 transition-colors" />
+    </a>
   );
 }
 
-function EmptyDoc() {
-  return <p className="text-sm text-gray-400 italic">No document uploaded.</p>;
+function EmptyState({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 p-3 rounded-xl border border-dashed border-base-300 text-base-content/40">
+      <FolderOpen className="h-4 w-4 shrink-0" />
+      <span className="text-sm italic">{label}</span>
+    </div>
+  );
 }
 
 export function LoadDocuments({
@@ -42,59 +48,69 @@ export function LoadDocuments({
   const titleDocs = property_data.propertyTitleDocuments ?? [];
 
   return (
-    <div className="flex flex-col gap-6 fade p-6 border rounded-lg shadow-md bg-white">
-      <h3 className="text-xl font-bold text-gray-800">Documents</h3>
+    <ThemeProvider>
+      <div className="card bg-base-100 border border-base-200 shadow-sm">
+        <div className="card-body gap-6">
+          <h3 className="card-title text-lg">Documents</h3>
 
-      {/* Building Permit Number */}
-      <div className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-gray-700">
-          Building Permit Number
-        </span>
-        {property_data.buildingPermitNumber ? (
-          <span className="text-sm text-gray-900 font-mono bg-gray-50 border rounded px-3 py-1.5 w-fit">
-            {property_data.buildingPermitNumber}
-          </span>
-        ) : (
-          <span className="text-sm text-gray-400 italic">Not provided.</span>
-        )}
-      </div>
+          {/* Building Permit Number */}
+          <div className="flex flex-col gap-2">
+            <span className="label-text font-semibold">
+              Building Permit Number
+            </span>
+            {property_data.buildingPermitNumber ? (
+              <div className="badge badge-outline badge-lg font-mono gap-1 py-4 px-3">
+                {property_data.buildingPermitNumber}
+              </div>
+            ) : (
+              <EmptyState label="Not provided." />
+            )}
+          </div>
 
-      {/* Property Document */}
-      <div className="flex flex-col gap-2 p-3 border rounded-md bg-gray-50">
-        <span className="text-sm font-medium text-gray-700">
-          Property Document
-        </span>
-        {property_data.propertyDocument ? (
-          <DocLink url={property_data.propertyDocument} />
-        ) : (
-          <EmptyDoc />
-        )}
-      </div>
+          <div className="divider my-0" />
 
-      {/* Property Title Documents */}
-      <div className="flex flex-col gap-3">
-        <span className="text-sm font-medium text-gray-700">
-          Property Title Documents
-        </span>
+          {/* Property Document */}
+          <div className="flex flex-col gap-2">
+            <span className="label-text font-semibold">Property Document</span>
+            {property_data.propertyDocument ? (
+              <DocLink url={property_data.propertyDocument} />
+            ) : (
+              <EmptyState label="No document uploaded." />
+            )}
+          </div>
 
-        {titleDocs.length === 0 ? (
-          <p className="text-sm text-gray-400 italic">
-            No title documents uploaded.
-          </p>
-        ) : (
-          titleDocs.map((td, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col gap-2 p-3 border rounded-md bg-gray-50 fade"
-            >
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                {TITLE_DOC_LABELS[td.type] ?? td.type}
+          <div className="divider my-0" />
+
+          {/* Property Title Documents */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="label-text font-semibold">
+                Property Title Documents
               </span>
-              <DocLink url={td.documentUrl} />
+              {titleDocs.length > 0 && (
+                <span className="badge badge-primary badge-sm">
+                  {titleDocs.length}
+                </span>
+              )}
             </div>
-          ))
-        )}
+
+            {titleDocs.length === 0 ? (
+              <EmptyState label="No title documents uploaded." />
+            ) : (
+              <div className="flex flex-col gap-2">
+                {titleDocs.map((td, idx) => (
+                  <div key={idx} className="flex flex-col gap-1.5">
+                    <span className="text-xs font-semibold text-base-content/50 uppercase tracking-widest pl-1">
+                      {TITLE_DOC_LABELS[td.type] ?? td.type}
+                    </span>
+                    <DocLink url={td.documentUrl} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }

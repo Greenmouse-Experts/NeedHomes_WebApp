@@ -284,7 +284,7 @@ function SignUpPage() {
                       <Input
                         id="firstName"
                         type="text"
-                        placeholder="Chika"
+                        placeholder="John"
                         value={formData.firstName}
                         onChange={(e) =>
                           handleInputChange("firstName", e.target.value)
@@ -300,7 +300,7 @@ function SignUpPage() {
                       <Input
                         id="lastName"
                         type="text"
-                        placeholder="Chuke"
+                        placeholder="doe"
                         value={formData.lastName}
                         onChange={(e) =>
                           handleInputChange("lastName", e.target.value)
@@ -319,7 +319,7 @@ function SignUpPage() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Chikachu@gmail.com"
+                      placeholder="Johndoe@gmail.com"
                       value={formData.email}
                       onChange={(e) =>
                         handleInputChange("email", e.target.value)
