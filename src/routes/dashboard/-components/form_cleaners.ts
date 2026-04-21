@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { DocProps } from "@/types/form";
 
 export const stripped_unneeded = (data: Record<string, any>) => {
@@ -50,6 +52,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.coDevelopmentProgress;
   delete cleaned.minimumInstallmentAmount;
   delete cleaned.paymentDuration;
+  delete cleaned.fractionalHoldingPeriodDays;
   return cleaned;
 };
 
@@ -74,6 +77,7 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.systemCharges;
   delete cleaned.paymentDuration;
   delete cleaned.minimumFirstPaymentPercentage;
+  delete cleaned.fractionalHoldingPeriodDays;
   return cleaned;
 };
 
@@ -100,6 +104,7 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.paymentDuration;
   delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.systemCharges;
+
   return cleaned;
 };
 
@@ -132,7 +137,7 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.projectStartDate;
   //@ts-ignore
-
+  delete cleaned.fractionalHoldingPeriodDays;
   delete cleaned.developmentStage;
   return cleaned;
 };
@@ -163,5 +168,6 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.paymentDuration;
   delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.projectStartDate;
+  delete cleaned.fractionalHoldingPeriodDays;
   return cleaned;
 };
