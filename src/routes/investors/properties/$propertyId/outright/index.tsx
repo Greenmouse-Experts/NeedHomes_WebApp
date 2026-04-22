@@ -22,6 +22,7 @@ import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
+import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/outright/",
@@ -170,6 +171,8 @@ function PropertyDetailPage() {
               >
                 Back to Properties
               </Button>
+
+              <ShareLink route={`/investors/properties/${propertyId}/outright`} />
 
               <Button
                 variant="primary"

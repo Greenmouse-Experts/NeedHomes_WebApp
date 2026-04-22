@@ -26,6 +26,7 @@ import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-compon
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
+import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/default/",
@@ -471,6 +472,8 @@ function PropertyDetailPage() {
               >
                 Back to Properties
               </Button>
+
+              <ShareLink route={`/investors/properties/${propertyId}/default`} />
 
               <Button
                 variant="primary"

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MapPin, Percent, TrendingUp, ChevronLeft } from "lucide-react";
+import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
@@ -281,6 +282,8 @@ function PropertyDetailPage() {
               >
                 Back to Properties
               </Button>
+
+              <ShareLink route={`/investors/properties/${propertyId}/fractional`} />
 
               <Button
                 variant="primary"

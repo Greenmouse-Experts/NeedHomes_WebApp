@@ -22,6 +22,7 @@ import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import AdminROI from "@/routes/-components/ROI";
+import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 
 export const Route = createFileRoute("/investors/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -150,6 +151,8 @@ function PropertyDetailPage() {
               >
                 Back to Properties
               </Button>
+
+              <ShareLink route={`/investors/properties/${propertyId}`} />
 
               <Button
                 variant="primary"
