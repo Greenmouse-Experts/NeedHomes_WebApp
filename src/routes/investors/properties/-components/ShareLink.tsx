@@ -17,16 +17,17 @@ export default function ShareLink({ route }: { route: string }) {
   };
 
   return (
-    <button
-      onClick={handleShare}
-      className="btn btn-outline w-full sm:w-auto gap-2"
-    >
-      {copied ? (
-        <Check className="w-4 h-4 text-success" />
-      ) : (
-        <Share2 className="w-4 h-4" />
-      )}
-      {copied ? "Copied!" : "Share"}
-    </button>
+    <div className="tooltip tooltip-bottom" data-tip={copied ? "Copied!" : "Copy share link"}>
+      <button
+        onClick={handleShare}
+        className="btn btn-ghost btn-square text-base-content/60 hover:text-primary hover:bg-primary/10"
+      >
+        {copied ? (
+          <Check className="w-5 h-5 text-success" />
+        ) : (
+          <Share2 className="w-5 h-5" />
+        )}
+      </button>
+    </div>
   );
 }
