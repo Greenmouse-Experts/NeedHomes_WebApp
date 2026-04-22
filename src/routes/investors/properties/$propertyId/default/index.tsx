@@ -473,8 +473,6 @@ function PropertyDetailPage() {
                 Back to Properties
               </Button>
 
-              <ShareLink route={`/investors/properties/${propertyId}/default`} />
-
               <Button
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
@@ -513,6 +511,9 @@ function PropertyDetailPage() {
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                           {property.propertyTitle}
                         </h1>
+                        <ShareLink
+                          route={`/investors/properties/${propertyId}/default`}
+                        />
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
