@@ -5,6 +5,7 @@ import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import SimpleContainer from "@/simpleComps/SimpleContainer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -156,12 +157,58 @@ function RouteComponent() {
                 {...otp_form.register("otp")}
               />
               <button className="btn btn-primary btn-block my-4">Verify</button>
+              <ResendOtpButton email={trimmed} />
               <ResetButton />
             </form>
           </FormProvider>
         </div>
       </div>
     </SimpleContainer>
+  );
+}
+
+const RESEND_DELAY = 60;
+
+function ResendOtpButton({ email }: { email: string }) {
+  const [countdown, setCountdown] = useState(RESEND_DELAY);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [countdown]);
+
+  const resend = useMutation({
+    mutationFn: async () => {
+      const resp = await apiClient.post("auth/resend-otp", { email });
+      return resp.data;
+    },
+    onSuccess: () => {
+      setCountdown(RESEND_DELAY);
+    },
+  });
+
+  const ready = countdown === 0;
+
+  return (
+    <button
+      type="button"
+      disabled={!ready || resend.isPending}
+      onClick={() =>
+        toast.promise(resend.mutateAsync(), {
+          loading: "Resending OTP...",
+          success: "OTP sent successfully",
+          error: extract_message,
+        })
+      }
+      className="btn btn-outline btn-block mb-2"
+    >
+      {resend.isPending
+        ? "Sending..."
+        : ready
+          ? "Resend OTP"
+          : `Resend OTP in ${countdown}s`}
+    </button>
   );
 }
 
