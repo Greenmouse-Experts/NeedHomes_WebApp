@@ -73,15 +73,20 @@ function PropertyDetailPage() {
   });
 
   const mutateIns = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
-      let resp = await apiClient.post(
-        "/investments/installments/:paymentId/pay",
-        {
-          propertyId: propertyId,
-          amountPaid: data.amountPaid,
-          quantity: data.quantity,
-        },
-      );
+    mutationFn: async (data: {
+      amountPaid: number;
+      installmentFrequency: "MONTHLY" | "WEEKLY";
+      installmentDuration: number;
+    }) => {
+      const ref = localStorage.getItem(`ref_${propertyId}`);
+      let resp = await apiClient.post("/investments", {
+        propertyId: propertyId,
+        amountPaid: parseFloat(data.amountPaid.toFixed()),
+        paymentOption: "INSTALLMENT",
+        installmentFrequency: data.installmentFrequency,
+        installmentDuration: data.installmentDuration,
+        ...(ref ? { referralCode: ref } : {}),
+      });
       return resp.data;
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
@@ -198,11 +203,12 @@ function PropertyDetailPage() {
                           });
                         }
                         if (payInstall) {
-                          const amount = form.getValues("amount");
+                          const { amount, installmentFrequency, installmentDuration } = form.getValues();
                           return toast.promise(
-                            mutate.mutateAsync({
+                            mutateIns.mutateAsync({
                               amountPaid: amount * 100,
-                              quantity,
+                              installmentFrequency,
+                              installmentDuration,
                             }),
                             {
                               loading: "Processing payment...",
@@ -223,7 +229,7 @@ function PropertyDetailPage() {
                           },
                         );
                       }}
-                      disabled={mutate.isPending}
+                      disabled={mutate.isPending || mutateIns.isPending}
                     >
                       Confirm & Pay{" "}
                       {payInstall
