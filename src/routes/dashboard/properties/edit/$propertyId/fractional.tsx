@@ -66,9 +66,14 @@ function RouteComponent() {
 interface FractionalPropertyFormValues extends DocProps {
   totalShares: number;
   pricePerShare: number;
-  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "MATURITY";
+  exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY";
   minimumShares: number;
   maxInvestors?: number | null;
+  fractionalHoldingPeriodDays: 30 | 60 | 90 | 120;
+  return30Days: number;
+  return60Days: number;
+  return90Days: number;
+  return120Days: number;
 }
 function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   const docUpload = useDocumentUpload(defaultValue as any);
@@ -255,6 +260,55 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       />
                     )}
                   />
+                  <Controller
+                    name="fractionalHoldingPeriodDays"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <LocalSelect
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(Number((e as any).target?.value))
+                        }
+                        label="Minimum Holding Period"
+                      >
+                        <option value={30}>30 Days</option>
+                        <option value={60}>60 Days</option>
+                        <option value={90}>90 Days</option>
+                        <option value={120}>120 Days</option>
+                      </LocalSelect>
+                    )}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pb-2 border-b border-base-200 mt-4">
+                  <h2 className="text-base font-semibold">Return Rates (%)</h2>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {(
+                    [
+                      { name: "return30Days", label: "30 Days" },
+                      { name: "return60Days", label: "60 Days" },
+                      { name: "return90Days", label: "90 Days" },
+                      { name: "return120Days", label: "120 Days" },
+                    ] as const
+                  ).map(({ name, label }) => (
+                    <Controller
+                      key={name}
+                      name={name}
+                      control={methods.control}
+                      render={({ field }) => (
+                        <SimpleInput
+                          {...field}
+                          label={label}
+                          type="number"
+                          icon={<span>%</span>}
+                          onChange={(e) =>
+                            field.onChange(Number((e as any).target?.value))
+                          }
+                        />
+                      )}
+                    />
+                  ))}
                 </div>
               </section>
               {/* 5. Investment-Specific Details */}
