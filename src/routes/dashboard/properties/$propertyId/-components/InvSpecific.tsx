@@ -139,18 +139,58 @@ export default function InvestmentDetails({
             value={property?.totalShares?.toLocaleString() || "N/A"}
           />
           <DetailRow
-            label="Price Per Slot"
+            label="Price Per Share"
             value={`₦${(property?.pricePerShare / 100).toLocaleString() || "0"}`}
+          />
+          <DetailRow
+            label="Holding Period"
+            value={
+              property?.fractionalHoldingPeriodDays
+                ? `${property.fractionalHoldingPeriodDays} Days`
+                : "N/A"
+            }
+          />
+          <DetailRow
+            label="30-Day Return"
+            value={
+              property?.return30Days != null
+                ? `${property.return30Days}%`
+                : "N/A"
+            }
+          />
+          <DetailRow
+            label="60-Day Return"
+            value={
+              property?.return60Days != null
+                ? `${property.return60Days}%`
+                : "N/A"
+            }
+          />
+          <DetailRow
+            label="90-Day Return"
+            value={
+              property?.return90Days != null
+                ? `${property.return90Days}%`
+                : "N/A"
+            }
+          />
+          <DetailRow
+            label="120-Day Return"
+            value={
+              property?.return120Days != null
+                ? `${property.return120Days}%`
+                : "N/A"
+            }
           />
           <DetailRow
             label="Payment Option"
             value={property?.paymentOption || "N/A"}
           />
           {/* @ts-ignore */}
-          <DetailRow
+          {/*<DetailRow
             label="Platform Charge"
             value={`${property?.systemCharges?.platformChargePercentage || 0}%`}
-          />
+          />*/}
         </DetailsCard>
       );
 

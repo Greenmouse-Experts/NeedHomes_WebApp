@@ -281,6 +281,7 @@ export interface ADMIN_KYC_RESPONSE {
 
 export interface ADMIN_PROPERTY_LISTING {
   id: string;
+  customId: string;
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
   investmentModel:
@@ -330,7 +331,12 @@ export interface ADMIN_PROPERTY_LISTING {
   availableShares: number | null;
   pricePerShare: number | null;
   minimumShares: number | null;
-  exitWindow: number | null;
+  exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY" | null;
+  fractionalHoldingPeriodDays: number | null;
+  return30Days: number | null;
+  return60Days: number | null;
+  return90Days: number | null;
+  return120Days: number | null;
   maxInvestors: number | null;
   availablePlots: string | null;
   pricePerPlot: number | null;
