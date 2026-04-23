@@ -49,7 +49,7 @@ export function LoadDocuments({
 
   return (
     <ThemeProvider>
-      <div className="card bg-base-100 border border-base-200 shadow-sm">
+      <div className="card bg-base-100 border border-base-200 shadow-sm ring fade  ring-primary/40">
         <div className="card-body gap-6">
           <h3 className="card-title text-lg">Documents</h3>
 
@@ -59,7 +59,7 @@ export function LoadDocuments({
               Building Permit Number
             </span>
             {property_data.buildingPermitNumber ? (
-              <div className="badge badge-outline badge-lg font-mono gap-1 py-4 px-3">
+              <div className="badge badge-outline fade badge-primary badge-lg font-mono gap-1 py-4 px-3">
                 {property_data.buildingPermitNumber}
               </div>
             ) : (

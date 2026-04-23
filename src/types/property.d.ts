@@ -14,6 +14,7 @@ export interface SystemCharges {
 export interface PROPERTY_TYPE {
   id: string;
   propertyTitle: string;
+  customId: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "INDUSTRIAL" | "LAND";
   investmentModel:
     | "FRACTIONAL_OWNERSHIP"
@@ -58,4 +59,13 @@ export interface PROPERTY_TYPE {
   deletedAt: string | null;
   additionalFees: AdditionalFee[];
   systemCharges: SystemCharges;
+}
+
+export interface FRACTIONAL_DETAILS {
+  return30Days: number;
+  return60Days: number;
+  return90Days: number;
+  return120Days: number;
+  totalShares: number;
+  fractionalHoldingPeriodDays: number;
 }
