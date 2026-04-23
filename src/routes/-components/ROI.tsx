@@ -42,10 +42,12 @@ function formatNaira(kobo: number) {
 }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-NG", {
+  return new Date(iso).toLocaleString("en-NG", {
     month: "short",
-    year: "numeric",
     day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -178,7 +180,14 @@ export default function AdminROI({
                         width={70}
                       />
                       <Tooltip
-                        formatter={(value: number) => formatNaira(value * 100)}
+                        formatter={(value: number) => [
+                          new Intl.NumberFormat("en-NG", {
+                            style: "currency",
+                            currency: "NGN",
+                            maximumFractionDigits: 0,
+                          }).format(value),
+                          "Price",
+                        ]}
                         labelFormatter={(label) => `Date: ${label}`}
                       />
                       <Area
