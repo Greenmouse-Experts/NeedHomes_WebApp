@@ -56,7 +56,11 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
   // delete cleaned.installmentDuration;
-
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
   delete cleaned.customId;
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
