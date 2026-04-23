@@ -28,7 +28,12 @@ export const stripped_unneeded = (data: Record<string, any>) => {
 
 export const strip_co_dev = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
-
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
@@ -78,6 +83,12 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.paymentDuration;
   delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.fractionalHoldingPeriodDays;
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   return cleaned;
 };
 
@@ -104,6 +115,7 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.paymentDuration;
   delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.systemCharges;
+  delete cleaned.customId;
 
   return cleaned;
 };
@@ -118,6 +130,12 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.minimumInstallmentAmount;
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   delete cleaned.minimumInvestment;
   delete cleaned.profitSharingRatio;
   delete cleaned.projectDuration;
@@ -149,6 +167,12 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.minimumShares;
   delete cleaned.exitWindow;
   delete cleaned.investmentModel;
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.minimumInvestment;
