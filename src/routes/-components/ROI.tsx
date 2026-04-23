@@ -85,10 +85,13 @@ export default function AdminROI({
             );
           }
 
-          const chartData = history.map((h) => ({
-            date: formatDate(h.changedAt),
-            price: h.newPrice / 100,
-          }));
+          const chartData = [
+            { date: "Initial", price: history[0].oldPrice / 100 },
+            ...history.map((h) => ({
+              date: formatDate(h.changedAt),
+              price: h.newPrice / 100,
+            })),
+          ];
 
           const roi = overallRoi?.toFixed(2) ?? null;
           const roiPositive = roi !== null && parseFloat(roi) >= 0;
