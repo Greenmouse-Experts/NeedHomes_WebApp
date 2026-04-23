@@ -38,7 +38,12 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
   delete cleaned.coDevelopmentProgress;
-
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   return cleaned;
 };
 
@@ -51,6 +56,8 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.investmentModel;
   // delete cleaned.paymentOption;
   // delete cleaned.installmentDuration;
+
+  delete cleaned.customId;
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
   delete cleaned.minimumShares;
@@ -61,6 +68,12 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.published;
   delete cleaned.deletedAt;
   delete cleaned.systemCharges;
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   return cleaned;
 };
 
@@ -88,6 +101,12 @@ export const strip_fractional = (data: Record<string, any>) => {
 
 export const strip_outright = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
   delete cleaned.minimumShares;
@@ -115,6 +134,12 @@ export const strip_outright = (data: Record<string, any>) => {
 export const strip_save_to_own = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
   delete cleaned.totalShares;
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
+  delete cleaned.return120Days;
+  delete cleaned.customId;
   delete cleaned.pricePerShare;
   delete cleaned.minimumShares;
   delete cleaned.exitWindow;
