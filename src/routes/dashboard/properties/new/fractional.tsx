@@ -40,6 +40,8 @@ function RouteComponent() {
       developmentStage: "PLANNING",
       premiumProperty: false,
       maxInvestors: null,
+      exitWindow: "MONTHLY" as const,
+      fractionalHoldingPeriodDays: 30 as const,
     },
   });
   const nav = useNavigate();
