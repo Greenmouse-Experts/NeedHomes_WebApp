@@ -14,6 +14,7 @@ export const stripped_unneeded = (data: Record<string, any>) => {
   delete copy.resellStatus;
   delete copy.resellerId;
   delete copy.originalInvestmentId;
+  delete copy.reseller;
 
   const new_add_fees = copy.additionalFees.map((item) => {
     return {
