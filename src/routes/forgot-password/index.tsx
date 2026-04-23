@@ -180,7 +180,7 @@ function ResendOtpButton({ email }: { email: string }) {
 
   const resend = useMutation({
     mutationFn: async () => {
-      const resp = await apiClient.post("auth/resend-otp", { email });
+      const resp = await apiClient.post("auth/resend-otp", { email, purpose: "password_reset" });
       return resp.data;
     },
     onSuccess: () => {
