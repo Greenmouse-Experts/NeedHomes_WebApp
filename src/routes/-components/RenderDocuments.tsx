@@ -81,9 +81,9 @@ export function RenderDocuments({
         </div>
       )}
 
-      {propertyDocument && (
+      {/*{propertyDocument && (
         <DocRow label="Property Document" url={propertyDocument} />
-      )}
+      )}*/}
 
       {hasTitleDocs && (
         <div className="flex flex-col gap-2">

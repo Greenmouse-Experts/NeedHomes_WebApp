@@ -141,7 +141,7 @@ export const DocumentUpload = (props: {
       </div>
 
       {/* ── Property Document ── */}
-      <div className="flex flex-col gap-2 p-3 fade border rounded-md bg-gray-50">
+      {/*<div className="flex flex-col gap-2 p-3 fade border rounded-md bg-gray-50">
         <span className="text-sm font-medium text-gray-700">
           Property Document
           <span className="ml-1 text-gray-400 font-normal">(optional)</span>
@@ -152,7 +152,7 @@ export const DocumentUpload = (props: {
           onUpload={(f) => handleFileChange("propertyDocument", f)}
           onRemove={() => removeFile("propertyDocument")}
         />
-      </div>
+      </div>*/}
 
       {/* ── Property Title Documents ── */}
       <div className="flex flex-col gap-3">
