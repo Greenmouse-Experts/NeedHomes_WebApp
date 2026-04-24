@@ -111,6 +111,7 @@ function RouteComponent() {
   const [exitAmountNaira, setExitAmountNaira] = useState("");
   const [adminNote, setAdminNote] = useState("");
   const [rejectNote, setRejectNote] = useState("");
+  const [manualFallback, setManualFallback] = useState(false);
 
   const query = useQuery<ApiResponse<ExitRequest>>({
     queryKey: ["exit-request", exitRequestId],
@@ -124,15 +125,24 @@ function RouteComponent() {
 
   const approveMutation = useMutation({
     mutationFn: async () => {
-      const kobo = Math.round(parseFloat(exitAmountNaira) * 100);
-      if (isNaN(kobo) || kobo <= 0)
-        throw new Error("Enter a valid exit amount");
+      const isFractional =
+        query.data?.data?.investment?.property?.investmentModel ===
+        "FRACTIONAL_OWNERSHIP";
+
+      const body: Record<string, unknown> = {
+        adminNote: adminNote.trim() || undefined,
+      };
+
+      if (!isFractional || manualFallback) {
+        const kobo = Math.round(parseFloat(exitAmountNaira) * 100);
+        if (isNaN(kobo) || kobo <= 0)
+          throw new Error("Enter a valid exit amount");
+        body.exitAmount = kobo;
+      }
+
       await apiClient.patch(
         `/investments/admin/exit-requests/${exitRequestId}/approve`,
-        {
-          exitAmount: kobo,
-          adminNote: adminNote.trim() || undefined,
-        },
+        body,
       );
     },
     onSuccess: () => {
@@ -144,6 +154,7 @@ function RouteComponent() {
       approveRef.current?.close();
       setExitAmountNaira("");
       setAdminNote("");
+      setManualFallback(false);
     },
     onError: (error) => toast.error(extract_message(error)),
   });
@@ -186,78 +197,139 @@ function RouteComponent() {
           return (
             <ThemeProvider className="space-y-4">
               {/* Approve Modal */}
-              <Modal
-                ref={approveRef}
-                title="Approve Exit Request"
-                actions={
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => approveRef.current?.close()}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      isLoading={approveMutation.isPending}
-                      onClick={() => approveMutation.mutate()}
-                    >
-                      Confirm Approval
-                    </Button>
-                  </div>
-                }
-              >
-                <div className="space-y-4">
-                  <div role="alert" className="alert alert-info text-sm">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
-                    <p>
-                      The investor's wallet will be credited immediately. This
-                      action cannot be undone.
-                    </p>
-                  </div>
+              {(() => {
+                const isFractional =
+                  req.investment?.property?.investmentModel ===
+                  "FRACTIONAL_OWNERSHIP";
+                return (
+                  <Modal
+                    ref={approveRef}
+                    title="Approve Exit Request"
+                    actions={
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => approveRef.current?.close()}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="primary"
+                          isLoading={approveMutation.isPending}
+                          onClick={() => approveMutation.mutate()}
+                        >
+                          Confirm Approval
+                        </Button>
+                      </div>
+                    }
+                  >
+                    <div className="space-y-4">
+                      <div role="alert" className="alert alert-info text-sm">
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <p>
+                          The investor's wallet will be credited immediately.
+                          This action cannot be undone.
+                        </p>
+                      </div>
 
-                  <div className="p-3 bg-base-200 rounded-box text-sm space-y-1">
-                    <p className="text-base-content/60">
-                      Current Value (reference)
-                    </p>
-                    <p className="text-lg font-bold">
-                      {formatNaira(req.investment?.currentValue ?? 0)}
-                    </p>
-                  </div>
+                      <div className="p-3 bg-base-200 rounded-box text-sm space-y-1">
+                        <p className="text-base-content/60">
+                          Current Value (reference)
+                        </p>
+                        <p className="text-lg font-bold">
+                          {formatNaira(req.investment?.currentValue ?? 0)}
+                        </p>
+                      </div>
 
-                  <fieldset className="fieldset">
-                    <legend className="fieldset-legend">
-                      Exit Amount (₦) <span className="text-error">*</span>
-                    </legend>
-                    <label className="input w-full">
-                      <span className="text-base-content/40">₦</span>
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="Enter payout amount in Naira"
-                        value={exitAmountNaira}
-                        onChange={(e) => setExitAmountNaira(e.target.value)}
-                      />
-                    </label>
-                  </fieldset>
+                      {isFractional ? (
+                        <>
+                          {!manualFallback ? (
+                            <div
+                              role="alert"
+                              className="alert alert-success text-sm"
+                            >
+                              <CheckCircle2 className="w-4 h-4 shrink-0" />
+                              <p>
+                                Exit payout will be{" "}
+                                <strong>auto-calculated</strong> by the backend
+                                using the investor's holding duration and the
+                                property's configured return rates.
+                              </p>
+                            </div>
+                          ) : (
+                            <fieldset className="fieldset">
+                              <legend className="fieldset-legend">
+                                Exit Amount (₦){" "}
+                                <span className="text-error">*</span>
+                              </legend>
+                              <label className="input w-full">
+                                <span className="text-base-content/40">₦</span>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  placeholder="Enter payout amount in Naira"
+                                  value={exitAmountNaira}
+                                  onChange={(e) =>
+                                    setExitAmountNaira(e.target.value)
+                                  }
+                                />
+                              </label>
+                            </fieldset>
+                          )}
+                          <label className="flex items-center gap-2 text-sm cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="checkbox checkbox-sm"
+                              checked={manualFallback}
+                              onChange={(e) =>
+                                setManualFallback(e.target.checked)
+                              }
+                            />
+                            <span className="text-base-content/70">
+                              No return rates configured — enter amount manually
+                            </span>
+                          </label>
+                        </>
+                      ) : (
+                        <fieldset className="fieldset">
+                          <legend className="fieldset-legend">
+                            Exit Amount (₦){" "}
+                            <span className="text-error">*</span>
+                          </legend>
+                          <label className="input w-full">
+                            <span className="text-base-content/40">₦</span>
+                            <input
+                              type="number"
+                              min="0"
+                              placeholder="Enter payout amount in Naira"
+                              value={exitAmountNaira}
+                              onChange={(e) =>
+                                setExitAmountNaira(e.target.value)
+                              }
+                            />
+                          </label>
+                        </fieldset>
+                      )}
 
-                  <fieldset className="fieldset">
-                    <legend className="fieldset-legend">
-                      Admin Note{" "}
-                      <span className="text-base-content/40 font-normal">
-                        (optional)
-                      </span>
-                    </legend>
-                    <textarea
-                      className="textarea textarea-bordered w-full resize-none"
-                      rows={3}
-                      placeholder="e.g. Approved at current market value after profit share deduction"
-                      value={adminNote}
-                      onChange={(e) => setAdminNote(e.target.value)}
-                    />
-                  </fieldset>
-                </div>
-              </Modal>
+                      <fieldset className="fieldset">
+                        <legend className="fieldset-legend">
+                          Admin Note{" "}
+                          <span className="text-base-content/40 font-normal">
+                            (optional)
+                          </span>
+                        </legend>
+                        <textarea
+                          className="textarea textarea-bordered w-full resize-none"
+                          rows={3}
+                          placeholder="e.g. Approved at current market value after profit share deduction"
+                          value={adminNote}
+                          onChange={(e) => setAdminNote(e.target.value)}
+                        />
+                      </fieldset>
+                    </div>
+                  </Modal>
+                );
+              })()}
 
               {/* Reject Modal */}
               <Modal
