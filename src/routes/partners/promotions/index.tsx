@@ -22,6 +22,8 @@ interface Promotion {
   promotionLink: string;
   clicks: number;
   conversions: number;
+  amountEarned: number;
+  amountEarnedNaira: number;
   createdAt: string;
 }
 
@@ -77,6 +79,16 @@ function RouteComponent() {
     {
       key: "conversions",
       label: "Conversions",
+    },
+    {
+      key: "amountEarnedNaira",
+      label: "Commission Earned",
+      render: (amount: number) =>
+        new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+          maximumFractionDigits: 0,
+        }).format(amount ?? 0),
     },
     {
       key: "createdAt",
