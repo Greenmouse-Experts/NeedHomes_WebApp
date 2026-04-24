@@ -61,11 +61,6 @@ function RouteComponent() {
       coverImage: "",
       galleryImages: [],
       totalPrice: 0,
-      certificate: "",
-      surveyPlanDocument: "",
-      transferDocument: "",
-      // paymentOption: "FULL_PAYMENT",
-      brochure: "",
       videos: "",
     },
   });
