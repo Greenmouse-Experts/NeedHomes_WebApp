@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   TrendingUp,
   ChevronLeft,
+  RefreshCw,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -400,6 +401,12 @@ function PropertyDetailPage() {
                           {property.location}
                         </span>
                       </div>
+                      {property.isResell && property.reseller && (
+                        <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                          <RefreshCw className="w-4 h-4 shrink-0" />
+                          <span>Resell Listing — Listed by <strong>{property.reseller.firstName} {property.reseller.lastName}</strong></span>
+                        </div>
+                      )}
                       <div className="mt-3">
                         <Maps
                           location={property.location}

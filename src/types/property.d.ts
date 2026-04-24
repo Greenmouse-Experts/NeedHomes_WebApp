@@ -59,6 +59,9 @@ export interface PROPERTY_TYPE {
   deletedAt: string | null;
   additionalFees: AdditionalFee[];
   systemCharges: SystemCharges;
+  isResell: boolean;
+  resellStatus: "PENDING" | "APPROVED" | null;
+  reseller: { id: string; firstName: string; lastName: string } | null;
 }
 
 export interface FRACTIONAL_DETAILS {
