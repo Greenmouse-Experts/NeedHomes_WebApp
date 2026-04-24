@@ -90,6 +90,7 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.return120Days;
   delete cleaned.return120Days;
   delete cleaned.customId;
+  delete cleaned.minimumInstallmentAmount;
   return cleaned;
 };
 

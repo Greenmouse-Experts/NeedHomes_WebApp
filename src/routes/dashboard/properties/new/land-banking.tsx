@@ -127,7 +127,7 @@ function RouteComponent() {
       data["basePrice"] = data.pricePerPlot * data["availablePlots"];
       const new_payload = calculate_fees(data, [
         "pricePerPlot",
-        "minimumInstallmentAmount",
+        // "minimumInstallmentAmount",
       ]);
       const payload = {
         ...new_payload,
