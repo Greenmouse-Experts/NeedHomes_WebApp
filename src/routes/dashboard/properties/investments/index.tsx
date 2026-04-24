@@ -4,15 +4,17 @@ import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { type Actions } from "@/components/tables/pop-up";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { usePagination } from "@/helpers/pagination";
+import SearchBar from "@/routes/-components/Searchbar";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Filter, Printer, Search } from "lucide-react";
-import { useState } from "react";
+import { Filter, Printer } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/properties/investments/")({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: (search.q as string) || "",
+  }),
 });
 
 interface Investment {
@@ -115,14 +117,15 @@ const actions: Actions[] = [
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { q: searchQuery } = Route.useSearch();
   const props = usePagination();
   const query = useQuery<ApiResponse<Investment[]>>({
-    queryKey: ["investments-admin", props.page],
+    queryKey: ["investments-admin", props.page, searchQuery],
     queryFn: async () => {
       let resp = await apiClient.get("/investments/admin/all", {
         params: {
           page: props.page,
+          search: searchQuery || undefined,
         },
       });
       return resp.data;
@@ -137,14 +140,12 @@ function RouteComponent() {
         </div>
 
         <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search investments..."
+          <div className="flex-1 max-w-md">
+            <SearchBar
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              onChange={(val: string) =>
+                navigate({ search: { q: val }, replace: true })
+              }
             />
           </div>
           <div className="flex items-center gap-2">
@@ -170,22 +171,13 @@ function RouteComponent() {
       <PageLoader query={query}>
         {(data) => {
           const investments = data.data.data || [];
-          const filteredData = investments.filter(
-            (inv: Investment) =>
-              inv.property?.propertyTitle
-                ?.toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-              inv.user?.email
-                ?.toLowerCase()
-                .includes(searchQuery.toLowerCase()),
-          );
 
           return (
             <CustomTable
               paginationProps={props}
               ring={false}
               columns={columns}
-              data={filteredData}
+              data={investments}
               actions={actions}
               onRowClick={(item) =>
                 navigate({

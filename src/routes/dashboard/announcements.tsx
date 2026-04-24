@@ -17,17 +17,31 @@ export const Route = createFileRoute("/dashboard/announcements")({
   component: AnnouncementsPage,
 });
 
-const userTypes = [
+type AnnouncementTarget =
+  | "INDIVIDUAL_INVESTORS"
+  | "CORPORATE_INVESTORS"
+  | "ALL_INVESTORS"
+  | "ALL_PARTNERS"
+  | "REAL_ESTATE_AGENT_PARTNERS"
+  | "PROPERTY_DEVELOPERS"
+  | "INVESTORS_AND_PARTNERS"
+  | "ALL_USERS";
+
+const userTypes: { value: AnnouncementTarget; label: string }[] = [
   { value: "ALL_USERS", label: "All Users" },
-  { value: "INVESTORS", label: "Investors" },
-  { value: "PARTNERS", label: "Partners" },
+  { value: "ALL_INVESTORS", label: "All Investors" },
+  { value: "INDIVIDUAL_INVESTORS", label: "Individual Investors" },
+  { value: "CORPORATE_INVESTORS", label: "Corporate Investors" },
+  { value: "ALL_PARTNERS", label: "All Partners" },
+  { value: "REAL_ESTATE_AGENT_PARTNERS", label: "Real Estate Agent Partners" },
+  { value: "PROPERTY_DEVELOPERS", label: "Property Developers" },
   { value: "INVESTORS_AND_PARTNERS", label: "Investors & Partners" },
 ];
 
 interface Announcement {
   id: string;
   content: string;
-  target: "ALL_USERS" | "INVESTORS" | "PARTNERS" | "INVESTORS_AND_PARTNERS";
+  target: AnnouncementTarget;
   createdBy: string;
   createdAt: string;
   deletedAt: string | null;
@@ -35,7 +49,7 @@ interface Announcement {
 
 type AnnouncementFormValues = {
   content: string;
-  target: "ALL_USERS" | "INVESTORS" | "PARTNERS" | "INVESTORS_AND_PARTNERS";
+  target: AnnouncementTarget;
 };
 
 function AnnouncementsPage() {
