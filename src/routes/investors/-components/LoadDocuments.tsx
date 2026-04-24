@@ -70,7 +70,7 @@ export function LoadDocuments({
           <div className="divider my-0" />
 
           {/* Property Document */}
-          <div className="flex flex-col gap-2">
+          {/*<div className="flex flex-col gap-2">
             <span className="label-text font-semibold">Property Document</span>
             {property_data.propertyDocument ? (
               <DocLink url={property_data.propertyDocument} />
@@ -79,7 +79,7 @@ export function LoadDocuments({
             )}
           </div>
 
-          <div className="divider my-0" />
+          <div className="divider my-0" />*/}
 
           {/* Property Title Documents */}
           <div className="flex flex-col gap-3">
