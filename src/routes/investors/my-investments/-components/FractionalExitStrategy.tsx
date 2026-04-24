@@ -114,19 +114,25 @@ export default function FractionalExitStrategy({
       );
       return resp.data;
     },
-    onSuccess: () => {
-      toast.success("Exit request submitted — pending admin review");
-      queryClient.invalidateQueries({
-        queryKey: ["exit-requests", investment.id],
-      });
-      setReason("");
-      setExitError(null);
-      modalRef.current?.close();
-    },
-    onError: (error) => {
-      setExitError(extract_message(error));
-    },
   });
+
+  const handleSubmit = () => {
+    toast.promise(submitMutation.mutateAsync(), {
+      loading: "Submitting exit request...",
+      success: () => {
+        queryClient.invalidateQueries({ queryKey: ["exit-requests", investment.id] });
+        setReason("");
+        setExitError(null);
+        modalRef.current?.close();
+        return "Exit request submitted — pending admin review";
+      },
+      error: (err) => {
+        const msg = extract_message(err);
+        setExitError(msg);
+        return msg;
+      },
+    });
+  };
 
   // if (investment.status !== "ACTIVE") return null;
 
@@ -165,14 +171,14 @@ export default function FractionalExitStrategy({
             <Button
               variant="primary"
               isLoading={submitMutation.isPending}
-              onClick={() => submitMutation.mutate()}
+              onClick={handleSubmit}
             >
               Submit Request
             </Button>
           </div>
         }
       >
-        <div className="space-y-4">
+        <div className="space-y-4 ">
           <div className="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
             <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
             <p>
@@ -229,7 +235,7 @@ export default function FractionalExitStrategy({
         </div>
       </Modal>
 
-      <div className="bg-white rounded-xl shadow ring fade overflow-hidden">
+      <div className="bg-white rounded-xl shadow ring fade overflow-hidden mt-4">
         <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-2">
             <LogOut className="w-5 h-5 text-gray-600" />

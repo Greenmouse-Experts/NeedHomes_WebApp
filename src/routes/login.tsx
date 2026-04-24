@@ -63,9 +63,7 @@ function LoginPage() {
       toast.success("Login successful!", { duration: 1500 });
       // set_user_value(data.data);
       const prof_data = response.data.data;
-      if (prof_data.partnerType == "PROPERTY_DEVELOPER") {
-        return navigate({ to: "/developer" });
-      }
+
       if (newUser.user.accountType == "PARTNER") {
         return navigate({ to: "/partners" });
       }
