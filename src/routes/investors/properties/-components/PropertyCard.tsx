@@ -55,11 +55,13 @@ export default function PropertyCard({
               Premium
             </div>
           )}
-          {property.availableUnits <= 0 && (
-            <div className="badge badge-error font-bold text-[10px] uppercase tracking-wider">
-              Sold Out
-            </div>
-          )}
+          {property.availableUnits <= 0 ||
+            property.availablePlots <= 0 ||
+            (property.availableShare <= 0 && (
+              <div className="badge badge-error font-bold text-[10px] uppercase tracking-wider">
+                Sold Out
+              </div>
+            ))}
         </div>
       </figure>
 
