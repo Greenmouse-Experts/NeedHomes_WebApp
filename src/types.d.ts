@@ -376,7 +376,7 @@ export interface PROPERTY_DATA {
   id: string;
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
-  investmentModel: "SAVE_TO_OWN" | "RENT_TO_OWN" | "INVESTMENT" | "OUTRIGHT";
+  investmentModel: "SAVE_TO_OWN" | "RENT_TO_OWN" | "INVESTMENT" | "OUTRIGHT" | "FRACTIONAL_OWNERSHIP" | "LAND_BANKING" | "OUTRIGHT_PURCHASE" | "CO_DEVELOPMENT";
   location: string;
   description: string;
   developmentStage: "PLANNING" | "FOUNDATION" | "ROOFING" | "FINISHED";
@@ -400,6 +400,7 @@ export interface PROPERTY_DATA {
   projectDuration: number | null;
   exitRule: string | null;
   totalShares: number | null;
+  availableShares: number | null;
   pricePerShare: number | null;
   minimumShares: number | null;
   exitWindow: number | null;
@@ -413,6 +414,9 @@ export interface PROPERTY_DATA {
   createdAt: string;
   updatedAt: string;
   additionalFees: any[];
+  isResell: boolean;
+  resellStatus: "PENDING" | "APPROVED" | null;
+  reseller: { id: string; firstName: string; lastName: string } | null;
 }
 
 export type SINGLE_PROPERTY = {

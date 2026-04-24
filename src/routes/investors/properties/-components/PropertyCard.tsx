@@ -1,6 +1,6 @@
 import type { PROPERTY_DATA } from "@/types";
-import { Link, type UseNavigateResult } from "@tanstack/react-router";
-import { MapPin, Home, TrendingUp, Calendar, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { MapPin, Home, TrendingUp, Calendar, ArrowRight, RefreshCw } from "lucide-react";
 
 export default function PropertyCard({
   item: property,
@@ -47,7 +47,7 @@ export default function PropertyCard({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-          <div className="badge ring   badge-neutral badge-soft  font-semibold fade  tracking-wider">
+          <div className="badge ring badge-neutral badge-soft font-semibold fade tracking-wider">
             {property.investmentModel.replace(/_/g, " ")}
           </div>
           {property.premiumProperty && (
@@ -55,13 +55,11 @@ export default function PropertyCard({
               Premium
             </div>
           )}
-          {property.availableUnits <= 0 ||
-            property.availablePlots <= 0 ||
-            (property.availableShare <= 0 && (
-              <div className="badge badge-error font-bold text-[10px] uppercase tracking-wider">
-                Sold Out
-              </div>
-            ))}
+          {property.isResell && (
+            <div className="badge badge-info font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+              <RefreshCw className="w-2.5 h-2.5" /> For Resale
+            </div>
+          )}
         </div>
       </figure>
 
@@ -74,6 +72,12 @@ export default function PropertyCard({
             <MapPin className="w-3.5 h-3.5 mr-1 shrink-0" />
             <span className="line-clamp-1">{property.location}</span>
           </div>
+          {property.isResell && property.reseller && (
+            <div className="flex items-center gap-1 text-xs text-info font-medium mt-0.5">
+              <RefreshCw className="w-3 h-3 shrink-0" />
+              Listed by {property.reseller.firstName} {property.reseller.lastName}
+            </div>
+          )}
         </div>
 
         <div className="divider my-2 opacity-50"></div>

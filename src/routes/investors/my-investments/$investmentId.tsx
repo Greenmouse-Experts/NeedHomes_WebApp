@@ -19,6 +19,7 @@ import PageLoader from "@/components/layout/PageLoader";
 import InvPropDetails from "./-components/InvPropDetails";
 import InvPaymentSchedule from "./-components/InvPaymentSchedule";
 import ExitStrategy from "./-components/ExitStrategy";
+import FractionalExitStrategy from "./-components/FractionalExitStrategy";
 import Resell from "./-components/Resell";
 import AdminROI from "@/routes/-components/ROI";
 
@@ -45,6 +46,15 @@ interface Investment {
   returnPercentage: number;
   totalAmount: number;
   totalReturns: number;
+  property?: {
+    investmentModel: string;
+    exitWindow?: string | null;
+    fractionalHoldingPeriodDays?: number | null;
+    return30Days?: number | null;
+    return60Days?: number | null;
+    return90Days?: number | null;
+    return120Days?: number | null;
+  };
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -295,10 +305,14 @@ function InvestmentDetailsPage() {
                   propertyId={investment.propertyId}
                 />
               ) : null}
-              <ExitStrategy
-                investment={investment}
-                propertyId={investment.propertyId}
-              />
+              {investment.property?.investmentModel === "FRACTIONAL_OWNERSHIP" ? (
+                <FractionalExitStrategy investment={investment} />
+              ) : (
+                <ExitStrategy
+                  investment={investment}
+                  propertyId={investment.propertyId}
+                />
+              )}
 
               <div className="mt-8">
                 <Resell investment={investment} />
