@@ -141,9 +141,9 @@ function RouteComponent() {
         projectEndDate: data.projectEndDate
           ? new Date(data.projectEndDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          new_payload["totalPrice"] / data.installmentDuration,
-        ),
+        // minimumInstallmentAmount: parseInt(
+        //   new_payload["totalPrice"] / data.installmentDuration,
+        // ),
       };
 
       const response = await apiClient.post(
