@@ -219,6 +219,15 @@ function RouteComponent() {
         }),
     },
     {
+      key: "view",
+      label: "View Property",
+      action: (item, nav) =>
+        nav({
+          to: "/dashboard/properties/$id",
+          params: { id: item.id },
+        }),
+    },
+    {
       key: "approve",
       label: "Approve",
       disabled: (item) => item.resellStatus !== "PENDING",
@@ -337,7 +346,10 @@ function RouteComponent() {
           <SearchBar
             value={search}
             onChange={(val: string) =>
-              navigate({ to: ".", search: (prev: any) => ({ ...prev, search: val }) })
+              navigate({
+                to: ".",
+                search: (prev: any) => ({ ...prev, search: val }),
+              })
             }
           />
           <select
