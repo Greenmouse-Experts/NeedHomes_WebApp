@@ -22,6 +22,14 @@ import {
   YAxis,
 } from "recharts";
 const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
+
+interface MonthlyFee {
+  month: string;
+  year: number;
+  monthIndex: number;
+  totalFees: number;
+}
+
 interface AdminStats {
   users: {
     totalRegisteredUsers: number;
@@ -56,7 +64,21 @@ export default function DashIncomeStats() {
     },
   });
 
+  const feesQuery = useQuery<ApiResponse<MonthlyFee[]>>({
+    queryKey: ["monthly-additional-fees"],
+    queryFn: async () => {
+      const resp = await apiClient.get(
+        "analytics/dashboard/monthly-additional-fees",
+      );
+      return resp.data;
+    },
+  });
+
   const stats = query.data?.data?.transactions;
+  const revenueData = (feesQuery.data?.data ?? []).map((d) => ({
+    month: d.month,
+    fees: d.totalFees / 100,
+  }));
 
   const chartData = stats
     ? [
@@ -81,7 +103,7 @@ export default function DashIncomeStats() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
           <div>
             <h3 className="text-base md:text-lg font-bold text-gray-900">
-              Transaction Overview
+              Additional Fees — Last 12 Months
             </h3>
             <div className="flex items-center gap-2 mt-1">
               <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600" />
@@ -112,25 +134,31 @@ export default function DashIncomeStats() {
         </div>
 
         {/* Chart */}
-        <div className="h-48 md:h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            {/*<AreaChart data={revenueData}>
+        <div className="h-48 md:h-64 ">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            className={" overflow-hidden"}
+          >
+            <AreaChart className="-mx-4" data={revenueData}>
               <defs>
-                <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="colorFees" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                 </linearGradient>
-                <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#EF671D" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#EF671D" stopOpacity={0} />
-                </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="month" stroke="#6B7280" tick={{ fontSize: 12 }} />
+              <XAxis dataKey="month" stroke="#6B7280" tick={{ fontSize: 11 }} />
               <YAxis
                 stroke="#6B7280"
-                tick={{ fontSize: 12 }}
-                tickFormatter={(value) => `${value}K`}
+                tick={{ fontSize: 11 }}
+                tickFormatter={(v) =>
+                  new Intl.NumberFormat("en-NG", {
+                    notation: "compact",
+                    compactDisplay: "short",
+                  }).format(v)
+                }
+                width={60}
               />
               <Tooltip
                 contentStyle={{
@@ -139,27 +167,25 @@ export default function DashIncomeStats() {
                   borderRadius: "8px",
                   padding: "8px",
                 }}
-                formatter={(value: number) => [`₦${value}K`, ""]}
+                formatter={(value: number) => [
+                  new Intl.NumberFormat("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                    minimumFractionDigits: 2,
+                  }).format(value),
+                  "Additional Fees",
+                ]}
               />
               <Area
                 type="monotone"
-                dataKey="income"
+                dataKey="fees"
                 stroke="#10B981"
                 strokeWidth={2}
                 fillOpacity={1}
-                fill="url(#colorIncome)"
-                name="Income"
+                fill="url(#colorFees)"
+                name="Additional Fees"
               />
-              <Area
-                type="monotone"
-                dataKey="expenses"
-                stroke="#EF671D"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorExpenses)"
-                name="Expenses"
-              />
-            </AreaChart>*/}
+            </AreaChart>
           </ResponsiveContainer>
         </div>
 
@@ -167,11 +193,9 @@ export default function DashIncomeStats() {
         <div className="flex items-center gap-4 mt-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-sm text-gray-600">Income</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[var(--color-orange)]"></div>
-            <span className="text-sm text-gray-600">Expenses</span>
+            <span className="text-sm text-gray-600">
+              Additional Fees (last 12 months)
+            </span>
           </div>
         </div>
       </div>
