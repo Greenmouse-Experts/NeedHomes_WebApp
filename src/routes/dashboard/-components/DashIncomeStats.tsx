@@ -114,7 +114,7 @@ export default function DashIncomeStats() {
               </span>
             </div>
           </div>
-          <DropdownMenu
+          {/*<DropdownMenu
             trigger={
               <Button
                 variant="outline"
@@ -130,7 +130,7 @@ export default function DashIncomeStats() {
             <DropdownMenuItem>Jan 2024 - Dec 2024</DropdownMenuItem>
             <DropdownMenuItem>Jan 2023 - Dec 2023</DropdownMenuItem>
             <DropdownMenuItem>Jan 2022 - Dec 2022</DropdownMenuItem>
-          </DropdownMenu>
+          </DropdownMenu>*/}
         </div>
 
         {/* Chart */}
@@ -173,7 +173,7 @@ export default function DashIncomeStats() {
                     currency: "NGN",
                     minimumFractionDigits: 2,
                   }).format(value),
-                  "Additional Fees",
+                  "Management Fees",
                 ]}
               />
               <Area
