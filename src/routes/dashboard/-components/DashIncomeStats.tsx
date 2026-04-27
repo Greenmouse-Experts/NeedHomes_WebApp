@@ -215,7 +215,7 @@ export default function DashIncomeStats() {
               transactions
             </p>
           </div>
-          <DropdownMenu
+          {/*<DropdownMenu
             trigger={
               <Button
                 variant="outline"
@@ -230,7 +230,7 @@ export default function DashIncomeStats() {
             <DropdownMenuItem>Amount</DropdownMenuItem>
             <DropdownMenuItem>Date</DropdownMenuItem>
             <DropdownMenuItem>Type</DropdownMenuItem>
-          </DropdownMenu>
+          </DropdownMenu>*/}
         </div>
 
         {/* Pie Chart */}
