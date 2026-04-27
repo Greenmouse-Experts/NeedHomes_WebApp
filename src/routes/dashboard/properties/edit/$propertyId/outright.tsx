@@ -23,17 +23,8 @@ import type { DocProps } from "@/types/form";
 import type { PROPERTY_TYPE } from "@/types/property";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  Calendar,
-  Home,
-  Layers,
-  Plus,
-} from "lucide-react";
-import {
-  Controller,
-  useForm,
-  useWatch,
-} from "react-hook-form";
+import { Calendar, Home, Layers, Plus } from "lucide-react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import DefaultForm from "../../-components/DefaultForm";
 import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
@@ -208,34 +199,39 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
             selectImageProps={selectImageProps as any}
             mutation={mutation as any}
             onSubmit={onSubmit}
+            units_label="Unit Available"
           >
-            <section className="space-y-6">
-              <div className="flex items-center gap-2 pb-2 border-b border-base-200">
-                <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                  <Layers size={20} />
+            <>
+              {/*<section className="space-y-6">
+                <div className="flex items-center gap-2 pb-2 border-b border-base-200">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Layers size={20} />
+                  </div>
+                  <h2 className="text-lg font-bold">
+                    4. Outright Purchase Details
+                  </h2>
                 </div>
-                <h2 className="text-lg font-bold">4. Outright Purchase Details</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
-                  name="projectEndDate"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <SimpleInput
-                      {...field}
-                      value={
-                        field.value
-                          ? new Date(field.value).toISOString().split("T")[0]
-                          : field.value
-                      }
-                      label="Project End Date"
-                      type="date"
-                      icon={<Calendar size={16} />}
-                    />
-                  )}
-                />
-              </div>
-            </section>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Controller
+                    name="projectEndDate"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : field.value
+                        }
+                        label="Project End Date"
+                        type="date"
+                        icon={<Calendar size={16} />}
+                      />
+                    )}
+                  />
+                </div>
+              </section>*/}
+            </>
           </DefaultForm>
         </div>
       </div>
