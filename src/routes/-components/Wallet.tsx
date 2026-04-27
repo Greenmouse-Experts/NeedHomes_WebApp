@@ -18,7 +18,7 @@ interface WalletTransaction {
   id: string;
   walletId: string;
   amount: number;
-  type: "DEPOSIT" | "WITHDRAWAL";
+  type: "DEPOSIT" | "WITHDRAWAL" | "PROMOTION";
   status: "PENDING" | "SUCCESS" | "FAILED";
   reference: string;
   createdAt: string;
@@ -188,7 +188,11 @@ export default function UserWallet() {
 
           const income =
             walletData.walletTransactions
-              .filter((t) => t.type === "DEPOSIT" && t.status === "SUCCESS")
+              .filter(
+                (t) =>
+                  (t.type === "DEPOSIT" || t.type === "PROMOTION") &&
+                  t.status === "SUCCESS",
+              )
               .reduce((acc, curr) => acc + curr.amount, 0) / 100;
 
           const withdrawals =
@@ -294,10 +298,22 @@ export default function UserWallet() {
                           className="flex items-start gap-2 md:gap-3 p-2 md:p-3 bg-gray-50 rounded-lg mb-2"
                         >
                           <div
-                            className={`w-8 h-8 md:w-10 md:h-10 ${transaction.type === "DEPOSIT" ? "bg-green-100" : "bg-red-100"} rounded-full flex items-center justify-center shrink-0`}
+                            className={`w-8 h-8 md:w-10 md:h-10 ${
+                              transaction.type === "WITHDRAWAL"
+                                ? "bg-red-100"
+                                : transaction.type === "PROMOTION"
+                                  ? "bg-purple-100"
+                                  : "bg-green-100"
+                            } rounded-full flex items-center justify-center shrink-0`}
                           >
                             <svg
-                              className={`w-6 h-6 md:w-7 md:h-7 ${transaction.type === "DEPOSIT" ? "text-green-600" : "text-red-600"}`}
+                              className={`w-6 h-6 md:w-7 md:h-7 ${
+                                transaction.type === "WITHDRAWAL"
+                                  ? "text-red-600"
+                                  : transaction.type === "PROMOTION"
+                                    ? "text-purple-600"
+                                    : "text-green-600"
+                              }`}
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -307,9 +323,9 @@ export default function UserWallet() {
                                 strokeLinejoin="round"
                                 strokeWidth={2}
                                 d={
-                                  transaction.type === "DEPOSIT"
-                                    ? "M5 13l4 4L19 7"
-                                    : "M19 13l-4 4-4-4m4 4V7"
+                                  transaction.type === "WITHDRAWAL"
+                                    ? "M19 13l-4 4-4-4m4 4V7"
+                                    : "M5 13l4 4L19 7"
                                 }
                               />
                             </svg>
@@ -318,7 +334,9 @@ export default function UserWallet() {
                             <p className="text-xs md:text-sm font-medium text-gray-900">
                               {transaction.type === "DEPOSIT"
                                 ? "Deposit"
-                                : "Withdrawal"}
+                                : transaction.type === "PROMOTION"
+                                  ? "Promotion Reward"
+                                  : "Withdrawal"}
                             </p>
                             <p className="text-xs text-gray-500 mt-1">
                               {new Date(
@@ -328,7 +346,7 @@ export default function UserWallet() {
                           </div>
                           <div className="text-right">
                             <p className="text-xs md:text-sm font-semibold text-gray-900">
-                              {transaction.type === "DEPOSIT" ? "+" : "-"} N{" "}
+                              {transaction.type === "WITHDRAWAL" ? "-" : "+"} N{" "}
                               {(transaction.amount / 100).toLocaleString()}
                             </p>
                             <p

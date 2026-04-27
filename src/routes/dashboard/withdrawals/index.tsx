@@ -93,15 +93,15 @@ function RouteComponent() {
         });
       },
     },
-    {
-      key: "approve",
-      label: "Approve",
-      action: (item) => {
-        if (item.status === "PENDING") {
-          console.log("Approving", item.id);
-        }
-      },
-    },
+    // {
+    //   key: "approve",
+    //   label: "Approve",
+    //   action: (item) => {
+    //     if (item.status === "PENDING") {
+    //       console.log("Approving", item.id);
+    //     }
+    //   },
+    // },
   ];
 
   return (
