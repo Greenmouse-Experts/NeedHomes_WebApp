@@ -172,7 +172,7 @@ function RouteComponent() {
                 replace: true,
               })
             }
-            className="select select-bordered select-sm"
+            className="select select-bordered "
           >
             {ACCOUNT_TYPE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
