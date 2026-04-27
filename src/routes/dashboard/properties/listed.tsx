@@ -107,14 +107,20 @@ function ListedPropertiesPage() {
     {
       key: "availableUnits",
       label: "Slots",
-      render: (value) =>
-        value <= 0 ? (
-          <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-            Sold Out
-          </span>
-        ) : (
-          <span>{value}</span>
-        ),
+      render: (value, item) => {
+        if (item.investmentModel === "FRACTIONAL_OWNERSHIP") {
+          return <span>{item.availableShares}</span>;
+        }
+
+        if (value <= 0) {
+          return (
+            <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+              Sold Out
+            </span>
+          );
+        }
+        return <span>{value}</span>;
+      },
     },
     {
       key: "published",
