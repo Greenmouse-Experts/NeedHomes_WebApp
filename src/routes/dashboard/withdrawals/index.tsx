@@ -140,64 +140,72 @@ function RouteComponent() {
   return (
     <>
       <WithdrawalStats />
+      <section className="bg-white rounded-t-xl p-4 ring fade">
+        <div className="mb-6 ">
+          <h1 className="text-xl font-bold">Withdrawal Requests</h1>
+          <p className="text-base-content/60">
+            Manage and process user withdrawal requests and bank transfers.
+          </p>
+        </div>
+        {/*<ToolbarSec />*/}
+        <div className="mb-4">
+          <SearchBar
+            value={q}
+            onChange={(val: string) =>
+              navigate({
+                search: { status, q: val, accountType },
+                replace: true,
+              })
+            }
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <select
+            value={accountType}
+            onChange={(e) =>
+              navigate({
+                search: {
+                  status,
+                  q,
+                  accountType: e.target.value as AccountType,
+                },
+                replace: true,
+              })
+            }
+            className="select select-bordered select-sm"
+          >
+            {ACCOUNT_TYPE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() =>
+                navigate({
+                  search: { status: opt.value as Status, q, accountType },
+                  replace: true,
+                })
+              }
+              className={`btn btn-sm ${
+                status === opt.value ? "btn-primary" : "btn-outline"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </section>
       <PageLoader query={query}>
         {(resp) => {
           const list = resp.data.data;
           return (
             <>
-              <section className="p-6 bg-white rounded-xl ring fade">
-                <div className="mb-6 ">
-                  <h1 className="text-xl font-bold">Withdrawal Requests</h1>
-                  <p className="text-base-content/60">
-                    Manage and process user withdrawal requests and bank
-                    transfers.
-                  </p>
-                </div>
-                {/*<ToolbarSec />*/}
-                <div className="mb-4">
-                  <SearchBar
-                    value={q}
-                    onChange={(val: string) =>
-                      navigate({ search: { status, q: val, accountType }, replace: true })
-                    }
-                  />
-                </div>
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <select
-                    value={accountType}
-                    onChange={(e) =>
-                      navigate({
-                        search: { status, q, accountType: e.target.value as AccountType },
-                        replace: true,
-                      })
-                    }
-                    className="select select-bordered select-sm"
-                  >
-                    {ACCOUNT_TYPE_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {STATUS_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() =>
-                        navigate({
-                          search: { status: opt.value as Status, q, accountType },
-                          replace: true,
-                        })
-                      }
-                      className={`btn btn-sm ${
-                        status === opt.value ? "btn-primary" : "btn-outline"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
+              <section className="p-6 bg-white rounded-b-xl ring fade">
                 <CustomTable columns={columns} data={list} actions={actions} />
               </section>
             </>
