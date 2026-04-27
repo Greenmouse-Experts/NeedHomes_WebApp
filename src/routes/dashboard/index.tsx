@@ -22,6 +22,7 @@ import { io, type Socket } from "socket.io-client";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import AdminRevenue from "./-components/Revenue";
+import DashIncomeStats from "./-components/DashIncomeStats";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
@@ -210,6 +211,7 @@ function DashboardIndexPage() {
           </CardContent>
         </Card>
       </div>
+      <DashIncomeStats />
     </DashboardLayout>
   );
 }

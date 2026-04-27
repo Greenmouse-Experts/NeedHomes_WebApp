@@ -8,9 +8,9 @@ import {
   CheckCircle2,
   Clock,
   ChevronDown,
-  Search,
   ArrowUpDown,
 } from "lucide-react";
+import SearchBar from "@/routes/-components/Searchbar";
 import {
   AreaChart,
   Area,
@@ -164,17 +164,11 @@ function PaymentsPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 md:mb-6 space-y-3">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by reference..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="input input-bordered input-sm w-full pl-9"
-            />
-          </div>
+        {/* Row 1: Search */}
+        <SearchBar value={search} onChange={(val: string) => setSearch(val)} />
+
+        {/* Row 2: Type, Status, Date range, Sort */}
+        <div className="flex flex-wrap gap-2 items-end">
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
@@ -185,6 +179,7 @@ function PaymentsPage() {
             <option value="WITHDRAWAL">Withdrawal</option>
             <option value="INVESTMENT">Investment</option>
           </select>
+
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -195,29 +190,29 @@ function PaymentsPage() {
             <option value="SUCCESS">Success</option>
             <option value="FAILED">Failed</option>
           </select>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 items-end">
-          <div className="flex gap-2 flex-1">
-            <div className="flex-1">
+
+          <div className="flex items-end gap-2">
+            <div>
               <label className="label label-text text-xs pb-1">From</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="input input-bordered input-sm w-full"
+                className="input input-bordered input-sm"
               />
             </div>
-            <div className="flex-1">
+            <div>
               <label className="label label-text text-xs pb-1">To</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="input input-bordered input-sm w-full"
+                className="input input-bordered input-sm"
               />
             </div>
           </div>
-          <div className="flex gap-2">
+
+          <div className="flex gap-2 ml-auto">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "createdAt" | "amount")}
