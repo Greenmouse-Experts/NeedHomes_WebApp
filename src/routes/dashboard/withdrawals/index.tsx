@@ -4,20 +4,42 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
 import type { withdrawal_reqeust } from "@/types/withdrawals";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import Toolbar from "../-components/ToolBar";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import ToolbarSec from "../-components/ToolBar";
 import WithdrawalStats from "./-components/WithdrawalStats";
+import SearchBar from "@/routes/-components/Searchbar";
+
+type Status = "PENDING" | "COMPLETED" | "FAILED" | "PROCESSING";
+
+const STATUS_OPTIONS: { label: string; value: Status | "" }[] = [
+  { label: "All", value: "" },
+  { label: "Pending", value: "PENDING" },
+  { label: "Processing", value: "PROCESSING" },
+  { label: "Completed", value: "COMPLETED" },
+  { label: "Failed", value: "FAILED" },
+];
 
 export const Route = createFileRoute("/dashboard/withdrawals/")({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>) => ({
+    status: (search.status as Status) || "",
+    q: (search.q as string) || "",
+  }),
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const { status, q } = Route.useSearch();
+
   const query = useQuery<ApiResponseV2<withdrawal_reqeust[]>>({
-    queryKey: ["withdrawals"],
+    queryKey: ["withdrawals", status, q],
     queryFn: async () => {
-      let resp = await apiClient.get("/admin/withdrawals");
+      let resp = await apiClient.get("/admin/withdrawals", {
+        params: {
+          ...(status && { status }),
+          ...(q && { search: q }),
+        },
+      });
       return resp.data;
     },
   });
@@ -120,7 +142,33 @@ function RouteComponent() {
                     transfers.
                   </p>
                 </div>
-                <ToolbarSec />
+                {/*<ToolbarSec />*/}
+                <div className="mb-4">
+                  <SearchBar
+                    value={q}
+                    onChange={(val: string) =>
+                      navigate({ search: { status, q: val }, replace: true })
+                    }
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {STATUS_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() =>
+                        navigate({
+                          search: { status: opt.value as Status, q },
+                          replace: true,
+                        })
+                      }
+                      className={`btn btn-sm ${
+                        status === opt.value ? "btn-primary" : "btn-outline"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
                 <CustomTable columns={columns} data={list} actions={actions} />
               </section>
             </>
