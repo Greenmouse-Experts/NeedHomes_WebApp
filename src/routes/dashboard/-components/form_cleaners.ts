@@ -199,5 +199,7 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.minimumFirstPaymentPercentage;
   delete cleaned.projectStartDate;
   delete cleaned.fractionalHoldingPeriodDays;
+  delete cleaned.projectEndDate;
+
   return cleaned;
 };
