@@ -51,7 +51,7 @@ function RouteComponent() {
       propertyType: "RESIDENTIAL",
       developmentStage: "PLANNING",
       premiumProperty: false,
-      completionDate: "",
+      // completionDate: "",
       availableUnits: 1,
       availablePlots: 0,
       pricePerPlot: 0,
