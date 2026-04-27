@@ -4,8 +4,10 @@ import apiClient, {
 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
+import type { Actions } from "@/components/tables/pop-up";
 import { usePagination } from "@/helpers/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowLeftRight, X } from "lucide-react";
 import { useState } from "react";
@@ -52,7 +54,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<ResellStatus | "">("");
   const [showRequestModal, setShowRequestModal] = useState(false);
-
+  const nav = useNavigate();
   const query = useQuery<ApiResponseV2<ResellListing[]>>({
     queryKey: ["resell-my-listings", paginationProps.page, statusFilter],
     queryFn: async () => {
@@ -104,6 +106,17 @@ function RouteComponent() {
     },
   ];
 
+  const actions = [
+    {
+      label: "View Invesment",
+      key: "view",
+      action: (item, nav) =>
+        nav({
+          to: `/investors/my-investments/${item.originalInvestmentId}`,
+          // params: {},
+        }),
+    },
+  ] satisfies Actions<ResellListing>[];
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -154,6 +167,7 @@ function RouteComponent() {
               columns={columns}
               paginationProps={paginationProps}
               totalCount={meta?.total ?? listings.length}
+              actions={actions}
             />
           );
         }}
