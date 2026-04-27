@@ -1,5 +1,7 @@
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
+import { useQuery } from "@tanstack/react-query";
 import {
   Building2,
   ChevronDown,
@@ -19,29 +21,59 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-const COLORS = ["#3B82F6", "#EF671D", "#6B7280"];
-const revenueData = [
-  { month: "Jan", income: 200, expenses: 150 },
-  { month: "Feb", income: 210, expenses: 160 },
-  { month: "Mar", income: 220, expenses: 170 },
-  { month: "Apr", income: 215, expenses: 165 },
-  { month: "May", income: 230, expenses: 180 },
-  { month: "Jun", income: 240, expenses: 190 },
-  { month: "Jul", income: 235, expenses: 185 },
-  { month: "Aug", income: 245, expenses: 195 },
-  { month: "Sep", income: 250, expenses: 200 },
-  { month: "Oct", income: 248, expenses: 198 },
-  { month: "Nov", income: 255, expenses: 205 },
-  { month: "Dec", income: 260, expenses: 210 },
-];
-
-const incomeSummaryData = [
-  { name: "Investment", value: 1754, color: "#3B82F6" },
-  { name: "Partners", value: 873, color: "#EF671D" },
-  { name: "Projects", value: 685, color: "#6B7280" },
-];
+const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
+interface AdminStats {
+  users: {
+    totalRegisteredUsers: number;
+    activeInvestorPercentage: number;
+    verifiedInvestorCount: number;
+    totalInvestorCount: number;
+    activePartnerPercentage: number;
+    verifiedPartnerCount: number;
+    totalPartnerCount: number;
+  };
+  partners: {
+    partnerAgentActivationRate: number;
+    verifiedPartnersTotal: number;
+    verifiedPartnersWithPromotions: number;
+  };
+  transactions: {
+    transactionSuccessRate: number;
+    totalSuccessful: number;
+    totalFailed: number;
+    totalPending: number;
+    totalTransactions: number;
+  };
+  generatedAt: string;
+}
 
 export default function DashIncomeStats() {
+  const query = useQuery<ApiResponse<AdminStats>>({
+    queryKey: ["admin_dash_stats"],
+    queryFn: async () => {
+      const resp = await apiClient.get("analytics/dashboard");
+      return resp.data;
+    },
+  });
+
+  const stats = query.data?.data?.transactions;
+
+  const chartData = stats
+    ? [
+        { label: "Successful", count: stats.totalSuccessful },
+        { label: "Pending", count: stats.totalPending },
+        { label: "Failed", count: stats.totalFailed },
+      ]
+    : [];
+
+  const pieData = stats
+    ? [
+        { name: "Successful", value: stats.totalSuccessful },
+        { name: "Pending", value: stats.totalPending },
+        { name: "Failed", value: stats.totalFailed },
+      ]
+    : [];
+
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-8">
       {/* Revenue Trend Chart */}
@@ -49,12 +81,14 @@ export default function DashIncomeStats() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
           <div>
             <h3 className="text-base md:text-lg font-bold text-gray-900">
-              Today Revenue Trend
+              Transaction Overview
             </h3>
             <div className="flex items-center gap-2 mt-1">
               <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600" />
               <span className="text-xs md:text-sm font-semibold text-green-600">
-                24.6%
+                {stats
+                  ? `${stats.transactionSuccessRate.toFixed(1)}% success rate`
+                  : "—"}
               </span>
             </div>
           </div>
@@ -80,7 +114,7 @@ export default function DashIncomeStats() {
         {/* Chart */}
         <div className="h-48 md:h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={revenueData}>
+            {/*<AreaChart data={revenueData}>
               <defs>
                 <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
@@ -125,7 +159,7 @@ export default function DashIncomeStats() {
                 fill="url(#colorExpenses)"
                 name="Expenses"
               />
-            </AreaChart>
+            </AreaChart>*/}
           </ResponsiveContainer>
         </div>
 
@@ -171,7 +205,7 @@ export default function DashIncomeStats() {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={incomeSummaryData}
+                data={pieData}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -182,7 +216,7 @@ export default function DashIncomeStats() {
                   `${name} ${(percent * 100).toFixed(0)}%`
                 }
               >
-                {incomeSummaryData.map((entry, index) => (
+                {pieData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
@@ -203,43 +237,43 @@ export default function DashIncomeStats() {
 
         {/* Statistics */}
         <div className="space-y-2 md:space-y-3">
-          <div className="flex items-center justify-between p-2.5 md:p-3 bg-blue-50 rounded-lg">
+          <div className="flex items-center justify-between p-2.5 md:p-3 bg-green-50 rounded-lg">
             <div className="flex items-center gap-2 md:gap-3">
-              <div className="p-1.5 md:p-2 bg-blue-100 rounded-lg">
-                <Building2 className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+              <div className="p-1.5 md:p-2 bg-green-100 rounded-lg">
+                <Building2 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
               </div>
               <span className="text-xs md:text-sm font-medium text-gray-700">
-                Investment
+                Successful
               </span>
             </div>
-            <span className="text-base md:text-lg font-bold text-blue-600">
-              1,754
+            <span className="text-base md:text-lg font-bold text-green-600">
+              {stats?.totalSuccessful?.toLocaleString() ?? "—"}
             </span>
           </div>
-          <div className="flex items-center justify-between p-2.5 md:p-3 bg-orange-50 rounded-lg">
+          <div className="flex items-center justify-between p-2.5 md:p-3 bg-yellow-50 rounded-lg">
             <div className="flex items-center gap-2 md:gap-3">
-              <div className="p-1.5 md:p-2 bg-orange-100 rounded-lg">
-                <Wallet className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
+              <div className="p-1.5 md:p-2 bg-yellow-100 rounded-lg">
+                <Wallet className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
               </div>
               <span className="text-xs md:text-sm font-medium text-gray-700">
-                Partners
+                Pending
               </span>
             </div>
-            <span className="text-base md:text-lg font-bold text-[var(--color-orange)]">
-              873
+            <span className="text-base md:text-lg font-bold text-yellow-600">
+              {stats?.totalPending?.toLocaleString() ?? "—"}
             </span>
           </div>
-          <div className="flex items-center justify-between p-2.5 md:p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center justify-between p-2.5 md:p-3 bg-red-50 rounded-lg">
             <div className="flex items-center gap-2 md:gap-3">
-              <div className="p-1.5 md:p-2 bg-gray-100 rounded-lg">
-                <FileText className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
+              <div className="p-1.5 md:p-2 bg-red-100 rounded-lg">
+                <FileText className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
               </div>
               <span className="text-xs md:text-sm font-medium text-gray-700">
-                Projects
+                Failed
               </span>
             </div>
-            <span className="text-base md:text-lg font-bold text-gray-600">
-              685
+            <span className="text-base md:text-lg font-bold text-red-600">
+              {stats?.totalFailed?.toLocaleString() ?? "—"}
             </span>
           </div>
         </div>
