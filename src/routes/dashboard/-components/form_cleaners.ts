@@ -162,6 +162,7 @@ export const strip_outright = (data: Record<string, any>) => {
   //@ts-ignore
   delete cleaned.fractionalHoldingPeriodDays;
   delete cleaned.developmentStage;
+  delete cleaned.projectEndDate;
   return cleaned;
 };
 // property paymentOption should not exist, property installmentDuration should not exist, property minimumInstallmentAmount should not exist
