@@ -223,7 +223,9 @@ function RouteComponent() {
       label: "View Property",
       action: (item, nav) =>
         nav({
+          //@ts-ignore
           to: "/dashboard/properties/$id",
+          //@ts-ignore
           params: { id: item.id },
         }),
     },
