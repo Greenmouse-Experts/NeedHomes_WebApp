@@ -179,9 +179,18 @@ export default function DashIncomeStats() {
       {/* Income Summary */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
-          <h3 className="text-base md:text-lg font-bold text-gray-900">
-            Income Summary
-          </h3>
+          <div>
+            <h3 className="text-base md:text-lg font-bold text-gray-900">
+              Transaction Summary
+            </h3>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Total:{" "}
+              <span className="font-semibold text-gray-700">
+                {stats?.totalTransactions?.toLocaleString() ?? "—"}
+              </span>{" "}
+              transactions
+            </p>
+          </div>
           <DropdownMenu
             trigger={
               <Button

@@ -10,6 +10,7 @@ import WithdrawalStats from "./-components/WithdrawalStats";
 import SearchBar from "@/routes/-components/Searchbar";
 
 type Status = "PENDING" | "COMPLETED" | "FAILED" | "PROCESSING";
+type AccountType = "INDIVIDUAL" | "CORPORATE" | "PARTNER" | "ADMIN";
 
 const STATUS_OPTIONS: { label: string; value: Status | "" }[] = [
   { label: "All", value: "" },
@@ -19,25 +20,35 @@ const STATUS_OPTIONS: { label: string; value: Status | "" }[] = [
   { label: "Failed", value: "FAILED" },
 ];
 
+const ACCOUNT_TYPE_OPTIONS: { label: string; value: AccountType | "" }[] = [
+  { label: "All Users", value: "" },
+  { label: "Individual", value: "INDIVIDUAL" },
+  { label: "Corporate", value: "CORPORATE" },
+  { label: "Partner", value: "PARTNER" },
+  { label: "Admin", value: "ADMIN" },
+];
+
 export const Route = createFileRoute("/dashboard/withdrawals/")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => ({
     status: (search.status as Status) || "",
     q: (search.q as string) || "",
+    accountType: (search.accountType as AccountType) || "",
   }),
 });
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { status, q } = Route.useSearch();
+  const { status, q, accountType } = Route.useSearch();
 
   const query = useQuery<ApiResponseV2<withdrawal_reqeust[]>>({
-    queryKey: ["withdrawals", status, q],
+    queryKey: ["withdrawals", status, q, accountType],
     queryFn: async () => {
       let resp = await apiClient.get("/admin/withdrawals", {
         params: {
           ...(status && { status }),
           ...(q && { search: q }),
+          ...(accountType && { accountType }),
         },
       });
       return resp.data;
@@ -147,9 +158,27 @@ function RouteComponent() {
                   <SearchBar
                     value={q}
                     onChange={(val: string) =>
-                      navigate({ search: { status, q: val }, replace: true })
+                      navigate({ search: { status, q: val, accountType }, replace: true })
                     }
                   />
+                </div>
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <select
+                    value={accountType}
+                    onChange={(e) =>
+                      navigate({
+                        search: { status, q, accountType: e.target.value as AccountType },
+                        replace: true,
+                      })
+                    }
+                    className="select select-bordered select-sm"
+                  >
+                    {ACCOUNT_TYPE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {STATUS_OPTIONS.map((opt) => (
@@ -157,7 +186,7 @@ function RouteComponent() {
                       key={opt.value}
                       onClick={() =>
                         navigate({
-                          search: { status: opt.value as Status, q },
+                          search: { status: opt.value as Status, q, accountType },
                           replace: true,
                         })
                       }
