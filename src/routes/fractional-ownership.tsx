@@ -4,12 +4,12 @@ import {
   TrendingUp,
   Shield,
   Users,
-  DollarSign,
   ArrowRight,
   CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import Footer from "@/components/home/Footer";
+import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute("/fractional-ownership")({
   component: FractionalOwnershipPage,
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/fractional-ownership")({
 function FractionalOwnershipPage() {
   const features = [
     {
-      icon: <DollarSign className="w-6 h-6" />,
+      icon: <NairaIcon className="w-6 h-6" />,
       title: "Low Entry Cost",
       description:
         "Start your property investment journey with as little as ₦500,000",

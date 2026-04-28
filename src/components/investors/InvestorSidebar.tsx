@@ -4,7 +4,6 @@ import {
   Building2,
   User,
   Bell,
-  CircleDollarSign,
   Megaphone,
   Briefcase,
   List,
@@ -15,6 +14,7 @@ import {
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "./ProfileCard";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import { NairaIcon } from "../NairaIcon";
 
 interface InvestorSidebarProps {
   activePage?: string;
@@ -75,7 +75,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       to: "/investors/transactions",
       activePage: "transactions",
       label: "Transaction",
-      icon: <CircleDollarSign className="size-4" />,
+      icon: <NairaIcon className="size-4" />,
       alwaysEnabled: false,
     },
     {

@@ -15,7 +15,7 @@ import {
   Trash2,
   Home,
   MapPin,
-  DollarSign,
+  Sign,
   Calendar,
   FileText,
   Image as ImageIcon,

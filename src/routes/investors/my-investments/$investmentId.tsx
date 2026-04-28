@@ -3,7 +3,6 @@ import {
   ChevronLeft,
   TrendingUp,
   Calendar,
-  DollarSign,
   BarChart3,
   MapPin,
   ArrowUpRight,
@@ -22,6 +21,7 @@ import ExitStrategy from "./-components/ExitStrategy";
 import FractionalExitStrategy from "./-components/FractionalExitStrategy";
 import Resell from "./-components/Resell";
 import AdminROI from "@/routes/-components/ROI";
+import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -202,7 +202,7 @@ function InvestmentDetailsPage() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 my-4">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="p-2 bg-blue-50 rounded-lg w-fit mb-3">
-                    <DollarSign className="w-4 h-4 text-blue-600" />
+                    <NairaIcon className="w-4 h-4 text-blue-600" />
                   </div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
                     Amount Paid
@@ -305,7 +305,8 @@ function InvestmentDetailsPage() {
                   propertyId={investment.propertyId}
                 />
               ) : null}
-              {investment.property?.investmentModel === "FRACTIONAL_OWNERSHIP" ? (
+              {investment.property?.investmentModel ===
+              "FRACTIONAL_OWNERSHIP" ? (
                 <FractionalExitStrategy investment={investment} />
               ) : (
                 <ExitStrategy

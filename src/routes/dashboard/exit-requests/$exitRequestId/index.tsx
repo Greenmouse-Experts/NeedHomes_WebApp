@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-  DollarSign,
   User,
   Home,
   Calendar,
@@ -437,7 +436,7 @@ function RouteComponent() {
                     value: formatNaira(req.investment?.currentValue ?? 0),
                   },
                   {
-                    icon: DollarSign,
+                    icon: NairaIcon,
                     color: req.exitAmount
                       ? "bg-emerald-50 text-emerald-600"
                       : "bg-gray-50 text-gray-400",

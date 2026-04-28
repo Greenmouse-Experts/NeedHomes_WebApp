@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  CircleDollarSign,
   BadgeCheck,
   TrendingUp,
 } from "lucide-react";
@@ -15,9 +14,16 @@ import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import { extract_message } from "@/helpers/apihelpers";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { Button } from "@/components/ui/Button";
+import { NairaIcon } from "@/components/NairaIcon";
 
 interface PriceHistoryData {
-  history: { id: string; priceField: string; oldPrice: number; newPrice: number; changedAt: string }[];
+  history: {
+    id: string;
+    priceField: string;
+    oldPrice: number;
+    newPrice: number;
+    changedAt: string;
+  }[];
   formerPrice: number;
   currentPrice: number;
   overallRoi: number;
@@ -91,7 +97,9 @@ export default function Resell({ investment }: { investment: Investment }) {
   const priceHistoryQuery = useQuery<{ data: PriceHistoryData }>({
     queryKey: ["price-history", investment.propertyId],
     queryFn: async () => {
-      const resp = await apiClient.get(`properties/${investment.propertyId}/price-history`);
+      const resp = await apiClient.get(
+        `properties/${investment.propertyId}/price-history`,
+      );
       return resp.data;
     },
     enabled: investment.status === "COMPLETED",
@@ -121,8 +129,14 @@ export default function Resell({ investment }: { investment: Investment }) {
       if (askingPriceNaira.trim()) {
         const naira = parseFloat(askingPriceNaira);
         if (isNaN(naira) || naira <= 0) throw new Error("Invalid asking price");
-        if (naira < minNaira) throw new Error(`Asking price must be at least ${formatNaira(minNaira * 100)}`);
-        if (naira > maxNaira) throw new Error(`Asking price cannot exceed ${formatNaira(maxNaira * 100)}`);
+        if (naira < minNaira)
+          throw new Error(
+            `Asking price must be at least ${formatNaira(minNaira * 100)}`,
+          );
+        if (naira > maxNaira)
+          throw new Error(
+            `Asking price cannot exceed ${formatNaira(maxNaira * 100)}`,
+          );
         body.askingPrice = Math.round(naira * 100);
       }
       const resp = await apiClient.post(`resell/${investment.id}`, body);
@@ -179,18 +193,31 @@ export default function Resell({ investment }: { investment: Investment }) {
           {hasHistory && (
             <div className="grid grid-cols-3 gap-2 text-sm bg-base-200 rounded-box p-3">
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">Min Price</p>
-                <p className="font-semibold">{formatNaira(priceHistory!.formerPrice)}</p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  Min Price
+                </p>
+                <p className="font-semibold">
+                  {formatNaira(priceHistory!.formerPrice)}
+                </p>
               </div>
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">Max Price</p>
-                <p className="font-semibold">{formatNaira(priceHistory!.currentPrice)}</p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  Max Price
+                </p>
+                <p className="font-semibold">
+                  {formatNaira(priceHistory!.currentPrice)}
+                </p>
               </div>
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">ROI</p>
-                <p className={`font-bold flex items-center gap-1 ${parseFloat(roi!) >= 0 ? "text-success" : "text-error"}`}>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  ROI
+                </p>
+                <p
+                  className={`font-bold flex items-center gap-1 ${parseFloat(roi!) >= 0 ? "text-success" : "text-error"}`}
+                >
                   <TrendingUp className="w-3 h-3" />
-                  {parseFloat(roi!) >= 0 ? "+" : ""}{roi}%
+                  {parseFloat(roi!) >= 0 ? "+" : ""}
+                  {roi}%
                 </p>
               </div>
             </div>
@@ -199,9 +226,7 @@ export default function Resell({ investment }: { investment: Investment }) {
           <fieldset className="fieldset">
             <legend className="fieldset-legend">
               Asking Price{" "}
-              <span className="text-base-content/40 font-normal">
-                (in ₦)
-              </span>
+              <span className="text-base-content/40 font-normal">(in ₦)</span>
             </legend>
             <label className="input w-full">
               <span className="text-base-content/40">₦</span>
@@ -243,7 +268,7 @@ export default function Resell({ investment }: { investment: Investment }) {
               className="btn btn-outline btn-sm gap-2"
               onClick={() => modalRef.current?.open()}
             >
-              <CircleDollarSign className="w-4 h-4" />
+              <NairaIcon className="w-4 h-4" />
               Request Resell
             </button>
           ) : null}

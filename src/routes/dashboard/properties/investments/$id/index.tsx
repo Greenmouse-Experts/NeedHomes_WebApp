@@ -14,7 +14,7 @@ import {
   Check,
   ChevronLeft,
   Copy,
-  DollarSign,
+  Sign,
   Hash,
   MapPin,
   TrendingUp,
@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute("/dashboard/properties/investments/$id/")({
   component: RouteComponent,
@@ -321,7 +322,7 @@ function RouteComponent() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="p-2 bg-blue-50 rounded-lg w-fit mb-3">
-                    <DollarSign className="w-4 h-4 text-blue-600" />
+                    <NairaIcon className="w-4 h-4 text-blue-600" />
                   </div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
                     Amount Paid
