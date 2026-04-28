@@ -20,6 +20,7 @@ import {
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute(
   "/dashboard/exit-requests/$exitRequestId/",
@@ -424,13 +425,13 @@ function RouteComponent() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                   {
-                    icon: DollarSign,
+                    icon: NairaIcon,
                     color: "bg-blue-50 text-blue-600",
                     label: "Amount Paid",
                     value: formatNaira(req.investment?.amountPaid ?? 0),
                   },
                   {
-                    icon: DollarSign,
+                    icon: NairaIcon,
                     color: "bg-green-50 text-green-600",
                     label: "Current Value",
                     value: formatNaira(req.investment?.currentValue ?? 0),
