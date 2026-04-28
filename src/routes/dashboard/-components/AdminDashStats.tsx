@@ -7,13 +7,7 @@ import {
   UserCheck,
   Megaphone,
 } from "lucide-react";
-import {
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 interface AdminStats {
   users: {
@@ -104,7 +98,11 @@ function MiniPie({
               </Pie>
               <Tooltip
                 formatter={(value: number, name: string) => [value, name]}
-                contentStyle={{ fontSize: 11, borderRadius: 6, padding: "4px 8px" }}
+                contentStyle={{
+                  fontSize: 11,
+                  borderRadius: 6,
+                  padding: "4px 8px",
+                }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -199,17 +197,41 @@ export default function AdminDashStats() {
           <MiniPie
             title="Investor Breakdown"
             data={[
-              { name: "Verified", value: users.verifiedInvestorCount, color: "#10B981" },
-              { name: "Churned", value: users.churnedInvestorCount, color: "#EF4444" },
-              { name: "Other", value: Math.max(0, investorOther), color: "#D1D5DB" },
+              {
+                name: "Verified",
+                value: users.verifiedInvestorCount,
+                color: "#10B981",
+              },
+              {
+                name: "Churned",
+                value: users.churnedInvestorCount,
+                color: "#EF4444",
+              },
+              {
+                name: "Other",
+                value: Math.max(0, investorOther),
+                color: "#D1D5DB",
+              },
             ]}
           />
           <MiniPie
             title="Partner Breakdown"
             data={[
-              { name: "Verified", value: partners.verifiedPartnersTotal, color: "#F59E0B" },
-              { name: "Churned", value: partners.churnedPartnerCount, color: "#EF4444" },
-              { name: "Other", value: Math.max(0, partnerOther), color: "#D1D5DB" },
+              {
+                name: "Verified",
+                value: partners.verifiedPartnersTotal,
+                color: "#F59E0B",
+              },
+              {
+                name: "Churned",
+                value: partners.churnedPartnerCount,
+                color: "#EF4444",
+              },
+              {
+                name: "Other",
+                value: Math.max(0, partnerOther),
+                color: "#D1D5DB",
+              },
             ]}
           />
           <div className="grid grid-rows-2 gap-3">
@@ -255,7 +277,8 @@ export default function AdminDashStats() {
                 name: "Without",
                 value: Math.max(
                   0,
-                  partners.verifiedPartnersTotal - partners.verifiedPartnersWithPromotions,
+                  partners.verifiedPartnersTotal -
+                    partners.verifiedPartnersWithPromotions,
                 ),
                 color: "#D1D5DB",
               },
@@ -273,7 +296,7 @@ export default function AdminDashStats() {
       </div>
 
       {/* ── Transactions ── */}
-      <div>
+      {/*<div>
         <SectionHeader title="Transactions" icon={TrendingUp} />
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <StatCard
@@ -313,7 +336,7 @@ export default function AdminDashStats() {
             ))}
           </div>
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 }
