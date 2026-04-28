@@ -7,6 +7,7 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import SearchBar from "@/routes/-components/Searchbar";
 
 export const Route = createFileRoute("/dashboard/properties/promotions/")({
   component: RouteComponent,
@@ -111,11 +112,17 @@ const columns: columnType<Promotion>[] = [
 
 function RouteComponent() {
   const nav = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [search, setSearch] = useState("");
   const query = useQuery<ApiResponseV2<Promotion[]>>({
-    queryKey: ["promotions", searchQuery],
+    queryKey: ["promotions", search],
     queryFn: async () => {
-      return (await apiClient.get("/admin/promotions")).data;
+      return (
+        await apiClient.get("/admin/promotions", {
+          params: {
+            ...(search && { search: search }),
+          },
+        })
+      ).data;
     },
   });
 
@@ -132,24 +139,24 @@ function RouteComponent() {
 
         <div className="p-4 border-b border-gray-200 flex items-center justify-between gap-4">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search promotions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+            <SearchBar
+              value={search}
+              onChange={(val) => {
+                setSearch(val);
+                // props.setPagination(1);
+              }}
+              placeholder="Search by title, location, or description"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Button
+            {/*<Button
               variant="outline"
               size="sm"
               className="flex items-center gap-2"
             >
               <Filter className="w-4 h-4" />
               Filter
-            </Button>
+            </Button>*/}
             <Button
               variant="outline"
               size="sm"
