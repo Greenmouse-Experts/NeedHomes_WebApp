@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MapPin, Percent, TrendingUp, ChevronLeft, RefreshCw } from "lucide-react";
+import {
+  MapPin,
+  Percent,
+  TrendingUp,
+  ChevronLeft,
+  RefreshCw,
+} from "lucide-react";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -18,6 +24,7 @@ import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-compon
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/fractional/",
@@ -316,6 +323,7 @@ function PropertyDetailPage() {
                           route={`/investors/properties/${propertyId}/fractional`}
                         />
                       </div>
+                      <RenderCustomId property={property} />
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                         <span className="text-sm md:text-lg">
@@ -325,7 +333,13 @@ function PropertyDetailPage() {
                       {property.isResell && property.reseller && (
                         <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
                           <RefreshCw className="w-4 h-4 shrink-0" />
-                          <span>Resell Listing — Listed by <strong>{property.reseller.firstName} {property.reseller.lastName}</strong></span>
+                          <span>
+                            Resell Listing — Listed by{" "}
+                            <strong>
+                              {property.reseller.firstName}{" "}
+                              {property.reseller.lastName}
+                            </strong>
+                          </span>
                         </div>
                       )}
                       <div className="mt-3">

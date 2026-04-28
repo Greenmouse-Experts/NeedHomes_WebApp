@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MapPin, Percent, TrendingUp, ChevronLeft, RefreshCw } from "lucide-react";
+import {
+  MapPin,
+  Percent,
+  TrendingUp,
+  ChevronLeft,
+  RefreshCw,
+} from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
@@ -20,6 +26,7 @@ import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/land-banking/",
@@ -243,6 +250,8 @@ function PropertyDetailPage() {
                         {formatCurrency(property.basePrice / 100)}
                       </span>
                     </div>*/}
+
+                    <RenderCustomId property={property} />
                     <div className="ring rounded-box fade">
                       <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
                         Shares
@@ -453,7 +462,9 @@ function PropertyDetailPage() {
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                           {property.propertyTitle}
                         </h1>
-                        <ShareLink route={`/investors/properties/${propertyId}/land-banking`} />
+                        <ShareLink
+                          route={`/investors/properties/${propertyId}/land-banking`}
+                        />
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
@@ -464,7 +475,13 @@ function PropertyDetailPage() {
                       {property.isResell && property.reseller && (
                         <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
                           <RefreshCw className="w-4 h-4 shrink-0" />
-                          <span>Resell Listing — Listed by <strong>{property.reseller.firstName} {property.reseller.lastName}</strong></span>
+                          <span>
+                            Resell Listing — Listed by{" "}
+                            <strong>
+                              {property.reseller.firstName}{" "}
+                              {property.reseller.lastName}
+                            </strong>
+                          </span>
                         </div>
                       )}
                       <div className="mt-3">

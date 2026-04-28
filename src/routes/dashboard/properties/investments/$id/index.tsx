@@ -180,16 +180,18 @@ function RouteComponent() {
                           <XCircle className="w-4 h-4 shrink-0" />
                           <p>
                             This investment cannot be cancelled because its
-                            current status is{" "}
-                            <strong>{inv.status}</strong>. Only{" "}
-                            <strong>ACTIVE</strong> or{" "}
+                            current status is <strong>{inv.status}</strong>.
+                            Only <strong>ACTIVE</strong> or{" "}
                             <strong>PENDING</strong> investments can be
                             cancelled.
                           </p>
                         </div>
                       ) : (
                         <>
-                          <div role="alert" className="alert alert-warning text-sm">
+                          <div
+                            role="alert"
+                            className="alert alert-warning text-sm"
+                          >
                             <AlertTriangle className="w-4 h-4 shrink-0" />
                             <p>
                               This will cancel the investment and automatically

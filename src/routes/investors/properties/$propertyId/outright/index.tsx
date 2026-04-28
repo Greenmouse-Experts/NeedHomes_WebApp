@@ -24,6 +24,7 @@ import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-compon
 import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/outright/",
@@ -200,8 +201,11 @@ function PropertyDetailPage() {
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                           {property.propertyTitle}
                         </h1>
-                        <ShareLink route={`/investors/properties/${propertyId}/outright`} />
+                        <ShareLink
+                          route={`/investors/properties/${propertyId}/outright`}
+                        />
                       </div>
+                      <RenderCustomId property={property} />
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                         <span className="text-sm md:text-lg">
@@ -211,7 +215,13 @@ function PropertyDetailPage() {
                       {property.isResell && property.reseller && (
                         <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
                           <RefreshCw className="w-4 h-4 shrink-0" />
-                          <span>Resell Listing — Listed by <strong>{property.reseller.firstName} {property.reseller.lastName}</strong></span>
+                          <span>
+                            Resell Listing — Listed by{" "}
+                            <strong>
+                              {property.reseller.firstName}{" "}
+                              {property.reseller.lastName}
+                            </strong>
+                          </span>
                         </div>
                       )}
                       <div className="mt-3">

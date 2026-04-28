@@ -148,12 +148,12 @@ function RouteComponent() {
           <option value="SOLD">Sold</option>
         </select>
 
-        <button
+        {/*<button
           className="btn btn-sm bg-(--color-orange) text-white hover:opacity-90 border-none ml-auto"
           onClick={() => setShowRequestModal(true)}
         >
           + Request Resell
-        </button>
+        </button>*/}
       </div>
 
       {/* Table */}

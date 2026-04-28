@@ -28,6 +28,7 @@ import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/default/",
@@ -237,7 +238,7 @@ function PropertyDetailPage() {
                         {property.propertyTitle}
                       </span>
                     </div>
-
+                    <RenderCustomId property={property} />
                     <div className="ring rounded-box fade">
                       <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
                         Units
@@ -525,7 +526,13 @@ function PropertyDetailPage() {
                       {property.isResell && property.reseller && (
                         <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
                           <RefreshCw className="w-4 h-4 shrink-0" />
-                          <span>Resell Listing — Listed by <strong>{property.reseller.firstName} {property.reseller.lastName}</strong></span>
+                          <span>
+                            Resell Listing — Listed by{" "}
+                            <strong>
+                              {property.reseller.firstName}{" "}
+                              {property.reseller.lastName}
+                            </strong>
+                          </span>
                         </div>
                       )}
                       <div className="mt-3">

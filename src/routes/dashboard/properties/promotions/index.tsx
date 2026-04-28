@@ -4,6 +4,8 @@ import { Search, Filter, Printer, Plus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/api/simpleApi";
 
 export const Route = createFileRoute("/dashboard/properties/promotions/")({
   component: RouteComponent,
@@ -66,6 +68,12 @@ const columns: columnType[] = [
 
 function RouteComponent() {
   const [searchQuery, setSearchQuery] = useState("");
+  const query = useQuery({
+    queryKey: ["promotions", searchQuery],
+    queryFn: async () => {
+      return await apiClient.get("/admin/promotions");
+    },
+  });
 
   return (
     <div className="bg-base-100">
