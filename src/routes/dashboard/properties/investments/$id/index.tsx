@@ -1,10 +1,13 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import PageLoader from "@/components/layout/PageLoader";
 import { Button } from "@/components/ui/Button";
+import { extract_message } from "@/helpers/apihelpers";
 import AdminROI from "@/routes/-components/ROI";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
+  AlertTriangle,
   ArrowUpRight,
   BarChart3,
   Calendar,
@@ -16,8 +19,10 @@ import {
   MapPin,
   TrendingUp,
   User,
+  XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/properties/investments/$id/")({
   component: RouteComponent,
@@ -83,12 +88,38 @@ function CopyButton({ text }: { text: string }) {
 function RouteComponent() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const cancelRef = useRef<ModalHandle>(null);
+  const [reason, setReason] = useState("");
+
   const query = useQuery<ApiResponse<Investment>>({
     queryKey: ["investments-admin", id],
     queryFn: async () => {
       let resp = await apiClient.get(`admin/investments/${id}`);
       return resp.data;
     },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: async () => {
+      if (!reason.trim()) throw new Error("A reason is required");
+      const resp = await apiClient.patch(`/investments/admin/${id}/cancel`, {
+        reason: reason.trim(),
+      });
+      return resp.data;
+    },
+    onSuccess: (data: any) => {
+      const refunded = data?.data?.refundedAmountNaira;
+      toast.success(
+        refunded
+          ? `Investment cancelled. ₦${Number(refunded).toLocaleString()} refunded to investor.`
+          : "Investment cancelled and investor refunded.",
+      );
+      queryClient.invalidateQueries({ queryKey: ["investments-admin", id] });
+      cancelRef.current?.close();
+      setReason("");
+    },
+    onError: (err) => toast.error(extract_message(err)),
   });
 
   const formatCurrency = (amount: number) => `₦${amount.toLocaleString()}`;
@@ -117,6 +148,83 @@ function RouteComponent() {
 
           return (
             <div className="space-y-8">
+              {/* Cancel Modal */}
+              {(() => {
+                const canCancel = ["ACTIVE", "PENDING"].includes(inv.status);
+                return (
+                  <Modal
+                    ref={cancelRef}
+                    title="Cancel Investment"
+                    actions={
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => cancelRef.current?.close()}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          variant="danger"
+                          isLoading={cancelMutation.isPending}
+                          disabled={!canCancel || !reason.trim()}
+                          onClick={() => cancelMutation.mutate()}
+                        >
+                          Confirm Cancellation
+                        </Button>
+                      </div>
+                    }
+                  >
+                    <div className="space-y-4">
+                      {!canCancel ? (
+                        <div role="alert" className="alert alert-info text-sm">
+                          <XCircle className="w-4 h-4 shrink-0" />
+                          <p>
+                            This investment cannot be cancelled because its
+                            current status is{" "}
+                            <strong>{inv.status}</strong>. Only{" "}
+                            <strong>ACTIVE</strong> or{" "}
+                            <strong>PENDING</strong> investments can be
+                            cancelled.
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          <div role="alert" className="alert alert-warning text-sm">
+                            <AlertTriangle className="w-4 h-4 shrink-0" />
+                            <p>
+                              This will cancel the investment and automatically
+                              refund the investor's wallet. This action cannot
+                              be undone.
+                            </p>
+                          </div>
+                          <div className="p-3 bg-base-200 rounded-box text-sm space-y-0.5">
+                            <p className="text-base-content/60">Investor</p>
+                            <p className="font-semibold">
+                              {inv.user?.firstName} {inv.user?.lastName}
+                            </p>
+                            <p className="text-base-content/60">
+                              {inv.user?.email}
+                            </p>
+                          </div>
+                          <fieldset className="fieldset">
+                            <legend className="fieldset-legend">
+                              Reason <span className="text-error">*</span>
+                            </legend>
+                            <textarea
+                              className="textarea textarea-bordered w-full resize-none"
+                              rows={3}
+                              placeholder="e.g. Property is being removed from the platform"
+                              value={reason}
+                              onChange={(e) => setReason(e.target.value)}
+                            />
+                          </fieldset>
+                        </>
+                      )}
+                    </div>
+                  </Modal>
+                );
+              })()}
+
               {/* ── Hero Header ── */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="h-1.5 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500" />
@@ -176,19 +284,31 @@ function RouteComponent() {
                       </div>
                     </div>
 
-                    {/* Right: current value */}
-                    <div className="shrink-0 bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 rounded-xl px-6 py-4 text-center md:text-right">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
-                        Current Value
-                      </p>
-                      <p className="text-3xl font-bold text-(--color-orange) leading-none">
-                        {formatCurrency(inv.currentValue / 100)}
-                      </p>
-                      <div className="flex items-center gap-1 mt-2 justify-center md:justify-end">
-                        <ArrowUpRight className="w-4 h-4 text-green-600" />
-                        <span className="text-sm font-semibold text-green-600">
-                          +{inv.returnPercentage}%
-                        </span>
+                    {/* Right: current value + cancel */}
+                    <div className="shrink-0 flex flex-col items-end gap-3">
+                      <button
+                        className="btn btn-error btn-outline btn-sm gap-1.5"
+                        onClick={() => {
+                          setReason("");
+                          cancelRef.current?.open();
+                        }}
+                      >
+                        <XCircle className="w-4 h-4" />
+                        Cancel Investment
+                      </button>
+                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 rounded-xl px-6 py-4 text-center md:text-right">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
+                          Current Value
+                        </p>
+                        <p className="text-3xl font-bold text-(--color-orange) leading-none">
+                          {formatCurrency(inv.currentValue / 100)}
+                        </p>
+                        <div className="flex items-center gap-1 mt-2 justify-center md:justify-end">
+                          <ArrowUpRight className="w-4 h-4 text-green-600" />
+                          <span className="text-sm font-semibold text-green-600">
+                            +{inv.returnPercentage}%
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
