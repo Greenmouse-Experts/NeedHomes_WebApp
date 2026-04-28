@@ -20,25 +20,41 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { type Actions } from "@/components/tables/pop-up";
 import { usePagination } from "@/helpers/pagination";
 
+type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+
+const VERIFICATION_OPTIONS: {
+  label: string;
+  value: VerificationStatus | "";
+}[] = [
+  { label: "All", value: "" },
+  { label: "Pending", value: "PENDING" },
+  { label: "Verified", value: "VERIFIED" },
+  { label: "Rejected", value: "REJECTED" },
+];
+
 export const Route = createFileRoute("/dashboard/investors/")({
   component: InvestorsPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    verificationStatus: (search.verificationStatus as VerificationStatus) || "",
+  }),
 });
 
 function InvestorsPage() {
   const navigate = useNavigate();
+  const { verificationStatus } = Route.useSearch();
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
   const query = useQuery<ApiResponseV2<INVESTOR[]>>({
-    queryKey: ["investors", props.page],
+    queryKey: ["investors", props.page, verificationStatus],
     queryFn: async () => {
       const response = await apiClient.get(
         "admin/users?accountType=INDIVIDUAL",
         {
           params: {
             page: props.page,
-            verification: "PENDING",
+            ...(verificationStatus && { verificationStatus }),
           },
         },
       );
@@ -138,10 +154,28 @@ function InvestorsPage() {
             <div>
               <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
-            <button className="btn btn-primary ">
-              <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline">Filter</span>
-            </button>
+            <div className="flex flex-wrap gap-2">
+              {VERIFICATION_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() =>
+                    navigate({
+                      search: {
+                        verificationStatus: opt.value as VerificationStatus,
+                      },
+                      replace: true,
+                    })
+                  }
+                  className={`btn  ${
+                    verificationStatus === opt.value
+                      ? "btn-primary"
+                      : "btn-outline"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -25,27 +25,44 @@ import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import PopUp, { type Actions } from "@/components/tables/pop-up";
 import { usePagination } from "@/helpers/pagination";
 
+type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+
+const VERIFICATION_OPTIONS: {
+  label: string;
+  value: VerificationStatus | "";
+}[] = [
+  { label: "All", value: "" },
+  { label: "Pending", value: "PENDING" },
+  { label: "Verified", value: "VERIFIED" },
+  { label: "Rejected", value: "REJECTED" },
+];
+
 export const Route = createFileRoute("/dashboard/investors/corporate/")({
   component: InvestorsPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    verificationStatus: (search.verificationStatus as VerificationStatus) || "",
+  }),
 });
 
 function InvestorsPage() {
   const navigate = useNavigate();
+  const { verificationStatus } = Route.useSearch();
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const props = usePagination();
   const query = useQuery<ApiResponseV2<INVESTOR[]>>({
-    queryKey: ["investors", "corporate", props.page],
+    queryKey: ["investors", "corporate", props.page, verificationStatus],
     queryFn: async () => {
       const response = await apiClient.get(
         "admin/users?accountType=CORPORATE",
         {
           params: {
             page: props.page,
+            ...(verificationStatus && { verificationStatus }),
           },
         },
       );
-      return response.data; // Assuming response.data is directly ApiResponse<INVESTOR[]>
+      return response.data;
     },
   });
 
@@ -170,98 +187,113 @@ function InvestorsPage() {
             <div className="flex-1 min-w-50 md:flex-initial md:w-64">
               <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 text-xs md:text-sm"
-            >
-              <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline">Filter</span>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              {VERIFICATION_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() =>
+                    navigate({
+                      search: {
+                        verificationStatus: opt.value as VerificationStatus,
+                      },
+                      replace: true,
+                    })
+                  }
+                  className={`btn  ${
+                    verificationStatus === opt.value
+                      ? "btn-primary"
+                      : "btn-outline"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       <PageLoader query={query}>
-      {viewMode === "list" && (
-        <CustomTable
-          data={filteredInvestors}
-          columns={investorColumns}
-          actions={actions}
-          paginationProps={props}
-        />
-      )}
+        {viewMode === "list" && (
+          <CustomTable
+            data={filteredInvestors}
+            columns={investorColumns}
+            actions={actions}
+            paginationProps={props}
+          />
+        )}
 
-      {viewMode === "grid" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-          {filteredInvestors.length > 0 ? (
-            filteredInvestors.map((investor) => (
-              <>
-                <div
-                  key={investor.id}
-                  className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
-                >
-                  <div className="p-5">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-brand-orange">
-                        <User className="w-6 h-6" />
+        {viewMode === "grid" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+            {filteredInvestors.length > 0 ? (
+              filteredInvestors.map((investor) => (
+                <>
+                  <div
+                    key={investor.id}
+                    className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
+                  >
+                    <div className="p-5">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-brand-orange">
+                          <User className="w-6 h-6" />
+                        </div>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            investor.account_verification_status != "PENDING"
+                              ? "bg-green-50 text-green-700 border border-green-100"
+                              : "bg-yellow-50 text-yellow-700 border border-yellow-100"
+                          }`}
+                        >
+                          {investor.account_verification_status}
+                        </span>
                       </div>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          investor.account_verification_status != "PENDING"
-                            ? "bg-green-50 text-green-700 border border-green-100"
-                            : "bg-yellow-50 text-yellow-700 border border-yellow-100"
-                        }`}
+
+                      <h3 className="font-bold text-gray-900 text-lg mb-1 truncate">
+                        {investor.firstName} {investor.lastName}
+                      </h3>
+
+                      <div className="space-y-2 mt-4">
+                        <div className="flex items-center text-sm text-gray-600 gap-2">
+                          <Mail className="w-4 h-4 text-gray-400" />
+                          <span className="truncate">{investor.email}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600 gap-2">
+                          <Phone className="w-4 h-4 text-gray-400" />
+                          <span>{investor.phone}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
+                        ID: {investor.id.slice(0, 8)}...
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-brand-orange hover:text-brand-orange hover:bg-orange-50 gap-1.5 h-8 px-2"
+                        onClick={() =>
+                          navigate({
+                            to: `/dashboard/investors/${investor.id}`,
+                          })
+                        }
                       >
-                        {investor.account_verification_status}
-                      </span>
-                    </div>
-
-                    <h3 className="font-bold text-gray-900 text-lg mb-1 truncate">
-                      {investor.firstName} {investor.lastName}
-                    </h3>
-
-                    <div className="space-y-2 mt-4">
-                      <div className="flex items-center text-sm text-gray-600 gap-2">
-                        <Mail className="w-4 h-4 text-gray-400" />
-                        <span className="truncate">{investor.email}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600 gap-2">
-                        <Phone className="w-4 h-4 text-gray-400" />
-                        <span>{investor.phone}</span>
-                      </div>
+                        <span className="text-xs font-semibold">
+                          View Profile
+                        </span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
-                      ID: {investor.id.slice(0, 8)}...
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-brand-orange hover:text-brand-orange hover:bg-orange-50 gap-1.5 h-8 px-2"
-                      onClick={() =>
-                        navigate({ to: `/dashboard/investors/${investor.id}` })
-                      }
-                    >
-                      <span className="text-xs font-semibold">
-                        View Profile
-                      </span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </Button>
-                  </div>
-                </div>
-              </>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-10 text-gray-500">
-              No investors found.
-            </div>
-          )}
-        </div>
-      )}
-
+                </>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-gray-500">
+                No investors found.
+              </div>
+            )}
+          </div>
+        )}
       </PageLoader>
     </>
   );

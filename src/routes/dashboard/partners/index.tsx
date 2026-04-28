@@ -26,22 +26,39 @@ import type { Actions } from "@/components/tables/pop-up";
 import PartnerListCard from "./-components/PartnerListCard";
 import { usePagination } from "@/helpers/pagination";
 
+type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+
+const VERIFICATION_OPTIONS: {
+  label: string;
+  value: VerificationStatus | "";
+}[] = [
+  { label: "All", value: "" },
+  { label: "Pending", value: "PENDING" },
+  { label: "Verified", value: "VERIFIED" },
+  { label: "Rejected", value: "REJECTED" },
+];
+
 export const Route = createFileRoute("/dashboard/partners/")({
   component: PartnersPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    verificationStatus: (search.verificationStatus as VerificationStatus) || "",
+  }),
 });
 
 function PartnersPage() {
   const navigate = useNavigate();
+  const { verificationStatus } = Route.useSearch();
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
   const query = useQuery<ApiResponseV2<PARTNER[]>>({
-    queryKey: ["partners", props.page],
+    queryKey: ["partners", props.page, verificationStatus],
     queryFn: async () => {
       const response = await apiClient.get("admin/users?accountType=PARTNER", {
         params: {
           page: props.page,
+          ...(verificationStatus && { verificationStatus }),
         },
       });
       return response.data;
@@ -122,6 +139,61 @@ function PartnersPage() {
         </div>
       ),
     },
+    {
+      key: "account_status",
+      label: "Status",
+      render: (value) => (
+        <span
+          className={`badge badge-sm badge-soft ring fade font-bold ${
+            value === "ACTIVE" ? "badge-success" : "badge-warning"
+          }`}
+        >
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: "account_verification_status",
+      label: "Verification",
+      render: (value) => (
+        <span
+          className={`badge badge-sm badge-soft ring fade font-bold ${
+            value === "VERIFIED"
+              ? "badge-success"
+              : value === "PENDING"
+                ? "badge-warning"
+                : "badge-error"
+          }`}
+        >
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: "isEmailVerified",
+      label: "Email Verified",
+      render: (value) => (
+        <span
+          className={`badge badge-sm badge-soft ${value ? "badge-success" : "badge-error"}`}
+        >
+          {value ? "Yes" : "No"}
+        </span>
+      ),
+    },
+    {
+      key: "partnerRoles",
+      label: "Partner Role",
+      render: (value: any[]) => (
+        <span className="text-xs font-medium text-gray-700">
+          {value?.[0]?.role?.name ?? "—"}
+        </span>
+      ),
+    },
+    {
+      key: "createdAt",
+      label: "Joined",
+      render: (value) => new Date(value).toLocaleDateString(),
+    },
   ];
 
   const actions: Actions[] = [
@@ -182,14 +254,28 @@ function PartnersPage() {
             <div className="flex-1 min-w-50 md:flex-initial md:w-64">
               <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 text-xs md:text-sm"
-            >
-              <Filter className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline">Filter</span>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              {VERIFICATION_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() =>
+                    navigate({
+                      search: {
+                        verificationStatus: opt.value as VerificationStatus,
+                      },
+                      replace: true,
+                    })
+                  }
+                  className={`btn ${
+                    verificationStatus === opt.value
+                      ? "btn-primary"
+                      : "btn-outline"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
