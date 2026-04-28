@@ -58,7 +58,7 @@ function InvestorsPage() {
         {
           params: {
             page: props.page,
-            ...(verificationStatus && { verificationStatus }),
+            ...(verificationStatus && { documentStatus: verificationStatus }),
           },
         },
       );

@@ -58,7 +58,7 @@ function PartnersPage() {
       const response = await apiClient.get("admin/users?accountType=PARTNER", {
         params: {
           page: props.page,
-          ...(verificationStatus && { verificationStatus }),
+          ...(verificationStatus && { documentStatus: verificationStatus }),
         },
       });
       return response.data;
