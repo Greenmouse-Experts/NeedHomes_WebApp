@@ -14,7 +14,6 @@ import {
   Check,
   ChevronLeft,
   Copy,
-  Sign,
   Hash,
   MapPin,
   TrendingUp,
