@@ -11,6 +11,7 @@ import UserWallet from "../-components/Wallet";
 import Example from "./-components/Chart";
 import InvStatistics from "./my-investments/-components/InvStatistics";
 import RecentProperties from "./-components/RecentProperty";
+import InvestorAnalysis from "./-components/InvestorAnalysis";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -280,7 +281,8 @@ function InvestorDashboard() {
       </div>
       <InvStatistics />
       {/* Monthly Analysis */}
-      <Example />
+      <InvestorAnalysis />
+      {/*<Example />*/}
     </div>
   );
 }
