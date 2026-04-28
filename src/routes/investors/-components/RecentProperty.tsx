@@ -2,7 +2,8 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 
 interface Investment {
   id: string;
@@ -89,10 +90,16 @@ export default function RecentProperties() {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div className="p-4 md:p-6 border-b border-gray-200">
+      <div className="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between">
         <h3 className="text-base md:text-lg font-semibold text-gray-900">
           Recent Investments
         </h3>
+        <Link
+          to="/investors/my-investments"
+          className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+        >
+          View all <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
       <PageLoader query={query}>
         {(data) => {
