@@ -4,7 +4,7 @@ import { CopyButton } from "./CopyButton";
 export const RenderCustomId = (prop: { property: ADMIN_PROPERTY_LISTING }) => {
   const customId = prop.property.customId;
   return (
-    <div className="mt-3 inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 shadow-sm backdrop-blur-sm">
+    <div className="my-3 inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 shadow-sm backdrop-blur-sm">
       <div className="flex min-w-0 items-center gap-2">
         <span className="text-xs font-semibold uppercase tracking-wide text-primary/60">
           Property ID
