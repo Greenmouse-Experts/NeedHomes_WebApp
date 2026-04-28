@@ -1,7 +1,7 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
-import { DollarSign, ArrowDownCircle, ArrowUpCircle, Clock } from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle, Clock } from "lucide-react";
 
 interface TransactionStats {
   deposits: {
@@ -32,6 +32,27 @@ export default function TransStats() {
       return resp.data;
     },
   });
+
+  const NairaIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      {...props}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <text
+        x="12"
+        y="18"
+        textAnchor="middle"
+        fontSize="20"
+        fill="currentColor"
+        fontWeight="bold"
+      >
+        ₦
+      </text>
+    </svg>
+  );
+
   return (
     <QueryCompLayout query={query}>
       {(resp) => {
@@ -41,7 +62,7 @@ export default function TransStats() {
             label: "Total Investments",
             value: fmt(data.investments.total),
             sub: `${data.investments.count} transaction${data.investments.count !== 1 ? "s" : ""}`,
-            icon: DollarSign,
+            icon: NairaIcon,
           },
           {
             label: "Total Deposits",
@@ -79,8 +100,12 @@ export default function TransStats() {
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-xl md:text-2xl font-bold text-gray-900">{value}</p>
-                    <p className="text-[10px] md:text-xs text-gray-500">{sub}</p>
+                    <p className="text-xl md:text-2xl font-bold text-gray-900">
+                      {value}
+                    </p>
+                    <p className="text-[10px] md:text-xs text-gray-500">
+                      {sub}
+                    </p>
                   </div>
                 </div>
               ))}

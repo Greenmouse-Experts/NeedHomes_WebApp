@@ -142,7 +142,7 @@ const NAVIGATION_CONFIG: (NavItem | NavSection)[] = [
       { label: "Jobs", to: "/dashboard/jobs", icon: Briefcase },
       { label: "Categories", to: "/dashboard/jobs/categories", icon: List },
       { label: "Create", to: "/dashboard/jobs/create", icon: Plus },
-      { label: "Applications", to: "/dashboard/jobs/applications", icon: List },
+      // { label: "Applications", to: "/dashboard/jobs/applications", icon: List },
     ],
   },
   { label: "WAITLIST", to: "/dashboard/waitlist", icon: ClipboardList },
