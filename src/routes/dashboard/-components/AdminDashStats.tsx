@@ -1,10 +1,17 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
-import QueryCompLayout from "@/components/layout/QueryCompLayout";
-import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
-import ThemeProvider from "@/simpleComps/ThemeProvider";
-import { HomeIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
-import { Handshake, Home, Users } from "lucide-react";
+import {
+  Users,
+  Handshake,
+  TrendingUp,
+  TrendingDown,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  UserCheck,
+  Megaphone,
+} from "lucide-react";
+
 interface AdminStats {
   users: {
     totalRegisteredUsers: number;
@@ -14,11 +21,15 @@ interface AdminStats {
     activePartnerPercentage: number;
     verifiedPartnerCount: number;
     totalPartnerCount: number;
+    investorChurnRate: number;
+    churnedInvestorCount: number;
   };
   partners: {
     partnerAgentActivationRate: number;
     verifiedPartnersTotal: number;
     verifiedPartnersWithPromotions: number;
+    partnerChurnRate: number;
+    churnedPartnerCount: number;
   };
   transactions: {
     transactionSuccessRate: number;
@@ -30,6 +41,52 @@ interface AdminStats {
   generatedAt: string;
 }
 
+function StatCard({
+  label,
+  value,
+  sub,
+  icon: Icon,
+  color = "text-gray-600",
+  bg = "bg-gray-50",
+}: {
+  label: string;
+  value: string | number;
+  sub?: string;
+  icon: React.ElementType;
+  color?: string;
+  bg?: string;
+}) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-start gap-3">
+      <div className={`p-2 rounded-lg ${bg} shrink-0`}>
+        <Icon className={`w-4 h-4 ${color}`} />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs text-gray-500 font-medium truncate">{label}</p>
+        <p className={`text-xl font-bold ${color}`}>{value}</p>
+        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+function SectionHeader({
+  title,
+  icon: Icon,
+}: {
+  title: string;
+  icon: React.ElementType;
+}) {
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      <Icon className="w-4 h-4 text-gray-500" />
+      <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider">
+        {title}
+      </h3>
+    </div>
+  );
+}
+
 export default function AdminDashStats() {
   const query = useQuery<ApiResponse<AdminStats>>({
     queryKey: ["admin_dash_stats"],
@@ -38,89 +95,137 @@ export default function AdminDashStats() {
       return resp.data;
     },
   });
+
+  if (query.isLoading) {
+    return (
+      <div className="space-y-6 mb-6">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[1, 2, 3, 4].map((j) => (
+              <div key={j} className="skeleton h-20 rounded-xl" />
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!query.data) return null;
+
+  const { users, partners, transactions } = query.data.data;
+
   return (
-    <QueryCompLayout
-      query={query}
-      customLoading={
-        <>
-          <ThemeProvider className="grid skeleton grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-4 md:mb-6">
-            <Card className="skeleton">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">
-                  ... Investors
-                </CardTitle>
-                <Users className="w-5 h-5 text-[var(--color-orange)]" />
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">
-                  ... Partners
-                </CardTitle>
-                <Handshake className="w-5 h-5 text-[var(--color-orange)]" />
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">
-                  ... Successful
-                </CardTitle>
-                <HomeIcon className="w-5 h-5 text-[var(--color-orange)]" />
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">
-                  ... Total Transactions
-                </CardTitle>
-                <Home className="w-5 h-5 text-[var(--color-orange)]" />
-              </CardHeader>
-            </Card>
-          </ThemeProvider>
-        </>
-      }
-    >
-      {(data) => {
-        const stats = data.data;
-        return (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-4 md:mb-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    {stats.users.totalInvestorCount} Investors
-                  </CardTitle>
-                  <Users className="w-5 h-5 text-[var(--color-orange)]" />
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    {stats.users.totalPartnerCount} Partners
-                  </CardTitle>
-                  <Handshake className="w-5 h-5 text-[var(--color-orange)]" />
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    {stats.transactions.totalSuccessful} Successful
-                  </CardTitle>
-                  <HomeIcon className="w-5 h-5 text-[var(--color-orange)]" />
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    {stats.transactions.totalTransactions} Total Transactions
-                  </CardTitle>
-                  <Home className="w-5 h-5 text-[var(--color-orange)]" />
-                </CardHeader>
-              </Card>
-            </div>
-          </>
-        );
-      }}
-    </QueryCompLayout>
+    <div className="space-y-6 mb-6">
+      {/* ── Users ── */}
+      <div>
+        <SectionHeader title="Users" icon={Users} />
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <StatCard
+            label="Total Registered"
+            value={users.totalRegisteredUsers.toLocaleString()}
+            icon={Users}
+            bg="bg-blue-50"
+            color="text-blue-600"
+          />
+          <StatCard
+            label="Total Investors"
+            value={users.totalInvestorCount.toLocaleString()}
+            sub={`${users.verifiedInvestorCount} verified · ${users.activeInvestorPercentage.toFixed(1)}% active`}
+            icon={UserCheck}
+            bg="bg-green-50"
+            color="text-green-600"
+          />
+          <StatCard
+            label="Investor Churn Rate"
+            value={`${users.investorChurnRate.toFixed(1)}%`}
+            sub={`${users.churnedInvestorCount} churned`}
+            icon={TrendingDown}
+            bg="bg-red-50"
+            color="text-red-500"
+          />
+          <StatCard
+            label="Total Partners"
+            value={users.totalPartnerCount.toLocaleString()}
+            sub={`${users.verifiedPartnerCount} verified · ${users.activePartnerPercentage.toFixed(1)}% active`}
+            icon={Handshake}
+            bg="bg-orange-50"
+            color="text-orange-500"
+          />
+          <StatCard
+            label="Partner Churn Rate"
+            value={`${partners.partnerChurnRate.toFixed(1)}%`}
+            sub={`${partners.churnedPartnerCount} churned`}
+            icon={TrendingDown}
+            bg="bg-red-50"
+            color="text-red-500"
+          />
+        </div>
+      </div>
+
+      {/* ── Partners ── */}
+      <div>
+        <SectionHeader title="Partners" icon={Handshake} />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <StatCard
+            label="Agent Activation Rate"
+            value={`${partners.partnerAgentActivationRate.toFixed(1)}%`}
+            icon={TrendingUp}
+            bg="bg-green-50"
+            color="text-green-600"
+          />
+          <StatCard
+            label="Verified Partners"
+            value={partners.verifiedPartnersTotal.toLocaleString()}
+            icon={UserCheck}
+            bg="bg-blue-50"
+            color="text-blue-600"
+          />
+          <StatCard
+            label="Partners with Promotions"
+            value={partners.verifiedPartnersWithPromotions.toLocaleString()}
+            sub={`of ${partners.verifiedPartnersTotal} verified`}
+            icon={Megaphone}
+            bg="bg-purple-50"
+            color="text-purple-600"
+          />
+        </div>
+      </div>
+
+      {/* ── Transactions ── */}
+      <div>
+        <SectionHeader title="Transactions" icon={TrendingUp} />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <StatCard
+            label="Total Transactions"
+            value={transactions.totalTransactions.toLocaleString()}
+            icon={TrendingUp}
+            bg="bg-gray-50"
+            color="text-gray-600"
+          />
+          <StatCard
+            label="Success Rate"
+            value={`${transactions.transactionSuccessRate.toFixed(1)}%`}
+            sub={`${transactions.totalSuccessful} successful`}
+            icon={CheckCircle2}
+            bg="bg-green-50"
+            color="text-green-600"
+          />
+          <StatCard
+            label="Pending"
+            value={transactions.totalPending.toLocaleString()}
+            icon={Clock}
+            bg="bg-yellow-50"
+            color="text-yellow-600"
+          />
+          <StatCard
+            label="Failed"
+            value={transactions.totalFailed.toLocaleString()}
+            icon={XCircle}
+            bg="bg-red-50"
+            color="text-red-500"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

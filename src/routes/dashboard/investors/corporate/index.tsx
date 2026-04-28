@@ -199,7 +199,7 @@ function InvestorsPage() {
                       replace: true,
                     })
                   }
-                  className={`btn  ${
+                  className={`btn    ${
                     verificationStatus === opt.value
                       ? "btn-primary"
                       : "btn-outline"

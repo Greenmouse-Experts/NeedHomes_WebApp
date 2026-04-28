@@ -97,7 +97,6 @@ function DashboardIndexPage() {
   return (
     <DashboardLayout title="Super Admin Dashboard">
       {/* Stats Cards */}
-      <AdminDashStats />
 
       {/* Welcome Banner */}
       <Card className="mb-4 md:mb-6 bg-gradient-to-r from-gray-800 to-[var(--color-orange)] text-white relative overflow-hidden">
@@ -124,6 +123,8 @@ function DashboardIndexPage() {
           </div>
         </CardContent>
       </Card>
+      <AdminDashStats />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Revenue Chart */}
         <AdminRevenue />

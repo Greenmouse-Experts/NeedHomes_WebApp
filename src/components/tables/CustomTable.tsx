@@ -102,43 +102,47 @@ export default function CustomTable(props: CustomTableProps) {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 bg-base-200/30 border-t border-base-300">
-          <div className="text-sm text-base-content/60">
-            Showing{" "}
-            <span className="font-medium">
-              {/*{totalCount > 0 ? startRange : 0}*/}
-            </span>{" "}
-            to <span className="font-medium">{endRange}</span> of{" "}
-            <span className="font-medium">{totalCount}</span> results
-          </div>
-          <div className="join">
-            <button
-              className="join-item btn btn-sm"
-              onClick={() => {
-                if (pagination) {
-                  pagination.setPagination(Math.max(1, page - 1));
-                }
-              }}
-              disabled={page === 1}
-            >
-              «
-            </button>
-            <button className="join-item btn btn-sm btn-active">
-              Page {page}
-            </button>
-            <button
-              className="join-item btn btn-sm"
-              onClick={() => {
-                if (pagination) {
-                  pagination.setPagination(page + 1);
-                }
-              }}
-              // disabled={endRange >= totalCount}
-            >
-              »
-            </button>
-          </div>
-        </div>
+        {props.paginationProps && (
+          <>
+            <div className="flex items-center justify-between px-4 py-3 bg-base-200/30 border-t border-base-300">
+              <div className="text-sm text-base-content/60">
+                Showing{" "}
+                <span className="font-medium">
+                  {/*{totalCount > 0 ? startRange : 0}*/}
+                </span>{" "}
+                to <span className="font-medium">{endRange}</span> of{" "}
+                <span className="font-medium">{totalCount}</span> results
+              </div>
+              <div className="join">
+                <button
+                  className="join-item btn btn-sm"
+                  onClick={() => {
+                    if (pagination) {
+                      pagination.setPagination(Math.max(1, page - 1));
+                    }
+                  }}
+                  disabled={page === 1}
+                >
+                  «
+                </button>
+                <button className="join-item btn btn-sm btn-active">
+                  Page {page}
+                </button>
+                <button
+                  className="join-item btn btn-sm"
+                  onClick={() => {
+                    if (pagination) {
+                      pagination.setPagination(page + 1);
+                    }
+                  }}
+                  // disabled={endRange >= totalCount}
+                >
+                  »
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </ThemeProvider>
   );

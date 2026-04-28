@@ -28,15 +28,24 @@ const columns: columnType<Investment>[] = [
   {
     key: "createdAt",
     label: "Date",
-    render: (value) => new Date(value).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" }),
+    render: (value) =>
+      new Date(value).toLocaleDateString("en-NG", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
   },
   {
     key: "property",
     label: "Property",
     render: (_, item) => (
       <div className="flex flex-col">
-        <span className="font-medium text-sm">{item.property?.propertyTitle}</span>
-        <span className="text-xs opacity-50">{item.property?.investmentModel?.replace(/_/g, " ")}</span>
+        <span className="font-medium text-sm">
+          {item.property?.propertyTitle}
+        </span>
+        <span className="text-xs opacity-50">
+          {item.property?.investmentModel?.replace(/_/g, " ")}
+        </span>
       </div>
     ),
   },
@@ -48,13 +57,17 @@ const columns: columnType<Investment>[] = [
   {
     key: "paymentOption",
     label: "Method",
-    render: (value) => <span className="capitalize text-sm">{value?.toLowerCase()}</span>,
+    render: (value) => (
+      <span className="capitalize text-sm">{value?.toLowerCase()}</span>
+    ),
   },
   {
     key: "status",
     label: "Status",
     render: (value: string) => (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value] ?? "bg-gray-100 text-gray-700"}`}>
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value] ?? "bg-gray-100 text-gray-700"}`}
+      >
         {value}
       </span>
     ),
@@ -68,7 +81,7 @@ export default function RecentProperties() {
     queryKey: ["investments", "recent"],
     queryFn: async () => {
       const resp = await apiClient.get("investments/my-investments", {
-        params: { page: 1, limit: 5 },
+        params: { page: 1, limit: 10 },
       });
       return resp.data;
     },
@@ -83,7 +96,8 @@ export default function RecentProperties() {
       </div>
       <PageLoader query={query}>
         {(data) => {
-          const investments: Investment[] = (data.data as any)?.data ?? data.data ?? [];
+          const investments: Investment[] =
+            (data.data as any)?.data ?? data.data ?? [];
           return (
             <CustomTable
               ring={false}
