@@ -44,16 +44,20 @@ interface Investment {
 function RouteComponent() {
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [status, setStatus] = useState<
+    null | "ACTIVE" | "CANCELLED" | "COMPLETED" | "EXITED"
+  >("ACTIVE");
   const [actionOpen, setActionOpen] = useState(false);
   const paginationProps = usePagination();
 
   const query = useQuery<ApiResponse<Investment[]>>({
-    queryKey: ["investments", paginationProps.page],
+    queryKey: ["investments", paginationProps.page, status],
     queryFn: async () => {
       let resp = await apiClient.get("investments/my-investments", {
         params: {
           page: paginationProps.page,
           limit: paginationProps.pageSize,
+          ...(status && { status }),
         },
       });
       return resp.data;
@@ -150,61 +154,19 @@ function RouteComponent() {
       {/* Filters Bar */}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="relative">
-          <button
-            onClick={() => setFilterOpen(!filterOpen)}
-            className="flex items-center gap-2 px-4 py-2 border-2 border-(--color-orange) text-(--color-orange) rounded-lg hover:bg-orange-50 transition-colors"
+          <select
+            className="select select-primary"
+            value={status}
+            onChange={(e) => setStatus(e.target.value as typeof status)}
           >
-            <Filter className="w-4 h-4" />
-            Filter
-          </button>
-          {filterOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setFilterOpen(false)}
-              />
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-20 p-2">
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">
-                  All Investments
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">
-                  Active
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">
-                  Pending
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">
-                  Completed
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="relative">
-          <button
-            onClick={() => setActionOpen(!actionOpen)}
-            className="flex items-center gap-2 px-4 py-2 border-2 border-(--color-orange) text-(--color-orange) rounded-lg hover:bg-orange-50 transition-colors"
-          >
-            Action
-            <ChevronDown className="w-4 h-4" />
-          </button>
-          {actionOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setActionOpen(false)}
-              />
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-20 p-2">
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">
-                  Export Data
-                </button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded">
-                  View Reports
-                </button>
-              </div>
-            </>
-          )}
+            <option className="" value={null}>
+              All
+            </option>
+            <option value="ACTIVE">Active</option>
+            <option value="CANCELLED">Cancelled</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="EXITED">Exited</option>
+          </select>
         </div>
 
         <Link
