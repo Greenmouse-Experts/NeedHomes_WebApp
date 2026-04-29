@@ -14,6 +14,7 @@ import { PaystackButton } from "react-paystack";
 import PaystackPop from "@paystack/inline-js";
 
 import { usePaystackPayment } from "react-paystack";
+import { useNavigate } from "@tanstack/react-router";
 interface WalletTransaction {
   id: string;
   walletId: string;
@@ -36,8 +37,10 @@ interface WalletData {
   walletTransactions: WalletTransaction[];
 }
 
+const paystackInstance = new PaystackPop();
+
 export default function UserWallet() {
-  const paystackInstance = new PaystackPop();
+  const nav = useNavigate();
   const onSuccess = (reference) => {
     toast.success("Payment successful");
     // Implementation for whatever you want to do with reference and after success call.
@@ -179,7 +182,7 @@ export default function UserWallet() {
 
   const isPending = depositMutation.isPending || withdrawalMutation.isPending;
   const modal = useModal();
-
+  const isPartner = auth?.user.accountType != "PARTNER";
   return (
     <>
       <PageLoader customLoading={<WalletSkeleton />} query={query}>
@@ -291,7 +294,7 @@ export default function UserWallet() {
                   </h4>
                   {walletData?.walletTransactions?.length > 0 ? (
                     walletData.walletTransactions
-                      .slice(0, 3)
+                      .slice(0, 5)
                       .map((transaction: WalletTransaction) => (
                         <div
                           key={transaction.id}
@@ -362,6 +365,20 @@ export default function UserWallet() {
                       No recent activity
                     </p>
                   )}
+
+                  <Button
+                    className="w-full"
+                    onClick={() => {
+                      if (isPartner)
+                        return nav({ to: "/partners/transactions" });
+                      return nav({
+                        to: "/investors/transactions",
+                      });
+                    }}
+                  >
+                    {" "}
+                    View All
+                  </Button>
                 </div>
               </div>
 
