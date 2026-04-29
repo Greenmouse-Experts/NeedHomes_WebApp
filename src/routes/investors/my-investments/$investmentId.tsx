@@ -22,6 +22,7 @@ import FractionalExitStrategy from "./-components/FractionalExitStrategy";
 import Resell from "./-components/Resell";
 import AdminROI from "@/routes/-components/ROI";
 import { NairaIcon } from "@/components/NairaIcon";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -168,6 +169,7 @@ function InvestmentDetailsPage() {
                         </div>
                         <CopyButton text={investment.id} />
                       </div>
+                      <RenderCustomId investment={investment} />
 
                       {/* Property ref */}
                       <div className="flex items-center gap-2 mt-3 text-gray-500">
