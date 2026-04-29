@@ -23,6 +23,7 @@ import {
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { NairaIcon } from "@/components/NairaIcon";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute("/dashboard/properties/investments/$id/")({
   component: RouteComponent,
@@ -274,6 +275,8 @@ function RouteComponent() {
                         </div>
                         <CopyButton text={inv.id} />
                       </div>
+
+                      <RenderCustomId investment={inv} />
 
                       {/* Property ref */}
                       <div className="flex items-center gap-2 mt-3 text-gray-500">

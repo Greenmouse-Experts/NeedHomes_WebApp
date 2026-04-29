@@ -22,6 +22,7 @@ import SimpleAvatar from "@/simpleComps/SimpleAvatar";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute("/dashboard/investors/$investorId/")({
   component: InvestorDetailsPage,
@@ -135,6 +136,7 @@ function InvestorDetailsPage() {
                               ).toLocaleDateString()}
                             </span>
                           </div>
+                          <RenderCustomId user={investor} />
                         </div>
                         <DropdownMenu
                           trigger={

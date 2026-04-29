@@ -7,9 +7,16 @@ export const RenderCustomId = (prop: {
     customId: string;
     [key: string]: any;
   };
+  user: {
+    customId: string;
+    [key: string]: any;
+  };
 }) => {
   const customId =
-    (prop?.property?.customId || prop?.investment?.customId) ?? "";
+    (prop?.property?.customId ||
+      prop?.investment?.customId ||
+      prop?.user?.customId) ??
+    "";
   return (
     <div className="my-3 inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2 shadow-sm backdrop-blur-sm">
       <div className="flex min-w-0 items-center gap-2">

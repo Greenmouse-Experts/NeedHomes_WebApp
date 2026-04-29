@@ -9,6 +9,7 @@ import type { ADMIN_PROPERTY_LISTING } from "@/types";
 import InvestmentDetails from "./-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import { RenderDocuments } from "@/routes/-components/RenderDocuments";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
   component: PropertyDetailsPage,
@@ -99,6 +100,7 @@ function PropertyDetailsPage() {
                       <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                         {property.propertyTitle}
                       </h1>
+                      <RenderCustomId property={property} />
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                         <span className="text-sm md:text-lg">{location}</span>

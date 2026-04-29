@@ -24,6 +24,7 @@ import PromotedProps from "./-components/PromotedProps";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute("/dashboard/partners/$partnerId/")({
   component: PartnerDetailsPage,
@@ -127,6 +128,7 @@ function PartnerDetailsPage() {
                               )}
                             </span>
                           </div>
+                          <RenderCustomId user={partner} />
                         </div>
                         <DropdownMenu
                           trigger={
