@@ -21,6 +21,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute("/partners/properties/$propertyId/")({
   component: PropertyDetailPage,
@@ -174,6 +175,8 @@ function PropertyDetailPage() {
                           {property.propertyTitle}
                         </h1>
                       </div>
+                      <RenderCustomId property={property} />
+
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                         <span className="text-sm md:text-lg">

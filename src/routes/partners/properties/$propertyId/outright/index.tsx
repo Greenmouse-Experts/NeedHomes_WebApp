@@ -23,6 +23,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import { useEffect } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
+import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 
 export const Route = createFileRoute(
   "/partners/properties/$propertyId/outright/",
@@ -186,6 +187,8 @@ function PropertyDetailPage() {
                         {property.propertyTitle}
                       </span>
                     </div>
+                    <RenderCustomId property={property} />
+
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Base Price</span>
                       <span className="text-sm font-medium">
