@@ -182,7 +182,7 @@ export default function UserWallet() {
 
   const isPending = depositMutation.isPending || withdrawalMutation.isPending;
   const modal = useModal();
-  const isPartner = auth?.user.accountType != "PARTNER";
+  const isPartner = auth?.user.accountType == "PARTNER";
   return (
     <>
       <PageLoader customLoading={<WalletSkeleton />} query={query}>
@@ -369,14 +369,14 @@ export default function UserWallet() {
                   <Button
                     className="w-full"
                     onClick={() => {
-                      if (isPartner)
-                        return nav({ to: "/partners/transactions" });
-                      return nav({
-                        to: "/investors/transactions",
-                      });
+                      if (!isPartner) {
+                        return nav({
+                          to: "/investors/transactions",
+                        });
+                      }
+                      return nav({ to: "/partners/transactions" });
                     }}
                   >
-                    {" "}
                     View All
                   </Button>
                 </div>
