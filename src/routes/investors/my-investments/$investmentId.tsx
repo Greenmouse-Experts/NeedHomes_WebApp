@@ -157,7 +157,7 @@ function InvestmentDetailsPage() {
                       </div>
 
                       {/* Investment ID — prominent */}
-                      <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 max-w-md">
+                      {/*<div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 max-w-md">
                         <Hash className="w-4 h-4 text-gray-400 shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-0.5">
@@ -168,7 +168,7 @@ function InvestmentDetailsPage() {
                           </p>
                         </div>
                         <CopyButton text={investment.id} />
-                      </div>
+                      </div>*/}
                       <RenderCustomId investment={investment} />
 
                       {/* Property ref */}
