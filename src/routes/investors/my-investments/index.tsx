@@ -156,12 +156,16 @@ function RouteComponent() {
         <div className="relative">
           <select
             className="select select-primary"
-            value={status}
-            onChange={(e) => setStatus(e.target.value as typeof status)}
+            value={status ?? ""}
+            onChange={(e) =>
+              setStatus(
+                e.target.value === ""
+                  ? null
+                  : (e.target.value as typeof status),
+              )
+            }
           >
-            <option className="" value={null}>
-              All
-            </option>
+            <option value="">All</option>
             <option value="ACTIVE">Active</option>
             <option value="CANCELLED">Cancelled</option>
             <option value="COMPLETED">Completed</option>
