@@ -1,6 +1,13 @@
 import type { PROPERTY_DATA } from "@/types";
 import { Link } from "@tanstack/react-router";
-import { MapPin, Home, TrendingUp, Calendar, ArrowRight, RefreshCw } from "lucide-react";
+import {
+  MapPin,
+  Home,
+  TrendingUp,
+  Calendar,
+  ArrowRight,
+  RefreshCw,
+} from "lucide-react";
 
 export default function PropertyCard({
   item: property,
@@ -55,11 +62,11 @@ export default function PropertyCard({
               Premium
             </div>
           )}
-          {property.isResell && (
+          {/*{property.isResell && (
             <div className="badge badge-info font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
               <RefreshCw className="w-2.5 h-2.5" /> For Resale
             </div>
-          )}
+          )}*/}
         </div>
       </figure>
 
@@ -75,7 +82,8 @@ export default function PropertyCard({
           {property.isResell && property.reseller && (
             <div className="flex items-center gap-1 text-xs text-info font-medium mt-0.5">
               <RefreshCw className="w-3 h-3 shrink-0" />
-              Listed by {property.reseller.firstName} {property.reseller.lastName}
+              Listed by {property.reseller.firstName}{" "}
+              {property.reseller.lastName}
             </div>
           )}
         </div>
