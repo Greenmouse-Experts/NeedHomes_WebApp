@@ -51,7 +51,7 @@ function RouteComponent() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [status, setStatus] = useState<
     null | "ACTIVE" | "CANCELLED" | "COMPLETED" | "EXITED"
-  >("ACTIVE");
+  >(null);
   const [actionOpen, setActionOpen] = useState(false);
   const paginationProps = usePagination();
 
