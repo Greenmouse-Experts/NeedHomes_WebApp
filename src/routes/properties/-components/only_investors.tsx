@@ -32,7 +32,7 @@ export default function InvestorOnly(props: PropsWithChildren) {
         variant="primary"
         size="md"
       >
-        {JSON.stringify(auth?.user.accountType)}
+        {/*{JSON.stringify(auth?.user.accountType)}*/}
         Sign In As Investor
       </Button>
     </>
