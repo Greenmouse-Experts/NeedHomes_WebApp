@@ -16,6 +16,7 @@ import { uploadFile } from "@/api/fileApi";
 import { useImages, useSelectImage } from "@/helpers/images";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import calculate_fees from "../-components/calculate_fees";
+import { doc_helper } from "../../-components/upload_helpers";
 
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
   component: RouteComponent,
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/dashboard/properties/new/fractional")({
 interface FractionalPropertyFormValues extends DocProps {
   totalShares: number;
   pricePerShare: number;
-  exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY";
+  // exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY";
   minimumShares: number;
   maxInvestors?: number | null;
   fractionalHoldingPeriodDays: 30 | 60 | 90 | 120;
@@ -98,7 +99,7 @@ function RouteComponent() {
         ...(images || []).map((img) => img.url),
         ...uploadedGalleryUrls,
       ];
-      const uploadedDocUrls = await get_docs(docUploadProps);
+      const uploadedDocUrls = await doc_helper(docUploadProps);
       console.log("Uploaded Doc URLs:", uploadedDocUrls);
       const keys = ["pricePerShare"] as (typeof data)[string];
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
@@ -322,43 +323,3 @@ function RouteComponent() {
     </ThemeProvider>
   );
 }
-
-export const get_docs = async (
-  docUploadProps: ReturnType<typeof useDocumentUpload>,
-) => {
-  const uploadedDocUrls: Partial<DocProps> = {};
-  const docFiles = docUploadProps.documents;
-  console.log(docFiles);
-
-  if (docFiles.certificate) {
-    try {
-      const url = await uploadFile(docFiles.certificate);
-      if (url) uploadedDocUrls.certificate = url;
-    } catch (e) {}
-  }
-
-  if (docFiles.surveyPlanDocument) {
-    try {
-      // @ts-expect-error
-
-      const url = await uploadFile(docFiles.surveyPlan);
-      if (url) uploadedDocUrls.surveyPlanDocument = url;
-    } catch (e) {}
-  }
-
-  if (docFiles.transferDocument) {
-    try {
-      // @ts-ignore
-      const url = await uploadFile(docFiles.transferDocument);
-      if (url) uploadedDocUrls.transferDocument = url;
-    } catch (e) {}
-  }
-
-  if (docFiles.brochure) {
-    try {
-      const url = await uploadFile(docFiles.brochure);
-      if (url) uploadedDocUrls.brochure = url;
-    } catch (e) {}
-  }
-  return uploadedDocUrls;
-};

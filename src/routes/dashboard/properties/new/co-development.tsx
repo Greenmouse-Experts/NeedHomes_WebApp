@@ -17,9 +17,9 @@ import { useVideoUpload } from "../../-components/VideoUpload";
 import { useDocumentUpload } from "../../-components/DocumentUpload";
 import type { DocProps } from "@/types/form";
 import { docPropsResolver } from "../-components/formresolver";
-import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
 import calculate_fees from "../-components/calculate_fees";
+import { doc_helper } from "../../-components/upload_helpers";
 
 export const Route = createFileRoute(
   "/dashboard/properties/new/co-development",
@@ -86,7 +86,7 @@ function RouteComponent() {
       ];
       const docUploadProps = docUpload;
       // Handle Document Uploads
-      const uploadedDocUrls = await get_docs(docUploadProps);
+      const uploadedDocUrls = await doc_helper(docUploadProps);
       // Handle Video Upload
       let videoUrl = "";
       if (videoUpload.videoFile) {
