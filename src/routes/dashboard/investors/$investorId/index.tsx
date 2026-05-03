@@ -9,6 +9,8 @@ import {
   Calendar,
   TrendingUp,
   Share2,
+  Users,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
@@ -254,6 +256,7 @@ function InvestorDetailsPage() {
                 {/* Tab Content */}
                 <div className="p-6 md:p-8">
                   {activeTab === "overview" && (
+                    <div className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Contact Information */}
                       <div className="space-y-4">
@@ -358,6 +361,57 @@ function InvestorDetailsPage() {
                             Send Message
                           </Button>
                         </div>
+                      </div>
+                    </div>
+
+                      {/* Next of Kin */}
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                          <Heart className="w-5 h-5 text-rose-500" />
+                          Next of Kin
+                        </h3>
+                        {investor.nextOfKin ? (
+                          <div className="grid sm:grid-cols-2 gap-3">
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-rose-100 rounded-lg">
+                                <Users className="w-4 h-4 text-rose-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Full Name</p>
+                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.fullName}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-pink-100 rounded-lg">
+                                <Heart className="w-4 h-4 text-pink-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Relationship</p>
+                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.relationship}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-green-100 rounded-lg">
+                                <Phone className="w-4 h-4 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Phone</p>
+                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.phone}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-blue-100 rounded-lg">
+                                <Mail className="w-4 h-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Email</p>
+                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.email}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-500 italic">No next of kin on record.</p>
+                        )}
                       </div>
                     </div>
                   )}

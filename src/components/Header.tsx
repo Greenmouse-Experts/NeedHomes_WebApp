@@ -11,6 +11,7 @@ import {
   PieChart,
   Headset,
   LayoutDashboard,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
@@ -94,12 +95,6 @@ const dropdownMenus = {
       description: "Step-by-step guide",
       icon: "📖",
     },
-    {
-      name: "MarketPlace",
-      path: "/properties",
-      description: "Browse available properties",
-      icon: "🏪",
-    },
   ],
   Support: [
     {
@@ -146,6 +141,11 @@ export default function Header() {
     {
       name: "Resources",
       icon: FileText,
+    },
+    {
+      name: "Marketplace",
+      icon: Store,
+      path: "/properties",
     },
     {
       name: "Contact Us",

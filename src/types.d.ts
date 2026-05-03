@@ -125,6 +125,17 @@ export interface ADMIN_INVESTOR_DATA {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  nextOfKin?: {
+    id: "526c7b51-e90b-429e-be61-3eb915de9454";
+    userId: "333f1612-a0c2-479b-9965-bc1510cf1a42";
+    fullName: "August Nwadinobi";
+    email: "ausinonwadinobi@gmail.com";
+    phone: "+23469526406";
+    relationship: "Spouse";
+    createdAt: "2026-05-01T16:34:34.316Z";
+    updatedAt: "2026-05-01T16:34:34.316Z";
+    deletedAt: null;
+  };
   roles: {
     userId: string;
     roleId: string;
@@ -376,7 +387,15 @@ export interface PROPERTY_DATA {
   id: string;
   propertyTitle: string;
   propertyType: "RESIDENTIAL" | "COMMERCIAL" | "LAND";
-  investmentModel: "SAVE_TO_OWN" | "RENT_TO_OWN" | "INVESTMENT" | "OUTRIGHT" | "FRACTIONAL_OWNERSHIP" | "LAND_BANKING" | "OUTRIGHT_PURCHASE" | "CO_DEVELOPMENT";
+  investmentModel:
+    | "SAVE_TO_OWN"
+    | "RENT_TO_OWN"
+    | "INVESTMENT"
+    | "OUTRIGHT"
+    | "FRACTIONAL_OWNERSHIP"
+    | "LAND_BANKING"
+    | "OUTRIGHT_PURCHASE"
+    | "CO_DEVELOPMENT";
   location: string;
   description: string;
   developmentStage: "PLANNING" | "FOUNDATION" | "ROOFING" | "FINISHED";
