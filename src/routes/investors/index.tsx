@@ -279,7 +279,7 @@ function InvestorDashboard() {
           <UserWallet />
         </div>
       </div>
-      <InvStatistics />
+      {/*<InvStatistics />*/}
       {/* Monthly Analysis */}
       <InvestorAnalysis />
       {/*<Example />*/}
