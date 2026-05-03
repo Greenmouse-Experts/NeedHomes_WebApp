@@ -21,7 +21,6 @@ import type { DocProps } from "@/types/form";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
-import { get_docs } from "./fractional";
 import { uploadFile } from "@/api/fileApi";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import calculate_fees from "../-components/calculate_fees";

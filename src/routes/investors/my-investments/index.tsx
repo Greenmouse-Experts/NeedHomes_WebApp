@@ -10,9 +10,13 @@ import { useState } from "react";
 import InvStatistics from "./-components/InvStatistics";
 import ExitStrategy from "./-components/ExitStrategy";
 import { Link } from "@tanstack/react-router";
+import SearchBar from "@/routes/-components/Searchbar";
 
 export const Route = createFileRoute("/investors/my-investments/")({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>) => ({
+    search: (search.search as string) ?? "",
+  }),
 });
 
 interface Investment {
@@ -43,6 +47,7 @@ interface Investment {
 
 function RouteComponent() {
   const navigate = useNavigate();
+  const { search } = Route.useSearch();
   const [filterOpen, setFilterOpen] = useState(false);
   const [status, setStatus] = useState<
     null | "ACTIVE" | "CANCELLED" | "COMPLETED" | "EXITED"
@@ -51,13 +56,14 @@ function RouteComponent() {
   const paginationProps = usePagination();
 
   const query = useQuery<ApiResponse<Investment[]>>({
-    queryKey: ["investments", paginationProps.page, status],
+    queryKey: ["investments", paginationProps.page, status, search],
     queryFn: async () => {
       let resp = await apiClient.get("investments/my-investments", {
         params: {
           page: paginationProps.page,
           limit: paginationProps.pageSize,
           ...(status && { status }),
+          ...(search && { search }),
         },
       });
       return resp.data;
@@ -153,6 +159,12 @@ function RouteComponent() {
 
       {/* Filters Bar */}
       <div className="mb-6 flex flex-wrap items-center gap-3">
+        <SearchBar
+          value={search}
+          onChange={(val: string) =>
+            navigate({ search: (prev) => ({ ...prev, search: val }) })
+          }
+        />
         <div className="relative">
           <select
             className="select select-primary"
