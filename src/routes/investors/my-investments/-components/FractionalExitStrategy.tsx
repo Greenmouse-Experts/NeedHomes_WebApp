@@ -120,7 +120,9 @@ export default function FractionalExitStrategy({
     toast.promise(submitMutation.mutateAsync(), {
       loading: "Submitting exit request...",
       success: () => {
-        queryClient.invalidateQueries({ queryKey: ["exit-requests", investment.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["exit-requests", investment.id],
+        });
         setReason("");
         setExitError(null);
         modalRef.current?.close();

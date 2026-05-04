@@ -149,11 +149,24 @@ export default function ExitStrategy({
     },
   });
 
-  if (investment.status !== "ACTIVE") return null;
-
   const NON_EXITABLE = ["FRACTIONAL_OWNERSHIP", "OUTRIGHT_PURCHASE"];
-  if (NON_EXITABLE.includes(investment.property?.investmentModel ?? ""))
-    return null;
+  const exitUnavailable =
+    investment.status !== "ACTIVE" ||
+    NON_EXITABLE.includes(investment.property?.investmentModel ?? "");
+
+  if (exitUnavailable)
+    return (
+      <div className="bg-white rounded-xl shadow ring fade overflow-hidden h-full">
+        <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4 flex items-center gap-2">
+          <LogOut className="w-5 h-5 text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900">Exit Strategy</h3>
+        </div>
+        <div className="p-6 flex items-center gap-3 text-sm text-gray-500">
+          <XCircle className="w-5 h-5 text-gray-400 shrink-0" />
+          Exit strategy is not available for this investment.
+        </div>
+      </div>
+    );
 
   const allRequests = exitRequestsQuery.data?.data?.data ?? [];
 

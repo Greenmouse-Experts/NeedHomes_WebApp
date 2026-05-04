@@ -251,75 +251,77 @@ function InvestmentDetailsPage() {
                 </div>
               </div>
               {/* ── Investment Information ── */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                    Investment Information
-                  </h3>
-                  <Link
-                    to="/investors/properties/"
-                    params={{ propertyId: investment.propertyId }}
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-all shadow-sm active:scale-95"
-                  >
-                    Invest More
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-                <div className="divide-y divide-gray-50">
-                  {[
-                    {
-                      label: "Payment Plan",
-                      value: investment.paymentOption,
-                    },
-                    {
-                      label: "Total Contract",
-                      value: formatCurrency(investment.totalAmount / 100),
-                      bold: true,
-                    },
-                    {
-                      label: "Last Valuation",
-                      value: investment.lastValuationDate
-                        ? formatDate(investment.lastValuationDate)
-                        : "N/A",
-                    },
-                    {
-                      label: "Last Updated",
-                      value: formatDate(investment.updatedAt),
-                    },
-                  ].map(({ label, value, bold }) => (
-                    <div
-                      key={label}
-                      className="flex items-center justify-between px-6 py-3.5"
-                    >
-                      <span className="text-sm text-gray-500">{label}</span>
-                      <span
-                        className={`text-sm ${bold ? "font-bold text-gray-900" : "font-medium text-gray-700"}`}
-                      >
-                        {value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+
               {investment_type ? (
                 <InvPaymentSchedule
                   id={investmentId}
                   propertyId={investment.propertyId}
                 />
               ) : null}
-              {investment.property?.investmentModel ===
-              "FRACTIONAL_OWNERSHIP" ? (
-                <FractionalExitStrategy investment={investment} />
-              ) : (
-                <ExitStrategy
-                  investment={investment}
-                  propertyId={investment.propertyId}
-                />
-              )}
-
-              <div className="mt-8">
+              <section className="grid grid-cols-3 gap-2">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                      Investment Information
+                    </h3>
+                    <Link
+                      to="/investors/properties/"
+                      params={{ propertyId: investment.propertyId }}
+                      className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-all shadow-sm active:scale-95"
+                    >
+                      Invest More
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                  <div className="divide-y divide-gray-50">
+                    {[
+                      {
+                        label: "Payment Plan",
+                        value: investment.paymentOption,
+                      },
+                      {
+                        label: "Total Contract",
+                        value: formatCurrency(investment.totalAmount / 100),
+                        bold: true,
+                      },
+                      {
+                        label: "Last Valuation",
+                        value: investment.lastValuationDate
+                          ? formatDate(investment.lastValuationDate)
+                          : "N/A",
+                      },
+                      {
+                        label: "Last Updated",
+                        value: formatDate(investment.updatedAt),
+                      },
+                    ].map(({ label, value, bold }) => (
+                      <div
+                        key={label}
+                        className="flex items-center justify-between px-6 py-3.5"
+                      >
+                        <span className="text-sm text-gray-500">{label}</span>
+                        <span
+                          className={`text-sm ${bold ? "font-bold text-gray-900" : "font-medium text-gray-700"}`}
+                        >
+                          {value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <Resell investment={investment} />
-              </div>
+                <div className="">
+                  {investment.property?.investmentModel ===
+                  "FRACTIONAL_OWNERSHIP" ? (
+                    <FractionalExitStrategy investment={investment} />
+                  ) : (
+                    <ExitStrategy
+                      investment={investment}
+                      propertyId={investment.propertyId}
+                    />
+                  )}
+                </div>
+              </section>
 
               <InvPropDetails propId={investment.propertyId} />
             </>
