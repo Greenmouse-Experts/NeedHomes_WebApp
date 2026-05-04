@@ -148,9 +148,9 @@ function DashboardIndexPage() {
                     <p className="text-[10px] md:text-xs opacity-90">
                       TOTAL BALANCE
                     </p>
-                    <p className="text-xl md:text-2xl font-bold">
-                      <NairaIcon /> 120,000
-                    </p>
+                    <div className="text-xl md:text-2xl font-bold flex gap-2">
+                      <NairaIcon className="w-8" /> 120,000
+                    </div>
                   </div>
                   <EyeIcon className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
@@ -164,8 +164,8 @@ function DashboardIndexPage() {
                   <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
                   <span className="text-xs md:text-sm font-medium">INCOME</span>
                 </div>
-                <span className="text-sm md:text-base font-bold text-green-600">
-                  <NairaIcon /> 100,000
+                <span className="text-sm md:text-base font-bold text-green-600 flex items-center">
+                  <NairaIcon className="w-5" /> 100,000
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 md:p-3 bg-red-50 rounded-lg">
@@ -175,8 +175,8 @@ function DashboardIndexPage() {
                     EXPENSE
                   </span>
                 </div>
-                <span className="text-sm md:text-base font-bold text-red-600">
-                  <NairaIcon /> 20,000
+                <span className="text-sm flex items-center md:text-base font-bold text-red-600">
+                  <NairaIcon className="w-5" /> 20,000
                 </span>
               </div>
             </div>
@@ -193,8 +193,8 @@ function DashboardIndexPage() {
                   <div className="flex items-center gap-2 min-w-0 flex-1">
                     <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600 flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-xs md:text-sm font-medium text-green-600 truncate">
-                        + <NairaIcon /> 200,000
+                      <p className="flex items-center text-xs md:text-sm font-medium text-green-600 truncate">
+                        + <NairaIcon className="w-5" /> 200,000
                       </p>
                       <p className="text-[10px] md:text-xs text-gray-500 truncate">
                         Incoming payment

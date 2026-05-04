@@ -203,7 +203,7 @@ export default function UserWallet() {
             walletData.walletTransactions
               .filter((t) => t.type === "WITHDRAWAL" && t.status === "SUCCESS")
               .reduce((acc, curr) => acc + curr.amount, 0) / 100;
-
+          return null;
           return (
             <>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -223,7 +223,7 @@ export default function UserWallet() {
                   </p>
                   <div className="flex items-center justify-between">
                     <p className="text-2xl md:text-3xl font-bold">
-                      <NairaIcon />
+                      {/*<NairaIcon className="w-5" />*/}
                       {(walletData?.balance / 100)?.toLocaleString() || 0}
                     </p>
                     <button
@@ -255,7 +255,7 @@ export default function UserWallet() {
                         INCOME
                       </p>
                       <p className="text-base md:text-lg font-bold text-gray-900">
-                        <NairaIcon />{" "}
+                        {/*<NairaIcon />{" "}*/}
                         {error_status ? 0 : income.toLocaleString()}
                       </p>
                     </div>
