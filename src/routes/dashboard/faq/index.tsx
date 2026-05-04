@@ -36,11 +36,7 @@ function RouteComponent() {
       const resp = await apiClient.delete(`faqs/${id}`);
       return resp.data;
     },
-    onSuccess: () => {
-      toast.success("FAQ deleted");
-      queryClient.invalidateQueries({ queryKey: ["faqs-admin"] });
-    },
-    onError: (e) => toast.error(extract_message(e)),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["faqs-admin"] }),
   });
 
   const toggleMutation = useMutation({
@@ -48,10 +44,7 @@ function RouteComponent() {
       const resp = await apiClient.patch(`faqs/${id}`, { isActive });
       return resp.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["faqs-admin"] });
-    },
-    onError: (e) => toast.error(extract_message(e)),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["faqs-admin"] }),
   });
 
   const faqs: FAQ[] = (query.data?.data as any) ?? [];
@@ -129,10 +122,14 @@ function RouteComponent() {
                       className="btn btn-ghost btn-sm btn-square"
                       title={faq.isActive ? "Hide" : "Show"}
                       onClick={() =>
-                        toggleMutation.mutate({
-                          id: faq.id,
-                          isActive: !faq.isActive,
-                        })
+                        toast.promise(
+                          toggleMutation.mutateAsync({ id: faq.id, isActive: !faq.isActive }),
+                          {
+                            loading: faq.isActive ? "Hiding..." : "Showing...",
+                            success: faq.isActive ? "FAQ hidden" : "FAQ visible",
+                            error: extract_message,
+                          },
+                        )
                       }
                     >
                       {faq.isActive ? (
@@ -156,7 +153,11 @@ function RouteComponent() {
                       className="btn btn-ghost btn-sm btn-square"
                       onClick={() => {
                         if (confirm("Delete this FAQ?"))
-                          deleteMutation.mutate(faq.id);
+                          toast.promise(deleteMutation.mutateAsync(faq.id), {
+                            loading: "Deleting...",
+                            success: "FAQ deleted",
+                            error: extract_message,
+                          });
                       }}
                     >
                       <Trash2 size={15} className="text-red-500" />
