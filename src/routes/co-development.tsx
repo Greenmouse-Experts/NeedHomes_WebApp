@@ -109,13 +109,13 @@ function CoDevelopmentPage() {
                 Co-Development
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
-                Co-development Is An Investment Model where Multiple Individuals
-                Co-Fund a Property development Project From land Acquisition To
-                completion. Instead Of One Individual Carrying Full Risk The
-                Model Enables Multiple Investors To Co- Fund it together. Each
-                investor Automatically Gets Full Ownership and increase in
-                Equity Upon Project Completion There by Reducing Lower Entry
-                Barriers
+                Co-development is an investment model where multiple individuals
+                co-fund a property development project from land acquisition to
+                completion. Instead of one individual carrying full risk, the
+                model enables multiple investors to co-fund it together. Each
+                investor automatically gets full ownership and increase in
+                equity upon project completion, thereby reducing lower entry
+                barriers
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
