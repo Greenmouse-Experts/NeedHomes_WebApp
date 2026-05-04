@@ -66,7 +66,7 @@ function RouteComponent() {
 interface FractionalPropertyFormValues extends DocProps {
   totalShares: number;
   pricePerShare: number;
-  exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY";
+  // exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY";
   minimumShares: number;
   maxInvestors?: number | null;
   fractionalHoldingPeriodDays: 30 | 60 | 90 | 120;
@@ -231,7 +231,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                       />
                     )}
                   />
-                  <Controller
+                  {/*<Controller
                     name="exitWindow"
                     control={methods.control}
                     render={({ field }) => (
@@ -242,7 +242,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                         <option value="AT_MATURITY">At Maturity</option>
                       </LocalSelect>
                     )}
-                  />
+                  />*/}
                   <Controller
                     name="maxInvestors"
                     control={methods.control}

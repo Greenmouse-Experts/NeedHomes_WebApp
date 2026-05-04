@@ -41,7 +41,7 @@ function RouteComponent() {
       developmentStage: "PLANNING",
       premiumProperty: false,
       maxInvestors: null,
-      exitWindow: "MONTHLY" as const,
+      // exitWindow: "MONTHLY" as const,
       fractionalHoldingPeriodDays: 30 as const,
     },
   });
@@ -235,7 +235,7 @@ function RouteComponent() {
                       />
                     )}
                   />
-                  <Controller
+                  {/*<Controller
                     name="exitWindow"
                     control={methods.control}
                     render={({ field }) => (
@@ -246,7 +246,7 @@ function RouteComponent() {
                         <option value="AT_MATURITY">At Maturity</option>
                       </LocalSelect>
                     )}
-                  />
+                  />*/}
                   <Controller
                     name="maxInvestors"
                     control={methods.control}
