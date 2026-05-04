@@ -235,7 +235,15 @@ function InvestorsPage() {
                     <div className="p-5">
                       <div className="flex justify-between items-start mb-4">
                         <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-brand-orange">
-                          <User className="w-6 h-6" />
+                          {investor.profilePicture ? (
+                            <img
+                              src={investor.profilePicture}
+                              alt="profile"
+                              className="w-8 h-8 rounded-full"
+                            />
+                          ) : (
+                            <User className="w-6 h-6" />
+                          )}
                         </div>
                         <span
                           className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${

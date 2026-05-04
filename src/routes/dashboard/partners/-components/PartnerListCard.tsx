@@ -53,13 +53,20 @@ export default function PartnerListCard({ item }: { item: PARTNER }) {
 
       <div className="flex flex-col items-center mb-4">
         <div className="relative mb-3">
-          <Avatar className="w-20 h-20 border-2 border-gray-100 group-hover:border-brand-orange/30 transition-all duration-300 shadow-sm">
-            <AvatarImage />
-            <AvatarFallback className="bg-brand-orange/10 text-brand-orange-dark font-semibold text-lg">
-              {partner.firstName?.charAt(0)}
-              {partner.lastName?.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+          {partner.profilePicture ? (
+            <img
+              src={partner.profilePicture}
+              alt="profile"
+              className="w-20 h-20 rounded-full object-cover border-2 border-gray-100 group-hover:border-brand-orange/30 transition-all duration-300 shadow-sm"
+            />
+          ) : (
+            <Avatar className="w-20 h-20 border-2 border-gray-100 group-hover:border-brand-orange/30 transition-all duration-300 shadow-sm">
+              <AvatarFallback className="bg-brand-orange/10 text-brand-orange-dark font-semibold text-lg">
+                {partner.firstName?.charAt(0)}
+                {partner.lastName?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+          )}
           <div className="absolute -bottom-1 -right-1">
             {partner.isEmailVerified ? (
               <CheckCircle2 className="w-6 h-6 text-emerald-500 fill-white" />
