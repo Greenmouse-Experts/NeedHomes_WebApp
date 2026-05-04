@@ -88,7 +88,13 @@ function RouteComponent() {
     },
     {
       key: "unitsBought",
-      label: "Slots",
+      label: "Slots / Shares",
+      render: (_, item) =>
+        item.sharesBought != null ? (
+          <span className="font-medium">{item.sharesBought} share{item.sharesBought !== 1 ? "s" : ""}</span>
+        ) : (
+          <span>{item.unitsBought ?? "—"}</span>
+        ),
     },
     {
       key: "paymentOption",
