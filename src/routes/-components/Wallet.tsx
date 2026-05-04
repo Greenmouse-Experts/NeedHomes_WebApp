@@ -203,7 +203,6 @@ export default function UserWallet() {
             walletData.walletTransactions
               .filter((t) => t.type === "WITHDRAWAL" && t.status === "SUCCESS")
               .reduce((acc, curr) => acc + curr.amount, 0) / 100;
-          return null;
           return (
             <>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -222,8 +221,8 @@ export default function UserWallet() {
                     TOTAL BALANCE
                   </p>
                   <div className="flex items-center justify-between">
-                    <p className="text-2xl md:text-3xl font-bold">
-                      {/*<NairaIcon className="w-5" />*/}
+                    <p className="text-2xl md:text-3xl font-bold flex gap-2">
+                      <NairaIcon className="w-8" />
                       {(walletData?.balance / 100)?.toLocaleString() || 0}
                     </p>
                     <button
@@ -254,8 +253,8 @@ export default function UserWallet() {
                       <p className="text-xs text-gray-600 font-semibold mb-1">
                         INCOME
                       </p>
-                      <p className="text-base md:text-lg font-bold text-gray-900">
-                        {/*<NairaIcon />{" "}*/}
+                      <p className="text-base md:text-lg font-bold text-gray-900 flex items-center">
+                        <NairaIcon className="w-5" />{" "}
                         {error_status ? 0 : income.toLocaleString()}
                       </p>
                     </div>
@@ -263,8 +262,9 @@ export default function UserWallet() {
                       <p className="text-xs text-gray-600 font-semibold mb-1">
                         WITHDRAW
                       </p>
-                      <p className="text-base md:text-lg font-bold text-gray-900">
-                        <NairaIcon /> {withdrawals.toLocaleString()}
+                      <p className="text-base md:text-lg font-bold text-gray-900 flex items-center">
+                        <NairaIcon className="w-5" />{" "}
+                        {withdrawals.toLocaleString()}
                       </p>
                     </div>
                   </div>
