@@ -36,18 +36,18 @@ export const Route = createFileRoute("/dashboard/investors/")({
   component: InvestorsPage,
   validateSearch: (search: Record<string, unknown>) => ({
     verificationStatus: (search.verificationStatus as VerificationStatus) || "",
+    search: (search.search as string) ?? "",
   }),
 });
 
 function InvestorsPage() {
   const navigate = useNavigate();
-  const { verificationStatus } = Route.useSearch();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { verificationStatus, search } = Route.useSearch();
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
   const query = useQuery<ApiResponseV2<INVESTOR[]>>({
-    queryKey: ["investors", props.page, verificationStatus],
+    queryKey: ["investors", props.page, verificationStatus, search],
     queryFn: async () => {
       const response = await apiClient.get(
         "admin/users?accountType=INDIVIDUAL",
@@ -55,6 +55,7 @@ function InvestorsPage() {
           params: {
             page: props.page,
             ...(verificationStatus && { documentStatus: verificationStatus }),
+            ...(search && { search }),
           },
         },
       );
@@ -62,15 +63,7 @@ function InvestorsPage() {
     },
   });
 
-  const investorsData = query.data?.data.data || [];
-
-  const filteredInvestors = investorsData.filter(
-    (investor) =>
-      investor.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      investor.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      investor.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      investor.id.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredInvestors = query.data?.data.data || [];
 
   const investorColumns: columnType<INVESTOR>[] = [
     {
@@ -152,7 +145,12 @@ function InvestorsPage() {
 
           <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
             <div>
-              <SearchBar value={searchQuery} onChange={setSearchQuery} />
+              <SearchBar
+                value={search}
+                onChange={(val: string) =>
+                  navigate({ search: (prev) => ({ ...prev, search: val }), replace: true })
+                }
+              />
             </div>
             <div className="flex flex-wrap gap-2">
               {VERIFICATION_OPTIONS.map((opt) => (

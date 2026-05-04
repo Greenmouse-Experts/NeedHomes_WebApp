@@ -42,39 +42,31 @@ export const Route = createFileRoute("/dashboard/partners/")({
   component: PartnersPage,
   validateSearch: (search: Record<string, unknown>) => ({
     verificationStatus: (search.verificationStatus as VerificationStatus) || "",
+    search: (search.search as string) ?? "",
   }),
 });
 
 function PartnersPage() {
   const navigate = useNavigate();
-  const { verificationStatus } = Route.useSearch();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { verificationStatus, search } = Route.useSearch();
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const props = usePagination();
   const query = useQuery<ApiResponseV2<PARTNER[]>>({
-    queryKey: ["partners", props.page, verificationStatus],
+    queryKey: ["partners", props.page, verificationStatus, search],
     queryFn: async () => {
       const response = await apiClient.get("admin/users?accountType=PARTNER", {
         params: {
           page: props.page,
           ...(verificationStatus && { documentStatus: verificationStatus }),
+          ...(search && { search }),
         },
       });
       return response.data;
     },
   });
 
-  const partnersData = query.data?.data.data || [];
-
-  const filteredPartners = partnersData.filter(
-    (partner) =>
-      partner.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.phone?.includes(searchQuery) ||
-      partner.id.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredPartners = query.data?.data.data || [];
 
   const columns: columnType<PARTNER>[] = [
     // {
@@ -252,7 +244,12 @@ function PartnersPage() {
           {/* Search and Filters */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full">
             <div className="flex-1 min-w-50 md:flex-initial md:w-64">
-              <SearchBar value={searchQuery} onChange={setSearchQuery} />
+              <SearchBar
+                value={search}
+                onChange={(val: string) =>
+                  navigate({ search: (prev) => ({ ...prev, search: val }), replace: true })
+                }
+              />
             </div>
             <div className="flex flex-wrap gap-2">
               {VERIFICATION_OPTIONS.map((opt) => (
