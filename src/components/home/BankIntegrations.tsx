@@ -14,7 +14,7 @@ export default function BankIntegrations() {
           {banks.map((bank, index) => (
             <div
               key={index}
-              className="flex items-center justify-center h-16 w-32 md:h-20 md:w-40"
+              className="flex items-center justify-center p-2 size-52 "
             >
               <img
                 src={bank.logo}
