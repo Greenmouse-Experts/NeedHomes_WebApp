@@ -12,6 +12,7 @@ import Example from "./-components/Chart";
 import InvStatistics from "./my-investments/-components/InvStatistics";
 import RecentProperties from "./-components/RecentProperty";
 import InvestorAnalysis from "./-components/InvestorAnalysis";
+import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
@@ -21,14 +22,14 @@ const recentProperties = [
   {
     id: "01",
     type: "4BR Duplex",
-    amount: "N 10,000,000",
+    amount: `${(<NairaIcon />)} 10,000,000`,
     date: "24-02-25",
     status: "Approved",
   },
   {
     id: "02",
     type: "Semi Detached",
-    amount: "N 10,000,000",
+    amount: `${(<NairaIcon />)} 10,000,000`,
     date: "24-02-25",
     status: "Pending",
   },

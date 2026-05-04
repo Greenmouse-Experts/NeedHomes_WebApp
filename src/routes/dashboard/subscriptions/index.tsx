@@ -1,6 +1,7 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import Modal from "@/components/modals/DialogModal";
+import { NairaIcon } from "@/components/NairaIcon";
 import CustomTable from "@/components/tables/CustomTable";
 import { extract_message } from "@/helpers/apihelpers";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
@@ -214,7 +215,7 @@ const ViewPlanForm = ({
           </div>
           <h3 className="text-2xl font-bold">{plan.name}</h3>
           <div className="text-3xl font-black text-primary mt-2">
-            N {plan.price.toLocaleString()}
+            <NairaIcon /> {plan.price.toLocaleString()}
             <span className="text-sm font-normal text-base-content/60 ml-1">
               / {plan.validity} Months
             </span>

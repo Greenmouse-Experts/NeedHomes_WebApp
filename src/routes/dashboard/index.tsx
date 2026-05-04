@@ -23,6 +23,7 @@ import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import AdminRevenue from "./-components/Revenue";
 import DashIncomeStats from "./-components/DashIncomeStats";
+import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndexPage,
@@ -147,7 +148,9 @@ function DashboardIndexPage() {
                     <p className="text-[10px] md:text-xs opacity-90">
                       TOTAL BALANCE
                     </p>
-                    <p className="text-xl md:text-2xl font-bold">N 120,000</p>
+                    <p className="text-xl md:text-2xl font-bold">
+                      <NairaIcon /> 120,000
+                    </p>
                   </div>
                   <EyeIcon className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
@@ -162,7 +165,7 @@ function DashboardIndexPage() {
                   <span className="text-xs md:text-sm font-medium">INCOME</span>
                 </div>
                 <span className="text-sm md:text-base font-bold text-green-600">
-                  N 100,000
+                  <NairaIcon /> 100,000
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 md:p-3 bg-red-50 rounded-lg">
@@ -173,7 +176,7 @@ function DashboardIndexPage() {
                   </span>
                 </div>
                 <span className="text-sm md:text-base font-bold text-red-600">
-                  N 20,000
+                  <NairaIcon /> 20,000
                 </span>
               </div>
             </div>
@@ -191,7 +194,7 @@ function DashboardIndexPage() {
                     <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600 flex-shrink-0" />
                     <div className="min-w-0">
                       <p className="text-xs md:text-sm font-medium text-green-600 truncate">
-                        + N 200,000
+                        + <NairaIcon /> 200,000
                       </p>
                       <p className="text-[10px] md:text-xs text-gray-500 truncate">
                         Incoming payment

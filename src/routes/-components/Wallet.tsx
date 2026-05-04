@@ -15,6 +15,7 @@ import PaystackPop from "@paystack/inline-js";
 
 import { usePaystackPayment } from "react-paystack";
 import { useNavigate } from "@tanstack/react-router";
+import { NairaIcon } from "@/components/NairaIcon";
 interface WalletTransaction {
   id: string;
   walletId: string;
@@ -222,7 +223,8 @@ export default function UserWallet() {
                   </p>
                   <div className="flex items-center justify-between">
                     <p className="text-2xl md:text-3xl font-bold">
-                      N {(walletData?.balance / 100)?.toLocaleString() || 0}
+                      <NairaIcon />
+                      {(walletData?.balance / 100)?.toLocaleString() || 0}
                     </p>
                     <button
                       onClick={() => handleOpenModal("deposit")}
@@ -253,7 +255,8 @@ export default function UserWallet() {
                         INCOME
                       </p>
                       <p className="text-base md:text-lg font-bold text-gray-900">
-                        N {error_status ? 0 : income.toLocaleString()}
+                        <NairaIcon />{" "}
+                        {error_status ? 0 : income.toLocaleString()}
                       </p>
                     </div>
                     <div className="bg-red-50 rounded-lg p-2 md:p-3 border border-red-200">
@@ -261,7 +264,7 @@ export default function UserWallet() {
                         WITHDRAW
                       </p>
                       <p className="text-base md:text-lg font-bold text-gray-900">
-                        N {withdrawals.toLocaleString()}
+                        <NairaIcon /> {withdrawals.toLocaleString()}
                       </p>
                     </div>
                   </div>
