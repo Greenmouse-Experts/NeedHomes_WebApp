@@ -79,13 +79,13 @@ export default function PropertyCard({
             <MapPin className="w-3.5 h-3.5 mr-1 shrink-0" />
             <span className="line-clamp-1">{property.location}</span>
           </div>
-          {property.isResell && property.reseller && (
+          {/*{property.isResell && property.reseller && (
             <div className="flex items-center gap-1 text-xs text-info font-medium mt-0.5">
               <RefreshCw className="w-3 h-3 shrink-0" />
               Listed by {property.reseller.firstName}{" "}
               {property.reseller.lastName}
             </div>
-          )}
+          )}*/}
         </div>
 
         <div className="divider my-2 opacity-50"></div>
