@@ -44,13 +44,13 @@ export default function InvPropDetails({ propId }: { propId: string }) {
               <div className="my-4">
                 <AdminROI property={prop_data} />
               </div>
-              <div className="flex flex-col md:flex-row md:items-start gap-6">
-                <div className="md:flex-1">
-                  <div className="rounded overflow-hidden border border-gray-100">
+              <div className="flex flex-col  md:items-start gap-6">
+                <div className="flex-1 w-full">
+                  <div className="rounded overflow-hidden border border-gray-100 w-full">
                     <img
                       src={prop_data.coverImage || ""}
                       alt={prop_data.propertyTitle}
-                      className="w-full h-72 md:h-80 object-cover bg-gray-50"
+                      className="w-full h-72 md:h-80 object-contain bg-gray-50"
                     />
                   </div>
 
@@ -76,7 +76,7 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                   </div>
                 </div>
 
-                <div className="md:flex-1 md:pl-6">
+                <div className=" flex-1 w-full ">
                   <div className="flex items-start justify-between">
                     <div>
                       <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">
