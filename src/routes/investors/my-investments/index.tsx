@@ -143,6 +143,7 @@ function RouteComponent() {
   return (
     <div className="space-y-6">
       {/* Header */}
+
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center space-x-3 mb-2">
           <div className="p-2 bg-purple-100 rounded-lg">
@@ -156,6 +157,7 @@ function RouteComponent() {
           Track your investment portfolio and monitor performance.
         </p>
       </div>
+      <InvStatistics />
 
       {/* Filters Bar */}
       <div className="mb-6 flex flex-wrap items-center gap-3">
@@ -194,7 +196,6 @@ function RouteComponent() {
           Add Investment
         </Link>
       </div>
-      <InvStatistics />
 
       {/* Investments Table */}
       <PageLoader query={query}>
