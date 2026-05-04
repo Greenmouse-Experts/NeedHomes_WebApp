@@ -101,6 +101,7 @@ export const strip_fractional = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
   delete cleaned.basePrice;
   delete cleaned.availablePlots;
+  delete cleaned.exitWindow;
   delete cleaned.pricePerPlot;
   delete cleaned.holdingPeriod;
   delete cleaned.buyBackOption;
