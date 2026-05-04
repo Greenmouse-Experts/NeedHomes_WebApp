@@ -29,6 +29,7 @@ import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
+import RenderDescription from "@/components/RenderDescription";
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/default/",
@@ -580,9 +581,7 @@ function PropertyDetailPage() {
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">
                           Description
                         </h2>
-                        <p className="text-gray-600 leading-relaxed">
-                          {property.description}
-                        </p>
+                        <RenderDescription description={property.description} />
                       </div>
 
                       {/* Amenities */}

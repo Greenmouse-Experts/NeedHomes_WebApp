@@ -10,6 +10,7 @@ import InvestmentDetails from "./-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import { RenderDocuments } from "@/routes/-components/RenderDocuments";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
+import RenderDescription from "@/components/RenderDescription";
 
 export const Route = createFileRoute("/dashboard/properties/$propertyId/")({
   component: PropertyDetailsPage,
@@ -168,9 +169,7 @@ function PropertyDetailsPage() {
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">
                           Description
                         </h2>
-                        <p className="text-gray-600 leading-relaxed">
-                          {property.description}
-                        </p>
+                        <RenderDescription description={property.description} />
                       </div>
 
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

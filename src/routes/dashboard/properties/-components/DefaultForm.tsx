@@ -29,7 +29,7 @@ import {
 import type { DocProps } from "@/types/form";
 import VideoUpload, { useVideoUpload } from "../../-components/VideoUpload";
 import { useImages, useSelectImage } from "@/helpers/images";
-import SimpleTextArea from "@/simpleComps/inputs/SimpleTextArea";
+import { RichTextEditor } from "@/components/terms/RichTextEditor";
 import UpdateImages from "@/simpleComps/inputs/UpdateImages";
 import type { useMutation } from "@tanstack/react-query";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
@@ -277,11 +277,12 @@ export default function DefaultForm<T = any>({
                   name="description"
                   control={methods.control}
                   render={({ field }) => (
-                    <SimpleTextArea
-                      {...field}
+                    <RichTextEditor
                       label="Project Description"
                       placeholder="Provide a detailed overview of the project, ROI projections, and infrastructure plans..."
-                      rows={4}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      required={false}
                     />
                   )}
                 />
