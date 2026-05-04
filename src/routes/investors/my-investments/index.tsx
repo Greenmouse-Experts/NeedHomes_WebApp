@@ -91,7 +91,9 @@ function RouteComponent() {
       label: "Slots / Shares",
       render: (_, item) =>
         item.sharesBought != null ? (
-          <span className="font-medium">{item.sharesBought} share{item.sharesBought !== 1 ? "s" : ""}</span>
+          <span className="font-medium">
+            {item.sharesBought} share{item.sharesBought !== 1 ? "s" : ""}
+          </span>
         ) : (
           <span>{item.unitsBought ?? "—"}</span>
         ),

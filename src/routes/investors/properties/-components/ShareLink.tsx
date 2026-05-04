@@ -1,5 +1,13 @@
 import { useRef, useState } from "react";
-import { Share2, Check, Copy, Twitter, Facebook, Link2, Linkedin } from "lucide-react";
+import {
+  Share2,
+  Check,
+  Copy,
+  Twitter,
+  Facebook,
+  Link2,
+  Linkedin,
+} from "lucide-react";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 
 const WhatsAppIcon = () => (
@@ -62,12 +70,12 @@ export default function ShareLink({ route }: { route: string }) {
       <Modal ref={modalRef} title="Share this property">
         <div className="space-y-5">
           {/* Link preview */}
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-base-200 border border-base-300">
+          {/*<div className="flex items-center gap-3 p-3 rounded-lg bg-base-200 border border-base-300">
             <Link2 size={16} className="shrink-0 text-base-content/50" />
             <span className="text-sm truncate text-base-content/70 flex-1">
               {url}
             </span>
-          </div>
+          </div>*/}
 
           {/* Social options */}
           <div className="flex justify-center gap-4">
@@ -86,7 +94,10 @@ export default function ShareLink({ route }: { route: string }) {
           </div>
 
           {/* Copy link */}
-          <button onClick={copyLink} className="btn btn-outline w-full gap-2">
+          <button
+            onClick={copyLink}
+            className="btn btn-outline fade btn-primary btn-lg w-full gap-2"
+          >
             {copied ? (
               <>
                 <Check size={16} className="text-success" />
