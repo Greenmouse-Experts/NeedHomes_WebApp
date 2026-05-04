@@ -47,8 +47,17 @@ interface Investment {
   returnPercentage: number;
   totalAmount: number;
   totalReturns: number;
+  customId?: string;
+  costBasis?: number;
   property?: {
+    propertyTitle?: string;
     investmentModel: string;
+    location?: string;
+    coverImage?: string;
+    basePrice?: number;
+    pricePerShare?: number | null;
+    pricePerPlot?: number | null;
+    totalShares?: number | null;
     exitWindow?: string | null;
     fractionalHoldingPeriodDays?: number | null;
     return30Days?: number | null;
@@ -56,6 +65,7 @@ interface Investment {
     return90Days?: number | null;
     return120Days?: number | null;
   };
+  exitRequest?: any | null;
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -230,12 +240,35 @@ function InvestmentDetailsPage() {
                   <div className="p-2 bg-purple-50 rounded-lg w-fit mb-3">
                     <BarChart3 className="w-4 h-4 text-purple-600" />
                   </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
-                    Slots Bought
-                  </p>
-                  <p className="text-xl font-bold text-gray-900">
-                    {investment.unitsBought}
-                  </p>
+                  {investment.sharesBought != null ? (
+                    <>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
+                        Shares Bought
+                      </p>
+                      <p className="text-xl font-bold text-gray-900">
+                        {investment.sharesBought}
+                        {investment.property?.totalShares != null && (
+                          <span className="text-sm font-normal text-gray-400 ml-1">
+                            / {investment.property.totalShares}
+                          </span>
+                        )}
+                      </p>
+                      {investment.property?.pricePerShare != null && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          {formatCurrency(investment.property.pricePerShare / 100)} per share
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
+                        Slots Bought
+                      </p>
+                      <p className="text-xl font-bold text-gray-900">
+                        {investment.unitsBought}
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
