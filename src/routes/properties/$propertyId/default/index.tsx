@@ -203,7 +203,11 @@ function PropertyDetailPage() {
                           });
                         }
                         if (payInstall) {
-                          const { amount, installmentFrequency, installmentDuration } = form.getValues();
+                          const {
+                            amount,
+                            installmentFrequency,
+                            installmentDuration,
+                          } = form.getValues();
                           return toast.promise(
                             mutateIns.mutateAsync({
                               amountPaid: amount * 100,
@@ -461,9 +465,6 @@ function PropertyDetailPage() {
                     <div className="sm:text-right">
                       <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
                         {formatCurrency(property.basePrice / 100)}
-                      </p>
-                      <p className="text-xs md:text-sm text-gray-500 mt-1">
-                        SKU: {property.id}
                       </p>
                     </div>
                   </div>
