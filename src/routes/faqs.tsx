@@ -1,89 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, MessageCircle, HelpCircle, Plus, Minus } from "lucide-react";
-// import type Footer from "@/components/home/Footer";
 import Footer from "@/components/home/Footer";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
+
 export const Route = createFileRoute("/faqs")({
   component: RouteComponent,
 });
 
-const questions = [
-  {
-    q: "What is Needhomes PropTech Platform?",
-    a: "Needhomes is a property co-development and fractional home-investment platform that enables individuals to co-own, co-develop, and invest in real estate projects affordably, transparently, and digitally.",
-  },
-  {
-    q: "How does co-development work?",
-    a: "We bring multiple qualified home buyers or investors together to fund, build & own housing units collectively. Each subscriber contributes an agreed portion into the project during construction and receives full legal ownership upon completion. Example: A 12-unit estate → 12 subscribers → construction funded collectively → each owns one fully built home.",
-  },
-  {
-    q: "Who can join Needhomes projects?",
-    a: "✅ First-time home buyers\n✅ Real estate investors (local & diaspora)\n✅ Individuals seeking long-term returns on real estate assets\n✅ Anyone interested in affordable home ownership through structured payments",
-  },
-  {
-    q: "What project types does Needhomes offer?",
-    a: "Residential estates (terraces, apartments, duplexes), Smart and affordable homes, Mixed-use investment properties (New categories added as we expand regions)",
-  },
-  {
-    q: "What is Co-Ownership vs Co-Development?",
-    a: "Co-Ownership: Shares in a property after construction for investment & income with rental & capital gain returns. Co-Development: Full unit ownership before/during construction for living + equity with equity gain returns. Needhomes offers both — you choose based on your goals.",
-  },
-  {
-    q: "How secure is my investment?",
-    a: "We protect subscribers through: ✅ Verified project documentation ✅ Escrow or trustee-managed project accounts ✅ Legal title documentation ✅ Smart contract digital records (coming roadmap) ✅ Insurance on construction-related risks",
-  },
-  {
-    q: "How much do I need to start?",
-    a: "Contribution varies per project. Typical entry points: ₦500,000 – ₦5M initial deposit for co-development, ₦50,000 and above for co-ownership shares. Installment plans are available up to 18–24 months.",
-  },
-  {
-    q: "Are there guaranteed returns?",
-    a: "Real estate performance varies, but Needhomes projects are structured for: 12–25% annual capital appreciation and steady rental income (for co-ownership investments). We prioritize risk-mitigated projects only.",
-  },
-  {
-    q: "How do I monitor my investment?",
-    a: "Through your Needhomes mobile/web dashboard: Project milestone tracking, Payment records and receipts, Legal documentation, Rental income and dividends (where applicable)",
-  },
-  {
-    q: "What are management and service fees?",
-    a: "We charge a small management fee included in the subscription structure to cover: Platform support, Compliance & legal, Project oversight & reporting. Fee transparency is fully disclosed per project.",
-  },
-  {
-    q: "Can I exit before the project completes?",
-    a: "Yes. Options include: 1. Sell your position to new subscribers via the platform resale marketplace 2. Transfer to an approved buyer. Exit terms are clearly stated in your contract.",
-  },
-  {
-    q: "What locations do Needhomes projects cover?",
-    a: "Starting in Lagos, expanding to: Abuja, Port Harcourt, Ogun, Select Sub-Saharan African regions (expansion rollout)",
-  },
-  {
-    q: "Does Needhomes provide mortgages?",
-    a: "Not directly. However, we partner with mortgage banks and lenders to help subscribers secure: NHF loans, Mortgage refinancing after completion",
-  },
-  {
-    q: "What documents do subscribers get?",
-    a: "Each subscriber receives: Offer letter & subscription agreement, Payment schedule, Deed of assignment / Sublease agreement (depending on title), Allocation of home unit (upon completion)",
-  },
-  {
-    q: "How do I get started?",
-    a: "1️⃣ Download and register on the Needhomes App 2️⃣ KYC verification 3️⃣ Choose a project 4️⃣ Start your subscription and track progress digitally",
-  },
-  {
-    q: "Can I invest from abroad (Diaspora)?",
-    a: "✅ Yes — 100% digital onboarding. Accepted currencies: USD, GBP, EUR, CAD, NGN. Returns payout: Paid to your foreign/local bank",
-  },
-];
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  isActive: boolean;
+}
 
 function RouteComponent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  const { data, isLoading } = useQuery<ApiResponse<FAQ[]>>({
+    queryKey: ["faqs-public"],
+    queryFn: async () => {
+      const resp = await apiClient.get("faqs");
+      return resp.data;
+    },
+  });
+
+  const faqs = (data?.data as any as FAQ[]) ?? [];
+
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const filteredQuestions = questions.filter((item) =>
-    item.q.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredQuestions = faqs.filter((item) =>
+    item.question.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -123,48 +76,58 @@ function RouteComponent() {
             <div className="grid grid-cols-1 gap-12">
               {/* Accordion List */}
               <div className="space-y-4">
-                {filteredQuestions.map((item, idx) => {
-                  const isOpen = openIndex === idx;
-                  return (
-                    <div
-                      key={idx}
-                      className={`group rounded-2xl border transition-all duration-300 ${isOpen
-                        ? "border-brand-orange bg-brand-orange/2 shadow-md"
-                        : "border-border bg-card hover:border-brand-orange/50"
-                        }`}
-                    >
-                      <button
-                        onClick={() => toggleAccordion(idx)}
-                        className="cursor-pointer w-full flex items-center justify-between p-6 text-left"
-                      >
-                        <span
-                          className={`text-lg font-semibold transition-colors ${isOpen ? "text-brand-orange" : "text-foreground"
-                            }`}
-                        >
-                          {item.q}
-                        </span>
-                        <div
-                          className={`shrink-0 ml-4 p-1 rounded-full transition-all duration-300 ${isOpen
-                            ? "bg-brand-orange text-white rotate-180"
-                            : "bg-secondary text-muted-foreground"
-                            }`}
-                        >
-                          {isOpen ? <Minus size={20} /> : <Plus size={20} />}
-                        </div>
-                      </button>
+                {isLoading ? (
+                  <div className="flex justify-center py-16">
+                    <span className="loading loading-spinner loading-lg text-primary" />
+                  </div>
+                ) : filteredQuestions.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-12">
+                    No FAQs found.
+                  </p>
+                ) : (
+                  filteredQuestions.map((item, idx) => {
+                    const isOpen = openIndex === idx;
+                    return (
                       <div
-                        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen
-                          ? "max-h-[500px] opacity-100"
-                          : "max-h-0 opacity-0"
+                        key={item.id}
+                        className={`group rounded-2xl border transition-all duration-300 ${isOpen
+                          ? "border-brand-orange bg-brand-orange/2 shadow-md"
+                          : "border-border bg-card hover:border-brand-orange/50"
                           }`}
                       >
-                        <div className="px-6 pb-6 text-muted-foreground leading-relaxed whitespace-pre-line">
-                          {item.a}
+                        <button
+                          onClick={() => toggleAccordion(idx)}
+                          className="cursor-pointer w-full flex items-center justify-between p-6 text-left"
+                        >
+                          <span
+                            className={`text-lg font-semibold transition-colors ${isOpen ? "text-brand-orange" : "text-foreground"
+                              }`}
+                          >
+                            {item.question}
+                          </span>
+                          <div
+                            className={`shrink-0 ml-4 p-1 rounded-full transition-all duration-300 ${isOpen
+                              ? "bg-brand-orange text-white rotate-180"
+                              : "bg-secondary text-muted-foreground"
+                              }`}
+                          >
+                            {isOpen ? <Minus size={20} /> : <Plus size={20} />}
+                          </div>
+                        </button>
+                        <div
+                          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen
+                            ? "max-h-[500px] opacity-100"
+                            : "max-h-0 opacity-0"
+                            }`}
+                        >
+                          <div className="px-6 pb-6 text-muted-foreground leading-relaxed whitespace-pre-line">
+                            {item.answer}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
 
               {/* Support Cards - Centered Below */}

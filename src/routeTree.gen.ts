@@ -78,6 +78,7 @@ import { Route as DashboardPartnersRouteRouteImport } from './routes/dashboard/p
 import { Route as DashboardNotificationsRouteRouteImport } from './routes/dashboard/notifications/route'
 import { Route as DashboardJobsRouteRouteImport } from './routes/dashboard/jobs/route'
 import { Route as DashboardInvestorsRouteRouteImport } from './routes/dashboard/investors/route'
+import { Route as DashboardFaqRouteRouteImport } from './routes/dashboard/faq/route'
 import { Route as DashboardExitRequestsRouteRouteImport } from './routes/dashboard/exit-requests/route'
 import { Route as DashboardChatRouteRouteImport } from './routes/dashboard/chat/route'
 import { Route as DashboardBlogsRouteRouteImport } from './routes/dashboard/blogs/route'
@@ -104,6 +105,7 @@ import { Route as DashboardPartnersIndexRouteImport } from './routes/dashboard/p
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications/index'
 import { Route as DashboardJobsIndexRouteImport } from './routes/dashboard/jobs/index'
 import { Route as DashboardInvestorsIndexRouteImport } from './routes/dashboard/investors/index'
+import { Route as DashboardFaqIndexRouteImport } from './routes/dashboard/faq/index'
 import { Route as DashboardExitRequestsIndexRouteImport } from './routes/dashboard/exit-requests/index'
 import { Route as DashboardChatIndexRouteImport } from './routes/dashboard/chat/index'
 import { Route as DashboardBlogsIndexRouteImport } from './routes/dashboard/blogs/index'
@@ -120,6 +122,8 @@ import { Route as DashboardPropertiesListedRouteImport } from './routes/dashboar
 import { Route as DashboardPropertiesPropertyIdRouteImport } from './routes/dashboard/properties/$propertyId'
 import { Route as DashboardJobsCreateRouteImport } from './routes/dashboard/jobs/create'
 import { Route as DashboardJobsApplicationsRouteImport } from './routes/dashboard/jobs/applications'
+import { Route as DashboardFaqNewRouteImport } from './routes/dashboard/faq/new'
+import { Route as DashboardFaqFaqIdRouteImport } from './routes/dashboard/faq/$faqId'
 import { Route as DashboardPropertiesNewRouteRouteImport } from './routes/dashboard/properties/new/route'
 import { Route as DashboardPropertiesEditRouteRouteImport } from './routes/dashboard/properties/edit/route'
 import { Route as DashboardPartnersPartnerIdRouteRouteImport } from './routes/dashboard/partners/$partnerId/route'
@@ -534,6 +538,11 @@ const DashboardInvestorsRouteRoute = DashboardInvestorsRouteRouteImport.update({
   path: '/investors',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardFaqRouteRoute = DashboardFaqRouteRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardExitRequestsRouteRoute =
   DashboardExitRequestsRouteRouteImport.update({
     id: '/exit-requests',
@@ -676,6 +685,11 @@ const DashboardInvestorsIndexRoute = DashboardInvestorsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardInvestorsRouteRoute,
 } as any)
+const DashboardFaqIndexRoute = DashboardFaqIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardFaqRouteRoute,
+} as any)
 const DashboardExitRequestsIndexRoute =
   DashboardExitRequestsIndexRouteImport.update({
     id: '/',
@@ -765,6 +779,16 @@ const DashboardJobsApplicationsRoute =
     path: '/applications',
     getParentRoute: () => DashboardJobsRouteRoute,
   } as any)
+const DashboardFaqNewRoute = DashboardFaqNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => DashboardFaqRouteRoute,
+} as any)
+const DashboardFaqFaqIdRoute = DashboardFaqFaqIdRouteImport.update({
+  id: '/$faqId',
+  path: '/$faqId',
+  getParentRoute: () => DashboardFaqRouteRoute,
+} as any)
 const DashboardPropertiesNewRouteRoute =
   DashboardPropertiesNewRouteRouteImport.update({
     id: '/new',
@@ -1165,6 +1189,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/exit-requests': typeof DashboardExitRequestsRouteRouteWithChildren
+  '/dashboard/faq': typeof DashboardFaqRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
@@ -1206,6 +1231,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
+  '/dashboard/faq/$faqId': typeof DashboardFaqFaqIdRoute
+  '/dashboard/faq/new': typeof DashboardFaqNewRoute
   '/dashboard/jobs/applications': typeof DashboardJobsApplicationsRoute
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
@@ -1222,6 +1249,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/exit-requests/': typeof DashboardExitRequestsIndexRoute
+  '/dashboard/faq/': typeof DashboardFaqIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -1357,6 +1385,8 @@ export interface FileRoutesByTo {
   '/recover-password': typeof RecoverPasswordIndexRoute
   '/terms': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
+  '/dashboard/faq/$faqId': typeof DashboardFaqFaqIdRoute
+  '/dashboard/faq/new': typeof DashboardFaqNewRoute
   '/dashboard/jobs/applications': typeof DashboardJobsApplicationsRoute
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/listed': typeof DashboardPropertiesListedRoute
@@ -1370,6 +1400,7 @@ export interface FileRoutesByTo {
   '/dashboard/blogs': typeof DashboardBlogsIndexRoute
   '/dashboard/chat': typeof DashboardChatIndexRoute
   '/dashboard/exit-requests': typeof DashboardExitRequestsIndexRoute
+  '/dashboard/faq': typeof DashboardFaqIndexRoute
   '/dashboard/investors': typeof DashboardInvestorsIndexRoute
   '/dashboard/jobs': typeof DashboardJobsIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
@@ -1488,6 +1519,7 @@ export interface FileRoutesById {
   '/dashboard/blogs': typeof DashboardBlogsRouteRouteWithChildren
   '/dashboard/chat': typeof DashboardChatRouteRouteWithChildren
   '/dashboard/exit-requests': typeof DashboardExitRequestsRouteRouteWithChildren
+  '/dashboard/faq': typeof DashboardFaqRouteRouteWithChildren
   '/dashboard/investors': typeof DashboardInvestorsRouteRouteWithChildren
   '/dashboard/jobs': typeof DashboardJobsRouteRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteRouteWithChildren
@@ -1529,6 +1561,8 @@ export interface FileRoutesById {
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/properties/new': typeof DashboardPropertiesNewRouteRouteWithChildren
+  '/dashboard/faq/$faqId': typeof DashboardFaqFaqIdRoute
+  '/dashboard/faq/new': typeof DashboardFaqNewRoute
   '/dashboard/jobs/applications': typeof DashboardJobsApplicationsRoute
   '/dashboard/jobs/create': typeof DashboardJobsCreateRoute
   '/dashboard/properties/$propertyId': typeof DashboardPropertiesPropertyIdRouteWithChildren
@@ -1545,6 +1579,7 @@ export interface FileRoutesById {
   '/dashboard/blogs/': typeof DashboardBlogsIndexRoute
   '/dashboard/chat/': typeof DashboardChatIndexRoute
   '/dashboard/exit-requests/': typeof DashboardExitRequestsIndexRoute
+  '/dashboard/faq/': typeof DashboardFaqIndexRoute
   '/dashboard/investors/': typeof DashboardInvestorsIndexRoute
   '/dashboard/jobs/': typeof DashboardJobsIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -1664,6 +1699,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/exit-requests'
+    | '/dashboard/faq'
     | '/dashboard/investors'
     | '/dashboard/jobs'
     | '/dashboard/notifications'
@@ -1705,6 +1741,8 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/new'
+    | '/dashboard/faq/$faqId'
+    | '/dashboard/faq/new'
     | '/dashboard/jobs/applications'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/$propertyId'
@@ -1721,6 +1759,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/exit-requests/'
+    | '/dashboard/faq/'
     | '/dashboard/investors/'
     | '/dashboard/jobs/'
     | '/dashboard/notifications/'
@@ -1856,6 +1895,8 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/terms'
     | '/dashboard/properties/edit'
+    | '/dashboard/faq/$faqId'
+    | '/dashboard/faq/new'
     | '/dashboard/jobs/applications'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/listed'
@@ -1869,6 +1910,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/exit-requests'
+    | '/dashboard/faq'
     | '/dashboard/investors'
     | '/dashboard/jobs'
     | '/dashboard/notifications'
@@ -1986,6 +2028,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs'
     | '/dashboard/chat'
     | '/dashboard/exit-requests'
+    | '/dashboard/faq'
     | '/dashboard/investors'
     | '/dashboard/jobs'
     | '/dashboard/notifications'
@@ -2027,6 +2070,8 @@ export interface FileRouteTypes {
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
     | '/dashboard/properties/new'
+    | '/dashboard/faq/$faqId'
+    | '/dashboard/faq/new'
     | '/dashboard/jobs/applications'
     | '/dashboard/jobs/create'
     | '/dashboard/properties/$propertyId'
@@ -2043,6 +2088,7 @@ export interface FileRouteTypes {
     | '/dashboard/blogs/'
     | '/dashboard/chat/'
     | '/dashboard/exit-requests/'
+    | '/dashboard/faq/'
     | '/dashboard/investors/'
     | '/dashboard/jobs/'
     | '/dashboard/notifications/'
@@ -2657,6 +2703,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsRouteRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/faq': {
+      id: '/dashboard/faq'
+      path: '/faq'
+      fullPath: '/dashboard/faq'
+      preLoaderRoute: typeof DashboardFaqRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/exit-requests': {
       id: '/dashboard/exit-requests'
       path: '/exit-requests'
@@ -2839,6 +2892,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestorsIndexRouteImport
       parentRoute: typeof DashboardInvestorsRouteRoute
     }
+    '/dashboard/faq/': {
+      id: '/dashboard/faq/'
+      path: '/'
+      fullPath: '/dashboard/faq/'
+      preLoaderRoute: typeof DashboardFaqIndexRouteImport
+      parentRoute: typeof DashboardFaqRouteRoute
+    }
     '/dashboard/exit-requests/': {
       id: '/dashboard/exit-requests/'
       path: '/'
@@ -2950,6 +3010,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/jobs/applications'
       preLoaderRoute: typeof DashboardJobsApplicationsRouteImport
       parentRoute: typeof DashboardJobsRouteRoute
+    }
+    '/dashboard/faq/new': {
+      id: '/dashboard/faq/new'
+      path: '/new'
+      fullPath: '/dashboard/faq/new'
+      preLoaderRoute: typeof DashboardFaqNewRouteImport
+      parentRoute: typeof DashboardFaqRouteRoute
+    }
+    '/dashboard/faq/$faqId': {
+      id: '/dashboard/faq/$faqId'
+      path: '/$faqId'
+      fullPath: '/dashboard/faq/$faqId'
+      preLoaderRoute: typeof DashboardFaqFaqIdRouteImport
+      parentRoute: typeof DashboardFaqRouteRoute
     }
     '/dashboard/properties/new': {
       id: '/dashboard/properties/new'
@@ -3442,6 +3516,21 @@ const DashboardExitRequestsRouteRouteWithChildren =
     DashboardExitRequestsRouteRouteChildren,
   )
 
+interface DashboardFaqRouteRouteChildren {
+  DashboardFaqFaqIdRoute: typeof DashboardFaqFaqIdRoute
+  DashboardFaqNewRoute: typeof DashboardFaqNewRoute
+  DashboardFaqIndexRoute: typeof DashboardFaqIndexRoute
+}
+
+const DashboardFaqRouteRouteChildren: DashboardFaqRouteRouteChildren = {
+  DashboardFaqFaqIdRoute: DashboardFaqFaqIdRoute,
+  DashboardFaqNewRoute: DashboardFaqNewRoute,
+  DashboardFaqIndexRoute: DashboardFaqIndexRoute,
+}
+
+const DashboardFaqRouteRouteWithChildren =
+  DashboardFaqRouteRoute._addFileChildren(DashboardFaqRouteRouteChildren)
+
 interface DashboardInvestorsRouteRouteChildren {
   DashboardInvestorsIndexRoute: typeof DashboardInvestorsIndexRoute
   DashboardInvestorsInvestorIdKycRoute: typeof DashboardInvestorsInvestorIdKycRoute
@@ -3763,6 +3852,7 @@ interface DashboardRouteRouteChildren {
   DashboardBlogsRouteRoute: typeof DashboardBlogsRouteRouteWithChildren
   DashboardChatRouteRoute: typeof DashboardChatRouteRouteWithChildren
   DashboardExitRequestsRouteRoute: typeof DashboardExitRequestsRouteRouteWithChildren
+  DashboardFaqRouteRoute: typeof DashboardFaqRouteRouteWithChildren
   DashboardInvestorsRouteRoute: typeof DashboardInvestorsRouteRouteWithChildren
   DashboardJobsRouteRoute: typeof DashboardJobsRouteRouteWithChildren
   DashboardNotificationsRouteRoute: typeof DashboardNotificationsRouteRouteWithChildren
@@ -3785,6 +3875,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardBlogsRouteRoute: DashboardBlogsRouteRouteWithChildren,
   DashboardChatRouteRoute: DashboardChatRouteRouteWithChildren,
   DashboardExitRequestsRouteRoute: DashboardExitRequestsRouteRouteWithChildren,
+  DashboardFaqRouteRoute: DashboardFaqRouteRouteWithChildren,
   DashboardInvestorsRouteRoute: DashboardInvestorsRouteRouteWithChildren,
   DashboardJobsRouteRoute: DashboardJobsRouteRouteWithChildren,
   DashboardNotificationsRouteRoute:
