@@ -5,6 +5,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import { Link } from "@tanstack/react-router";
 import { Bell, Menu, Search } from "lucide-react";
+import PatNotifications from "./PatNotifications";
 
 export default function PatHeader({
   title,
@@ -41,11 +42,7 @@ export default function PatHeader({
         </div>
         <div className="flex pr-3 items-center gap-2 md:gap-3 shrink-0">
           <div className="relative">
-            <Link to="/partners/notifications">
-              {" "}
-              <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
-              <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0"></Badge>
-            </Link>
+            <PatNotifications></PatNotifications>
           </div>
           <ThemeProvider>
             <div className="dropdown dropdown-end ">
