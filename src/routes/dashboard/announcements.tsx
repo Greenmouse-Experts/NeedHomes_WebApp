@@ -5,13 +5,27 @@ import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Textarea";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Placeholder from "@tiptap/extension-placeholder";
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  List,
+  ListOrdered,
+  Undo,
+  Redo,
+} from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
+import RenderFormattedText from "@/components/RenderFormattedText";
 
 export const Route = createFileRoute("/dashboard/announcements")({
   component: AnnouncementsPage,
@@ -40,6 +54,7 @@ const userTypes: { value: AnnouncementTarget; label: string }[] = [
 
 interface Announcement {
   id: string;
+  title: string;
   content: string;
   target: AnnouncementTarget;
   createdBy: string;
@@ -48,9 +63,105 @@ interface Announcement {
 }
 
 type AnnouncementFormValues = {
+  title: string;
   content: string;
   target: AnnouncementTarget;
 };
+
+function AnnouncementEditor({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Placeholder.configure({ placeholder: "Type in your announcement..." }),
+    ],
+    content: value,
+    onUpdate({ editor }) {
+      onChange(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: "prose prose-sm max-w-none min-h-[200px] p-4 focus:outline-none",
+      },
+    },
+  });
+
+  if (!editor) return null;
+
+  const btn = (
+    active: boolean,
+    onClick: () => void,
+    title: string,
+    icon: React.ReactNode,
+  ) => (
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className={`btn btn-xs btn-ghost ${active ? "btn-active bg-base-200" : ""}`}
+    >
+      {icon}
+    </button>
+  );
+
+  return (
+    <div className="border border-gray-300 rounded-lg overflow-hidden">
+      <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-gray-200 bg-gray-50">
+        {btn(
+          editor.isActive("bold"),
+          () => editor.chain().focus().toggleBold().run(),
+          "Bold",
+          <Bold size={13} />,
+        )}
+        {btn(
+          editor.isActive("italic"),
+          () => editor.chain().focus().toggleItalic().run(),
+          "Italic",
+          <Italic size={13} />,
+        )}
+        {btn(
+          editor.isActive("underline"),
+          () => editor.chain().focus().toggleUnderline().run(),
+          "Underline",
+          <UnderlineIcon size={13} />,
+        )}
+        <div className="w-px h-5 bg-gray-200 mx-1" />
+        {btn(
+          editor.isActive("bulletList"),
+          () => editor.chain().focus().toggleBulletList().run(),
+          "Bullet List",
+          <List size={13} />,
+        )}
+        {btn(
+          editor.isActive("orderedList"),
+          () => editor.chain().focus().toggleOrderedList().run(),
+          "Numbered List",
+          <ListOrdered size={13} />,
+        )}
+        <div className="w-px h-5 bg-gray-200 mx-1" />
+        {btn(
+          false,
+          () => editor.chain().focus().undo().run(),
+          "Undo",
+          <Undo size={13} />,
+        )}
+        {btn(
+          false,
+          () => editor.chain().focus().redo().run(),
+          "Redo",
+          <Redo size={13} />,
+        )}
+      </div>
+      <EditorContent editor={editor} />
+    </div>
+  );
+}
 
 function AnnouncementsPage() {
   const query = useQuery<ApiResponseV2<Announcement[]>>({
@@ -65,16 +176,15 @@ function AnnouncementsPage() {
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { isValid },
   } = useForm<AnnouncementFormValues>({
     defaultValues: {
+      title: "",
       content: "",
       target: "ALL_USERS",
     },
   });
-
-  const announcementText = watch("content");
 
   const onSubmit = (data: AnnouncementFormValues) => {
     toast.promise(annouce.mutateAsync(data), {
@@ -85,7 +195,7 @@ function AnnouncementsPage() {
   };
 
   const annouce = useMutation({
-    mutationFn: (data: { content: string; target: string }) => {
+    mutationFn: (data: { title: string; content: string; target: string }) => {
       return apiClient.post("/announcements", data);
     },
     onSuccess: () => {
@@ -143,7 +253,12 @@ function AnnouncementsPage() {
                                 })}
                               </span>
                             </div>
-                            <p className="">{announcement.content}</p>
+                            {announcement.title && (
+                              <p className="font-semibold text-sm text-gray-900 mb-0.5">
+                                {announcement.title}
+                              </p>
+                            )}
+                            <RenderFormattedText text={announcement.content} />
                           </div>
                         </ThemeProvider>
                       ))}
@@ -194,25 +309,39 @@ function AnnouncementsPage() {
               />
             </div>
 
-            {/* Announcement Textarea */}
+            {/* Title */}
             <div className="space-y-2">
               <Label
-                htmlFor="content"
+                htmlFor="title"
                 className="text-sm font-semibold text-gray-700 flex items-center gap-2"
               >
-                Announcement
+                Title
                 <span className="text-red-500">*</span>
               </Label>
-              <Textarea
-                id="content"
-                placeholder="Type in your announcement..."
-                {...register("content", { required: true })}
-                rows={10}
-                className="resize-none min-h-50"
+              <input
+                id="title"
+                className="input input-bordered w-full"
+                placeholder="e.g. Platform Maintenance Notice"
+                {...register("title", { required: true })}
               />
-              <p className="text-xs text-gray-500">
-                {announcementText.length} characters
-              </p>
+            </div>
+
+            {/* Announcement WYSIWYG */}
+            <div className="space-y-2">
+              <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                Announcement <span className="text-red-500">*</span>
+              </Label>
+              <Controller
+                name="content"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <AnnouncementEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
             </div>
 
             {/* Send Button */}

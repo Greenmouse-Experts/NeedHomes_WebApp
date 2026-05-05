@@ -3,6 +3,7 @@ import { Bell, Calendar, Clock, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import RenderFormattedText from "@/components/RenderFormattedText";
 import { useModal } from "@/store/modals";
 import Modal from "@/components/modals/DialogModal";
 import { useState } from "react";
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/investors/announcements")({
 
 type AnnouncementCreate = {
   id: string;
+  title: string;
   content: string;
   target: "ALL_USERS";
   createdBy: string;
@@ -80,11 +82,9 @@ function RouteComponent() {
               </div>
             </div>
             <h3 className="text-xl font-bold text-gray-900">
-              Important Update
+              {selectedAnnouncement.title || "Important Update"}
             </h3>
-            <div className="prose prose-sm max-w-none text-gray-600 whitespace-pre-wrap">
-              {selectedAnnouncement.content}
-            </div>
+            <RenderFormattedText text={selectedAnnouncement.content} />
           </div>
         )}
       </Modal>
@@ -137,12 +137,12 @@ function RouteComponent() {
                           </div>
 
                           <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-1">
-                            Important Update
+                            {announcement.title || "Important Update"}
                           </h3>
 
-                          <p className="text-gray-600 leading-relaxed text-sm sm:text-base line-clamp-2">
-                            {announcement.content}
-                          </p>
+                          <div className="text-gray-600 text-sm sm:text-base line-clamp-2">
+                            <RenderFormattedText text={announcement.content} />
+                          </div>
                         </div>
 
                         <div className="shrink-0 self-center">

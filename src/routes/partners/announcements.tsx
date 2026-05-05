@@ -3,6 +3,7 @@ import { Bell, Calendar, Clock, Eye, ChevronRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
+import RenderFormattedText from "@/components/RenderFormattedText";
 
 export const Route = createFileRoute("/partners/announcements")({
   component: RouteComponent,
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/partners/announcements")({
 function RouteComponent() {
   type AnnouncementCreate = {
     id: string;
+    title: string;
     content: string;
     target: "ALL_USERS";
     createdBy: string;
@@ -102,12 +104,12 @@ function RouteComponent() {
                           </div>
 
                           <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-1">
-                            Important Update
+                            {announcement.title || "Important Update"}
                           </h3>
 
-                          <p className="text-gray-600 leading-relaxed text-sm sm:text-base line-clamp-2">
-                            {announcement.content}
-                          </p>
+                          <div className="text-gray-600 text-sm sm:text-base line-clamp-2">
+                            <RenderFormattedText text={announcement.content} />
+                          </div>
 
                           {/*<div className="mt-4 flex items-center text-sm font-semibold text-orange-600 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
                             View Details
