@@ -9,15 +9,57 @@ import {
   Megaphone,
   Settings,
 } from "lucide-react";
-import { show_logout, useAuth, useKyc } from "@/store/authStore";
+import { show_logout, useKyc } from "@/store/authStore";
 import ProfileCard from "../investors/ProfileCard";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 
 interface PartnerSidebarProps {
   activePage?: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
 }
+const RenderNotifications = (props: {
+  link: any;
+  isRestricted: boolean;
+  activePage?: string;
+  handleLinkClick: (
+    e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+  ) => void;
+}) => {
+  const countQuery = useQuery<ApiResponse<{ unreadCount: number }>>({
+    queryKey: ["pat-notifications"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/notifications/unread-count");
+      return resp.data;
+    },
+  });
+  const { link, isRestricted, activePage, handleLinkClick } = props;
+  return (
+    <Link
+      key={link.to}
+      to={isRestricted ? "#" : link.to}
+      onClick={isRestricted ? (e) => e.preventDefault() : handleLinkClick}
+      disabled={isRestricted}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.id
+          ? "bg-(--color-orange) text-white"
+          : "hover:bg-gray-800 text-gray-400"
+      } ${isRestricted ? "opacity-50 cursor-not-allowed" : ""}`}
+      activeProps={{
+        className: "bg-(--color-orange) text-white",
+      }}
+      activeOptions={{ exact: link.exact }}
+    >
+      <link.icon className="size-4" />
+      <span>{link.label}</span>
+      <span className="ml-auto text-sm bg-red-500/20 ring fade  p-1 text-white rounded-sm">
+        {countQuery.data?.data?.unreadCount}
+      </span>
+    </Link>
+  );
+};
 
 const NAV_LINKS = [
   {
@@ -44,6 +86,7 @@ const NAV_LINKS = [
     label: "Notifications",
     id: "notifications",
     icon: Bell,
+    render: RenderNotifications,
   },
   {
     to: "/partners/transactions",
@@ -72,12 +115,7 @@ const NAV_LINKS = [
   },
 ];
 
-export function PartnerSidebar({
-  activePage,
-  setIsSidebarOpen,
-}: PartnerSidebarProps) {
-  const [authRecord] = useAuth();
-
+export function PartnerSidebar({ activePage }: PartnerSidebarProps) {
   // Close sidebar when route changes on mobile
   const handleLinkClick = () => {
     const close_div = document.getElementById(
@@ -114,7 +152,14 @@ export function PartnerSidebar({
           {NAV_LINKS.map((link) => {
             const isRestricted =
               !isVerified && link.id !== "dashboard" && link.id !== "settings";
-
+            if (link.render) {
+              return link.render({
+                link,
+                isRestricted,
+                activePage,
+                handleLinkClick,
+              });
+            }
             return (
               <Link
                 key={link.to}

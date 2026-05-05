@@ -15,6 +15,49 @@ import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "./ProfileCard";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { NairaIcon } from "../NairaIcon";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
+
+const RenderNotifications = (props: {
+  link: any;
+  isDisabled: boolean;
+  activePage?: string;
+  handleLinkClick: () => void;
+}) => {
+  const countQuery = useQuery<ApiResponse<{ unreadCount: number }>>({
+    queryKey: ["inv-notifications"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/notifications/unread-count");
+      return resp.data;
+    },
+  });
+  const { link, isDisabled, activePage, handleLinkClick } = props;
+  return (
+    <Link
+      key={link.to}
+      to={isDisabled ? "#" : link.to}
+      onClick={isDisabled ? (e) => e.preventDefault() : handleLinkClick}
+      disabled={isDisabled}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.activePage
+          ? "bg-[var(--color-orange)] text-white"
+          : isDisabled
+            ? "text-gray-600 cursor-not-allowed opacity-50"
+            : "hover:bg-gray-800 text-gray-400"
+      }`}
+      activeProps={{ className: "bg-[var(--color-orange)] text-white" }}
+      activeOptions={link.activeOptions}
+    >
+      {link.icon}
+      <span>{link.label}</span>
+      {(countQuery.data?.data?.unreadCount ?? 0) > 0 && (
+        <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+          {countQuery.data?.data?.unreadCount}
+        </span>
+      )}
+    </Link>
+  );
+};
 
 interface InvestorSidebarProps {
   activePage?: string;
@@ -70,6 +113,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       label: "Notifications",
       icon: <Bell className="size-4" />,
       alwaysEnabled: false,
+      render: RenderNotifications,
     },
     {
       to: "/investors/transactions",
@@ -141,27 +185,24 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
         <nav className="flex-1 overflow-y-auto p-3 space-y-1  ">
           {navLinks.map((link) => {
             const isDisabled = !isVerified && !link.alwaysEnabled;
-            const linkClasses = `flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
-              activePage === link.activePage
-                ? "bg-[var(--color-orange)] text-white"
-                : isDisabled
-                  ? "text-gray-600 cursor-not-allowed opacity-50"
-                  : "hover:bg-gray-800 text-gray-400"
-            }`;
-
+            if ((link as any).render) {
+              return (link as any).render({ link, isDisabled, activePage, handleLinkClick });
+            }
             return (
               <Link
                 key={link.to}
                 to={isDisabled ? "#" : link.to}
-                onClick={
-                  isDisabled ? (e) => e.preventDefault() : handleLinkClick
-                }
+                onClick={isDisabled ? (e) => e.preventDefault() : handleLinkClick}
                 disabled={isDisabled}
-                className={linkClasses}
+                className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+                  activePage === link.activePage
+                    ? "bg-[var(--color-orange)] text-white"
+                    : isDisabled
+                      ? "text-gray-600 cursor-not-allowed opacity-50"
+                      : "hover:bg-gray-800 text-gray-400"
+                }`}
                 activeOptions={link.activeOptions}
-                activeProps={{
-                  className: "bg-[var(--color-orange)] text-white",
-                }}
+                activeProps={{ className: "bg-[var(--color-orange)] text-white" }}
               >
                 {link.icon}
                 <span>{link.label}</span>

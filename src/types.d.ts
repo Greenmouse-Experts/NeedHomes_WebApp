@@ -1,3 +1,5 @@
+export type AccountStatus = "ACTIVE" | "SUSPENDED";
+
 export interface USER {
   id: string;
   email: string;
