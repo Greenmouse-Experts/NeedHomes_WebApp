@@ -5,6 +5,8 @@ import { Plus, Pencil, Trash2, Eye, EyeOff, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import RenderFormattedText from "@/components/RenderFormattedText";
+import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
+import { useRef, useState } from "react";
 
 export const Route = createFileRoute("/dashboard/faq/")({
   component: RouteComponent,
@@ -51,6 +53,24 @@ function RouteComponent() {
   });
 
   const faqs: FAQ[] = (query.data?.data as any) ?? [];
+  const deleteModalRef = useRef<ModalHandle>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
+  const confirmDelete = (id: string) => {
+    setPendingDeleteId(id);
+    deleteModalRef.current?.open();
+  };
+
+  const handleDelete = () => {
+    if (!pendingDeleteId) return;
+    toast.promise(deleteMutation.mutateAsync(pendingDeleteId), {
+      loading: "Deleting...",
+      success: "FAQ deleted",
+      error: extract_message,
+    });
+    deleteModalRef.current?.close();
+    setPendingDeleteId(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -159,14 +179,7 @@ function RouteComponent() {
                     </button>
                     <button
                       className="btn btn-ghost btn-sm btn-square"
-                      onClick={() => {
-                        if (confirm("Delete this FAQ?"))
-                          toast.promise(deleteMutation.mutateAsync(faq.id), {
-                            loading: "Deleting...",
-                            success: "FAQ deleted",
-                            error: extract_message,
-                          });
-                      }}
+                      onClick={() => confirmDelete(faq.id)}
                     >
                       <Trash2 size={15} className="text-red-500" />
                     </button>
@@ -176,6 +189,31 @@ function RouteComponent() {
             ))}
         </div>
       )}
+      <Modal
+        ref={deleteModalRef}
+        title="Delete FAQ"
+        actions={
+          <>
+            <button
+              className="btn btn-ghost"
+              onClick={() => deleteModalRef.current?.close()}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-error"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+            >
+              <Trash2 size={15} /> Delete
+            </button>
+          </>
+        }
+      >
+        <p className="text-sm text-gray-600">
+          Are you sure you want to delete this FAQ? This action cannot be undone.
+        </p>
+      </Modal>
     </div>
   );
 }
