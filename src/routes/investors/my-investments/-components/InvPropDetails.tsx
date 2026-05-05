@@ -205,12 +205,6 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                     {new Date(prop_data.createdAt).toLocaleString()}
                   </span>
                 </div>
-                <div className="mt-2 sm:mt-0">
-                  <span className="font-medium text-gray-700">Updated:</span>{" "}
-                  <span className="ml-1">
-                    {new Date(prop_data.updatedAt).toLocaleString()}
-                  </span>
-                </div>
               </div>
             </div>
           );
