@@ -1,6 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { extract_message } from "@/helpers/apihelpers";
+import { suspend_unsuspend } from "@/routes/-components/suspend_unsuspend";
 import apiClient from "@/api/simpleApi";
 import type { ApiResponse, ApiResponseV2 } from "@/api/simpleApi";
 import {
@@ -42,6 +45,7 @@ export const Route = createFileRoute("/dashboard/investors/")({
 
 function InvestorsPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { verificationStatus, search } = Route.useSearch();
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
@@ -110,6 +114,25 @@ function InvestorsPage() {
       label: "View Details",
       action: (item: INVESTOR, nav) =>
         nav({ to: `/dashboard/investors/${item.id}` }),
+    },
+    {
+      key: "suspend",
+      label: "Suspend",
+      render: (item: INVESTOR) =>
+        item.account_status === "ACTIVE" ? "Suspend" : "Unsuspend",
+      action: (item: INVESTOR) => {
+        const status = item.account_status === "ACTIVE" ? "suspend" : "unsuspend";
+        toast.promise(
+          suspend_unsuspend({ userId: item.id, status }).then(() =>
+            queryClient.invalidateQueries({ queryKey: ["investors"] }),
+          ),
+          {
+            loading: status === "suspend" ? "Suspending..." : "Unsuspending...",
+            success: status === "suspend" ? "User suspended" : "User unsuspended",
+            error: extract_message,
+          },
+        );
+      },
     },
   ];
 

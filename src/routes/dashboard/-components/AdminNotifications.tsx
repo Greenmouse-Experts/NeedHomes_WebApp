@@ -29,7 +29,7 @@ const getIcon = (type: string) => {
   }
 };
 
-export default function PatNotifications() {
+export default function AdminNotifications() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function PatNotifications() {
   });
 
   const listQuery = useQuery<ApiResponseV2<Notification[]>>({
-    queryKey: ["pat-notifications-list"],
+    queryKey: ["admin-notifications-list"],
     queryFn: async () => {
       const resp = await apiClient.get("/notifications");
       return resp.data;
@@ -127,7 +127,7 @@ export default function PatNotifications() {
 
           <div className="px-4 py-3 border-t border-gray-100">
             <Link
-              to="/partners/notifications"
+              to="/dashboard/notifications"
               onClick={() => setOpen(false)}
               className="block text-center text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors"
             >

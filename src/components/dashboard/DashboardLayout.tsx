@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import AdminNotifications from "@/routes/dashboard/-components/AdminNotifications";
 
 interface NavItem {
   label: string;
@@ -336,16 +337,7 @@ export function DashboardLayout({
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
-            <Link
-              to="/dashboard/notifications"
-              viewTransition
-              className="relative"
-            >
-              <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
-              <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:size-4 flex items-center justify-center p-0">
-                6
-              </Badge>
-            </Link>
+            <AdminNotifications />
             <ThemeProvider>
               <div className="dropdown dropdown-end">
                 <button className="btn btn-circle">
