@@ -15,7 +15,8 @@ import {
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
 import UserTransactions from "@/routes/dashboard/investors/-components/UserTransactions";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { suspend_unsuspend } from "@/routes/-components/suspend_unsuspend";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_INVESTOR_DATA } from "@/types";
 import PageLoader from "@/components/layout/PageLoader";
@@ -38,6 +39,7 @@ function InvestorDetailsPage() {
   );
   const [message, setMessage] = useState("");
   const modalRef = useRef<ModalHandle>(null);
+  const queryClient = useQueryClient();
 
   const query = useQuery<ApiResponse<ADMIN_INVESTOR_DATA>>({
     queryKey: ["admin-investor", investorId],
@@ -147,7 +149,24 @@ function InvestorDetailsPage() {
                             </button>
                           }
                         >
-                          <DropdownMenuItem>Suspend Investor</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const isSuspended = investor.account_status !== "ACTIVE";
+                              const status = isSuspended ? "unsuspend" : "suspend";
+                              toast.promise(
+                                suspend_unsuspend({ userId: investorId, status }).then(() =>
+                                  queryClient.invalidateQueries({ queryKey: ["admin-investor", investorId] }),
+                                ),
+                                {
+                                  loading: isSuspended ? "Unsuspending..." : "Suspending...",
+                                  success: isSuspended ? "Investor unsuspended" : "Investor suspended",
+                                  error: extract_message,
+                                },
+                              );
+                            }}
+                          >
+                            {investor.account_status !== "ACTIVE" ? "Unsuspend Investor" : "Suspend Investor"}
+                          </DropdownMenuItem>
                         </DropdownMenu>
                       </div>
                     </div>

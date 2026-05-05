@@ -13,7 +13,8 @@ import {
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuItem } from "@/components/ui/DropdownMenu";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { suspend_unsuspend } from "@/routes/-components/suspend_unsuspend";
 import type { ApiResponse } from "@/api/simpleApi";
 import type { ADMIN_PARTNER_DATA } from "@/types";
 import apiClient from "@/api/simpleApi";
@@ -38,6 +39,7 @@ function PartnerDetailsPage() {
   );
   const [message, setMessage] = useState("");
   const modalRef = useRef<ModalHandle>(null);
+  const queryClient = useQueryClient();
 
   const query = useQuery<ApiResponse<ADMIN_PARTNER_DATA>>({
     queryKey: ["admin-partner", partnerId],
@@ -137,7 +139,24 @@ function PartnerDetailsPage() {
                             </button>
                           }
                         >
-                          <DropdownMenuItem>Suspend Partner</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const isSuspended = partner.account_status !== "ACTIVE";
+                              const status = isSuspended ? "unsuspend" : "suspend";
+                              toast.promise(
+                                suspend_unsuspend({ userId: partnerId, status }).then(() =>
+                                  queryClient.invalidateQueries({ queryKey: ["admin-partner", partnerId] }),
+                                ),
+                                {
+                                  loading: isSuspended ? "Unsuspending..." : "Suspending...",
+                                  success: isSuspended ? "Partner unsuspended" : "Partner suspended",
+                                  error: extract_message,
+                                },
+                              );
+                            }}
+                          >
+                            {partner.account_status !== "ACTIVE" ? "Unsuspend Partner" : "Suspend Partner"}
+                          </DropdownMenuItem>
                         </DropdownMenu>
                       </div>
                     </div>
