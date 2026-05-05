@@ -59,9 +59,7 @@ export function RenderDocuments({
     propertyDocument ||
     hasTitleDocs;
 
-  if (!hasAnything) {
-    return <p className="text-sm text-gray-400">No documents available.</p>;
-  }
+  if (!hasAnything) return null;
 
   return (
     <ThemeProvider className="flex flex-col gap-3">
