@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import SimpleInput from "./inputs/SimpleInput";
 import LocalSelect from "./inputs/LocalSelect";
 import { Button } from "@/components/ui/Button";
+import { Info } from "lucide-react";
 import ThemeProvider from "./ThemeProvider";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
@@ -137,6 +138,8 @@ export default function BankDetails() {
     );
   }
 
+  const bankExists = !!currentBankInfo?.data;
+
   return (
     <div>
       <div className="mb-4 md:mb-6">
@@ -144,6 +147,16 @@ export default function BankDetails() {
           Bank Details
         </h3>
       </div>
+
+      {bankExists && (
+        <div className="flex items-start gap-3 p-4 mb-6 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-sm max-w-2xl">
+          <Info className="w-4 h-4 mt-0.5 shrink-0 text-blue-500" />
+          <p>
+            Your bank details are already on file. To update them, please contact{" "}
+            <strong>customer support</strong>.
+          </p>
+        </div>
+      )}
 
       <ThemeProvider>
         <form onSubmit={handleSubmit(handleBankSubmit)} className="max-w-2xl">
@@ -157,6 +170,7 @@ export default function BankDetails() {
                 id="accountNumber"
                 placeholder="Enter Acct Number"
                 className="text-sm md:text-base"
+                disabled={bankExists}
                 {...register("accountNumber", {
                   required: "Account number is required",
                 })}
@@ -176,6 +190,7 @@ export default function BankDetails() {
               <div className="relative">
                 <LocalSelect
                   id="bankCode"
+                  disabled={bankExists}
                   {...register("bankCode", {
                     required: "Bank name is required",
                   })}
@@ -223,12 +238,21 @@ export default function BankDetails() {
             </div>
           </div>
 
+          {!bankExists && (
+            <div className="flex items-start gap-2 mt-5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs max-w-2xl">
+              <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-500" />
+              <p>
+                Once saved, bank details <strong>cannot be changed</strong> without contacting customer support.
+              </p>
+            </div>
+          )}
+
           {/* Submit Button */}
           <div className="pt-4 md:pt-6">
             <Button
               type="submit"
               className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
-              disabled={resolveBankMutation.isPending}
+              disabled={resolveBankMutation.isPending || bankExists}
             >
               {resolveBankMutation.isPending ? (
                 <>
