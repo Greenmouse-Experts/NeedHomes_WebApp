@@ -82,7 +82,7 @@ export default function RecentProperties() {
     queryKey: ["investments", "recent"],
     queryFn: async () => {
       const resp = await apiClient.get("investments/my-investments", {
-        params: { page: 1, limit: 10 },
+        params: { page: 1, limit: 5 },
       });
       return resp.data;
     },
@@ -104,7 +104,7 @@ export default function RecentProperties() {
       <PageLoader query={query}>
         {(data) => {
           const investments: Investment[] =
-            (data.data as any)?.data ?? data.data ?? [];
+            ((data.data as any)?.data ?? data.data ?? []).slice(0, 5);
           return (
             <CustomTable
               ring={false}

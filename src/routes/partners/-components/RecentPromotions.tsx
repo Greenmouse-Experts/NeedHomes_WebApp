@@ -91,7 +91,7 @@ export default function RecentPromotions() {
         {(data) => {
           const promotions: Promotion[] =
             (data.data as any)?.data ?? data.data ?? [];
-          const latest = promotions.slice(0, 10);
+          const latest = promotions.slice(0, 5);
 
           if (latest.length === 0) {
             return (
