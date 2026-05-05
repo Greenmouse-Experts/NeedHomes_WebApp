@@ -4,6 +4,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { Plus, Pencil, Trash2, Eye, EyeOff, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
+import RenderFormattedText from "@/components/RenderFormattedText";
 
 export const Route = createFileRoute("/dashboard/faq/")({
   component: RouteComponent,
@@ -36,7 +37,8 @@ function RouteComponent() {
       const resp = await apiClient.delete(`faqs/${id}`);
       return resp.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["faqs-admin"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["faqs-admin"] }),
   });
 
   const toggleMutation = useMutation({
@@ -44,7 +46,8 @@ function RouteComponent() {
       const resp = await apiClient.patch(`faqs/${id}`, { isActive });
       return resp.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["faqs-admin"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["faqs-admin"] }),
   });
 
   const faqs: FAQ[] = (query.data?.data as any) ?? [];
@@ -104,9 +107,9 @@ function RouteComponent() {
                     <p className="font-semibold text-gray-900 mb-1">
                       {faq.question}
                     </p>
-                    <p className="text-sm text-gray-500 line-clamp-2">
-                      {faq.answer}
-                    </p>
+                    <RenderFormattedText
+                      text={faq.answer}
+                    ></RenderFormattedText>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span
@@ -123,10 +126,15 @@ function RouteComponent() {
                       title={faq.isActive ? "Hide" : "Show"}
                       onClick={() =>
                         toast.promise(
-                          toggleMutation.mutateAsync({ id: faq.id, isActive: !faq.isActive }),
+                          toggleMutation.mutateAsync({
+                            id: faq.id,
+                            isActive: !faq.isActive,
+                          }),
                           {
                             loading: faq.isActive ? "Hiding..." : "Showing...",
-                            success: faq.isActive ? "FAQ hidden" : "FAQ visible",
+                            success: faq.isActive
+                              ? "FAQ hidden"
+                              : "FAQ visible",
                             error: extract_message,
                           },
                         )

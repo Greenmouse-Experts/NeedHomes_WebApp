@@ -1,4 +1,5 @@
 import { type UseFormReturn, Controller } from "react-hook-form";
+import { RichTextEditor } from "@/components/terms/RichTextEditor";
 
 export interface FAQFormValues {
   question: string;
@@ -44,19 +45,20 @@ export default function FAQForm({
         )}
       </div>
 
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium text-gray-700">
-          Answer <span className="text-red-500">*</span>
-        </label>
-        <textarea
-          className="textarea textarea-bordered w-full min-h-36 resize-y"
-          placeholder="Provide a clear and helpful answer..."
-          {...register("answer", { required: "Answer is required" })}
-        />
-        {errors.answer && (
-          <p className="text-xs text-red-500">{errors.answer.message}</p>
+      <Controller
+        control={control}
+        name="answer"
+        rules={{ required: "Answer is required" }}
+        render={({ field }) => (
+          <RichTextEditor
+            label="Answer"
+            placeholder="Provide a clear and helpful answer..."
+            value={field.value ?? ""}
+            onChange={field.onChange}
+            error={errors.answer?.message}
+          />
         )}
-      </div>
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">

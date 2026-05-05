@@ -4,6 +4,8 @@ import { Search, MessageCircle, HelpCircle, Plus, Minus } from "lucide-react";
 import Footer from "@/components/home/Footer";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import { Renderer } from "leaflet";
+import RenderFormattedText from "@/components/RenderFormattedText";
 
 export const Route = createFileRoute("/faqs")({
   component: RouteComponent,
@@ -90,39 +92,43 @@ function RouteComponent() {
                     return (
                       <div
                         key={item.id}
-                        className={`group rounded-2xl border transition-all duration-300 ${isOpen
-                          ? "border-brand-orange bg-brand-orange/2 shadow-md"
-                          : "border-border bg-card hover:border-brand-orange/50"
-                          }`}
+                        className={`group rounded-2xl border transition-all duration-300 ${
+                          isOpen
+                            ? "border-brand-orange bg-brand-orange/2 shadow-md"
+                            : "border-border bg-card hover:border-brand-orange/50"
+                        }`}
                       >
                         <button
                           onClick={() => toggleAccordion(idx)}
                           className="cursor-pointer w-full flex items-center justify-between p-6 text-left"
                         >
                           <span
-                            className={`text-lg font-semibold transition-colors ${isOpen ? "text-brand-orange" : "text-foreground"
-                              }`}
+                            className={`text-lg font-semibold transition-colors ${
+                              isOpen ? "text-brand-orange" : "text-foreground"
+                            }`}
                           >
                             {item.question}
                           </span>
                           <div
-                            className={`shrink-0 ml-4 p-1 rounded-full transition-all duration-300 ${isOpen
-                              ? "bg-brand-orange text-white rotate-180"
-                              : "bg-secondary text-muted-foreground"
-                              }`}
+                            className={`shrink-0 ml-4 p-1 rounded-full transition-all duration-300 ${
+                              isOpen
+                                ? "bg-brand-orange text-white rotate-180"
+                                : "bg-secondary text-muted-foreground"
+                            }`}
                           >
                             {isOpen ? <Minus size={20} /> : <Plus size={20} />}
                           </div>
                         </button>
                         <div
-                          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen
-                            ? "max-h-[500px] opacity-100"
-                            : "max-h-0 opacity-0"
-                            }`}
+                          className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                            isOpen
+                              ? "max-h-[500px] opacity-100"
+                              : "max-h-0 opacity-0"
+                          }`}
                         >
-                          <div className="px-6 pb-6 text-muted-foreground leading-relaxed whitespace-pre-line">
-                            {item.answer}
-                          </div>
+                          <RenderFormattedText
+                            text={item.answer}
+                          ></RenderFormattedText>
                         </div>
                       </div>
                     );
