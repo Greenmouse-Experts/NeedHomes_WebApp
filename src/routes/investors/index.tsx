@@ -1,92 +1,22 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, CheckCircle2, Star } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { createFileRoute } from "@tanstack/react-router";
+import { Star } from "lucide-react";
 import { useAuth, useKyc } from "@/store/authStore";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import CalendarWidget from "@/components/CalendarWidget";
-import ThemeProvider from "@/simpleComps/ThemeProvider";
 import VerificationStatus from "../-components/VerificationStatus";
 import UserWallet from "../-components/Wallet";
-import Example from "./-components/Chart";
-import InvStatistics from "./my-investments/-components/InvStatistics";
 import RecentProperties from "./-components/RecentProperty";
 import InvestorAnalysis from "./-components/InvestorAnalysis";
-import { NairaIcon } from "@/components/NairaIcon";
 
 export const Route = createFileRoute("/investors/")({
   component: InvestorDashboard,
 });
 
-const recentProperties = [
-  {
-    id: "01",
-    type: "4BR Duplex",
-    amount: `${(<NairaIcon />)} 10,000,000`,
-    date: "24-02-25",
-    status: "Approved",
-  },
-  {
-    id: "02",
-    type: "Semi Detached",
-    amount: `${(<NairaIcon />)} 10,000,000`,
-    date: "24-02-25",
-    status: "Pending",
-  },
-  {
-    id: "03",
-    type: "Fully Detached",
-    amount: "N 10,000,000",
-    date: "24-02-25",
-    status: "Approved",
-  },
-  {
-    id: "04",
-    type: "4BR Duplex",
-    amount: "N 10,000,000",
-    date: "24-02-25",
-    status: "Declined",
-  },
-  {
-    id: "05",
-    type: "Semi Detached",
-    amount: "N 10,000,000",
-    date: "24-02-25",
-    status: "Approved",
-  },
-  {
-    id: "06",
-    type: "Semi Detached",
-    amount: "N 10,000,000",
-    date: "24-02-25",
-    status: "Approved",
-  },
-];
-
-const monthlyData = [
-  { month: "Jan", value: 40000 },
-  { month: "Feb", value: 25000 },
-  { month: "Mar", value: 30000 },
-  { month: "Apr", value: 50000 },
-  { month: "May", value: 20000 },
-  { month: "Jun", value: 35000 },
-  { month: "Jul", value: 28000 },
-  { month: "Aug", value: 55000 },
-  { month: "Sep", value: 32000 },
-  { month: "Oct", value: 45000 },
-  { month: "Nov", value: 38000 },
-  { month: "Dec", value: 42000 },
-];
-
 function InvestorDashboard() {
-  const maxValue = Math.max(...monthlyData.map((d) => d.value));
   const [authRecord] = useAuth();
   const user = authRecord?.user;
   const [kyc] = useKyc();
-  const isVerified = user?.account_verification_status === "VERIFIED";
-  const profilePictureUrl =
-    user?.profilePicture ||
-    "https://images.unsplash.com/photo-1635194936300-08a36d3a90de?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   const statsQuery = useQuery<
     ApiResponse<{
@@ -128,160 +58,156 @@ function InvestorDashboard() {
           {/*<ThemeProvider></ThemeProvider>*/}
         </div>
       </div>
-      {/* Stats Cards in Orange Box + Calendar */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 h-full">
-          <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg h-full flex flex-col justify-between">
-            <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 opacity-20">
-              <svg viewBox="0 0 200 200" className="w-full h-full">
-                <path
-                  fill="white"
-                  d="M40,-65C50,-55,55,-40,58,-25C61,-10,62,5,58,18C54,31,45,42,35,50C25,58,14,63,0,63C-14,63,-28,58,-40,50C-52,42,-62,31,-65,18C-68,5,-64,-10,-58,-25C-52,-40,-44,-55,-32,-65C-20,-75,-10,-80,0,-80C10,-80,30,-75,40,-65Z"
-                  transform="translate(100 100)"
-                />
-              </svg>
-            </div>
 
-            <div className="relative z-10 flex items-center gap-2 text-white/90 mb-6">
-              <Star className="w-4 h-4" />
-              <span className="text-xs md:text-sm font-medium">
-                BASIC STATISTICS
-              </span>
+      <section className="gap-6 flex">
+        <div className="flex-5/6 flex  flex-col gap-6">
+          <section className="flex  gap-6 ">
+            <div className="flex-1 max-w-xs">
+              <CalendarWidget />
             </div>
+            <div className=" flex-1">
+              <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg h-full flex flex-col justify-between">
+                <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 opacity-20">
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <path
+                      fill="white"
+                      d="M40,-65C50,-55,55,-40,58,-25C61,-10,62,5,58,18C54,31,45,42,35,50C25,58,14,63,0,63C-14,63,-28,58,-40,50C-52,42,-62,31,-65,18C-68,5,-64,-10,-58,-25C-52,-40,-44,-55,-32,-65C-20,-75,-10,-80,0,-80C10,-80,30,-75,40,-65Z"
+                      transform="translate(100 100)"
+                    />
+                  </svg>
+                </div>
 
-            {/* Stats Cards inside welcome box */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-2xl md:text-3xl font-bold text-white">
-                      {stats?.total ?? "—"}
-                    </p>
-                    <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Total Investments
-                    </p>
-                  </div>
+                <div className="relative z-10 flex items-center gap-2 text-white/90 mb-6">
+                  <Star className="w-4 h-4" />
+                  <span className="text-xs md:text-sm font-medium">
+                    BASIC STATISTICS
+                  </span>
                 </div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+
+                {/* Stats Cards inside welcome box */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
+                        <svg
+                          className="w-6 h-6 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-2xl md:text-3xl font-bold text-white">
+                          {stats?.total ?? "—"}
+                        </p>
+                        <p className="text-xs md:text-sm text-white/90 font-medium">
+                          Total Investments
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xl md:text-2xl font-bold text-white">
-                      {stats
-                        ? `₦${(stats.totalInvested / 100).toLocaleString()}`
-                        : "—"}
-                    </p>
-                    <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Total Amount Invested
-                    </p>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
+                        <svg
+                          className="w-6 h-6 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-xl md:text-2xl font-bold text-white">
+                          {stats
+                            ? `₦${(stats.totalInvested / 100).toLocaleString()}`
+                            : "—"}
+                        </p>
+                        <p className="text-xs md:text-sm text-white/90 font-medium">
+                          Total Amount Invested
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
+                        <svg
+                          className="w-6 h-6 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-2xl md:text-3xl font-bold text-white">
+                          {stats?.active ?? "—"}
+                        </p>
+                        <p className="text-xs md:text-sm text-white/90 font-medium">
+                          Active Investments
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-2xl md:text-3xl font-bold text-white">
-                      {stats?.active ?? "—"}
-                    </p>
-                    <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Active Investments
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xl md:text-2xl font-bold text-white">
-                      {stats?.completed ?? "—"}
-                    </p>
-                    <p className="text-xs md:text-sm text-white/90 font-medium">
-                      Completed Investments
-                    </p>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white/30 rounded-xl flex items-center justify-center shrink-0">
+                        <svg
+                          className="w-6 h-6 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-xl md:text-2xl font-bold text-white">
+                          {stats?.completed ?? "—"}
+                        </p>
+                        <p className="text-xs md:text-sm text-white/90 font-medium">
+                          Completed Investments
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </section>
 
-        <div className="lg:col-span-1">
-          <CalendarWidget />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        {/* Recent Property */}
-        <div className="lg:col-span-2">
           <RecentProperties />
         </div>
-
-        {/* Wallet */}
-        <div className="lg:col-span-1">
+        <div className="flex-1/3 flex-col gap-6">
           <UserWallet />
         </div>
-      </div>
-      {/*<InvStatistics />*/}
-      {/* Monthly Analysis */}
+      </section>
+
       <InvestorAnalysis />
       {/*<Example />*/}
     </div>
