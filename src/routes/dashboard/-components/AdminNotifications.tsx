@@ -102,7 +102,7 @@ export default function AdminNotifications() {
                   className={`flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer ${!n.isRead ? "bg-blue-50/40" : ""}`}
                   onClick={() => {
                     setOpen(false);
-                    navigate({ to: "/partners/notifications" });
+                    navigate({ to: "/dashboard/notifications" });
                   }}
                 >
                   <div className="mt-0.5 shrink-0">{getIcon(n.type)}</div>
