@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Clock, Info, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useRef, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ interface Notification {
 }
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
   const query = useQuery<ApiResponseV2<Notification[]>>({
     queryKey: ["notifications"],
     queryFn: async () => {
@@ -40,7 +41,8 @@ function RouteComponent() {
   const mutation = useMutation({
     mutationFn: async (fn: any) => await fn(),
     onSuccess: () => {
-      query.refetch();
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ["inv-notifications"] });
     },
   });
 
