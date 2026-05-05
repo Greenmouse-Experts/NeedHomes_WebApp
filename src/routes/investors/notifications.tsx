@@ -1,11 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Check,
-  Clock,
-  Info,
-  AlertTriangle,
-  CheckCircle2,
-} from "lucide-react";
+import { Check, Clock, Info, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
@@ -30,63 +24,6 @@ interface Notification {
   date: string;
   isRead: boolean;
 }
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    title: "Investment Successful",
-    content:
-      'Your investment of N5,000,000 in "4BR Fully Detached Duplex" has been successfully processed.',
-    type: "success",
-    date: "2 hours ago",
-    isRead: false,
-    userId: "",
-    createdAt: "",
-  },
-  {
-    id: "2",
-    title: "New Property Alert",
-    content:
-      "A new property matching your preferences has been listed in Lekki Phase 1.",
-    type: "INFO",
-    date: "5 hours ago",
-    isRead: false,
-    userId: "",
-    createdAt: "",
-  },
-  {
-    id: "3",
-    title: "KYC Verification Required",
-    content:
-      "Please update your identification document to complete your KYC verification.",
-    type: "alert",
-    date: "1 day ago",
-    isRead: true,
-    userId: "",
-    createdAt: "",
-  },
-  {
-    id: "4",
-    title: "System Maintenance",
-    content:
-      "Scheduled maintenance will occur on Saturday, Jan 28th from 2:00 AM to 4:00 AM.",
-    type: "update",
-    date: "2 days ago",
-    isRead: true,
-    userId: "",
-    createdAt: "",
-  },
-  {
-    id: "5",
-    title: "Dividend Payout",
-    content:
-      "You have received a dividend payout of N250,000 from your co-development investment.",
-    type: "success",
-    date: "3 days ago",
-    isRead: true,
-    userId: "",
-    createdAt: "",
-  },
-];
 
 function RouteComponent() {
   const query = useQuery<ApiResponseV2<Notification[]>>({

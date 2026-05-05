@@ -4,6 +4,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import { Link } from "@tanstack/react-router";
 import { Bell, CheckCircle2, Clock, Menu, XCircle } from "lucide-react";
+import InvNotifications from "./InvNotifications";
 
 export default function InvHeader({
   title,
@@ -60,11 +61,7 @@ export default function InvHeader({
         </div>
         <div className="flex pr-3 items-center gap-2 md:gap-3 shrink-0">
           <div className="relative">
-            <Link to="/investors/notifications">
-              {" "}
-              <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-gray-600 cursor-pointer" />
-              <Badge className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] md:text-xs w-4 h-4 md:w-5 md:h-5 flex items-center justify-center p-0"></Badge>
-            </Link>
+            <InvNotifications />
           </div>
           <ThemeProvider>
             <div className="dropdown dropdown-end ">
