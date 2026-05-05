@@ -20,7 +20,7 @@ export default function PendingConversations({}) {
             return (
               <>
                 <h2 className="p-4 border-b fade font-bold flex items-center justify-between">
-                  Pending Convos
+                  Pending Conversation
                   <span className="badge badge-primary badge-sm">
                     {chats.length}
                   </span>
