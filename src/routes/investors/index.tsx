@@ -59,10 +59,10 @@ function InvestorDashboard() {
         </div>
       </div>
 
-      <section className="gap-6 flex">
-        <div className="flex-5/6 flex  flex-col gap-6">
-          <section className="flex  gap-6 ">
-            <div className="flex-1 max-w-xs">
+      <section className="gap-6 flex flex-col lg:flex-row">
+        <div className="flex-5/6 flex flex-col gap-6">
+          <section className="flex gap-6 flex-col-reverse lg:flex-row">
+            <div className="flex-1 w-full   lg:max-w-xs">
               <CalendarWidget />
             </div>
             <div className=" flex-1">
