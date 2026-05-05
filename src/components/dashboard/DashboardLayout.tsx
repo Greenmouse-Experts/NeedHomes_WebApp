@@ -1,5 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import {
   LayoutDashboard,
   Users,
@@ -30,6 +32,23 @@ import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import AdminNotifications from "@/routes/dashboard/-components/AdminNotifications";
+
+function AdminUnreadBadge() {
+  const { data } = useQuery<ApiResponse<{ unreadCount: number }>>({
+    queryKey: ["pat-notifications"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/notifications/unread-count");
+      return resp.data;
+    },
+  });
+  const count = data?.data?.unreadCount ?? 0;
+  if (!count) return null;
+  return (
+    <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
 
 interface NavItem {
   label: string;
@@ -215,6 +234,7 @@ export function DashboardLayout({
       >
         {Icon && <Icon className="w-4 h-4" />}
         <span>{children}</span>
+        {to === "/dashboard/notifications" && <AdminUnreadBadge />}
       </Link>
     );
   };
