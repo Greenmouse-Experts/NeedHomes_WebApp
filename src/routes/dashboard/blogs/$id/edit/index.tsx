@@ -1,7 +1,7 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import BackButton from "@/components/BackButton";
 import PageLoader from "@/components/layout/PageLoader";
-import { Textarea } from "@/components/ui/Textarea";
+import { RichTextEditor } from "@/components/terms/RichTextEditor";
 import { extract_message } from "@/helpers/apihelpers";
 import { useImages } from "@/helpers/images";
 import useSelect from "@/helpers/selectors";
@@ -11,7 +11,7 @@ import SimpleMultiSelect from "@/simpleComps/inputs/SimpleMultiSelect";
 import UpdateImages from "@/simpleComps/inputs/UpdateImages";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/blogs/$id/edit/")({
@@ -152,21 +152,20 @@ function FormField({ defaultValues }: { defaultValues: FORM_PROPS }) {
             </div>
 
             {/* Content Input */}
-            <div>
-              <label className="block text-sm font-semibold text-base-content mb-3">
-                Content
-              </label>
-              <Textarea
-                {...register("content", { required: "Content is required" })}
-                placeholder="Write your blog content here..."
-                className="textarea textarea-bordered min-h-48"
-              />
-              {errors.content && (
-                <p className="text-error text-sm mt-1">
-                  {errors.content.message}
-                </p>
+            <Controller
+              control={control}
+              name="content"
+              rules={{ required: "Content is required" }}
+              render={({ field }) => (
+                <RichTextEditor
+                  label="Content"
+                  placeholder="Write your blog content here..."
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  error={errors.content?.message}
+                />
               )}
-            </div>
+            />
 
             {/* Categories Section */}
             <div className="border border-base-300 rounded-lg overflow-hidden">

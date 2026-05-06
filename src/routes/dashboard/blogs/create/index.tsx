@@ -1,5 +1,4 @@
-import { Textarea } from "@/components/ui/Textarea";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import { RichTextEditor } from "@/components/terms/RichTextEditor";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -33,6 +32,7 @@ function RouteComponent() {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -120,21 +120,20 @@ function RouteComponent() {
             </div>
 
             {/* Content Input */}
-            <div>
-              <label className="block text-sm font-semibold text-base-content mb-3">
-                Content
-              </label>
-              <Textarea
-                {...register("content", { required: "Content is required" })}
-                placeholder="Write your blog content here..."
-                className="textarea textarea-bordered min-h-48"
-              />
-              {errors.content && (
-                <p className="text-error text-sm mt-1">
-                  {errors.content.message}
-                </p>
+            <Controller
+              control={control}
+              name="content"
+              rules={{ required: "Content is required" }}
+              render={({ field }) => (
+                <RichTextEditor
+                  label="Content"
+                  placeholder="Write your blog content here..."
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  error={errors.content?.message}
+                />
               )}
-            </div>
+            />
 
             {/* Categories Section */}
             <div className="border border-base-300 rounded-lg overflow-hidden">
