@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { uploadImage } from "@/api/imageApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
+import { Plus, Trash2 } from "lucide-react";
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload";
 import { Home, Image as Layers } from "lucide-react";
@@ -18,6 +18,50 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import calculate_fees from "../-components/calculate_fees";
 import { doc_helper } from "../../-components/upload_helpers";
 
+function ReturnTiersManager({ control, register }: { control: any; register: any }) {
+  const { fields, append, remove } = useFieldArray({ control, name: "returnTiersArray" });
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between border-b border-base-200 pb-2">
+        <h2 className="text-base font-semibold">Return Tiers</h2>
+        <button
+          type="button"
+          onClick={() => append({ days: "", rate: 0 })}
+          className="btn btn-ghost btn-xs text-primary gap-1"
+        >
+          <Plus size={14} /> Add Tier
+        </button>
+      </div>
+      {fields.map((field, index) => (
+        <div key={field.id} className="flex items-end gap-3">
+          <SimpleInput
+            label={index === 0 ? "Duration (days)" : ""}
+            type="number"
+            placeholder="e.g. 30"
+            {...register(`returnTiersArray.${index}.days`)}
+          />
+          <SimpleInput
+            label={index === 0 ? "Return %" : ""}
+            type="number"
+            icon={<span>%</span>}
+            {...register(`returnTiersArray.${index}.rate`, { valueAsNumber: true })}
+          />
+          <button
+            type="button"
+            onClick={() => remove(index)}
+            className="btn btn-ghost btn-square text-error mb-1"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      ))}
+      {fields.length === 0 && (
+        <p className="text-xs italic opacity-50">No tiers added. Click Add Tier.</p>
+      )}
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/dashboard/properties/new/fractional")({
   component: RouteComponent,
 });
@@ -25,14 +69,10 @@ export const Route = createFileRoute("/dashboard/properties/new/fractional")({
 interface FractionalPropertyFormValues extends DocProps {
   totalShares: number;
   pricePerShare: number;
-  // exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY";
   minimumShares: number;
   maxInvestors?: number | null;
-  fractionalHoldingPeriodDays: 30 | 60 | 90 | 120;
-  return30Days: number;
-  return60Days: number;
-  return90Days: number;
-  return120Days: number;
+  fractionalHoldingPeriodDays: number;
+  returnTiersArray: { days: string; rate: number }[];
 }
 function RouteComponent() {
   const methods = useForm<FractionalPropertyFormValues>({
@@ -41,8 +81,8 @@ function RouteComponent() {
       developmentStage: "PLANNING",
       premiumProperty: false,
       maxInvestors: null,
-      // exitWindow: "MONTHLY" as const,
-      fractionalHoldingPeriodDays: 30 as const,
+      fractionalHoldingPeriodDays: 30,
+      returnTiersArray: [{ days: "30", rate: 0 }],
     },
   });
   const nav = useNavigate();
@@ -101,12 +141,19 @@ function RouteComponent() {
       ];
       const uploadedDocUrls = await doc_helper(docUploadProps);
       console.log("Uploaded Doc URLs:", uploadedDocUrls);
+      const returnTiers = Object.fromEntries(
+        (data.returnTiersArray ?? [])
+          .filter((t) => t.days && t.rate)
+          .map((t) => [t.days, t.rate]),
+      );
       const keys = ["pricePerShare"] as (typeof data)[string];
       data["basePrice"] = data["totalShares"] * data["pricePerShare"];
       const new_payload = calculate_fees(data, keys);
+      delete (new_payload as any).returnTiersArray;
 
       const payload: any = {
         ...new_payload,
+        returnTiers,
         productCost: new_payload["basePrice"],
         coverImage: coverImageUrl,
         galleryImages: allGallery,
@@ -268,52 +315,20 @@ function RouteComponent() {
                     name="fractionalHoldingPeriodDays"
                     control={methods.control}
                     render={({ field }) => (
-                      <LocalSelect
+                      <SimpleInput
                         {...field}
+                        label="Minimum Holding Period (days)"
+                        type="number"
+                        placeholder="e.g. 30"
                         onChange={(e) =>
                           field.onChange(Number((e as any).target?.value))
                         }
-                        label="Minimum Holding Period"
-                      >
-                        <option value={30}>30 Days</option>
-                        <option value={60}>60 Days</option>
-                        <option value={90}>90 Days</option>
-                        <option value={120}>120 Days</option>
-                      </LocalSelect>
+                      />
                     )}
                   />
                 </div>
 
-                <div className="flex items-center gap-2 pb-2 border-b border-base-200 mt-4">
-                  <h2 className="text-base font-semibold">Return Rates (%)</h2>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {(
-                    [
-                      { name: "return30Days", label: "30 Days" },
-                      { name: "return60Days", label: "60 Days" },
-                      { name: "return90Days", label: "90 Days" },
-                      { name: "return120Days", label: "120 Days" },
-                    ] as const
-                  ).map(({ name, label }) => (
-                    <Controller
-                      key={name}
-                      name={name}
-                      control={methods.control}
-                      render={({ field }) => (
-                        <SimpleInput
-                          {...field}
-                          label={label}
-                          type="number"
-                          icon={<span>%</span>}
-                          onChange={(e) =>
-                            field.onChange(Number((e as any).target?.value))
-                          }
-                        />
-                      )}
-                    />
-                  ))}
-                </div>
+                <ReturnTiersManager control={methods.control} register={methods.register} />
               </section>
               {/* 5. Investment-Specific Details */}
             </>

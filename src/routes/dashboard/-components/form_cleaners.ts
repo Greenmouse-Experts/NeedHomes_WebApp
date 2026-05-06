@@ -99,6 +99,11 @@ export const strip_land_banking = (data: Record<string, any>) => {
 
 export const strip_fractional = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
+  delete cleaned.returnTiersArray;
+  delete cleaned.return30Days;
+  delete cleaned.return60Days;
+  delete cleaned.return90Days;
+  delete cleaned.return120Days;
   delete cleaned.basePrice;
   delete cleaned.availablePlots;
   delete cleaned.exitWindow;
