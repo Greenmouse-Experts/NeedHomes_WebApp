@@ -7,6 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 import { useAuth } from "@/store/authStore";
+import { SearchIcon, X } from "lucide-react";
 import AdminConvos from "./-components/AdminConversations";
 import PendingConversations from "./-components/PendingConversations";
 
@@ -58,6 +59,16 @@ function RouteComponent() {
   const socketRef = useRef<Socket | null>(null);
   const [isSocketConnected, setIsSocketConnected] = useState(false);
 
+  // Search state with debounce
+  const [convoSearch, setConvoSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Track latest socket message per conversation and unread status
+  const [socketMessages, setSocketMessages] = useState<Map<string, Message>>(
+    new Map(),
+  );
+  const [unreadIds, setUnreadIds] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     if (!auth?.accessToken) return;
     const socket = io(
@@ -82,50 +93,124 @@ function RouteComponent() {
     };
   }, [auth?.accessToken]);
 
+  // Debounce search
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(convoSearch), 300);
+    return () => clearTimeout(t);
+  }, [convoSearch]);
+
+  // Listen for incoming messages — update last-message preview and unread indicator
+  useEffect(() => {
+    const sock = socketRef.current;
+    if (!sock || !isSocketConnected) return;
+
+    const handleMsg = (message: Message) => {
+      setSocketMessages((prev) =>
+        new Map(prev).set(message.conversationId, message),
+      );
+      if (message.conversationId !== convoId && !message.isSystem) {
+        setUnreadIds((prev) => new Set([...prev, message.conversationId]));
+      }
+    };
+
+    sock.on("chat:newMessage", handleMsg);
+    return () => {
+      sock.off("chat:newMessage", handleMsg);
+    };
+  }, [isSocketConnected, convoId]);
+
+  // Clear unread when admin opens a conversation
+  useEffect(() => {
+    if (!convoId) return;
+    setUnreadIds((prev) => {
+      const next = new Set(prev);
+      next.delete(convoId);
+      return next;
+    });
+  }, [convoId]);
+
   const query = useQuery<ApiResponse<Conversation[]>>({
-    queryKey: ["chat-admin"],
+    queryKey: ["chat-admin", debouncedSearch],
     queryFn: async () => {
-      let resp = await apiClient.get("/chat/my-admin-conversations");
+      const qs = debouncedSearch
+        ? `?search=${encodeURIComponent(debouncedSearch)}`
+        : "";
+      const resp = await apiClient.get(`/chat/my-admin-conversations${qs}`);
       return resp.data;
     },
   });
 
-  // return (
-  //   <>
-  //     <section>
-  //       <AdminConvos convoId={convoId} />
-  //     </section>
-  //   </>
-  // );
   return (
     <>
-      <ThemeProvider className="drawer lg:drawer-open   ">
+      <ThemeProvider className="drawer lg:drawer-open">
         <input id="chat-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content md:h-[calc(100dvh-144px)] flex   p-0 isolate w-full b">
-          <AdminConvos convoId={convoId} socket={socketRef} isSocketConnected={isSocketConnected} />
+        <div className="drawer-content md:h-[calc(100dvh-144px)] flex p-0 isolate w-full">
+          <AdminConvos
+            convoId={convoId}
+            socket={socketRef}
+            isSocketConnected={isSocketConnected}
+          />
         </div>
         <div className="drawer-side md:h-[calc(100dvh-144px)]">
-          <div className="w-80 bg-white ">
+          <div className="w-80 bg-white overflow-y-auto h-full">
             <PendingConversations socket={socketRef} />
             <div className="border-t fade">
-              <h2 className="border-b fade p-4 font-bold">Conversations </h2>
+              <h2 className="border-b fade p-4 font-bold flex items-center justify-between">
+                Conversations
+                {unreadIds.size > 0 && (
+                  <span className="badge badge-error badge-sm">
+                    {unreadIds.size}
+                  </span>
+                )}
+              </h2>
+
+              {/* Search */}
+              <div className="px-3 py-2 border-b fade">
+                <label className="input input-sm w-full flex items-center gap-2">
+                  <SearchIcon className="w-3.5 h-3.5 text-base-content/40 shrink-0" />
+                  <input
+                    type="text"
+                    className="grow text-sm"
+                    placeholder="Search conversations..."
+                    value={convoSearch}
+                    onChange={(e) => setConvoSearch(e.target.value)}
+                  />
+                  {convoSearch && (
+                    <button
+                      type="button"
+                      onClick={() => setConvoSearch("")}
+                      className="text-base-content/40 hover:text-base-content transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </label>
+              </div>
+
               <QueryCompLayout query={query}>
                 {(data) => {
                   const chats = data.data;
                   return (
                     <div className="flex flex-col divide-y divide-gray-100">
+                      {chats.length === 0 && (
+                        <p className="p-4 text-sm text-gray-400 italic">
+                          {debouncedSearch
+                            ? `No conversations matching "${debouncedSearch}".`
+                            : "No conversations yet."}
+                        </p>
+                      )}
                       {chats.map((chat) => {
-                        const lastMessage = chat.messages[0];
+                        const socketMsg = socketMessages.get(chat.id);
+                        const lastMessage = socketMsg ?? chat.messages[0];
+                        const hasUnread = unreadIds.has(chat.id);
                         const firstName = chat?.user?.firstName ?? "Unknown";
                         const lastName = chat?.user?.lastName ?? "Unknown";
                         const initials = `${firstName[0]}${lastName[0]}`;
                         return (
                           <Link
                             key={chat.id}
-                            to={"/dashboard/chat"}
-                            search={{
-                              convoId: chat.id,
-                            }}
+                            to="/dashboard/chat"
+                            search={{ convoId: chat.id }}
                             className="flex items-center gap-3 p-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
                           >
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
@@ -134,23 +219,25 @@ function RouteComponent() {
                             <div className="flex-1 overflow-hidden">
                               <div className="flex items-center justify-between">
                                 <span className="truncate font-medium text-gray-900">
-                                  {chat.user.firstName} {chat.user.lastName}
+                                  {firstName} {lastName}
                                 </span>
                                 <span className="text-xs text-gray-500">
                                   {new Date(
-                                    chat.lastMessageAt,
+                                    socketMsg?.createdAt ?? chat.lastMessageAt,
                                   ).toLocaleTimeString([], {
                                     hour: "2-digit",
                                     minute: "2-digit",
                                   })}
                                 </span>
                               </div>
-                              <p className="truncate text-sm text-gray-500">
+                              <p
+                                className={`truncate text-sm ${hasUnread ? "font-semibold text-gray-900" : "text-gray-500"}`}
+                              >
                                 {lastMessage?.content || "No messages yet"}
                               </p>
                             </div>
-                            {chat.status === "PENDING" && (
-                              <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                            {hasUnread && (
+                              <div className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
                             )}
                           </Link>
                         );
