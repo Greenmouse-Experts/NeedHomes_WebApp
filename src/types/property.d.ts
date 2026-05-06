@@ -46,7 +46,11 @@ export interface PROPERTY_TYPE {
   totalShares: number;
   pricePerShare: number;
   minimumShares: number;
-  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "NONE";
+  exitWindow: "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "NONE" | null;
+  fractionalHoldingPeriodDays: number | null;
+  returnTiers: Record<string, number> | null;
+  latitude: number | null;
+  longitude: number | null;
   availablePlots: string | null;
   pricePerPlot: number | null;
   holdingPeriod: string | null;

@@ -131,7 +131,10 @@ export default function InvestmentDetails({
         </DetailsCard>
       );
 
-    case "FRACTIONAL_OWNERSHIP":
+    case "FRACTIONAL_OWNERSHIP": {
+      const tiers = property?.returnTiers
+        ? Object.entries(property.returnTiers).sort((a, b) => Number(a[0]) - Number(b[0]))
+        : [];
       return (
         <DetailsCard>
           <DetailRow
@@ -140,59 +143,42 @@ export default function InvestmentDetails({
           />
           <DetailRow
             label="Price Per Share"
-            value={`₦${(property?.pricePerShare / 100).toLocaleString() || "0"}`}
+            value={`₦${((property?.pricePerShare ?? 0) / 100).toLocaleString()}`}
+          />
+          <DetailRow
+            label="Min. Shares"
+            value={property?.minimumShares?.toLocaleString() || "N/A"}
           />
           <DetailRow
             label="Holding Period"
             value={
               property?.fractionalHoldingPeriodDays
-                ? `${property.fractionalHoldingPeriodDays} Days`
+                ? `${property.fractionalHoldingPeriodDays} days`
                 : "N/A"
             }
           />
-          <DetailRow
-            label="30-Day Return"
-            value={
-              property?.return30Days != null
-                ? `${property.return30Days}%`
-                : "N/A"
-            }
-          />
-          <DetailRow
-            label="60-Day Return"
-            value={
-              property?.return60Days != null
-                ? `${property.return60Days}%`
-                : "N/A"
-            }
-          />
-          <DetailRow
-            label="90-Day Return"
-            value={
-              property?.return90Days != null
-                ? `${property.return90Days}%`
-                : "N/A"
-            }
-          />
-          <DetailRow
-            label="120-Day Return"
-            value={
-              property?.return120Days != null
-                ? `${property.return120Days}%`
-                : "N/A"
-            }
-          />
+          {tiers.length > 0 ? (
+            <div className="pt-2">
+              <span className="text-sm text-gray-600 block mb-2">Return Tiers</span>
+              <div className="grid grid-cols-2 gap-2">
+                {tiers.map(([days, rate]) => (
+                  <div key={days} className="bg-white border border-gray-200 rounded-lg p-2 text-center">
+                    <p className="text-xs text-gray-500">{days} days</p>
+                    <p className="text-sm font-bold text-green-600">{rate}%</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <DetailRow label="Return Tiers" value="N/A" />
+          )}
           <DetailRow
             label="Payment Option"
             value={property?.paymentOption || "N/A"}
           />
-          {/* @ts-ignore */}
-          {/*<DetailRow
-            label="Platform Charge"
-            value={`${property?.systemCharges?.platformChargePercentage || 0}%`}
-          />*/}
         </DetailsCard>
       );
+    }
 
     default:
       return (

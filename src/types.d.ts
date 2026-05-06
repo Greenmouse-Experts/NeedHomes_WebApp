@@ -346,6 +346,7 @@ export interface ADMIN_PROPERTY_LISTING {
   minimumShares: number | null;
   exitWindow: "MONTHLY" | "QUATERLY" | "ANNUALLY" | "AT_MATURITY" | null;
   fractionalHoldingPeriodDays: number | null;
+  returnTiers: Record<string, number> | null;
   return30Days: number | null;
   return60Days: number | null;
   return90Days: number | null;

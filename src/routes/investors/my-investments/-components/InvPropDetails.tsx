@@ -8,6 +8,7 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import type { PROPERTY_TYPE } from "@/types/property";
 import { useQuery } from "@tanstack/react-query";
 import { LoadDocuments } from "../../-components/LoadDocuments";
+import RenderDescription from "@/components/RenderDescription";
 
 export default function InvPropDetails({ propId }: { propId: string }) {
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
@@ -188,9 +189,9 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                 <h2 className="text-lg font-semibold text-gray-900">
                   Overview
                 </h2>
-                <p className="mt-2 text-gray-700 leading-relaxed">
-                  {prop_data.description}
-                </p>
+                <div className="mt-2 ">
+                  <RenderDescription description={prop_data.description} />
+                </div>
               </div>
 
               {/* Documents & Media */}
@@ -198,14 +199,6 @@ export default function InvPropDetails({ propId }: { propId: string }) {
                 <LoadDocuments property_data={prop_data} />
               </ThemeProvider>
               {/* Footer meta */}
-              <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500">
-                <div>
-                  <span className="font-medium text-gray-700">Created:</span>{" "}
-                  <span className="ml-1">
-                    {new Date(prop_data.createdAt).toLocaleString()}
-                  </span>
-                </div>
-              </div>
             </div>
           );
         }}

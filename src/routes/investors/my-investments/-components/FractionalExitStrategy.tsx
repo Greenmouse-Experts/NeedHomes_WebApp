@@ -17,10 +17,7 @@ import { Button } from "@/components/ui/Button";
 interface FractionalProperty {
   exitWindow?: string | null;
   fractionalHoldingPeriodDays?: number | null;
-  return30Days?: number | null;
-  return60Days?: number | null;
-  return90Days?: number | null;
-  return120Days?: number | null;
+  returnTiers?: Record<string, number> | null;
 }
 
 interface Investment {
@@ -28,6 +25,9 @@ interface Investment {
   propertyId: string;
   status: "ACTIVE" | "PENDING" | "COMPLETED";
   currentValue: number;
+  amountPaid: number;
+  returnPercentage: number;
+  selectedReturnDays?: number | null;
   property?: FractionalProperty;
 }
 
@@ -77,13 +77,6 @@ function StatusBadge({ status }: { status: ExitRequest["status"] }) {
     </span>
   );
 }
-
-const RETURN_ROWS = [
-  { days: 30, key: "return30Days" },
-  { days: 60, key: "return60Days" },
-  { days: 90, key: "return90Days" },
-  { days: 120, key: "return120Days" },
-] as const;
 
 export default function FractionalExitStrategy({
   investment,
@@ -304,41 +297,47 @@ export default function FractionalExitStrategy({
             </div>
           )}
 
-          {/* Returns table */}
-          {prop && (
+          {/* Locked-in rate */}
+          {investment.selectedReturnDays != null && (
+            <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-0.5">Locked-in Return</p>
+                <p className="text-sm text-gray-700">Selected duration: <strong>{investment.selectedReturnDays} days</strong></p>
+              </div>
+              <span className="text-lg font-bold text-green-700">{investment.returnPercentage}%</span>
+            </div>
+          )}
+
+          {/* Return tiers table */}
+          {prop?.returnTiers && Object.keys(prop.returnTiers).length > 0 && (
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">
-                Expected Returns
+                Available Return Tiers
               </p>
               <div className="rounded-lg border border-gray-200 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="text-left px-4 py-2.5 font-medium text-gray-600">
-                        Holding Duration
-                      </th>
-                      <th className="text-right px-4 py-2.5 font-medium text-gray-600">
-                        Expected Return
-                      </th>
+                      <th className="text-left px-4 py-2.5 font-medium text-gray-600">Duration</th>
+                      <th className="text-right px-4 py-2.5 font-medium text-gray-600">Return</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {RETURN_ROWS.map(({ days, key }) => {
-                      const val = prop[key];
-                      return (
-                        <tr
-                          key={days}
-                          className="hover:bg-gray-50 transition-colors"
+                    {Object.entries(prop.returnTiers)
+                      .sort((a, b) => Number(a[0]) - Number(b[0]))
+                      .map(([days, rate]) => (
+                        <tr key={days}
+                          className={`transition-colors ${Number(days) === investment.selectedReturnDays ? "bg-green-50" : "hover:bg-gray-50"}`}
                         >
-                          <td className="px-4 py-2.5 text-gray-700">
-                            {days} Days
+                          <td className="px-4 py-2.5 text-gray-700 flex items-center gap-2">
+                            {Number(days) === investment.selectedReturnDays && (
+                              <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-semibold">selected</span>
+                            )}
+                            {days} days
                           </td>
-                          <td className="px-4 py-2.5 text-right font-semibold text-green-700">
-                            {val != null ? `${val}%` : "—"}
-                          </td>
+                          <td className="px-4 py-2.5 text-right font-semibold text-green-700">{rate}%</td>
                         </tr>
-                      );
-                    })}
+                      ))}
                   </tbody>
                 </table>
               </div>

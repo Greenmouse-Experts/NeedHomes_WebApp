@@ -49,6 +49,9 @@ interface Investment {
   totalReturns: number;
   customId?: string;
   costBasis?: number;
+  selectedReturnDays?: number | null;
+  investmentStartDate?: string | null;
+  investmentEndDate?: string | null;
   property?: {
     propertyTitle?: string;
     investmentModel: string;
@@ -60,12 +63,49 @@ interface Investment {
     totalShares?: number | null;
     exitWindow?: string | null;
     fractionalHoldingPeriodDays?: number | null;
-    return30Days?: number | null;
-    return60Days?: number | null;
-    return90Days?: number | null;
-    return120Days?: number | null;
+    returnTiers?: Record<string, number> | null;
   };
   exitRequest?: any | null;
+}
+
+function FractionalInfo({ investment, formatCurrency, formatDate }: {
+  investment: Investment;
+  formatCurrency: (n: number) => string;
+  formatDate: (s: string) => string;
+}) {
+  if (investment.property?.investmentModel !== "FRACTIONAL_OWNERSHIP") return null;
+
+  const amountPaid = investment.amountPaid;
+  const returnRate = investment.returnPercentage;
+  const expectedPayout = Math.round(amountPaid * (1 + returnRate / 100));
+
+  const rows = [
+    investment.selectedReturnDays != null && { label: "Selected Duration", value: `${investment.selectedReturnDays} days` },
+    investment.investmentStartDate && { label: "Investment Date", value: formatDate(investment.investmentStartDate) },
+    investment.investmentEndDate && { label: "Maturity Date", value: formatDate(investment.investmentEndDate) },
+    { label: "Locked-in Return", value: `${returnRate}%`, highlight: true },
+    { label: "Expected Payout", value: formatCurrency(expectedPayout / 100), highlight: true },
+    investment.property?.fractionalHoldingPeriodDays != null && {
+      label: "Min. Holding Period",
+      value: `${investment.property.fractionalHoldingPeriodDays} days`,
+    },
+  ].filter(Boolean) as { label: string; value: string; highlight?: boolean }[];
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="border-b border-gray-100 bg-blue-50 px-6 py-4">
+        <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wider">Fractional Details</h3>
+      </div>
+      <div className="divide-y divide-gray-50">
+        {rows.map(({ label, value, highlight }) => (
+          <div key={label} className="flex items-center justify-between px-6 py-3.5">
+            <span className="text-sm text-gray-500">{label}</span>
+            <span className={`text-sm font-bold ${highlight ? "text-green-600" : "text-gray-900"}`}>{value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -291,6 +331,10 @@ function InvestmentDetailsPage() {
                   propertyId={investment.propertyId}
                 />
               ) : null}
+              {investment.property?.investmentModel === "FRACTIONAL_OWNERSHIP" && (
+                <FractionalInfo investment={investment} formatCurrency={formatCurrency} formatDate={formatDate} />
+              )}
+
               <section className="grid  xl:grid-cols-3 gap-2">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                   <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
@@ -346,7 +390,7 @@ function InvestmentDetailsPage() {
                 <div className="">
                   {investment.property?.investmentModel ===
                   "FRACTIONAL_OWNERSHIP" ? (
-                    <FractionalExitStrategy investment={investment} />
+                    <FractionalExitStrategy investment={investment as any} />
                   ) : (
                     <ExitStrategy
                       investment={investment}

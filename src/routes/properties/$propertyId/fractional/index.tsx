@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MapPin, Percent, TrendingUp, ChevronLeft } from "lucide-react";
+import { MapPin, TrendingUp, ChevronLeft, Clock, CalendarCheck } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
@@ -12,10 +12,12 @@ import { useNavigate } from "@tanstack/react-router";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import { Controller, useForm } from "react-hook-form";
+import { useEffect } from "react";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
 import InvestorOnly from "../../-components/only_investors";
+import RenderDescription from "@/components/RenderDescription";
 
 export const Route = createFileRoute("/properties/$propertyId/fractional/")({
   component: PropertyDetailPage,
@@ -31,23 +33,30 @@ function PropertyDetailPage() {
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
     queryFn: async () => {
-      let resp = await apiClient.get("properties/" + propertyId);
+      const resp = await apiClient.get("properties/" + propertyId);
       return resp.data;
     },
   });
+
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
-    const fixed = parseFloat(amount.toFixed(2));
-    return `₦ ${fixed.toLocaleString()}`;
+    return `₦ ${parseFloat(amount.toFixed(2)).toLocaleString()}`;
   };
+
   const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
-      const ref = localStorage.getItem(`ref_${propertyId}`);
-      let resp = await apiClient.post("/investments", {
-        propertyId: propertyId,
-        amountPaid: parseFloat(data.amountPaid.toFixed()),
+    mutationFn: async (data: {
+      amountPaid: number;
+      quantity: number;
+      selectedReturnDays: number;
+    }) => {
+      const storedRef = localStorage.getItem(`ref_${propertyId}`);
+      const resp = await apiClient.post("/investments", {
+        propertyId,
+        amountPaid: Math.round(data.amountPaid),
         quantity: data.quantity,
-        ...(ref ? { referralCode: ref } : {}),
+        selectedReturnDays: data.selectedReturnDays,
+        paymentOption: "FULL_PAYMENT",
+        ...(storedRef ? { referralCode: storedRef } : {}),
       });
       return resp.data;
     },
@@ -56,9 +65,7 @@ function PropertyDetailPage() {
       closeModal();
       navigate({
         to: "/investors/my-investments/$investmentId",
-        params: {
-          investmentId: data.data.id,
-        },
+        params: { investmentId: data.data.id },
       });
     },
   });
@@ -66,28 +73,40 @@ function PropertyDetailPage() {
   const form = useForm({
     defaultValues: {
       quantity: 1,
+      selectedReturnDays: 0,
     },
   });
+
+  useEffect(() => {
+    const min = query.data?.data?.minimumShares;
+    if (min && min > 1) form.setValue("quantity", min);
+  }, [query.data]);
 
   return (
     <PageLoader query={query}>
       {(data) => {
         const property = data.data as PROPERTY_TYPE;
+
+        const tierOptions = Object.entries(property.returnTiers ?? {})
+          .sort((a, b) => Number(a[0]) - Number(b[0]))
+          .map(([days, rate]) => ({ days: Number(days), rate }));
+
         const additionalFeesTotal = (property.additionalFees || []).reduce(
           (sum: number, fee: AdditionalFee) => sum + fee.amount / 100,
           0,
         );
         const quantity = form.watch("quantity");
+        const selectedReturnDays = form.watch("selectedReturnDays");
+        const selectedTier = tierOptions.find((t) => t.days === selectedReturnDays);
         const sharesTotal = quantity * (property.pricePerShare / 100);
         const fullAmount = sharesTotal + additionalFeesTotal;
         const fullAmountKobo = Math.round(fullAmount * 100);
+        const expectedPayout = selectedTier
+          ? Math.round(fullAmountKobo * (1 + selectedTier.rate / 100))
+          : null;
+        const availableShares = property.availableShares ?? 0;
+        const minimumShares = property.minimumShares || 1;
 
-        const breakdown = {
-          additionalFees: property.additionalFees || [],
-          additionalFeesTotal,
-          pricePerShare: property.pricePerShare,
-          availableShares: property.availableShares,
-        };
         return (
           <>
             <Modal
@@ -95,44 +114,25 @@ function PropertyDetailPage() {
               title="Confirm Investment"
               actions={
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={closeModal}>
-                    Cancel
-                  </Button>
+                  <Button variant="outline" onClick={closeModal}>Cancel</Button>
                   {!auth?.accessToken ? (
-                    <Button
-                      variant="primary"
-                      onClick={() =>
-                        navigate({
-                          to: "/login",
-                          search: { redirect: window.location.pathname },
-                        })
-                      }
-                    >
+                    <Button variant="primary" onClick={() => navigate({ to: "/login", search: { redirect: window.location.pathname } })}>
                       Sign In to Invest
                     </Button>
                   ) : (
                     <Button
                       variant="primary"
                       onClick={() => {
-                        // if (auth?.user?.accountType === "INVESTOR") {
-                        //   return navigate({
-                        //     to: "/investors/properties/$propertyId/fractional/",
-                        //     params: { propertyId },
-                        //   });
-                        // }
+                        if (!selectedReturnDays) {
+                          toast.error("Please select a return duration.");
+                          return;
+                        }
                         toast.promise(
-                          mutate.mutateAsync({
-                            amountPaid: fullAmountKobo,
-                            quantity: form.getValues("quantity"),
-                          }),
-                          {
-                            loading: "Processing payment...",
-                            success: "Payment successful!",
-                            error: extract_message,
-                          },
+                          mutate.mutateAsync({ amountPaid: fullAmountKobo, quantity: form.getValues("quantity"), selectedReturnDays }),
+                          { loading: "Processing payment...", success: "Investment successful!", error: extract_message },
                         );
                       }}
-                      disabled={mutate.isPending}
+                      disabled={mutate.isPending || !selectedReturnDays}
                     >
                       Confirm & Pay {formatCurrency(fullAmount)}
                     </Button>
@@ -140,322 +140,207 @@ function PropertyDetailPage() {
                 </div>
               }
             >
-              <section>
-                <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
+              <div className="space-y-4">
+                {/* Shares info */}
+                <div className="ring rounded-box fade">
+                  <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">Shares</h2>
+                  <div className="p-3 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Property</span>
-                      <span className="text-sm font-semibold">
-                        {property.propertyTitle}
-                      </span>
+                      <span className="text-sm text-gray-600">Price Per Slot</span>
+                      <span className="text-sm font-bold">{formatCurrency(property.pricePerShare / 100)}</span>
                     </div>
-                    {/*<div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Base Price</span>
-                      <span className="text-sm font-medium">
-                        {formatCurrency(property.basePrice / 100)}
-                      </span>
-                    </div>*/}
+                    <div className="flex justify-between items-center border-t border-gray-100 pt-2">
+                      <span className="text-sm text-gray-600">Available Shares</span>
+                      <span className="text-sm">{availableShares}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quantity */}
+                <Controller
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
                     <div className="ring rounded-box fade">
-                      <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
-                        Shares
-                      </h2>
-                      <div className="p-2 space-y-2">
-                        <div className="pt-2  border-gray-200 flex justify-between items-center">
-                          <span className="text-sm  text-gray-900">
-                            Price Per Slot
-                          </span>
-                          <span className="text-sm font-bold">
-                            {formatCurrency(breakdown.pricePerShare / 100)}
-                          </span>
+                      <div className="p-3 border-b fade flex items-center justify-between">
+                        <h2 className="text-sm font-bold text-gray-900">Select Shares</h2>
+                        <span className="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-0.5 rounded-full">
+                          Min: {minimumShares} share{minimumShares !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      <div className="p-3 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Quantity</span>
+                          <div className="flex items-center gap-2">
+                            <Button type="button" variant="outline" size="sm"
+                              onClick={() => field.value > minimumShares && field.onChange(field.value - 1)}
+                              disabled={field.value <= minimumShares} className="px-2 py-1">−</Button>
+                            <span className="text-sm font-bold w-8 text-center">{field.value}</span>
+                            <Button type="button" variant="outline" size="sm"
+                              onClick={() => field.value < availableShares && field.onChange(field.value + 1)}
+                              disabled={field.value >= availableShares} className="px-2 py-1">+</Button>
+                          </div>
                         </div>
-                        <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                          <span className="text-sm  text-gray-900">
-                            Avaialble shares
-                          </span>
-                          <span className="text-sm  ">
-                            {breakdown.availableShares}
-                          </span>
+                        <div className="flex justify-between items-center border-t border-gray-100 pt-2">
+                          <span className="text-sm text-gray-600">Subtotal ({field.value} shares)</span>
+                          <span className="text-sm font-bold">{formatCurrency(field.value * (property.pricePerShare / 100) + additionalFeesTotal)}</span>
                         </div>
                       </div>
                     </div>
+                  )}
+                />
 
-                    <Controller
-                      control={form.control}
-                      name="quantity"
-                      render={({ field }) => {
-                        const currentQuantity = field.value;
-                        const pricePerShare = breakdown.pricePerShare / 100;
-                        const totalCost = currentQuantity * pricePerShare;
-                        const minimumShares = property.minimumShares || 1; // Default to 1 if not set
-
-                        const availableShares =
-                          breakdown.availableShares ?? Infinity;
-
-                        const incrementQuantity = () => {
-                          if (currentQuantity < availableShares) {
-                            field.onChange(currentQuantity + 1);
-                          }
-                        };
-
-                        const decrementQuantity = () => {
-                          if (currentQuantity > minimumShares) {
-                            field.onChange(currentQuantity - 1);
-                          }
-                        };
-
-                        return (
-                          <div className="ring rounded-box fade">
-                            <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
-                              Select Shares
-                            </h2>
-                            <div className="p-2 space-y-2">
-                              <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-900">
-                                  Quantity
-                                </span>
-                                <div className="flex items-center gap-2">
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={decrementQuantity}
-                                    disabled={
-                                      field.value <= breakdown.minimumShares
-                                    }
-                                    className="px-2 py-1"
-                                  >
-                                    -
-                                  </Button>
-                                  <span className="text-sm font-bold w-8 text-center">
-                                    {currentQuantity}
-                                  </span>
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={incrementQuantity}
-                                    disabled={field.value >= availableShares}
-                                    className="px-2 py-1"
-                                  >
-                                    +
-                                  </Button>
-                                </div>
-                              </div>
-                              <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                                <span className="text-sm text-gray-900">
-                                  Cost for {currentQuantity} shares
-                                </span>
-                                <span className="text-sm font-bold">
-                                  {formatCurrency(
-                                    totalCost + breakdown.additionalFeesTotal,
-                                  )}
-                                </span>
-                              </div>
+                {/* Return Duration */}
+                <div className="ring rounded-box fade">
+                  <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">Select Return Duration</h2>
+                  <div className="p-3 space-y-2">
+                    {tierOptions.length === 0 ? (
+                      <p className="text-xs text-gray-400 italic">No return tiers available.</p>
+                    ) : (
+                      tierOptions.map((tier) => (
+                        <label key={tier.days}
+                          className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
+                            selectedReturnDays === tier.days ? "border-orange-400 bg-orange-50" : "border-gray-200 hover:border-orange-200"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <input type="radio" className="radio radio-warning radio-sm"
+                              checked={selectedReturnDays === tier.days}
+                              onChange={() => form.setValue("selectedReturnDays", tier.days)} />
+                            <div>
+                              <p className="text-sm font-semibold text-gray-900">{tier.days} days</p>
+                              <p className="text-xs text-gray-500">Holding period: {property.fractionalHoldingPeriodDays ?? "—"} days</p>
                             </div>
                           </div>
-                        );
-                      }}
-                    ></Controller>
-                    {breakdown.additionalFees.length > 0 && (
-                      <section className="rounded-lg border border-gray-200 overflow-hidden">
-                        <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
-                          Management Fees
-                        </h2>
-                        <ul className="p-3 space-y-2">
-                          {breakdown.additionalFees.map((fee, idx) => (
-                            <li
-                              key={idx}
-                              className="flex justify-between items-center"
-                            >
-                              <span className="text-sm text-gray-600">
-                                {fee.label}
-                              </span>
-                              <span className="text-sm font-medium">
-                                {formatCurrency(fee.amount / 100)}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </section>
+                          <span className="text-sm font-bold text-green-600">{tier.rate}% return</span>
+                        </label>
+                      ))
                     )}
-
-                    {/*<div className="pt-2 border-t border-gray-200 flex justify-between items-center">
-                      <span className="text-sm font-bold text-gray-900">
-                        Total
-                      </span>
-                      <span className="text-lg font-bold text-(--color-orange)">
-                        {formatCurrency(breakdown.totalPrice)}
-                      </span>
-                    </div>*/}
                   </div>
                 </div>
-              </section>
+
+                {selectedTier && expectedPayout && (
+                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <span className="text-sm text-green-800 font-medium">Expected payout after {selectedTier.days} days</span>
+                    <span className="text-sm font-bold text-green-700">{formatCurrency(expectedPayout / 100)}</span>
+                  </div>
+                )}
+
+                {(property.additionalFees || []).length > 0 && (
+                  <section className="rounded-lg border border-gray-200 overflow-hidden">
+                    <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">Management Fees</h2>
+                    <ul className="p-3 space-y-2">
+                      {property.additionalFees.map((fee, idx) => (
+                        <li key={idx} className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">{fee.label}</span>
+                          <span className="text-sm font-medium">{formatCurrency(fee.amount / 100)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </div>
             </Modal>
+
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <Button
-                variant="outline"
-                leftIcon={<ChevronLeft className="w-5 h-5" />}
-                onClick={() => navigate({ to: "/properties" })}
-                className="w-full sm:w-auto"
-              >
+              <Button variant="outline" leftIcon={<ChevronLeft className="w-5 h-5" />}
+                onClick={() => navigate({ to: "/properties" })} className="w-full sm:w-auto">
                 Back to Properties
               </Button>
-
               {isAdmin && (
                 <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 w-full sm:w-auto">
                   <span>Logged in as admin — investing disabled.</span>
-                  <button
-                    type="button"
-                    className="ml-2 underline font-semibold hover:text-amber-900"
-                    onClick={() => logout()}
-                  >
-                    Log out
-                  </button>
+                  <button type="button" className="ml-2 underline font-semibold hover:text-amber-900" onClick={() => logout()}>Log out</button>
                 </div>
               )}
-
               <InvestorOnly>
-                <Button
-                  variant="primary"
-                  rightIcon={<TrendingUp className="w-5 h-5" />}
-                  onClick={() => {
-                    showModal();
-                  }}
-                  disabled={mutate.isPending || isAdmin}
-                  className="w-full sm:w-auto"
-                >
+                <Button variant="primary" rightIcon={<TrendingUp className="w-5 h-5" />}
+                  onClick={showModal} disabled={mutate.isPending || isAdmin} className="w-full sm:w-auto">
                   Invest Now
                 </Button>
               </InvestorOnly>
             </div>
+
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                {/* Media Slider */}
-                <MediaSlider
-                  images={property.galleryImages || []}
-                  videos={property.videos ? [property.videos] : []}
-                  coverImage={property.coverImage}
-                />
+                <MediaSlider images={property.galleryImages || []} videos={property.videos ? [property.videos] : []} coverImage={property.coverImage} />
 
                 <div className="p-4 md:p-6 lg:p-8">
-                  {/* Header */}
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                          {property.propertyTitle}
-                        </h1>
-                      </div>
+                      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{property.propertyTitle}</h1>
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
-                        <span className="text-sm md:text-lg">
-                          {property.location}
-                        </span>
+                        <span className="text-sm md:text-lg">{property.location}</span>
                       </div>
                     </div>
                     <div className="sm:text-right">
-                      <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
-                        {formatCurrency(property.basePrice / 100)}
-                      </p>
-                    
+                      <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">{formatCurrency(property.basePrice / 100)}</p>
                     </div>
                   </div>
 
-                  {/* Quick Stats */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-                    {property.profitSharingRatio && (
-                      <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <div className="p-2 bg-white rounded-lg shrink-0">
-                          <Percent className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs text-gray-500 whitespace-nowrap">
-                            Profit Sharing
-                          </p>
-                          <p className="font-semibold text-sm md:text-base text-gray-900 truncate">
-                            {property.profitSharingRatio}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Main Content */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
                     <div className="lg:col-span-2 space-y-4 md:space-y-6">
-                      {/* Description */}
                       <div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                          Description
-                        </h2>
-                        <p className="text-gray-600 leading-relaxed">
-                          {property.description}
-                        </p>
+                        <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
+                        <RenderDescription description={property.description} />
                       </div>
 
-                      {/* Amenities */}
-
-                      {/* Features */}
-
-                      {/* Investment Model Specific Information */}
                       {property.investmentModel === "FRACTIONAL_OWNERSHIP" && (
                         <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                            Investment Details
-                          </h3>
-                          <div className="grid grid-cols-2 gap-4">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-4">Investment Details</h3>
+                          <div className="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                              <p className="text-sm text-gray-600">
-                                Total Shares
-                              </p>
-                              <p className="text-lg font-semibold text-gray-900">
-                                {property.totalShares?.toLocaleString() ||
-                                  "N/A"}
-                              </p>
+                              <p className="text-sm text-gray-600">Total Shares</p>
+                              <p className="text-lg font-semibold text-gray-900">{property.totalShares?.toLocaleString() || "N/A"}</p>
                             </div>
                             <div>
-                              <p className="text-sm text-gray-600">
-                                Price Per Slot
-                              </p>
-                              <p className="text-lg font-semibold text-(--color-orange)">
-                                {formatCurrency(property.pricePerShare / 100)}
-                              </p>
+                              <p className="text-sm text-gray-600">Price Per Slot</p>
+                              <p className="text-lg font-semibold text-(--color-orange)">{formatCurrency(property.pricePerShare / 100)}</p>
                             </div>
                             <div>
-                              <p className="text-sm text-gray-600">
-                                Minimum Shares To Buy
-                              </p>
-                              <p className="text-lg font-semibold text-gray-900">
-                                {property.minimumShares || "N/A"}
-                              </p>
+                              <p className="text-sm text-gray-600">Minimum Shares</p>
+                              <p className="text-lg font-semibold text-gray-900">{property.minimumShares || "N/A"}</p>
                             </div>
-                            {/*<div>
-                              <p className="text-sm text-gray-600">
-                                Exit Window
-                              </p>
-                              <p className="text-lg font-semibold text-gray-900">
-                                {property.exitRule ||
-                                  property.exitWindow ||
-                                  "N/A"}
-                              </p>
-                            </div>*/}
+                            <div>
+                              <p className="text-sm text-gray-600">Available Shares</p>
+                              <p className="text-lg font-semibold text-gray-900">{availableShares}</p>
+                            </div>
+                            {property.fractionalHoldingPeriodDays && (
+                              <div className="flex items-center gap-2 col-span-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <Clock className="w-4 h-4 text-yellow-600 shrink-0" />
+                                <div>
+                                  <p className="text-sm font-medium text-yellow-800">Minimum Holding Period</p>
+                                  <p className="text-xs text-yellow-700">Hold for at least {property.fractionalHoldingPeriodDays} days to avoid early exit penalty.</p>
+                                </div>
+                              </div>
+                            )}
                           </div>
+
+                          {tierOptions.length > 0 && (
+                            <div>
+                              <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                <CalendarCheck className="w-4 h-4" /> Return Tiers
+                              </p>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                {tierOptions.map((tier) => (
+                                  <div key={tier.days} className="bg-white rounded-lg p-3 border border-blue-100 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">{tier.days} days</p>
+                                    <p className="text-lg font-bold text-green-600">{tier.rate}%</p>
+                                    <p className="text-[10px] text-gray-400">return</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
-                      {/* System Charges */}
-
-                      {/* Management Fees */}
                       <AdditionalFees fees={property.additionalFees} />
                     </div>
 
-                    {/* Sidebar */}
                     <div className="space-y-4 md:space-y-6">
-                      {/*{property.investmentModel}*/}
-                      <InvestmentDetails
-                        type={property.investmentModel}
-                        inv={property}
-                      />
+                      <InvestmentDetails type={property.investmentModel} inv={property} />
                     </div>
                   </div>
                 </div>
