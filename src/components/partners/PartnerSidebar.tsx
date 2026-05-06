@@ -20,6 +20,46 @@ interface PartnerSidebarProps {
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
 }
+const RenderAnnouncements = (props: {
+  link: any;
+  isDisabled: boolean;
+  activePage?: string;
+  handleLinkClick: () => void;
+}) => {
+  const countQuery = useQuery<ApiResponse<{ unreadCount: number }>>({
+    queryKey: ["pat-announcements"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/announcements/unread-count");
+      return resp.data;
+    },
+  });
+  const { link, isDisabled, activePage, handleLinkClick } = props;
+  return (
+    <Link
+      key={link.to}
+      to={isDisabled ? "#" : link.to}
+      onClick={isDisabled ? (e) => e.preventDefault() : handleLinkClick}
+      disabled={isDisabled}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.activePage
+          ? "bg-[var(--color-orange)] text-white"
+          : isDisabled
+            ? "text-gray-600 cursor-not-allowed opacity-50"
+            : "hover:bg-gray-800 text-gray-400"
+      }`}
+      activeProps={{ className: "bg-[var(--color-orange)] text-white" }}
+      activeOptions={link.activeOptions}
+    >
+      {link.icon}
+      <span>{link.label}</span>
+      {(countQuery.data?.data?.unreadCount ?? 0) > 0 && (
+        <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+          {countQuery.data?.data?.unreadCount}
+        </span>
+      )}
+    </Link>
+  );
+};
 const RenderNotifications = (props: {
   link: any;
   isRestricted: boolean;
@@ -105,6 +145,7 @@ const NAV_LINKS = [
     label: "Announcement",
     id: "announcements",
     icon: Megaphone,
+    render: RenderAnnouncements,
   },
 
   {
