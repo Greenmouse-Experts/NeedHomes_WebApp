@@ -394,10 +394,6 @@ function InvestmentDetailsPage() {
                           ? formatDate(investment.lastValuationDate)
                           : "N/A",
                       },
-                      {
-                        label: "Last Updated",
-                        value: formatDate(investment.updatedAt),
-                      },
                     ].map(({ label, value, bold }) => (
                       <div
                         key={label}
