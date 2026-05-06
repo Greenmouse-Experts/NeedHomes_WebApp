@@ -9,6 +9,7 @@ import Featured from "../-components/Featured";
 import { Facebook, Twitter, Linkedin, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import Comments from "../-components/Comments";
+import RenderFormattedText from "@/components/RenderFormattedText";
 
 export const Route = createFileRoute("/blogs/$id/")({
   component: RouteComponent,
@@ -177,7 +178,9 @@ function RouteComponent() {
                       {/* Content */}
                       <div className="border-b border-gray-200 pb-8 mb-8">
                         <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-                          {data.content}
+                          <RenderFormattedText
+                            text={data.content}
+                          ></RenderFormattedText>
                         </div>
                       </div>
 
