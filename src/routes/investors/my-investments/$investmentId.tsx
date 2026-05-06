@@ -68,23 +68,41 @@ interface Investment {
   exitRequest?: any | null;
 }
 
-function FractionalInfo({ investment, formatCurrency, formatDate }: {
+function FractionalInfo({
+  investment,
+  formatCurrency,
+  formatDate,
+}: {
   investment: Investment;
   formatCurrency: (n: number) => string;
   formatDate: (s: string) => string;
 }) {
-  if (investment.property?.investmentModel !== "FRACTIONAL_OWNERSHIP") return null;
+  if (investment.property?.investmentModel !== "FRACTIONAL_OWNERSHIP")
+    return null;
 
   const amountPaid = investment.amountPaid;
   const returnRate = investment.returnPercentage;
   const expectedPayout = Math.round(amountPaid * (1 + returnRate / 100));
 
   const rows = [
-    investment.selectedReturnDays != null && { label: "Selected Duration", value: `${investment.selectedReturnDays} days` },
-    investment.investmentStartDate && { label: "Investment Date", value: formatDate(investment.investmentStartDate) },
-    investment.investmentEndDate && { label: "Maturity Date", value: formatDate(investment.investmentEndDate) },
+    investment.selectedReturnDays != null && {
+      label: "Selected Duration",
+      value: `${investment.selectedReturnDays} days`,
+    },
+    investment.investmentStartDate && {
+      label: "Investment Date",
+      value: formatDate(investment.investmentStartDate),
+    },
+    investment.investmentEndDate && {
+      label: "Maturity Date",
+      value: formatDate(investment.investmentEndDate),
+    },
     { label: "Locked-in Return", value: `${returnRate}%`, highlight: true },
-    { label: "Expected Payout", value: formatCurrency(expectedPayout / 100), highlight: true },
+    {
+      label: "Expected Payout",
+      value: formatCurrency(expectedPayout / 100),
+      highlight: true,
+    },
     investment.property?.fractionalHoldingPeriodDays != null && {
       label: "Min. Holding Period",
       value: `${investment.property.fractionalHoldingPeriodDays} days`,
@@ -94,13 +112,22 @@ function FractionalInfo({ investment, formatCurrency, formatDate }: {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="border-b border-gray-100 bg-blue-50 px-6 py-4">
-        <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wider">Fractional Details</h3>
+        <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wider">
+          Fractional Details
+        </h3>
       </div>
       <div className="divide-y divide-gray-50">
         {rows.map(({ label, value, highlight }) => (
-          <div key={label} className="flex items-center justify-between px-6 py-3.5">
+          <div
+            key={label}
+            className="flex items-center justify-between px-6 py-3.5"
+          >
             <span className="text-sm text-gray-500">{label}</span>
-            <span className={`text-sm font-bold ${highlight ? "text-green-600" : "text-gray-900"}`}>{value}</span>
+            <span
+              className={`text-sm font-bold ${highlight ? "text-green-600" : "text-gray-900"}`}
+            >
+              {value}
+            </span>
           </div>
         ))}
       </div>
@@ -222,14 +249,6 @@ function InvestmentDetailsPage() {
                       <RenderCustomId investment={investment} />
 
                       {/* Property ref */}
-                      <div className="flex items-center gap-2 mt-3 text-gray-500">
-                        <MapPin className="w-3.5 h-3.5 shrink-0" />
-                        <span className="text-xs">Property: </span>
-                        <span className="font-mono text-xs text-gray-700 truncate">
-                          {investment.propertyId}
-                        </span>
-                        <CopyButton text={investment.propertyId} />
-                      </div>
                     </div>
 
                     {/* Right: current value */}
@@ -295,7 +314,10 @@ function InvestmentDetailsPage() {
                       </p>
                       {investment.property?.pricePerShare != null && (
                         <p className="text-xs text-gray-400 mt-1">
-                          {formatCurrency(investment.property.pricePerShare / 100)} per share
+                          {formatCurrency(
+                            investment.property.pricePerShare / 100,
+                          )}{" "}
+                          per share
                         </p>
                       )}
                     </>
@@ -331,8 +353,13 @@ function InvestmentDetailsPage() {
                   propertyId={investment.propertyId}
                 />
               ) : null}
-              {investment.property?.investmentModel === "FRACTIONAL_OWNERSHIP" && (
-                <FractionalInfo investment={investment} formatCurrency={formatCurrency} formatDate={formatDate} />
+              {investment.property?.investmentModel ===
+                "FRACTIONAL_OWNERSHIP" && (
+                <FractionalInfo
+                  investment={investment}
+                  formatCurrency={formatCurrency}
+                  formatDate={formatDate}
+                />
               )}
 
               <section className="grid  xl:grid-cols-3 gap-2">
