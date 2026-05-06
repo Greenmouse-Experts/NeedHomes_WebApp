@@ -105,7 +105,9 @@ function PropertyDetailPage() {
         );
         const quantity = form.watch("quantity");
         const selectedReturnDays = form.watch("selectedReturnDays");
-        const selectedTier = tierOptions.find((t) => t.days === selectedReturnDays);
+        const selectedTier = tierOptions.find(
+          (t) => t.days === selectedReturnDays,
+        );
         const sharesTotal = quantity * (property.pricePerShare / 100);
         const fullAmount = sharesTotal + additionalFeesTotal;
         const fullAmountKobo = Math.round(fullAmount * 100);
@@ -157,14 +159,22 @@ function PropertyDetailPage() {
               <div className="space-y-4">
                 {/* Shares */}
                 <div className="ring rounded-box fade">
-                  <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">Shares</h2>
+                  <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
+                    Shares
+                  </h2>
                   <div className="p-3 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Price Per Slot</span>
-                      <span className="text-sm font-bold">{formatCurrency(property.pricePerShare / 100)}</span>
+                      <span className="text-sm text-gray-600">
+                        Price Per Slot
+                      </span>
+                      <span className="text-sm font-bold">
+                        {formatCurrency(property.pricePerShare / 100)}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center border-t border-gray-100 pt-2">
-                      <span className="text-sm text-gray-600">Available Shares</span>
+                      <span className="text-sm text-gray-600">
+                        Available Shares
+                      </span>
                       <span className="text-sm">{availableShares}</span>
                     </div>
                   </div>
@@ -177,39 +187,98 @@ function PropertyDetailPage() {
                   render={({ field }) => (
                     <div className="ring rounded-box fade">
                       <div className="p-3 border-b fade flex items-center justify-between">
-                        <h2 className="text-sm font-bold text-gray-900">Select Shares</h2>
+                        <h2 className="text-sm font-bold text-gray-900">
+                          Select Shares
+                        </h2>
                         <span className="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-0.5 rounded-full">
-                          Min: {minimumShares} share{minimumShares !== 1 ? "s" : ""}
+                          Min: {minimumShares} share
+                          {minimumShares !== 1 ? "s" : ""}
                         </span>
                       </div>
                       <div className="p-3 space-y-2">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Quantity</span>
+                          <span className="text-sm text-gray-600">
+                            Quantity
+                          </span>
                           <div className="flex items-center gap-2">
-                            <Button type="button" variant="outline" size="sm"
-                              onClick={() => field.value > minimumShares && field.onChange(field.value - 1)}
-                              disabled={field.value <= minimumShares} className="px-2 py-1">−</Button>
-                            <span className="text-sm font-bold w-8 text-center">{field.value}</span>
-                            <Button type="button" variant="outline" size="sm"
-                              onClick={() => field.value < availableShares && field.onChange(field.value + 1)}
-                              disabled={field.value >= availableShares} className="px-2 py-1">+</Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                field.value > minimumShares &&
+                                field.onChange(field.value - 1)
+                              }
+                              disabled={field.value <= minimumShares}
+                              className="px-2 py-1"
+                            >
+                              −
+                            </Button>
+                            <span className="text-sm font-bold w-8 text-center">
+                              {field.value}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                field.value < availableShares &&
+                                field.onChange(field.value + 1)
+                              }
+                              disabled={field.value >= availableShares}
+                              className="px-2 py-1"
+                            >
+                              +
+                            </Button>
                           </div>
                         </div>
                         <div className="flex justify-between items-center border-t border-gray-100 pt-2">
-                          <span className="text-sm text-gray-600">Subtotal ({field.value} shares)</span>
-                          <span className="text-sm font-bold">{formatCurrency(field.value * (property.pricePerShare / 100) + additionalFeesTotal)}</span>
+                          <span className="text-sm text-gray-600">
+                            Subtotal ({field.value} shares)
+                          </span>
+                          <span className="text-sm font-bold">
+                            {formatCurrency(
+                              field.value * (property.pricePerShare / 100),
+                            )}
+                          </span>
                         </div>
                       </div>
                     </div>
                   )}
                 />
+                {(property.additionalFees || []).length > 0 && (
+                  <section className="rounded-lg border border-gray-200 overflow-hidden">
+                    <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">
+                      Management Fees
+                    </h2>
+                    <ul className="p-3 space-y-2">
+                      {property.additionalFees.map((fee, idx) => (
+                        <li
+                          key={idx}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-sm text-gray-600">
+                            {fee.label}
+                          </span>
+                          <span className="text-sm font-medium">
+                            {formatCurrency(fee.amount / 100)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
 
                 {/* Return Duration */}
                 <div className="ring rounded-box fade">
-                  <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">Select Return Duration</h2>
+                  <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">
+                    Select Return Duration
+                  </h2>
                   <div className="p-3 space-y-2">
                     {tierOptions.length === 0 ? (
-                      <p className="text-xs text-gray-400 italic">No return tiers available.</p>
+                      <p className="text-xs text-gray-400 italic">
+                        No return tiers available.
+                      </p>
                     ) : (
                       tierOptions.map((tier) => (
                         <label
@@ -225,14 +294,24 @@ function PropertyDetailPage() {
                               type="radio"
                               className="radio radio-warning radio-sm"
                               checked={selectedReturnDays === tier.days}
-                              onChange={() => form.setValue("selectedReturnDays", tier.days)}
+                              onChange={() =>
+                                form.setValue("selectedReturnDays", tier.days)
+                              }
                             />
                             <div>
-                              <p className="text-sm font-semibold text-gray-900">{tier.days} days</p>
-                              <p className="text-xs text-gray-500">Holding period: {property.fractionalHoldingPeriodDays ?? "—"} days</p>
+                              <p className="text-sm font-semibold text-gray-900">
+                                {tier.days} days
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                Holding period:{" "}
+                                {property.fractionalHoldingPeriodDays ?? "—"}{" "}
+                                days
+                              </p>
                             </div>
                           </div>
-                          <span className="text-sm font-bold text-green-600">{tier.rate}% return</span>
+                          <span className="text-sm font-bold text-green-600">
+                            {tier.rate}% return
+                          </span>
                         </label>
                       ))
                     )}
@@ -242,69 +321,91 @@ function PropertyDetailPage() {
                 {/* Payout preview */}
                 {selectedTier && expectedPayout && (
                   <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <span className="text-sm text-green-800 font-medium">Expected payout after {selectedTier.days} days</span>
-                    <span className="text-sm font-bold text-green-700">{formatCurrency(expectedPayout / 100)}</span>
+                    <span className="text-sm text-green-800 font-medium">
+                      Expected payout after {selectedTier.days} days
+                    </span>
+                    <span className="text-sm font-bold text-green-700">
+                      {formatCurrency(expectedPayout / 100)}
+                    </span>
                   </div>
                 )}
 
                 {/* Fees */}
-                {(property.additionalFees || []).length > 0 && (
-                  <section className="rounded-lg border border-gray-200 overflow-hidden">
-                    <h2 className="p-3 text-sm font-semibold border-b border-gray-200 bg-gray-100">Management Fees</h2>
-                    <ul className="p-3 space-y-2">
-                      {property.additionalFees.map((fee, idx) => (
-                        <li key={idx} className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">{fee.label}</span>
-                          <span className="text-sm font-medium">{formatCurrency(fee.amount / 100)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                )}
               </div>
             </Modal>
 
             {/* Page Header */}
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <Button variant="outline" leftIcon={<ChevronLeft className="w-5 h-5" />}
-                onClick={() => navigate({ to: "/investors/properties" })} className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                leftIcon={<ChevronLeft className="w-5 h-5" />}
+                onClick={() => navigate({ to: "/investors/properties" })}
+                className="w-full sm:w-auto"
+              >
                 Back to Properties
               </Button>
-              <Button variant="primary" rightIcon={<TrendingUp className="w-5 h-5" />}
-                onClick={showModal} disabled={mutate.isPending} className="w-full sm:w-auto">
+              <Button
+                variant="primary"
+                rightIcon={<TrendingUp className="w-5 h-5" />}
+                onClick={showModal}
+                disabled={mutate.isPending}
+                className="w-full sm:w-auto"
+              >
                 Invest Now
               </Button>
             </div>
 
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <MediaSlider images={property.galleryImages || []} videos={property.videos ? [property.videos] : []} coverImage={property.coverImage} />
+                <MediaSlider
+                  images={property.galleryImages || []}
+                  videos={property.videos ? [property.videos] : []}
+                  coverImage={property.coverImage}
+                />
 
                 <div className="p-4 md:p-6 lg:p-8">
                   {/* Header */}
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{property.propertyTitle}</h1>
-                        <ShareLink route={`/investors/properties/${propertyId}/fractional`} />
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                          {property.propertyTitle}
+                        </h1>
+                        <ShareLink
+                          route={`/investors/properties/${propertyId}/fractional`}
+                        />
                       </div>
                       <RenderCustomId property={property} />
                       <div className="flex items-center gap-2 text-gray-600">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
-                        <span className="text-sm md:text-lg">{property.location}</span>
+                        <span className="text-sm md:text-lg">
+                          {property.location}
+                        </span>
                       </div>
                       {property.isResell && property.reseller && (
                         <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
                           <RefreshCw className="w-4 h-4 shrink-0" />
-                          <span>Resell Listing — Listed by <strong>{property.reseller.firstName} {property.reseller.lastName}</strong></span>
+                          <span>
+                            Resell Listing — Listed by{" "}
+                            <strong>
+                              {property.reseller.firstName}{" "}
+                              {property.reseller.lastName}
+                            </strong>
+                          </span>
                         </div>
                       )}
                       <div className="mt-3">
-                        <Maps location={property.location} latitude={property.latitude} longitude={property.longitude} />
+                        <Maps
+                          location={property.location}
+                          latitude={property.latitude}
+                          longitude={property.longitude}
+                        />
                       </div>
                     </div>
                     <div className="sm:text-right">
-                      <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">{formatCurrency(property.basePrice / 100)}</p>
+                      <p className="text-2xl md:text-3xl font-bold text-(--color-orange)">
+                        {formatCurrency(property.basePrice / 100)}
+                      </p>
                     </div>
                   </div>
 
@@ -312,36 +413,62 @@ function PropertyDetailPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
                     <div className="lg:col-span-2 space-y-4 md:space-y-6">
                       <div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                          Description
+                        </h2>
                         <RenderDescription description={property.description} />
                       </div>
 
                       {/* Fractional Details */}
                       <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Investment Details</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                          Investment Details
+                        </h3>
                         <div className="grid grid-cols-2 gap-4 mb-4">
                           <div>
-                            <p className="text-sm text-gray-600">Total Shares</p>
-                            <p className="text-lg font-semibold text-gray-900">{property.totalShares?.toLocaleString() || "N/A"}</p>
+                            <p className="text-sm text-gray-600">
+                              Total Shares
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {property.totalShares?.toLocaleString() || "N/A"}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Price Per Slot</p>
-                            <p className="text-lg font-semibold text-(--color-orange)">{formatCurrency(property.pricePerShare / 100)}</p>
+                            <p className="text-sm text-gray-600">
+                              Price Per Slot
+                            </p>
+                            <p className="text-lg font-semibold text-(--color-orange)">
+                              {formatCurrency(property.pricePerShare / 100)}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Minimum Shares</p>
-                            <p className="text-lg font-semibold text-gray-900">{property.minimumShares || "N/A"}</p>
+                            <p className="text-sm text-gray-600">
+                              Minimum Shares
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {property.minimumShares || "N/A"}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600">Available Shares</p>
-                            <p className="text-lg font-semibold text-gray-900">{availableShares}</p>
+                            <p className="text-sm text-gray-600">
+                              Available Shares
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {availableShares}
+                            </p>
                           </div>
                           {property.fractionalHoldingPeriodDays && (
                             <div className="flex items-center gap-2 col-span-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                               <Clock className="w-4 h-4 text-yellow-600 shrink-0" />
                               <div>
-                                <p className="text-sm font-medium text-yellow-800">Minimum Holding Period</p>
-                                <p className="text-xs text-yellow-700">Hold for at least {property.fractionalHoldingPeriodDays} days to avoid early exit penalty.</p>
+                                <p className="text-sm font-medium text-yellow-800">
+                                  Minimum Holding Period
+                                </p>
+                                <p className="text-xs text-yellow-700">
+                                  Hold for at least{" "}
+                                  {property.fractionalHoldingPeriodDays} days to
+                                  avoid early exit penalty.
+                                </p>
                               </div>
                             </div>
                           )}
@@ -355,10 +482,19 @@ function PropertyDetailPage() {
                             </p>
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                               {tierOptions.map((tier) => (
-                                <div key={tier.days} className="bg-white rounded-lg p-3 border border-blue-100 text-center">
-                                  <p className="text-xs text-gray-500 mb-1">{tier.days} days</p>
-                                  <p className="text-lg font-bold text-green-600">{tier.rate}%</p>
-                                  <p className="text-[10px] text-gray-400">return</p>
+                                <div
+                                  key={tier.days}
+                                  className="bg-white rounded-lg p-3 border border-blue-100 text-center"
+                                >
+                                  <p className="text-xs text-gray-500 mb-1">
+                                    {tier.days} days
+                                  </p>
+                                  <p className="text-lg font-bold text-green-600">
+                                    {tier.rate}%
+                                  </p>
+                                  <p className="text-[10px] text-gray-400">
+                                    return
+                                  </p>
                                 </div>
                               ))}
                             </div>
@@ -371,7 +507,10 @@ function PropertyDetailPage() {
                     </div>
 
                     <div className="space-y-4 md:space-y-6">
-                      <InvestmentDetails type={property.investmentModel} inv={property} />
+                      <InvestmentDetails
+                        type={property.investmentModel}
+                        inv={property}
+                      />
                     </div>
                   </div>
                 </div>
