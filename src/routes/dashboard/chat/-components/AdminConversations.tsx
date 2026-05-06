@@ -1,7 +1,7 @@
 import apiClient from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, type RefObject } from "react";
+import { useEffect, type RefObject } from "react";
 import type { Socket } from "socket.io-client";
 import ChatBar from "./ChatBar";
 import Messages from "./Messages";
@@ -65,7 +65,7 @@ export default function AdminConvos({
                   Live Conversations
                 </h2>
                 <div className="p-4 flex-1 flex min-h-0 flex-col overflow-y-scroll">
-                  <Messages socket={socket} convoId={convoId} />
+                  <Messages key={convoId} socket={socket} convoId={convoId} />
                 </div>
                 <div>
                   <ChatBar socket={socket} />
