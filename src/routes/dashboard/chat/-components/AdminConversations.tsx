@@ -1,69 +1,34 @@
 import apiClient from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { useEffect, useState, type RefObject } from "react";
+import type { Socket } from "socket.io-client";
 import ChatBar from "./ChatBar";
 import Messages from "./Messages";
-import { get_user_value } from "@/store/authStore";
 
-export default function AdminConvos({ convoId }: { convoId?: string }) {
-  const socketRef = useRef<Socket | null>(null);
-  const auth = get_user_value();
-  const [isSocketConnected, setIsSocketConnected] = useState(false);
-
+export default function AdminConvos({
+  convoId,
+  socket,
+  isSocketConnected,
+}: {
+  convoId?: string;
+  socket: RefObject<Socket | null>;
+  isSocketConnected: boolean;
+}) {
   const query = useQuery({
     queryKey: ["convoId", convoId],
     queryFn: async () => {
-      let resp = apiClient.patch(
-        `https://needhomes-backend-staging.onrender.com/chat/conversations/${convoId}/join`,
+      const resp = await apiClient.patch(
+        `chat/conversations/${convoId}/join`,
       );
-      return (await resp).data;
+      return resp.data;
     },
     enabled: !!convoId,
   });
 
   useEffect(() => {
-    if (!auth?.accessToken) return;
-
-    const socket = io(
-      import.meta.env.VITE_BACKEND_URL ||
-        "https://needhomes-backend-staging.onrender.com",
-      {
-        auth: {
-          token: auth.accessToken,
-        },
-        extraHeaders: {
-          Authorization: `Bearer ${auth.accessToken}`,
-        },
-        transports: ["websocket", "polling"],
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: 5,
-      },
-    );
-
-    socketRef.current = socket;
-
-    socket.on("connect", () => {
-      console.log("✅ Connected to WebSocket");
-      setIsSocketConnected(true);
-    });
-    socket.on("disconnect", () => {
-      setIsSocketConnected(false);
-    });
-    socket.on("connected", (data) => {
-      console.log("User data:", data);
-    });
-    return () => {
-      console.log("❌ Disconnecting socket...");
-      socket.disconnect();
-    };
-  }, [auth?.accessToken]);
-
-  useEffect(() => {
     if (!convoId || !isSocketConnected) return;
-    socketRef.current?.emit("chat:createConversation", {
+    socket.current?.emit("chat:createConversation", {
       conversationId: convoId,
     });
   }, [convoId, isSocketConnected]);
@@ -100,10 +65,10 @@ export default function AdminConvos({ convoId }: { convoId?: string }) {
                   Live Conversations
                 </h2>
                 <div className="p-4 flex-1 flex min-h-0 flex-col overflow-y-scroll">
-                  <Messages socket={socketRef} convoId={convoId} />
+                  <Messages socket={socket} convoId={convoId} />
                 </div>
                 <div>
-                  <ChatBar socket={socketRef} />
+                  <ChatBar socket={socket} />
                 </div>
               </div>
             );

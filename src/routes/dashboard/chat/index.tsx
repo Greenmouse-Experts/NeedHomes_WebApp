@@ -4,6 +4,9 @@ import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { io, type Socket } from "socket.io-client";
+import { useAuth } from "@/store/authStore";
 import AdminConvos from "./-components/AdminConversations";
 import PendingConversations from "./-components/PendingConversations";
 
@@ -51,6 +54,34 @@ interface Conversation {
 
 function RouteComponent() {
   const { convoId } = Route.useSearch();
+  const [auth] = useAuth();
+  const socketRef = useRef<Socket | null>(null);
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
+
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: { token: auth.accessToken },
+        extraHeaders: { Authorization: `Bearer ${auth.accessToken}` },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: 5,
+      },
+    );
+    socketRef.current = socket;
+    socket.on("connect", () => setIsSocketConnected(true));
+    socket.on("disconnect", () => setIsSocketConnected(false));
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+      setIsSocketConnected(false);
+    };
+  }, [auth?.accessToken]);
+
   const query = useQuery<ApiResponse<Conversation[]>>({
     queryKey: ["chat-admin"],
     queryFn: async () => {
@@ -71,11 +102,11 @@ function RouteComponent() {
       <ThemeProvider className="drawer lg:drawer-open   ">
         <input id="chat-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content md:h-[calc(100dvh-144px)] flex   p-0 isolate w-full b">
-          <AdminConvos convoId={convoId} />
+          <AdminConvos convoId={convoId} socket={socketRef} isSocketConnected={isSocketConnected} />
         </div>
         <div className="drawer-side md:h-[calc(100dvh-144px)]">
           <div className="w-80 bg-white ">
-            <PendingConversations />
+            <PendingConversations socket={socketRef} />
             <div className="border-t fade">
               <h2 className="border-b fade p-4 font-bold">Conversations </h2>
               <QueryCompLayout query={query}>
