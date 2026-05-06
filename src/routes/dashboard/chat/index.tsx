@@ -20,6 +20,7 @@ export const Route = createFileRoute("/dashboard/chat/")({
     return { convoId: search.convoId as string };
   },
 });
+
 interface User {
   id: string;
   firstName: string;
@@ -59,16 +60,21 @@ function RouteComponent() {
   const socketRef = useRef<Socket | null>(null);
   const [isSocketConnected, setIsSocketConnected] = useState(false);
 
-  // Search state with debounce
+  // Search with debounce
   const [convoSearch, setConvoSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  // Track latest socket message per conversation and unread status
+  // Per-conversation unread counts and last-message preview from socket
+  const [unreadCounts, setUnreadCounts] = useState<Map<string, number>>(
+    new Map(),
+  );
   const [socketMessages, setSocketMessages] = useState<Map<string, Message>>(
     new Map(),
   );
-  const [unreadIds, setUnreadIds] = useState<Set<string>>(new Set());
+  // Conversations closed via socket — filter these out of the list
+  const [closedConvoIds, setClosedConvoIds] = useState<Set<string>>(new Set());
 
+  // Socket creation — join admin rooms immediately on connect
   useEffect(() => {
     if (!auth?.accessToken) return;
     const socket = io(
@@ -84,7 +90,12 @@ function RouteComponent() {
       },
     );
     socketRef.current = socket;
-    socket.on("connect", () => setIsSocketConnected(true));
+    socket.on("connect", () => {
+      setIsSocketConnected(true);
+      const userId = (auth as any).user?.id;
+      if (userId) socket.emit("join", { userId });
+      socket.emit("joinRoom", "admin-notifications");
+    });
     socket.on("disconnect", () => setIsSocketConnected(false));
     return () => {
       socket.disconnect();
@@ -99,7 +110,8 @@ function RouteComponent() {
     return () => clearTimeout(t);
   }, [convoSearch]);
 
-  // Listen for incoming messages — update last-message preview and unread indicator
+  // chat:newMessage — update preview, sort order, and unread count
+  // chat:conversationClosed — remove from list
   useEffect(() => {
     const sock = socketRef.current;
     if (!sock || !isSocketConnected) return;
@@ -109,24 +121,35 @@ function RouteComponent() {
         new Map(prev).set(message.conversationId, message),
       );
       if (message.conversationId !== convoId && !message.isSystem) {
-        setUnreadIds((prev) => new Set([...prev, message.conversationId]));
+        setUnreadCounts((prev) => {
+          const n = new Map(prev);
+          n.set(message.conversationId, (n.get(message.conversationId) ?? 0) + 1);
+          return n;
+        });
       }
     };
 
+    const handleClosed = ({ conversationId }: { conversationId: string }) => {
+      setClosedConvoIds((prev) => new Set([...prev, conversationId]));
+    };
+
     sock.on("chat:newMessage", handleMsg);
+    sock.on("chat:conversationClosed", handleClosed);
     return () => {
       sock.off("chat:newMessage", handleMsg);
+      sock.off("chat:conversationClosed", handleClosed);
     };
   }, [isSocketConnected, convoId]);
 
-  // Clear unread when admin opens a conversation
+  // When opening a conversation: reset unread optimistically + mark as read on server
   useEffect(() => {
     if (!convoId) return;
-    setUnreadIds((prev) => {
-      const next = new Set(prev);
-      next.delete(convoId);
-      return next;
+    setUnreadCounts((prev) => {
+      const n = new Map(prev);
+      n.delete(convoId);
+      return n;
     });
+    apiClient.post(`/chat/conversations/${convoId}/read`).catch(() => {});
   }, [convoId]);
 
   const query = useQuery<ApiResponse<Conversation[]>>({
@@ -139,6 +162,11 @@ function RouteComponent() {
       return resp.data;
     },
   });
+
+  const totalUnread = Array.from(unreadCounts.values()).reduce(
+    (sum, c) => sum + c,
+    0,
+  );
 
   return (
     <>
@@ -157,9 +185,9 @@ function RouteComponent() {
             <div className="border-t fade">
               <h2 className="border-b fade p-4 font-bold flex items-center justify-between">
                 Conversations
-                {unreadIds.size > 0 && (
+                {totalUnread > 0 && (
                   <span className="badge badge-error badge-sm">
-                    {unreadIds.size}
+                    {totalUnread}
                   </span>
                 )}
               </h2>
@@ -189,7 +217,21 @@ function RouteComponent() {
 
               <QueryCompLayout query={query}>
                 {(data) => {
-                  const chats = data.data;
+                  const chats = data.data
+                    .filter((c) => !closedConvoIds.has(c.id))
+                    .map((c) => {
+                      const socketMsg = socketMessages.get(c.id);
+                      return {
+                        ...c,
+                        _sortAt: socketMsg?.createdAt ?? c.lastMessageAt,
+                      };
+                    })
+                    .sort(
+                      (a, b) =>
+                        new Date(b._sortAt).getTime() -
+                        new Date(a._sortAt).getTime(),
+                    );
+
                   return (
                     <div className="flex flex-col divide-y divide-gray-100">
                       {chats.length === 0 && (
@@ -202,7 +244,7 @@ function RouteComponent() {
                       {chats.map((chat) => {
                         const socketMsg = socketMessages.get(chat.id);
                         const lastMessage = socketMsg ?? chat.messages[0];
-                        const hasUnread = unreadIds.has(chat.id);
+                        const unreadCount = unreadCounts.get(chat.id) ?? 0;
                         const firstName = chat?.user?.firstName ?? "Unknown";
                         const lastName = chat?.user?.lastName ?? "Unknown";
                         const initials = `${firstName[0]}${lastName[0]}`;
@@ -231,13 +273,15 @@ function RouteComponent() {
                                 </span>
                               </div>
                               <p
-                                className={`truncate text-sm ${hasUnread ? "font-semibold text-gray-900" : "text-gray-500"}`}
+                                className={`truncate text-sm ${unreadCount > 0 ? "font-semibold text-gray-900" : "text-gray-500"}`}
                               >
                                 {lastMessage?.content || "No messages yet"}
                               </p>
                             </div>
-                            {hasUnread && (
-                              <div className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
+                            {unreadCount > 0 && (
+                              <span className="badge badge-error badge-xs shrink-0">
+                                {unreadCount}
+                              </span>
                             )}
                           </Link>
                         );

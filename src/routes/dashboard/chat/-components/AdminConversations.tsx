@@ -28,9 +28,11 @@ export default function AdminConvos({
 
   useEffect(() => {
     if (!convoId || !isSocketConnected) return;
-    socket.current?.emit("chat:createConversation", {
-      conversationId: convoId,
-    });
+    const sock = socket.current;
+    sock?.emit("joinRoom", `conversation:${convoId}`);
+    return () => {
+      sock?.emit("leaveRoom", `conversation:${convoId}`);
+    };
   }, [convoId, isSocketConnected]);
   if (!convoId) {
     return (

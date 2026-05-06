@@ -54,12 +54,23 @@ export default function PendingConversations({
   // Real-time: skip socket updates while a search is active to avoid polluting filtered results
   useEffect(() => {
     const sock = socket.current;
-    console.log("socket", sock);
-
     if (!sock) return;
-    const handleNew = (convo: PendingConvo) => {
-      console.log(convo, "new_convo");
+
+    const handleNew = (data: {
+      conversationId: string;
+      user: User;
+      createdAt: string;
+    }) => {
       if (debouncedSearch) return;
+      const convo: PendingConvo = {
+        id: data.conversationId,
+        userId: data.user.id,
+        status: "PENDING",
+        lastMessageAt: data.createdAt,
+        createdAt: data.createdAt,
+        user: data.user,
+        messages: [],
+      };
       setChats((prev) => {
         if (prev.some((c) => c.id === convo.id)) return prev;
         return [convo, ...prev];
