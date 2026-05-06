@@ -55,42 +55,27 @@ export default function Messages({
       return resp.data;
     },
   });
-  const handleNewMessage = (message: Message) => {
-    queryClient.setQueryData<ApiResponse<Conversation>>(
-      ["chats", convoId],
-      (oldData) => {
-        if (!oldData) return oldData;
-
-        // Prevent adding duplicate messages
-        const messageExists = oldData.data.messages.some(
-          (existingMessage) => existingMessage.id === message.id,
-        );
-
-        if (messageExists) {
-          return oldData;
-        }
-
-        return {
-          ...oldData,
-          data: {
-            ...oldData.data,
-            messages: [...oldData.data.messages, message],
-          },
-        };
-      },
-    );
-  };
   useEffect(() => {
     const currentSocket = socket.current;
     if (!currentSocket) return;
 
     const handleMessage = (message: Message) => {
-      console.log("New message:", message);
-      handleNewMessage(message);
+      if (message.conversationId !== convoId) return;
+      queryClient.setQueryData<ApiResponse<Conversation>>(
+        ["chats", convoId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          const exists = oldData.data.messages.some((m) => m.id === message.id);
+          if (exists) return oldData;
+          return {
+            ...oldData,
+            data: { ...oldData.data, messages: [...oldData.data.messages, message] },
+          };
+        },
+      );
     };
 
     currentSocket.on("chat:newMessage", handleMessage);
-
     return () => {
       currentSocket.off("chat:newMessage", handleMessage);
     };
