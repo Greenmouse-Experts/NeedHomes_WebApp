@@ -1,23 +1,46 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, Calendar, Clock, Eye, ChevronRight } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Bell, Calendar, Clock, Eye } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import RenderFormattedText from "@/components/RenderFormattedText";
+import { useModal } from "@/store/modals";
+import Modal from "@/components/modals/DialogModal";
+import { useState } from "react";
 
 export const Route = createFileRoute("/partners/announcements")({
   component: RouteComponent,
 });
 
+type AnnouncementCreate = {
+  id: string;
+  title: string;
+  content: string;
+  target: "ALL_USERS";
+  createdBy: string;
+  createdAt: string;
+  deletedAt: string | null;
+  isRead: boolean;
+};
+
 function RouteComponent() {
-  type AnnouncementCreate = {
-    id: string;
-    title: string;
-    content: string;
-    target: "ALL_USERS";
-    createdBy: string;
-    createdAt: string;
-    deletedAt: string | null;
+  const modalRef = useModal();
+  const queryClient = useQueryClient();
+  const [selected, setSelected] = useState<AnnouncementCreate | null>(null);
+
+  const readMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.patch(`/announcements/${id}/read`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
+    },
+  });
+
+  const handleOpen = (announcement: AnnouncementCreate) => {
+    setSelected(announcement);
+    modalRef.ref.current?.open();
+    if (!announcement.isRead) readMutation.mutate(announcement.id);
   };
 
   const query = useQuery<ApiResponseV2<AnnouncementCreate[]>>({
@@ -56,6 +79,25 @@ function RouteComponent() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-4 sm:p-8">
+      <Modal ref={modalRef.ref} title="Announcement">
+        {selected && (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <div className="flex items-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                {new Date(selected.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+              </div>
+              <div className="flex items-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                <Clock className="h-3.5 w-3.5 mr-1.5" />
+                {new Date(selected.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{selected.title || "Important Update"}</h3>
+            <RenderFormattedText text={selected.content} />
+          </div>
+        )}
+      </Modal>
+
       <div className="mx-auto">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
@@ -83,7 +125,8 @@ function RouteComponent() {
                   announcementsList.map((announcement) => (
                     <div
                       key={announcement.id}
-                      className="group relative bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 cursor-pointer ring fade"
+                      onClick={() => handleOpen(announcement)}
+                      className={`group relative bg-white rounded-2xl border p-5 sm:p-6 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 cursor-pointer ring fade ${!announcement.isRead ? "border-orange-200 bg-orange-50/30" : "border-gray-200"}`}
                     >
                       <div className="flex items-start gap-5">
                         {/* Icon/Status Indicator */}
@@ -117,7 +160,10 @@ function RouteComponent() {
                           </div>*/}
                         </div>
 
-                        <div className="shrink-0 self-center">
+                        <div className="shrink-0 self-center flex flex-col items-center gap-2">
+                          {!announcement.isRead && (
+                            <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+                          )}
                           <div className="p-2 rounded-full bg-gray-50 text-gray-400 group-hover:bg-orange-100 group-hover:text-orange-600 transition-all">
                             <Eye className="h-5 w-5" />
                           </div>

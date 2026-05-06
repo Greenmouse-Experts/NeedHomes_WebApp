@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bell, Calendar, Clock, Eye } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import RenderFormattedText from "@/components/RenderFormattedText";
@@ -20,12 +20,23 @@ type AnnouncementCreate = {
   createdBy: string;
   createdAt: string;
   deletedAt: string | null;
+  isRead: boolean;
 };
 
 function RouteComponent() {
   const modalRef = useModal();
+  const queryClient = useQueryClient();
   const [selectedAnnouncement, setSelectedAnnouncement] =
     useState<AnnouncementCreate | null>(null);
+
+  const readMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.patch(`/announcements/${id}/read`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
+    },
+  });
 
   const query = useQuery<ApiResponseV2<AnnouncementCreate[]>>({
     queryKey: ["announcements"],
@@ -64,6 +75,7 @@ function RouteComponent() {
   const handleOpenAnnouncement = (announcement: AnnouncementCreate) => {
     setSelectedAnnouncement(announcement);
     modalRef.ref.current?.open();
+    if (!announcement.isRead) readMutation.mutate(announcement.id);
   };
 
   return (
@@ -117,7 +129,7 @@ function RouteComponent() {
                     <div
                       key={announcement.id}
                       onClick={() => handleOpenAnnouncement(announcement)}
-                      className="group relative bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 cursor-pointer ring fade"
+                      className={`group relative bg-white rounded-2xl border p-5 sm:p-6 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 cursor-pointer ring fade ${!announcement.isRead ? "border-orange-200 bg-orange-50/30" : "border-gray-200"}`}
                     >
                       <div className="flex items-start gap-5">
                         <div className="hidden sm:flex shrink-0 w-12 h-12 rounded-xl bg-gray-50 items-center justify-center group-hover:bg-orange-50 transition-colors duration-300">
@@ -145,7 +157,10 @@ function RouteComponent() {
                           </div>
                         </div>
 
-                        <div className="shrink-0 self-center">
+                        <div className="shrink-0 self-center flex flex-col items-center gap-2">
+                          {!announcement.isRead && (
+                            <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+                          )}
                           <div className="p-2 rounded-full bg-gray-50 text-gray-400 group-hover:bg-orange-100 group-hover:text-orange-600 transition-all">
                             <Eye className="h-5 w-5" />
                           </div>
