@@ -351,8 +351,9 @@ export default function UserWallet() {
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-xs md:text-sm font-semibold text-gray-900">
-                              {transaction.type === "WITHDRAWAL" ? "-" : "+"} N{" "}
+                            <p className="text-xs flex md:text-sm font-semibold text-gray-900">
+                              {transaction.type === "WITHDRAWAL" ? "-" : "+"}{" "}
+                              <NairaIcon className="w-5" />{" "}
                               {(transaction.amount / 100).toLocaleString()}
                             </p>
                             <p

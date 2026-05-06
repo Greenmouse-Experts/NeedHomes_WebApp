@@ -6,6 +6,7 @@ import PageLoader from "@/components/layout/PageLoader";
 import CustomTable, { type columnType } from "@/components/tables/CustomTable";
 import type { Actions } from "@/components/tables/pop-up";
 import { usePagination } from "@/helpers/pagination";
+import { InputNumberFormat } from "@react-input/number-format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
@@ -303,15 +304,17 @@ function ResellRequestModal({ onClose, onSuccess }: ResellRequestModalProps) {
                 </span>
               </span>
             </label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              className="input input-bordered w-full"
-              placeholder="Leave blank to use original price"
-              value={askingPrice}
-              onChange={(e) => setAskingPrice(e.target.value)}
-            />
+            {/*<InputNumberFormat
+              locales="en"
+              maximumFractionDigits={2}
+              // type="number"
+              // min="0"
+              // step="0.01"
+              // className="input input-bordered w-full"
+              // placeholder="Leave blank to use original price"
+              // value={askingPrice}
+              // onChange={(e) => setAskingPrice(e.target.value)}
+            />*/}
           </div>
         </div>
 

@@ -15,6 +15,7 @@ import { extract_message } from "@/helpers/apihelpers";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { Button } from "@/components/ui/Button";
 import { NairaIcon } from "@/components/NairaIcon";
+import { InputNumberFormat } from "@react-input/number-format";
 
 interface PriceHistoryData {
   history: {
@@ -91,8 +92,11 @@ function ResellStatusBadge({ status }: { status: ResellStatus }) {
 
 export default function Resell({ investment }: { investment: Investment }) {
   const modalRef = useRef<ModalHandle>(null);
-  const [askingPriceNaira, setAskingPriceNaira] = useState("");
+  const [askingPriceDisplay, setAskingPriceDisplay] = useState("");
   const queryClient = useQueryClient();
+
+  const parsePrice = (formatted: string) =>
+    parseFloat(formatted.replace(/,/g, "").trim()) || 0;
 
   const priceHistoryQuery = useQuery<{ data: PriceHistoryData }>({
     queryKey: ["price-history", investment.propertyId],
@@ -126,8 +130,8 @@ export default function Resell({ investment }: { investment: Investment }) {
   const submitMutation = useMutation({
     mutationFn: async () => {
       const body: Record<string, number> = {};
-      if (askingPriceNaira.trim()) {
-        const naira = parseFloat(askingPriceNaira);
+      if (askingPriceDisplay.trim()) {
+        const naira = parsePrice(askingPriceDisplay);
         if (isNaN(naira) || naira <= 0) throw new Error("Invalid asking price");
         if (naira < minNaira)
           throw new Error(
@@ -145,7 +149,7 @@ export default function Resell({ investment }: { investment: Investment }) {
     onSuccess: () => {
       toast.success("Resell request submitted — awaiting admin review");
       queryClient.invalidateQueries({ queryKey: ["resell-listings"] });
-      setAskingPriceNaira("");
+      setAskingPriceDisplay("");
       modalRef.current?.close();
     },
     onError: (error) => {
@@ -230,13 +234,15 @@ export default function Resell({ investment }: { investment: Investment }) {
             </legend>
             <label className="input w-full">
               <span className="text-base-content/40">₦</span>
-              <input
-                type="number"
-                min={minNaira}
-                max={maxNaira}
+              <InputNumberFormat
+                className="w-full bg-transparent outline-none"
+                locales="en-NG"
+                format="decimal"
+                maximumFractionDigits={2}
+                groupDisplay
                 placeholder={`${minNaira.toLocaleString()} – ${maxNaira.toLocaleString()}`}
-                value={askingPriceNaira}
-                onChange={(e) => setAskingPriceNaira(e.target.value)}
+                value={askingPriceDisplay}
+                onChange={(e) => setAskingPriceDisplay(e.target.value)}
               />
             </label>
             <p className="fieldset-label">
