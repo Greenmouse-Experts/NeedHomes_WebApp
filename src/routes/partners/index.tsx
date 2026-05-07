@@ -31,9 +31,9 @@ function PartnerDashboard() {
       <section className="gap-6 flex flex-col lg:flex-row">
         <div className="flex-5/6 flex flex-col gap-6">
           <section className="flex gap-6 flex-col-reverse lg:flex-row">
-            <div className="flex-1 w-full lg:max-w-xs hidden lg:block">
+            {/*<div className="flex-1 w-full lg:max-w-xs hidden lg:block">
               <CalendarWidget />
-            </div>
+            </div>*/}
             <PartnerStatsCard />
           </section>
           <RecentPromotions />
