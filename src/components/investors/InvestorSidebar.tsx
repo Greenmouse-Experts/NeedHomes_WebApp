@@ -17,6 +17,75 @@ import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { NairaIcon } from "../NairaIcon";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import { useEffect, useRef, useState } from "react";
+import { io, type Socket } from "socket.io-client";
+
+const RenderChat = (props: {
+  link: any;
+  isDisabled: boolean;
+  activePage?: string;
+  handleLinkClick: () => void;
+}) => {
+  const [auth] = useAuth();
+  const [hasUnread, setHasUnread] = useState(false);
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: { token: auth.accessToken },
+        extraHeaders: { Authorization: `Bearer ${auth.accessToken}` },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+      },
+    );
+    socketRef.current = socket;
+    socket.on("chat:newMessage", () => setHasUnread(true));
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, [auth?.accessToken]);
+
+  useEffect(() => {
+    if (props.activePage === "chat") setHasUnread(false);
+  }, [props.activePage]);
+
+  const { link, isDisabled, activePage, handleLinkClick } = props;
+  return (
+    <Link
+      key={link.to}
+      to={isDisabled ? "#" : link.to}
+      onClick={
+        isDisabled
+          ? (e) => e.preventDefault()
+          : () => {
+              setHasUnread(false);
+              handleLinkClick();
+            }
+      }
+      disabled={isDisabled}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.activePage
+          ? "bg-[var(--color-orange)] text-white"
+          : isDisabled
+            ? "text-gray-600 cursor-not-allowed opacity-50"
+            : "hover:bg-gray-800 text-gray-400"
+      }`}
+      activeProps={{ className: "bg-[var(--color-orange)] text-white" }}
+      activeOptions={link.activeOptions}
+    >
+      {link.icon}
+      <span>{link.label}</span>
+      {hasUnread && (
+        <span className="ml-auto w-2 h-2 rounded-full bg-red-500 shrink-0" />
+      )}
+    </Link>
+  );
+};
 
 const RenderAnnouncements = (props: {
   link: any;
@@ -169,6 +238,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       label: "chat",
       icon: <ChatBubbleLeftIcon className="size-4" />,
       alwaysEnabled: false,
+      render: RenderChat,
     },
 
     {

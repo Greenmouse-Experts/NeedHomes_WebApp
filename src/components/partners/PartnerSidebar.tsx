@@ -9,17 +9,84 @@ import {
   Megaphone,
   Settings,
 } from "lucide-react";
-import { show_logout, useKyc } from "@/store/authStore";
+import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "../investors/ProfileCard";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
+import { useEffect, useRef, useState } from "react";
+import { io, type Socket } from "socket.io-client";
 
 interface PartnerSidebarProps {
   activePage?: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
 }
+const RenderChat = (props: {
+  link: any;
+  isRestricted: boolean;
+  activePage?: string;
+  handleLinkClick: () => void;
+}) => {
+  const [auth] = useAuth();
+  const [hasUnread, setHasUnread] = useState(false);
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (!auth?.accessToken) return;
+    const socket = io(
+      import.meta.env.VITE_BACKEND_URL ||
+        "https://needhomes-backend-staging.onrender.com",
+      {
+        auth: { token: auth.accessToken },
+        extraHeaders: { Authorization: `Bearer ${auth.accessToken}` },
+        transports: ["websocket", "polling"],
+        reconnection: true,
+      },
+    );
+    socketRef.current = socket;
+    socket.on("chat:newMessage", () => setHasUnread(true));
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, [auth?.accessToken]);
+
+  useEffect(() => {
+    if (props.activePage === "chat") setHasUnread(false);
+  }, [props.activePage]);
+
+  const { link, isRestricted, activePage, handleLinkClick } = props;
+  return (
+    <Link
+      key={link.to}
+      to={isRestricted ? "#" : link.to}
+      onClick={
+        isRestricted
+          ? (e) => e.preventDefault()
+          : () => {
+              setHasUnread(false);
+              handleLinkClick();
+            }
+      }
+      disabled={isRestricted}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.id
+          ? "bg-(--color-orange) text-white"
+          : "hover:bg-gray-800 text-gray-400"
+      } ${isRestricted ? "opacity-50 cursor-not-allowed" : ""}`}
+      activeProps={{ className: "bg-(--color-orange) text-white" }}
+      activeOptions={{ exact: link.exact }}
+    >
+      <link.icon className="size-4" />
+      <span>{link.label}</span>
+      {hasUnread && (
+        <span className="ml-auto w-2 h-2 rounded-full bg-red-500 shrink-0" />
+      )}
+    </Link>
+  );
+};
+
 const RenderAnnouncements = (props: {
   link: any;
   isDisabled: boolean;
@@ -139,6 +206,7 @@ const NAV_LINKS = [
     label: "Chat",
     id: "chat",
     icon: ChatBubbleLeftIcon,
+    render: RenderChat,
   },
   {
     to: "/partners/announcements",
