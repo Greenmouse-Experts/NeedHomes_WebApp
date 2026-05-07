@@ -16,6 +16,7 @@ import PaystackPop from "@paystack/inline-js";
 import { usePaystackPayment } from "react-paystack";
 import { useNavigate } from "@tanstack/react-router";
 import { NairaIcon } from "@/components/NairaIcon";
+import PriceInput, { parsePriceInput } from "@/components/inputs/PriceInput";
 interface WalletTransaction {
   id: string;
   walletId: string;
@@ -163,8 +164,8 @@ export default function UserWallet() {
   };
 
   const handleSubmit = () => {
-    const numericAmount = Number(amount);
-    if (!amount || isNaN(numericAmount)) {
+    const numericAmount = parsePriceInput(amount);
+    if (!amount || !numericAmount) {
       return toast.error("Please enter a valid amount");
     }
 
@@ -414,18 +415,11 @@ export default function UserWallet() {
                   <p className="text-sm text-gray-500">
                     Enter the amount you wish to {modalType} from your wallet.
                   </p>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold">
-                      N
-                    </span>
-                    <input
-                      type="number"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      placeholder="0.00"
-                      className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none"
-                    />
-                  </div>
+                  <PriceInput
+                    value={amount}
+                    onChange={setAmount}
+                    placeholder="0.00"
+                  />
                 </div>
               </Modal>
             </>
