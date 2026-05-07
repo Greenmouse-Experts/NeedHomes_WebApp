@@ -351,7 +351,7 @@ function InvestmentDetailsPage() {
                 />
               )}
 
-              <section className="grid  xl:grid-cols-3 gap-2">
+              <section className="grid  xl:grid-cols-3 gap-2 mt-4">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                   <div className="border-b border-gray-100 bg-gray-50 px-6 py-4 flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
