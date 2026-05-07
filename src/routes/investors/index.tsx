@@ -62,9 +62,9 @@ function InvestorDashboard() {
       <section className="gap-6 flex flex-col lg:flex-row">
         <div className="flex-5/6 flex flex-col gap-6">
           <section className="flex gap-6 flex-col-reverse lg:flex-row">
-            <div className="flex-1 w-full hidden xl:block   xl:max-w-xs">
+            {/*<div className="flex-1 w-full hidden xl:block   xl:max-w-xs">
               <CalendarWidget />
-            </div>
+            </div>*/}
             <div className=" flex-1">
               <div className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-xl md:rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-lg h-full flex flex-col justify-between">
                 <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 opacity-20">

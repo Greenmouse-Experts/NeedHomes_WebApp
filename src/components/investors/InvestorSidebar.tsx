@@ -5,8 +5,6 @@ import {
   User,
   Bell,
   Megaphone,
-  Briefcase,
-  List,
   Settings,
   LogOut,
   ArrowLeftRight,
