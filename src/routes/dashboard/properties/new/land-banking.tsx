@@ -40,6 +40,8 @@ interface LandBankingProperty extends DocProps {
   pricePerPlot: number;
   holdingPeriod: number;
   buyBackOption: boolean;
+  installmentDuration?: number;
+  firstPaymentPercentage?: number;
 }
 
 function RouteComponent() {
@@ -56,6 +58,8 @@ function RouteComponent() {
       pricePerPlot: 0,
       holdingPeriod: 12,
       buyBackOption: false,
+      paymentOption: "FULL_PAYMENT",
+      installmentDuration: 12,
       additionalFees: [{ label: "Survey Fee", amount: 0 }],
       coverImage: "",
       galleryImages: [],
@@ -266,6 +270,58 @@ function RouteComponent() {
                   />
                 </div>
               </div>
+              <Controller
+                name="paymentOption"
+                control={methods.control}
+                render={({ field }) => (
+                  <LocalSelect {...field} label="Payment Option">
+                    <option value="FULL_PAYMENT">Full Payment</option>
+                    <option value="INSTALLMENT">Installment</option>
+                    <option value="BOTH">Both</option>
+                  </LocalSelect>
+                )}
+              />
+              {(paymentOption === "INSTALLMENT" || paymentOption === "BOTH") && (
+                <>
+                  <Controller
+                    name="installmentDuration"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <SimpleInput
+                        {...field}
+                        label="Installment Duration (Months)"
+                        type="number"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="firstPaymentPercentage"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <div className="space-y-1">
+                        <SimpleInput
+                          {...field}
+                          value={field.value ?? ""}
+                          label="First Payment Percentage (%)"
+                          type="number"
+                          placeholder="e.g. 30"
+                          min={1}
+                          max={100}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? e.target.valueAsNumber : undefined,
+                            )
+                          }
+                        />
+                        <p className="text-xs opacity-60">
+                          Minimum % of total plot cost required upfront. Leave blank for default (total ÷ duration).
+                        </p>
+                      </div>
+                    )}
+                  />
+                </>
+              )}
             </div>
           </section>
         </DefaultForm>

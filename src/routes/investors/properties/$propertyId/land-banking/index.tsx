@@ -90,9 +90,10 @@ function PropertyDetailPage() {
   });
 
   interface OUTRIGHTDATA {
-    paymentOption: "FULL_PAYMENT" | "INSTALLMENT";
+    paymentOption: "FULL_PAYMENT" | "INSTALLMENT" | "BOTH";
     minimumInstallmentAmount?: number;
     installmentDuraion?: number;
+    firstPaymentPercentage?: number;
   }
   const form = useForm({
     defaultValues: {
@@ -149,24 +150,38 @@ function PropertyDetailPage() {
 
         const payInstall = form.watch("installment");
 
+        const canPayInstallment =
+          property.paymentOption === "INSTALLMENT" ||
+          property.paymentOption === "BOTH";
         const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
         const selectedDuration = form.watch("installmentDuration");
+        const currentQuantity = form.watch("quantity");
 
-        const install_amount = form.watch("quantity") * property.pricePerPlot;
+        const install_amount = currentQuantity * property.pricePerPlot;
         const full_charge = (0 / 100) * install_amount;
+
+        const minFirstPaymentKobo = property.firstPaymentPercentage
+          ? Math.ceil(
+              install_amount * (property.firstPaymentPercentage / 100),
+            )
+          : null;
 
         useEffect(() => {
           if (payInstall) {
-            const charge = (0 / 100) * install_amount;
-            let amount_total =
-              ((install_amount + charge) / 100 +
-                breakdown.additionalFeesTotal) /
-              parseFloat(selectedDuration);
-            amount_total = Math.ceil(amount_total * 100) / 100;
-            form.setValue("amount", Number(amount_total.toFixed(2)));
+            if (property.firstPaymentPercentage && minFirstPaymentKobo !== null) {
+              form.setValue("amount", minFirstPaymentKobo / 100);
+            } else {
+              const charge = (0 / 100) * install_amount;
+              let amount_total =
+                ((install_amount + charge) / 100 +
+                  breakdown.additionalFeesTotal) /
+                parseFloat(selectedDuration);
+              amount_total = Math.ceil(amount_total * 100) / 100;
+              form.setValue("amount", Number(amount_total.toFixed(2)));
+            }
           }
-        }, [install_amount, selectedDuration, payInstall]);
+        }, [install_amount, selectedDuration, payInstall, minFirstPaymentKobo]);
         return (
           <>
             <Modal
@@ -390,35 +405,54 @@ function PropertyDetailPage() {
                     </div>*/}
                   </div>
 
-                  {property.paymentOption === "INSTALLMENT" && (
-                    <div className="p-3 bg-blue-50 rounded border border-blue-100">
-                      <p className="text-xs text-blue-700">
-                        You are paying in installment{" "}
-                        {/*<span className="font-bold">
-                          {formatCurrency(
-                            breakdown.installmentAmount,
-                            // (breakdown.mi || 0) / 100,
-                          )}
-                        </span>*/}
-                        Remaining balance will be spread over{" "}
-                        {property.installmentDuration} months.
-                      </p>
+                  {canPayInstallment && (
+                    <div className="p-3 bg-blue-50 rounded border border-blue-100 space-y-1">
+                      {property.firstPaymentPercentage && minFirstPaymentKobo !== null ? (
+                        <>
+                          <p className="text-xs text-blue-700 font-semibold">
+                            Installment Plan — {property.firstPaymentPercentage}% First Payment Required
+                          </p>
+                          <p className="text-xs text-blue-600">
+                            Minimum first payment:{" "}
+                            <span className="font-bold">
+                              {formatCurrency(minFirstPaymentKobo / 100)}
+                            </span>
+                            . Remaining{" "}
+                            <span className="font-bold">
+                              {formatCurrency((install_amount - minFirstPaymentKobo) / 100)}
+                            </span>{" "}
+                            spread over {property.installmentDuration} months.
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-xs text-blue-700">
+                          You are paying in installment. Remaining balance will be
+                          spread over {property.installmentDuration} months.
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
-                <div className="flex gap-2 items-center mt-2">
-                  <input
-                    {...form.register("installment")}
-                    type="checkbox"
-                    className="checkbox checkbox-sm"
-                  />
-                  <h2 className="text-sm">Pay Installmentally</h2>
-                </div>
-                {payInstall && (
+                {canPayInstallment && (
+                  <div className="flex gap-2 items-center mt-2">
+                    <input
+                      {...form.register("installment")}
+                      type="checkbox"
+                      className="checkbox checkbox-sm"
+                    />
+                    <h2 className="text-sm">Pay Installmentally</h2>
+                  </div>
+                )}
+                {canPayInstallment && payInstall && (
                   <div className="mt-4">
                     <InstallMentForm
                       form={form}
-                      minimumInvestmentAmount={breakdown.installmentAmount || 0}
+                      minimumInvestmentAmount={
+                        minFirstPaymentKobo !== null
+                          ? minFirstPaymentKobo / 100
+                          : breakdown.installmentAmount || 0
+                      }
+                      firstPaymentPercentage={property.firstPaymentPercentage}
                     />
                   </div>
                 )}
@@ -593,6 +627,62 @@ function PropertyDetailPage() {
                         type={property.investmentModel}
                         inv={property}
                       />
+                      {property.firstPaymentPercentage &&
+                        canPayInstallment &&
+                        minFirstPaymentKobo !== null && (
+                          <div className="bg-blue-50 rounded-lg border border-blue-200 p-4">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-3 border-b border-blue-200 pb-2">
+                              Payment Plan Summary
+                            </h3>
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-600">
+                                  Total Cost ({currentQuantity} plot
+                                  {currentQuantity > 1 ? "s" : ""})
+                                </span>
+                                <span className="font-medium">
+                                  {formatCurrency(install_amount / 100)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-600">
+                                  Min. First Payment (
+                                  {property.firstPaymentPercentage}%)
+                                </span>
+                                <span className="font-semibold text-blue-700">
+                                  {formatCurrency(minFirstPaymentKobo / 100)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-sm border-t border-blue-200 pt-2">
+                                <span className="text-gray-600">
+                                  Remaining Balance
+                                </span>
+                                <span className="font-medium">
+                                  {formatCurrency(
+                                    (install_amount - minFirstPaymentKobo) /
+                                      100,
+                                  )}
+                                </span>
+                              </div>
+                              {property.installmentDuration && (
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-gray-600">
+                                    Installments
+                                  </span>
+                                  <span className="font-medium">
+                                    {property.installmentDuration}x{" "}
+                                    {formatCurrency(
+                                      Math.ceil(
+                                        (install_amount - minFirstPaymentKobo) /
+                                          property.installmentDuration,
+                                      ) / 100,
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -607,9 +697,11 @@ function PropertyDetailPage() {
 const InstallMentForm = ({
   form,
   minimumInvestmentAmount,
+  firstPaymentPercentage,
 }: {
   form: any;
   minimumInvestmentAmount: number;
+  firstPaymentPercentage?: number;
 }) => {
   const formatCurrency = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return "N/A";
@@ -681,12 +773,16 @@ const InstallMentForm = ({
             valueAsNumber: true,
             min: {
               value: minimumInvestmentAmount,
-              message: `Amount must be at least ${formatCurrency(minimumInvestmentAmount)}`,
+              message: `Minimum first payment is ${formatCurrency(minimumInvestmentAmount)}`,
             },
           })}
-          label="Installment Amount"
+          label={
+            firstPaymentPercentage
+              ? `First Payment (min. ${firstPaymentPercentage}%)`
+              : "Installment Amount"
+          }
           type="number"
-          placeholder={formatCurrency(minimumInvestmentAmount * 100)}
+          placeholder={formatCurrency(minimumInvestmentAmount)}
           className="w-full"
         />
 
