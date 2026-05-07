@@ -50,7 +50,7 @@ const RenderAnnouncements = (props: {
       activeProps={{ className: "bg-[var(--color-orange)] text-white" }}
       activeOptions={link.activeOptions}
     >
-      {link.icon}
+      <link.icon className="size-4" />
       <span>{link.label}</span>
       {(countQuery.data?.data?.unreadCount ?? 0) > 0 && (
         <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
