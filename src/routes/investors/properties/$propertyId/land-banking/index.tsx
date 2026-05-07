@@ -162,14 +162,15 @@ function PropertyDetailPage() {
         const full_charge = (0 / 100) * install_amount;
 
         const minFirstPaymentKobo = property.firstPaymentPercentage
-          ? Math.ceil(
-              install_amount * (property.firstPaymentPercentage / 100),
-            )
+          ? Math.ceil(install_amount * (property.firstPaymentPercentage / 100))
           : null;
 
         useEffect(() => {
           if (payInstall) {
-            if (property.firstPaymentPercentage && minFirstPaymentKobo !== null) {
+            if (
+              property.firstPaymentPercentage &&
+              minFirstPaymentKobo !== null
+            ) {
               form.setValue("amount", minFirstPaymentKobo / 100);
             } else {
               const charge = (0 / 100) * install_amount;
@@ -407,10 +408,12 @@ function PropertyDetailPage() {
 
                   {canPayInstallment && (
                     <div className="p-3 bg-blue-50 rounded border border-blue-100 space-y-1">
-                      {property.firstPaymentPercentage && minFirstPaymentKobo !== null ? (
+                      {property.firstPaymentPercentage &&
+                      minFirstPaymentKobo !== null ? (
                         <>
                           <p className="text-xs text-blue-700 font-semibold">
-                            Installment Plan — {property.firstPaymentPercentage}% First Payment Required
+                            Installment Plan — {property.firstPaymentPercentage}
+                            % First Payment Required
                           </p>
                           <p className="text-xs text-blue-600">
                             Minimum first payment:{" "}
@@ -419,15 +422,17 @@ function PropertyDetailPage() {
                             </span>
                             . Remaining{" "}
                             <span className="font-bold">
-                              {formatCurrency((install_amount - minFirstPaymentKobo) / 100)}
+                              {formatCurrency(
+                                (install_amount - minFirstPaymentKobo) / 100,
+                              )}
                             </span>{" "}
                             spread over {property.installmentDuration} months.
                           </p>
                         </>
                       ) : (
                         <p className="text-xs text-blue-700">
-                          You are paying in installment. Remaining balance will be
-                          spread over {property.installmentDuration} months.
+                          You are paying in installment. Remaining balance will
+                          be spread over {property.installmentDuration} months.
                         </p>
                       )}
                     </div>
@@ -507,18 +512,7 @@ function PropertyDetailPage() {
                           {property.location}
                         </span>
                       </div>
-                      {property.isResell && property.reseller && (
-                        <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-                          <RefreshCw className="w-4 h-4 shrink-0" />
-                          <span>
-                            Resell Listing — Listed by{" "}
-                            <strong>
-                              {property.reseller.firstName}{" "}
-                              {property.reseller.lastName}
-                            </strong>
-                          </span>
-                        </div>
-                      )}
+
                       <div className="mt-3">
                         <Maps
                           location={property.location}
