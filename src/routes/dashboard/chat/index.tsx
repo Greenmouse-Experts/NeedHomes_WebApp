@@ -123,7 +123,10 @@ function RouteComponent() {
       if (message.conversationId !== convoId && !message.isSystem) {
         setUnreadCounts((prev) => {
           const n = new Map(prev);
-          n.set(message.conversationId, (n.get(message.conversationId) ?? 0) + 1);
+          n.set(
+            message.conversationId,
+            (n.get(message.conversationId) ?? 0) + 1,
+          );
           return n;
         });
       }
@@ -253,7 +256,11 @@ function RouteComponent() {
                             key={chat.id}
                             to="/dashboard/chat"
                             search={{ convoId: chat.id }}
-                            className="flex items-center gap-3 p-4 text-left transition-colors hover:bg-gray-50 active:bg-gray-100"
+                            className={`flex items-center gap-3 p-4 text-left transition-colors active:bg-gray-100 ${
+                              unreadCount > 0
+                                ? "bg-blue-50 hover:bg-blue-100 border-l-2 border-blue-500"
+                                : "hover:bg-gray-50"
+                            }`}
                           >
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
                               {initials}
