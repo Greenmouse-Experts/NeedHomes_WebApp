@@ -38,7 +38,20 @@ export default function TotalReturnCard(props: { investment: Investment }) {
   const isFractional =
     investment.property.investmentModel === "FRACTIONAL_OWNERSHIP";
 
-  if (!isFractional) return null;
+  if (!isFractional)
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <div className="p-2 bg-green-50 rounded-lg w-fit mb-3">
+          <TrendingUp className="w-4 h-4 text-green-600" />
+        </div>
+        <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
+          Total Returns
+        </p>
+        <p className="text-xl font-bold text-green-600">
+          {formatCurrency(investment.totalReturns)}
+        </p>
+      </div>
+    );
 
   const { selectedReturnDays, amountPaid, totalReturns, property } = investment;
   const returnTiers = property.returnTiers;
@@ -51,8 +64,7 @@ export default function TotalReturnCard(props: { investment: Investment }) {
   const expectedReturn =
     tierPct != null ? Math.round(amountPaid * (tierPct / 100)) : null;
 
-  const displayReturn =
-    totalReturns > 0 ? totalReturns : (expectedReturn ?? 0);
+  const displayReturn = totalReturns > 0 ? totalReturns : (expectedReturn ?? 0);
 
   const isExpected = totalReturns === 0 && expectedReturn != null;
 

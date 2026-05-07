@@ -14,7 +14,6 @@ export const Route = createFileRoute("/partners/")({
 function PartnerDashboard() {
   const [authRecord] = useAuth();
   const user = authRecord?.user;
-
   return (
     <div className="space-y-6">
       {/* Welcome Header */}

@@ -23,6 +23,7 @@ import Resell from "./-components/Resell";
 import AdminROI from "@/routes/-components/ROI";
 import { NairaIcon } from "@/components/NairaIcon";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
+import TotalReturnCard from "./-components/TotalReturnsCard";
 
 export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   {
@@ -97,7 +98,7 @@ function FractionalInfo({
       label: "Maturity Date",
       value: formatDate(investment.investmentEndDate),
     },
-    { label: "Locked-in Return", value: `${returnRate}%`, highlight: true },
+    // { label: "Locked-in Return", value: `${returnRate}%`, highlight: true },
     {
       label: "Expected Payout",
       value: formatCurrency(expectedPayout / 100),
@@ -282,19 +283,7 @@ function InvestmentDetailsPage() {
                     {formatCurrency(investment.amountPaid / 100)}
                   </p>
                 </div>
-
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                  <div className="p-2 bg-green-50 rounded-lg w-fit mb-3">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                  </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
-                    Total Returns
-                  </p>
-                  <p className="text-xl font-bold text-green-600">
-                    {formatCurrency(investment.totalReturns)}
-                  </p>
-                </div>
-
+                <TotalReturnCard investment={investment} />
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="p-2 bg-purple-50 rounded-lg w-fit mb-3">
                     <BarChart3 className="w-4 h-4 text-purple-600" />

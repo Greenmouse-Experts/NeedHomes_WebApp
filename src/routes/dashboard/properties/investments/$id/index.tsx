@@ -360,21 +360,32 @@ function RouteComponent() {
                   </div>
                   {inv.sharesBought != null ? (
                     <>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">Shares Bought</p>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
+                        Shares Bought
+                      </p>
                       <p className="text-xl font-bold text-gray-900">
                         {inv.sharesBought}
                         {inv.property?.totalShares != null && (
-                          <span className="text-sm font-normal text-gray-400 ml-1">/ {inv.property.totalShares}</span>
+                          <span className="text-sm font-normal text-gray-400 ml-1">
+                            / {inv.property.totalShares}
+                          </span>
                         )}
                       </p>
                       {inv.property?.pricePerShare != null && (
-                        <p className="text-xs text-gray-400 mt-1">{formatCurrency(inv.property.pricePerShare / 100)} per share</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {formatCurrency(inv.property.pricePerShare / 100)} per
+                          share
+                        </p>
                       )}
                     </>
                   ) : (
                     <>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">Slots Bought</p>
-                      <p className="text-xl font-bold text-gray-900">{inv.unitsBought}</p>
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
+                        Slots Bought
+                      </p>
+                      <p className="text-xl font-bold text-gray-900">
+                        {inv.unitsBought}
+                      </p>
                     </>
                   )}
                 </div>
@@ -504,57 +515,100 @@ function RouteComponent() {
               </div>
 
               {/* ── Fractional Details ── */}
-              {inv.property?.investmentModel === "FRACTIONAL_OWNERSHIP" && (() => {
-                const expectedPayout = Math.round(inv.amountPaid * (1 + inv.returnPercentage / 100));
-                const tiers = inv.property.returnTiers
-                  ? Object.entries(inv.property.returnTiers).sort((a, b) => Number(a[0]) - Number(b[0]))
-                  : [];
-                return (
-                  <div className="bg-white rounded-xl shadow-sm border border-blue-200 overflow-hidden">
-                    <div className="border-b border-blue-100 bg-blue-50 px-6 py-4">
-                      <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wider">Fractional Details</h3>
-                    </div>
-                    <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                      <div className="divide-y divide-gray-50">
-                        {[
-                          inv.selectedReturnDays != null && { label: "Selected Duration", value: `${inv.selectedReturnDays} days` },
-                          { label: "Locked-in Return", value: `${inv.returnPercentage}%`, highlight: true },
-                          { label: "Expected Payout", value: formatCurrency(expectedPayout / 100), highlight: true },
-                          inv.investmentStartDate && { label: "Investment Date", value: formatDate(inv.investmentStartDate) },
-                          inv.investmentEndDate && { label: "Maturity Date", value: formatDate(inv.investmentEndDate) },
-                          inv.property.fractionalHoldingPeriodDays != null && {
-                            label: "Min. Holding Period",
-                            value: `${inv.property.fractionalHoldingPeriodDays} days`,
-                          },
-                        ].filter(Boolean).map(({ label, value, highlight }: any) => (
-                          <div key={label} className="flex items-center justify-between px-6 py-3.5">
-                            <span className="text-sm text-gray-500">{label}</span>
-                            <span className={`text-sm font-bold ${highlight ? "text-green-600" : "text-gray-900"}`}>{value}</span>
-                          </div>
-                        ))}
+              {inv.property?.investmentModel === "FRACTIONAL_OWNERSHIP" &&
+                (() => {
+                  const expectedPayout = Math.round(
+                    inv.amountPaid * (1 + inv.returnPercentage / 100),
+                  );
+                  const tiers = inv.property.returnTiers
+                    ? Object.entries(inv.property.returnTiers).sort(
+                        (a, b) => Number(a[0]) - Number(b[0]),
+                      )
+                    : [];
+                  return (
+                    <div className="bg-white rounded-xl shadow-sm border border-blue-200 overflow-hidden">
+                      <div className="border-b border-blue-100 bg-blue-50 px-6 py-4">
+                        <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wider">
+                          Fractional Details
+                        </h3>
                       </div>
-                      {tiers.length > 0 && (
-                        <div className="p-6">
-                          <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">Return Tiers</p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {tiers.map(([days, rate]) => (
-                              <div key={days}
-                                className={`rounded-lg p-3 border text-center ${Number(days) === inv.selectedReturnDays ? "border-green-300 bg-green-50" : "border-gray-200 bg-gray-50"}`}
+                      <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                        <div className="divide-y divide-gray-50">
+                          {[
+                            inv.selectedReturnDays != null && {
+                              label: "Selected Duration",
+                              value: `${inv.selectedReturnDays} days`,
+                            },
+                            // { label: "Locked-in Return", value: `${inv.returnPercentage}%`, highlight: true },
+                            {
+                              label: "Expected Payout",
+                              value: formatCurrency(expectedPayout / 100),
+                              highlight: true,
+                            },
+                            inv.investmentStartDate && {
+                              label: "Investment Date",
+                              value: formatDate(inv.investmentStartDate),
+                            },
+                            inv.investmentEndDate && {
+                              label: "Maturity Date",
+                              value: formatDate(inv.investmentEndDate),
+                            },
+                            inv.property.fractionalHoldingPeriodDays !=
+                              null && {
+                              label: "Min. Holding Period",
+                              value: `${inv.property.fractionalHoldingPeriodDays} days`,
+                            },
+                          ]
+                            .filter(Boolean)
+                            .map(({ label, value, highlight }: any) => (
+                              <div
+                                key={label}
+                                className="flex items-center justify-between px-6 py-3.5"
                               >
-                                <p className="text-xs text-gray-500">{days} days</p>
-                                <p className={`text-sm font-bold ${Number(days) === inv.selectedReturnDays ? "text-green-700" : "text-gray-700"}`}>{rate}%</p>
-                                {Number(days) === inv.selectedReturnDays && (
-                                  <span className="text-[10px] text-green-600 font-semibold">selected</span>
-                                )}
+                                <span className="text-sm text-gray-500">
+                                  {label}
+                                </span>
+                                <span
+                                  className={`text-sm font-bold ${highlight ? "text-green-600" : "text-gray-900"}`}
+                                >
+                                  {value}
+                                </span>
                               </div>
                             ))}
-                          </div>
                         </div>
-                      )}
+                        {tiers.length > 0 && (
+                          <div className="p-6">
+                            <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">
+                              Return Tiers
+                            </p>
+                            <div className="grid grid-cols-2 gap-2">
+                              {tiers.map(([days, rate]) => (
+                                <div
+                                  key={days}
+                                  className={`rounded-lg p-3 border text-center ${Number(days) === inv.selectedReturnDays ? "border-green-300 bg-green-50" : "border-gray-200 bg-gray-50"}`}
+                                >
+                                  <p className="text-xs text-gray-500">
+                                    {days} days
+                                  </p>
+                                  <p
+                                    className={`text-sm font-bold ${Number(days) === inv.selectedReturnDays ? "text-green-700" : "text-gray-700"}`}
+                                  >
+                                    {rate}%
+                                  </p>
+                                  {Number(days) === inv.selectedReturnDays && (
+                                    <span className="text-[10px] text-green-600 font-semibold">
+                                      selected
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })()}
+                  );
+                })()}
 
               {/* ── Property Info ── */}
               {inv.property && (
