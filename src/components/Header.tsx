@@ -406,7 +406,7 @@ export default function Header() {
                 ) : (
                   <>
                     <button
-                      className="btn btn-sm btn-outline"
+                      className="btn btn-sm btn-outline text-white"
                       onClick={() => {
                         setMobileMenuOpen(false);
                         navigate({ to: "/login" });
@@ -444,7 +444,7 @@ export default function Header() {
           ) : (
             <>
               <button
-                className="btn btn-sm btn-outline"
+                className="btn btn-sm btn-outline text-white"
                 onClick={() => navigate({ to: "/login" })}
               >
                 Sign In
