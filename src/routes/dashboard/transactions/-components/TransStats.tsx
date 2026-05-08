@@ -96,8 +96,8 @@ export default function TransStats() {
                       <Icon className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-orange)]" />
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-xl md:text-2xl font-bold text-gray-900">
+                  <div className="space-y-1 ">
+                    <p className="text-md wrap-anywhere md:text-xl font-bold text-gray-900">
                       {value}
                     </p>
                     <p className="text-[10px] md:text-xs text-gray-500">
