@@ -119,9 +119,7 @@ function InvestorDetailsPage() {
                           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                             {investor.firstName} {investor.lastName}
                           </h1>
-                          <p className="text-sm text-gray-600 mb-4">
-                            Investor ID: {investor.id}
-                          </p>
+
                           <div className="flex flex-wrap gap-3">
                             <span
                               className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
@@ -151,21 +149,35 @@ function InvestorDetailsPage() {
                         >
                           <DropdownMenuItem
                             onClick={() => {
-                              const isSuspended = investor.account_status !== "ACTIVE";
-                              const status = isSuspended ? "unsuspend" : "suspend";
+                              const isSuspended =
+                                investor.account_status !== "ACTIVE";
+                              const status = isSuspended
+                                ? "unsuspend"
+                                : "suspend";
                               toast.promise(
-                                suspend_unsuspend({ userId: investorId, status }).then(() =>
-                                  queryClient.invalidateQueries({ queryKey: ["admin-investor", investorId] }),
+                                suspend_unsuspend({
+                                  userId: investorId,
+                                  status,
+                                }).then(() =>
+                                  queryClient.invalidateQueries({
+                                    queryKey: ["admin-investor", investorId],
+                                  }),
                                 ),
                                 {
-                                  loading: isSuspended ? "Unsuspending..." : "Suspending...",
-                                  success: isSuspended ? "Investor unsuspended" : "Investor suspended",
+                                  loading: isSuspended
+                                    ? "Unsuspending..."
+                                    : "Suspending...",
+                                  success: isSuspended
+                                    ? "Investor unsuspended"
+                                    : "Investor suspended",
                                   error: extract_message,
                                 },
                               );
                             }}
                           >
-                            {investor.account_status !== "ACTIVE" ? "Unsuspend Investor" : "Suspend Investor"}
+                            {investor.account_status !== "ACTIVE"
+                              ? "Unsuspend Investor"
+                              : "Suspend Investor"}
                           </DropdownMenuItem>
                         </DropdownMenu>
                       </div>
@@ -276,112 +288,112 @@ function InvestorDetailsPage() {
                 <div className="p-6 md:p-8">
                   {activeTab === "overview" && (
                     <div className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {/* Contact Information */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          Contact Information
-                        </h3>
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                              <Phone className="w-4 h-4 text-green-600" />
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Contact Information */}
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                            Contact Information
+                          </h3>
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-green-100 rounded-lg">
+                                <Phone className="w-4 h-4 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Phone Number
+                                </p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.phone}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-xs text-gray-500">
-                                Phone Number
-                              </p>
-                              <p className="text-sm font-medium text-gray-900">
-                                {investor.phone}
-                              </p>
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-blue-100 rounded-lg">
+                                <Mail className="w-4 h-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Email Address
+                                </p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.email}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                              <Mail className="w-4 h-4 text-blue-600" />
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-purple-100 rounded-lg">
+                                <MapPin className="w-4 h-4 text-purple-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">Address</p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.verification_document?.address ||
+                                    "N/A"}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-xs text-gray-500">
-                                Email Address
-                              </p>
-                              <p className="text-sm font-medium text-gray-900">
-                                {investor.email}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="p-2 bg-purple-100 rounded-lg">
-                              <MapPin className="w-4 h-4 text-purple-600" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500">Address</p>
-                              <p className="text-sm font-medium text-gray-900">
-                                {investor.verification_document?.address ||
-                                  "N/A"}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="p-2 bg-orange-100 rounded-lg">
-                              <Share2 className="w-4 h-4 text-orange-600" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500">
-                                Referral Source
-                              </p>
-                              <p className="text-sm font-medium text-gray-900">
-                                {investor.referral_source || "N/A"}
-                              </p>
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                              <div className="p-2 bg-orange-100 rounded-lg">
+                                <Share2 className="w-4 h-4 text-orange-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Referral Source
+                                </p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.referral_source || "N/A"}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Bank and Actions */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                          Bank Account
-                        </h3>
-                        {investor.bank_account ? (
-                          <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                            <p className="text-sm font-bold text-gray-900">
-                              {investor.bank_account.account_name}
+                        {/* Bank and Actions */}
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                            Bank Account
+                          </h3>
+                          {investor.bank_account ? (
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
+                              <p className="text-sm font-bold text-gray-900">
+                                {investor.bank_account.account_name}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {investor.bank_account.account_number}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {investor.bank_account.bank_name}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-500 italic">
+                              No bank account linked.
                             </p>
-                            <p className="text-sm text-gray-600">
-                              {investor.bank_account.account_number}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {investor.bank_account.bank_name}
-                            </p>
+                          )}
+                          <div className="pt-4 space-y-3">
+                            <Button
+                              variant="primary"
+                              className="w-full"
+                              onClick={() =>
+                                navigate({
+                                  to: "/dashboard/investors/$investorId/kyc",
+                                  params: { investorId },
+                                })
+                              }
+                            >
+                              See KYC
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              onClick={() => modalRef.current?.open()}
+                            >
+                              Send Message
+                            </Button>
                           </div>
-                        ) : (
-                          <p className="text-sm text-gray-500 italic">
-                            No bank account linked.
-                          </p>
-                        )}
-                        <div className="pt-4 space-y-3">
-                          <Button
-                            variant="primary"
-                            className="w-full"
-                            onClick={() =>
-                              navigate({
-                                to: "/dashboard/investors/$investorId/kyc",
-                                params: { investorId },
-                              })
-                            }
-                          >
-                            See KYC
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => modalRef.current?.open()}
-                          >
-                            Send Message
-                          </Button>
                         </div>
                       </div>
-                    </div>
 
                       {/* Next of Kin */}
                       <div className="space-y-3">
@@ -396,8 +408,12 @@ function InvestorDetailsPage() {
                                 <Users className="w-4 h-4 text-rose-600" />
                               </div>
                               <div>
-                                <p className="text-xs text-gray-500">Full Name</p>
-                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.fullName}</p>
+                                <p className="text-xs text-gray-500">
+                                  Full Name
+                                </p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.nextOfKin.fullName}
+                                </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
@@ -405,8 +421,12 @@ function InvestorDetailsPage() {
                                 <Heart className="w-4 h-4 text-pink-600" />
                               </div>
                               <div>
-                                <p className="text-xs text-gray-500">Relationship</p>
-                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.relationship}</p>
+                                <p className="text-xs text-gray-500">
+                                  Relationship
+                                </p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.nextOfKin.relationship}
+                                </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
@@ -415,7 +435,9 @@ function InvestorDetailsPage() {
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500">Phone</p>
-                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.phone}</p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.nextOfKin.phone}
+                                </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
@@ -424,12 +446,16 @@ function InvestorDetailsPage() {
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500">Email</p>
-                                <p className="text-sm font-medium text-gray-900">{investor.nextOfKin.email}</p>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {investor.nextOfKin.email}
+                                </p>
                               </div>
                             </div>
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500 italic">No next of kin on record.</p>
+                          <p className="text-sm text-gray-500 italic">
+                            No next of kin on record.
+                          </p>
                         )}
                       </div>
                     </div>

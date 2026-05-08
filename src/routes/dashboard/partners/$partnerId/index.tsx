@@ -104,9 +104,7 @@ function PartnerDetailsPage() {
                           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                             {partner.firstName} {partner.lastName}
                           </h1>
-                          <p className="text-sm text-gray-600 mb-4">
-                            Partner ID: {partner.id}
-                          </p>
+
                           <div className="flex flex-wrap gap-3">
                             <span
                               className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
@@ -141,21 +139,35 @@ function PartnerDetailsPage() {
                         >
                           <DropdownMenuItem
                             onClick={() => {
-                              const isSuspended = partner.account_status !== "ACTIVE";
-                              const status = isSuspended ? "unsuspend" : "suspend";
+                              const isSuspended =
+                                partner.account_status !== "ACTIVE";
+                              const status = isSuspended
+                                ? "unsuspend"
+                                : "suspend";
                               toast.promise(
-                                suspend_unsuspend({ userId: partnerId, status }).then(() =>
-                                  queryClient.invalidateQueries({ queryKey: ["admin-partner", partnerId] }),
+                                suspend_unsuspend({
+                                  userId: partnerId,
+                                  status,
+                                }).then(() =>
+                                  queryClient.invalidateQueries({
+                                    queryKey: ["admin-partner", partnerId],
+                                  }),
                                 ),
                                 {
-                                  loading: isSuspended ? "Unsuspending..." : "Suspending...",
-                                  success: isSuspended ? "Partner unsuspended" : "Partner suspended",
+                                  loading: isSuspended
+                                    ? "Unsuspending..."
+                                    : "Suspending...",
+                                  success: isSuspended
+                                    ? "Partner unsuspended"
+                                    : "Partner suspended",
                                   error: extract_message,
                                 },
                               );
                             }}
                           >
-                            {partner.account_status !== "ACTIVE" ? "Unsuspend Partner" : "Suspend Partner"}
+                            {partner.account_status !== "ACTIVE"
+                              ? "Unsuspend Partner"
+                              : "Suspend Partner"}
                           </DropdownMenuItem>
                         </DropdownMenu>
                       </div>

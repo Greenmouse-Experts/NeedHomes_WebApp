@@ -119,9 +119,7 @@ function InvestorDetailsPage() {
                           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                             {investor.companyName}
                           </h1>
-                          <p className="text-sm text-gray-600 mb-4">
-                            Investor ID: {investor.id}
-                          </p>
+
                           <div className="flex flex-wrap gap-3">
                             <span
                               className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
@@ -152,21 +150,35 @@ function InvestorDetailsPage() {
                         >
                           <DropdownMenuItem
                             onClick={() => {
-                              const isSuspended = investor.account_status !== "ACTIVE";
-                              const status = isSuspended ? "unsuspend" : "suspend";
+                              const isSuspended =
+                                investor.account_status !== "ACTIVE";
+                              const status = isSuspended
+                                ? "unsuspend"
+                                : "suspend";
                               toast.promise(
-                                suspend_unsuspend({ userId: investorId, status }).then(() =>
-                                  queryClient.invalidateQueries({ queryKey: ["admin-investor", investorId] }),
+                                suspend_unsuspend({
+                                  userId: investorId,
+                                  status,
+                                }).then(() =>
+                                  queryClient.invalidateQueries({
+                                    queryKey: ["admin-investor", investorId],
+                                  }),
                                 ),
                                 {
-                                  loading: isSuspended ? "Unsuspending..." : "Suspending...",
-                                  success: isSuspended ? "Investor unsuspended" : "Investor suspended",
+                                  loading: isSuspended
+                                    ? "Unsuspending..."
+                                    : "Suspending...",
+                                  success: isSuspended
+                                    ? "Investor unsuspended"
+                                    : "Investor suspended",
                                   error: extract_message,
                                 },
                               );
                             }}
                           >
-                            {investor.account_status !== "ACTIVE" ? "Unsuspend Investor" : "Suspend Investor"}
+                            {investor.account_status !== "ACTIVE"
+                              ? "Unsuspend Investor"
+                              : "Suspend Investor"}
                           </DropdownMenuItem>
                         </DropdownMenu>
                       </div>
