@@ -5,7 +5,7 @@ export default function ThemeProvider(
 ) {
   return (
     <div
-      className={`flex-1  bg-transparent ${props.className || ""} `}
+      className={`flex-1  bg-none ${props.className || ""} `}
       data-theme="nh-light"
       id="myapp"
     >

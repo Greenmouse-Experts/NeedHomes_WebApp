@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/store/authStore";
+import ThemeProvider from "@/simpleComps/ThemeProvider";
 
 // Dropdown menu items with enhanced design
 const dropdownMenus = {
@@ -182,8 +183,8 @@ export default function Header() {
   };
 
   return (
-    <div className="h-24 grid place-items-center bg-black sticky top-0 z-50">
-      <nav className="contain mx-auto flex justify-between px-4 md:px-6 items-center w-full h-full">
+    <ThemeProvider className="bg-black h-24 flex items-center">
+      <nav className="flex items-center container mx-auto justify-between px-4 bg-black">
         <Link
           to="/"
           className="text-xl font-bold flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -392,9 +393,8 @@ export default function Header() {
               {/* Auth Buttons */}
               <div className="px-4 py-2 space-y-2">
                 {user ? (
-                  <Button
-                    variant="primary"
-                    className="w-full justify-start gap-3"
+                  <button
+                    className="btn btn-sm"
                     onClick={() => {
                       setMobileMenuOpen(false);
                       navigate({ to: "/dashboard" });
@@ -402,12 +402,11 @@ export default function Header() {
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     Dashboard
-                  </Button>
+                  </button>
                 ) : (
                   <>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-3 border-gray-600 text-white hover:bg-gray-800"
+                    <button
+                      className="btn btn-sm btn-outline"
                       onClick={() => {
                         setMobileMenuOpen(false);
                         navigate({ to: "/login" });
@@ -415,10 +414,9 @@ export default function Header() {
                     >
                       <LogIn className="w-4 h-4" />
                       Sign In
-                    </Button>
-                    <Button
-                      variant="primary"
-                      className="w-full justify-start gap-3"
+                    </button>
+                    <button
+                      className="btn btn-sm"
                       onClick={() => {
                         setMobileMenuOpen(false);
                         navigate({ to: "/account-type" });
@@ -426,7 +424,7 @@ export default function Header() {
                     >
                       <UserPlus className="w-4 h-4" />
                       Get Free Account
-                    </Button>
+                    </button>
                   </>
                 )}
               </div>
@@ -437,33 +435,30 @@ export default function Header() {
         {/* Desktop Auth Buttons */}
         <div className="space-x-3 hidden lg:flex items-center">
           {user ? (
-            <Button
-              variant="primary"
-              className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
+            <button
+              className="btn btn-sm btn-primary"
               onClick={() => navigate({ to: "/dashboard" })}
             >
               Dashboard
-            </Button>
+            </button>
           ) : (
             <>
-              <Button
-                variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
+              <button
+                className="btn btn-sm btn-outline"
                 onClick={() => navigate({ to: "/login" })}
               >
                 Sign In
-              </Button>
-              <Button
-                variant="primary"
-                className="bg-[var(--color-orange)] hover:bg-[var(--color-orange)]/90"
+              </button>
+              <button
+                className="btn btn-sm btn-primary"
                 onClick={() => navigate({ to: "/account-type" })}
               >
                 Get Free Account
-              </Button>
+              </button>
             </>
           )}
         </div>
       </nav>
-    </div>
+    </ThemeProvider>
   );
 }
