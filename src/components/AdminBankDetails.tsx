@@ -53,7 +53,7 @@ export default function AdminBankDetails({ id }: { id: string }) {
   const bankListQuery = useQuery<ApiResponse<BankListItem[]>>({
     queryKey: ["bank-list"],
     queryFn: async () => {
-      const response = await apiClient.get("/bank");
+      const response = await apiClient.get("banks");
       return response.data;
     },
   });
@@ -156,7 +156,9 @@ export default function AdminBankDetails({ id }: { id: string }) {
                   ))}
                 </LocalSelect>
                 {fieldState.error && (
-                  <p className="text-error text-xs">{fieldState.error.message}</p>
+                  <p className="text-error text-xs">
+                    {fieldState.error.message}
+                  </p>
                 )}
               </div>
             )}
@@ -180,7 +182,9 @@ export default function AdminBankDetails({ id }: { id: string }) {
                   maxLength={10}
                 />
                 {fieldState.error && (
-                  <p className="text-error text-xs">{fieldState.error.message}</p>
+                  <p className="text-error text-xs">
+                    {fieldState.error.message}
+                  </p>
                 )}
               </div>
             )}
@@ -203,7 +207,9 @@ export default function AdminBankDetails({ id }: { id: string }) {
             return (
               <ThemeProvider>
                 <div className="p-4 border rounded-md bg-gray-50 flex items-center justify-between">
-                  <p className="text-gray-500 text-sm">No bank details provided.</p>
+                  <p className="text-gray-500 text-sm">
+                    No bank details provided.
+                  </p>
                   <button
                     type="button"
                     className="btn btn-ghost btn-xs gap-1 text-primary"
