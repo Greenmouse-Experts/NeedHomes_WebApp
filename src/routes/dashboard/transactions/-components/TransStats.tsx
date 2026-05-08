@@ -2,6 +2,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowDownCircle, ArrowUpCircle, Clock } from "lucide-react";
+import { converty_format_currency } from "@/helpers/currency";
 
 interface TransactionStats {
   deposits: {
@@ -18,10 +19,6 @@ interface TransactionStats {
   };
   pending: number;
   failed: number;
-}
-
-function fmt(value: number) {
-  return `₦${Number(value).toLocaleString("en-NG", { minimumFractionDigits: 2 })}`;
 }
 
 export default function TransStats() {
@@ -60,19 +57,19 @@ export default function TransStats() {
         const cards = [
           {
             label: "Total Investments",
-            value: fmt(data.investments.total),
+            value: converty_format_currency(data.investments.total),
             sub: `${data.investments.count} transaction${data.investments.count !== 1 ? "s" : ""}`,
             icon: NairaIcon,
           },
           {
             label: "Total Deposits",
-            value: fmt(data.deposits.total),
+            value: converty_format_currency(data.deposits.total),
             sub: `${data.deposits.count} transaction${data.deposits.count !== 1 ? "s" : ""}`,
             icon: ArrowDownCircle,
           },
           {
             label: "Total Withdrawals",
-            value: fmt(data.withdrawals.total),
+            value: converty_format_currency(data.withdrawals.total),
             sub: `${data.withdrawals.count} transaction${data.withdrawals.count !== 1 ? "s" : ""}`,
             icon: ArrowUpCircle,
           },
