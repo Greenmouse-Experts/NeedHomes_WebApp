@@ -4,7 +4,7 @@ import Modal from "@/components/modals/DialogModal";
 import { useAuth } from "@/store/authStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import WalletSkeleton from "./WalletSkeleton";
 import { useModal } from "@/store/modals";
@@ -17,6 +17,13 @@ import { usePaystackPayment } from "react-paystack";
 import { useNavigate } from "@tanstack/react-router";
 import { NairaIcon } from "@/components/NairaIcon";
 import PriceInput, { parsePriceInput } from "@/components/inputs/PriceInput";
+interface PinStatus {
+  isSetUp: boolean;
+  securityQuestion?: string;
+  isLocked?: boolean;
+  lockedUntil?: string;
+}
+
 interface WalletTransaction {
   id: string;
   walletId: string;
@@ -65,9 +72,39 @@ export default function UserWallet() {
   const queryClient = useQueryClient();
   const userID = auth?.user?.id;
   const [amount, setAmount] = useState("");
+  const [pin, setPin] = useState("");
+  const [pinError, setPinError] = useState("");
   const [modalType, setModalType] = useState<"deposit" | "withdraw">("deposit");
+  const [lockedCountdown, setLockedCountdown] = useState("");
 
   const { ref: modalRef, showModal, closeModal } = useModal();
+
+  const pinStatusQuery = useQuery<ApiResponse<PinStatus>>({
+    queryKey: ["withdrawal-pin-status"],
+    queryFn: async () => {
+      const res = await apiClient.get("/withdrawal-pin/status");
+      return res.data;
+    },
+  });
+
+  const pinStatus = pinStatusQuery.data?.data;
+
+  useEffect(() => {
+    if (!pinStatus?.lockedUntil) {
+      setLockedCountdown("");
+      return;
+    }
+    const tick = () => {
+      const diff = new Date(pinStatus.lockedUntil!).getTime() - Date.now();
+      if (diff <= 0) { setLockedCountdown(""); return; }
+      const m = Math.floor(diff / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setLockedCountdown(`${m}m ${s}s`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [pinStatus?.lockedUntil]);
 
   const query = useQuery<ApiResponse<WalletData>>({
     queryKey: ["wallet", userID],
@@ -141,25 +178,36 @@ export default function UserWallet() {
   });
 
   const withdrawalMutation = useMutation({
-    mutationFn: async (amount: number) => {
+    mutationFn: async ({ amount, pin }: { amount: number; pin: string }) => {
       const resp = await apiClient.post("/withdrawals", {
         amount: amount * 100,
+        pin,
       });
       return resp.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
+      queryClient.invalidateQueries({ queryKey: ["withdrawal-pin-status"] });
       toast.success("Withdrawal successful");
       closeModal();
       setAmount("");
+      setPin("");
+      setPinError("");
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Withdrawal failed");
+      const message =
+        err?.response?.data?.message || "Withdrawal failed";
+      setPinError(message);
+      // Re-fetch pin status in case it just got locked
+      pinStatusQuery.refetch();
     },
   });
 
   const handleOpenModal = (type: "deposit" | "withdraw") => {
     setModalType(type);
+    setAmount("");
+    setPin("");
+    setPinError("");
     showModal();
   };
 
@@ -169,22 +217,25 @@ export default function UserWallet() {
       return toast.error("Please enter a valid amount");
     }
 
-    const mutation =
-      modalType === "deposit" ? depositMutation : withdrawalMutation;
-
-    toast.promise(mutation.mutateAsync(numericAmount), {
-      loading: "Processing transaction...",
-      success: `${modalType.charAt(0).toUpperCase() + modalType.slice(1)} processed`,
-      error: extract_message,
-    });
+    if (modalType === "deposit") {
+      toast.promise(depositMutation.mutateAsync(numericAmount), {
+        loading: "Processing deposit...",
+        success: "Deposit processed",
+        error: extract_message,
+      });
+    } else {
+      if (!pin) return toast.error("Please enter your withdrawal PIN");
+      setPinError("");
+      withdrawalMutation.mutate({ amount: numericAmount, pin });
+    }
   };
 
   const error = query.error as AxiosError<ApiResponse>;
   const error_status = error?.status == 404;
 
   const isPending = depositMutation.isPending || withdrawalMutation.isPending;
-  const modal = useModal();
   const isPartner = auth?.user.accountType == "PARTNER";
+  const settingsPath = isPartner ? "/partners/settings" : "/investors/settings";
   return (
     <>
       <PageLoader customLoading={<WalletSkeleton />} query={query}>
@@ -401,26 +452,122 @@ export default function UserWallet() {
                     >
                       Cancel
                     </Button>
-                    <Button
-                      disabled={isPending}
-                      className="flex-1 bg-(--color-orange) text-white"
-                      onClick={handleSubmit}
-                    >
-                      Confirm
-                    </Button>
+                    {/* Hide confirm for withdraw when PIN not actionable */}
+                    {modalType === "deposit" ||
+                    (pinStatus?.isSetUp && !pinStatus?.isLocked) ? (
+                      <Button
+                        disabled={isPending}
+                        className="flex-1 bg-(--color-orange) text-white"
+                        onClick={handleSubmit}
+                      >
+                        {isPending ? "Processing..." : "Confirm"}
+                      </Button>
+                    ) : (
+                      <Button
+                        className="flex-1"
+                        onClick={() => {
+                          closeModal();
+                          nav({ to: settingsPath });
+                        }}
+                      >
+                        Go to Settings
+                      </Button>
+                    )}
                   </div>
                 }
               >
-                <div className="space-y-4">
-                  <p className="text-sm text-gray-500">
-                    Enter the amount you wish to {modalType} from your wallet.
-                  </p>
-                  <PriceInput
-                    value={amount}
-                    onChange={setAmount}
-                    placeholder="0.00"
-                  />
-                </div>
+                {modalType === "deposit" ? (
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-500">
+                      Enter the amount you wish to deposit into your wallet.
+                    </p>
+                    <PriceInput
+                      value={amount}
+                      onChange={setAmount}
+                      placeholder="0.00"
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {pinStatusQuery.isLoading ? (
+                      <div className="flex justify-center py-4">
+                        <span className="loading loading-spinner loading-sm" />
+                      </div>
+                    ) : !pinStatus?.isSetUp ? (
+                      /* PIN not set up */
+                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
+                        <p className="text-sm font-medium text-amber-800">
+                          Withdrawal PIN not set up
+                        </p>
+                        <p className="text-xs text-amber-700">
+                          You need to set up a withdrawal PIN before making
+                          withdrawals. Go to Settings → Wallet PIN to get
+                          started.
+                        </p>
+                      </div>
+                    ) : pinStatus?.isLocked ? (
+                      /* PIN locked */
+                      <div className="p-4 bg-red-50 border border-red-200 rounded-lg space-y-2">
+                        <p className="text-sm font-medium text-red-800">
+                          PIN Locked
+                        </p>
+                        <p className="text-xs text-red-700">
+                          Too many failed attempts.{" "}
+                          {lockedCountdown
+                            ? `Unlocks in ${lockedCountdown}.`
+                            : "Your PIN is locked."}{" "}
+                          Go to Settings → Wallet PIN to reset using your
+                          security question.
+                        </p>
+                      </div>
+                    ) : (
+                      /* PIN active — normal withdraw form */
+                      <>
+                        <p className="text-sm text-gray-500">
+                          Enter the amount and your withdrawal PIN.
+                        </p>
+                        <PriceInput
+                          value={amount}
+                          onChange={setAmount}
+                          placeholder="0.00"
+                        />
+                        <div className="space-y-1">
+                          <label className="text-sm font-semibold">
+                            Withdrawal PIN
+                          </label>
+                          <div className="input input-md input-bordered flex items-center w-full">
+                            <input
+                              type="password"
+                              className="grow"
+                              placeholder="••••"
+                              maxLength={6}
+                              value={pin}
+                              onChange={(e) => {
+                                setPin(e.target.value);
+                                setPinError("");
+                              }}
+                            />
+                          </div>
+                        </div>
+                        {pinError && (
+                          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-xs text-red-700">{pinError}</p>
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          className="text-xs text-gray-500 hover:text-gray-700 underline"
+                          onClick={() => {
+                            closeModal();
+                            nav({ to: settingsPath });
+                          }}
+                        >
+                          Forgot your PIN? Reset using your security question
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
               </Modal>
             </>
           );

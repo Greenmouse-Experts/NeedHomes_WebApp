@@ -7,6 +7,7 @@ import {
   Shield,
   Upload,
   Calendar,
+  KeyRound,
 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Input } from "@/components/ui/Input";
@@ -15,12 +16,13 @@ import { Label } from "@/components/ui/Label";
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
 import { useAuth } from "@/store/authStore";
 import Charges from "./-components/Charges";
+import AdminWalletSettings from "@/components/AdminWalletSettings";
 
 export const Route = createFileRoute("/dashboard/settings/")({
   component: SettingsPage,
 });
 
-type SettingsTab = "profile" | "bankDetails" | "Charges" | "security";
+type SettingsTab = "profile" | "bankDetails" | "Charges" | "security" | "walletPin";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
@@ -94,6 +96,7 @@ function SettingsPage() {
 
     { id: "security" as SettingsTab, label: "Security", icon: Shield },
     { id: "Charges" as SettingsTab, label: "Charges", icon: Shield },
+    { id: "walletPin" as SettingsTab, label: "Wallet PIN", icon: KeyRound },
   ];
 
   return (
@@ -252,6 +255,7 @@ function SettingsPage() {
 
             {/* Security Tab */}
             {activeTab === "Charges" && <Charges />}
+            {activeTab === "walletPin" && <AdminWalletSettings />}
             {activeTab === "security" && (
               <div>
                 <div className="mb-6">

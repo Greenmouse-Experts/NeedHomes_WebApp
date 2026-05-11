@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { User, CreditCard, FileText, Shield, Bell } from "lucide-react";
+import { User, CreditCard, FileText, Shield, Bell, KeyRound } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
@@ -13,12 +13,13 @@ import KYCForm from "@/components/KYCForm";
 import { PhoneInput } from "@/components/CountryPhoneInput";
 import UserProfile from "@/components/UserProfile";
 import ChangePassword from "@/components/ChangePassword";
+import WalletPin from "@/components/WalletPin";
 
 export const Route = createFileRoute("/partners/settings")({
   component: SettingsPage,
 });
 
-type SettingsTab = "profile" | "bankDetails" | "kyc" | "security";
+type SettingsTab = "profile" | "bankDetails" | "kyc" | "security" | "walletPin";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
@@ -34,6 +35,7 @@ function SettingsPage() {
     },
     { id: "kyc" as SettingsTab, label: "KYC", icon: FileText },
     { id: "security" as SettingsTab, label: "Security", icon: Shield },
+    { id: "walletPin" as SettingsTab, label: "Wallet PIN", icon: KeyRound },
   ];
 
   return (
@@ -93,6 +95,9 @@ function SettingsPage() {
                 <ChangePassword />
               </>
             )}
+
+            {/* Wallet PIN Tab */}
+            {activeTab === "walletPin" && <WalletPin />}
           </div>
         </div>
       </div>
