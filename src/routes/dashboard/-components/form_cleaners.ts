@@ -59,6 +59,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.minimumInstallmentAmount;
   delete cleaned.paymentDuration;
   delete cleaned.fractionalHoldingPeriodDays;
+  delete cleaned.returnTiers;
   return cleaned;
 };
 
@@ -89,6 +90,7 @@ export const strip_land_banking = (data: Record<string, any>) => {
   delete cleaned.return60Days;
   delete cleaned.return90Days;
   delete cleaned.return120Days;
+  delete cleaned.returnTiers;
   delete cleaned.return120Days;
   delete cleaned.customId;
   delete cleaned.minimumInstallmentAmount;
@@ -119,6 +121,7 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
   delete cleaned.targetPropertyPrice;
+
   delete cleaned.savingsFrequency;
   delete cleaned.savingsDuration;
   delete cleaned.published;
@@ -140,6 +143,7 @@ export const strip_outright = (data: Record<string, any>) => {
   delete cleaned.investmentModel;
   delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
+  delete cleaned.returnTiers;
   delete cleaned.minimumInstallmentAmount;
   delete cleaned.return30Days;
   delete cleaned.return60Days;
@@ -182,6 +186,7 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.return30Days;
   delete cleaned.return60Days;
   delete cleaned.return90Days;
+  delete cleaned.returnTiers;
   delete cleaned.return120Days;
   delete cleaned.return120Days;
   delete cleaned.customId;
