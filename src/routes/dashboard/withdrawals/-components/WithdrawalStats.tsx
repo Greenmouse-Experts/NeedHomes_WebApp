@@ -119,9 +119,9 @@ export default function WithdrawalStats() {
                       <p className="text-xs font-bold uppercase tracking-widest text-base-content/50 mb-1">
                         Pending Amount
                       </p>
-                      <p className="text-3xl font-black flex items-center text-warning truncate">
+                      <p className="text-3xl font-bold flex items-center text-warning truncate">
                         <NairaIcon className="size-10 text-warning" />
-                        {amounts.pendingNaira}
+                        {Number(amounts.pendingNaira).toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -139,9 +139,9 @@ export default function WithdrawalStats() {
                       <p className="text-xs font-bold uppercase tracking-widest text-base-content/50 mb-1">
                         Completed Amount
                       </p>
-                      <p className="text-3xl font-black flex items-center text-warning truncate">
+                      <p className="text-3xl font-bold flex items-center text-warning truncate">
                         <NairaIcon className="size-10 text-success" />
-                        {amounts.completedNaira}
+                        {Number(amounts.completedNaira).toLocaleString()}
                       </p>
                     </div>
                   </div>
