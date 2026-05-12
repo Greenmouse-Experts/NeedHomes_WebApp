@@ -1,5 +1,6 @@
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import QueryCompLayout from "@/components/layout/QueryCompLayout";
+import { NairaIcon } from "@/components/NairaIcon";
 import { useQuery } from "@tanstack/react-query";
 import {
   AlertTriangle,
@@ -118,7 +119,8 @@ export default function WithdrawalStats() {
                       <p className="text-xs font-bold uppercase tracking-widest text-base-content/50 mb-1">
                         Pending Amount
                       </p>
-                      <p className="text-3xl font-black text-warning truncate">
+                      <p className="text-3xl font-black flex items-center text-warning truncate">
+                        <NairaIcon className="size-10 text-warning" />
                         {amounts.pendingNaira}
                       </p>
                     </div>
@@ -137,7 +139,8 @@ export default function WithdrawalStats() {
                       <p className="text-xs font-bold uppercase tracking-widest text-base-content/50 mb-1">
                         Completed Amount
                       </p>
-                      <p className="text-3xl font-black text-success truncate">
+                      <p className="text-3xl font-black flex items-center text-warning truncate">
+                        <NairaIcon className="size-10 text-success" />
                         {amounts.completedNaira}
                       </p>
                     </div>
@@ -168,9 +171,7 @@ export default function WithdrawalStats() {
                         {item.icon}
                       </div>
                       <div>
-                        <p
-                          className={`text-2xl font-black ${item.valueColor}`}
-                        >
+                        <p className={`text-2xl font-black ${item.valueColor}`}>
                           {item.value.toLocaleString()}
                         </p>
                         <p className="text-xs font-bold uppercase tracking-widest text-base-content/40 mt-0.5">

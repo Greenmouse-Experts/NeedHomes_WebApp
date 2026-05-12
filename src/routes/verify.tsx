@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm, FormProvider } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import apiClient from "@/api/simpleApi";
 import { toast } from "sonner";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { Mail, Hash } from "lucide-react";
+import { Mail, Hash, ChevronLeft } from "lucide-react";
 
 export const Route = createFileRoute("/verify")({
   component: RouteComponent,
@@ -46,6 +47,14 @@ function RouteComponent() {
     },
   });
 
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const id = setInterval(() => setResendCooldown((c) => c - 1), 1000);
+    return () => clearInterval(id);
+  }, [resendCooldown]);
+
   const { mutate: resendOtpMutate, isPending: isResendingOtp } = useMutation({
     mutationFn: async (payload: { email: string }) => {
       const response = await apiClient.post("auth/resend-otp", payload);
@@ -53,6 +62,7 @@ function RouteComponent() {
     },
     onSuccess: () => {
       toast.success("OTP resent successfully! Check your email.");
+      setResendCooldown(50);
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to resend OTP");
@@ -75,6 +85,14 @@ function RouteComponent() {
     >
       <div className="card w-full max-w-md bg-base-100 shadow-xl ring ring-current/20">
         <div className="card-body">
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/login" })}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition-colors w-fit -ml-1 mb-1"
+          >
+            <ChevronLeft size={16} />
+            Back
+          </button>
           <h2 className="card-title text-2xl font-bold">Verify Email</h2>
           <p className="text-sm text-gray-500">
             Please enter the OTP sent to you.
@@ -114,9 +132,13 @@ function RouteComponent() {
                   type="button"
                   onClick={handleResendOtp}
                   className={`btn btn-ghost w-full ${isResendingOtp ? "loading" : ""}`}
-                  disabled={isResendingOtp}
+                  disabled={isResendingOtp || resendCooldown > 0}
                 >
-                  {isResendingOtp ? "Resending..." : "Resend OTP"}
+                  {isResendingOtp
+                    ? "Resending..."
+                    : resendCooldown > 0
+                      ? `Resend OTP (${resendCooldown}s)`
+                      : "Resend OTP"}
                 </button>
               </div>
             </form>

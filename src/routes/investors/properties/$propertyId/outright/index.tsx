@@ -7,6 +7,7 @@ import {
   TrendingUp,
   ChevronLeft,
   RefreshCw,
+  Home,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -231,6 +232,21 @@ function PropertyDetailPage() {
 
                   {/* Quick Stats */}
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+                    <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="p-2 bg-white rounded-lg shrink-0">
+                        <Home className="w-4 h-4 md:w-5 md:h-5 text-(--color-orange)" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 whitespace-nowrap">
+                          Available Units
+                        </p>
+                        <p className={`font-semibold text-sm md:text-base truncate ${property.availableUnits === 0 ? "text-red-500" : "text-gray-900"}`}>
+                          {property.availableUnits === 0
+                            ? "Sold Out"
+                            : property.availableUnits}
+                        </p>
+                      </div>
+                    </div>
                     {property.profitSharingRatio && (
                       <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <div className="p-2 bg-white rounded-lg shrink-0">

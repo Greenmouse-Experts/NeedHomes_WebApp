@@ -97,7 +97,7 @@ export default function TransStats() {
                     </div>
                   </div>
                   <div className="space-y-1 ">
-                    <p className="text-md wrap-anywhere md:text-xl font-bold text-gray-900">
+                    <p className="text-md wrap-anywhere md:text-lg font-bold text-gray-900">
                       {value}
                     </p>
                     <p className="text-[10px] md:text-xs text-gray-500">

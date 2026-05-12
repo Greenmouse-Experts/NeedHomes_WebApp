@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm, FormProvider } from "react-hook-form";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { Eye } from "lucide-react";
+import { Eye, ChevronLeft } from "lucide-react";
 import apiClient from "@/api/simpleApi";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
@@ -110,6 +110,14 @@ function RouteComponent() {
     <SimpleContainer>
       <div className="flex-1 grid place-items-center">
         <div className="card w-full max-w-md bg-base-100 shadow-xl p-8 ring fade">
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/forgot-password" })}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition-colors w-fit -ml-1 mb-2"
+          >
+            <ChevronLeft size={16} />
+            Back
+          </button>
           <h2 className="card-title text-2xl mb-6 text-center">
             Reset Password
           </h2>
