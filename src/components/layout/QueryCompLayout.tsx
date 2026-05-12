@@ -17,12 +17,7 @@ interface QueryPageLayoutProps<TData> {
 export default function QueryCompLayout<TData>(
   props: QueryPageLayoutProps<TData>,
 ) {
-  const {
-    children,
-    customLoading,
-    query,
-    loadingText = "Loading resources...",
-  } = props;
+  const { children, customLoading, query, loadingText = "Loading..." } = props;
   const loading = query.isLoading;
   if (loading) {
     if (customLoading) {

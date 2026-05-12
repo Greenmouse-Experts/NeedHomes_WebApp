@@ -12,12 +12,7 @@ interface PageLoaderProps<TData> {
 }
 
 export default function PageLoader<TData>(props: PageLoaderProps<TData>) {
-  const {
-    query,
-    customLoading,
-    children,
-    loadingText = "Loading resources...",
-  } = props;
+  const { query, customLoading, children, loadingText = "Loading..." } = props;
 
   if (query.isLoading) {
     if (customLoading) {
