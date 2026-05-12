@@ -121,7 +121,7 @@ export const strip_fractional = (data: Record<string, any>) => {
   delete cleaned.projectDuration;
   delete cleaned.exitRule;
   delete cleaned.targetPropertyPrice;
-
+  delete cleaned.firstPaymentPercentage;
   delete cleaned.savingsFrequency;
   delete cleaned.savingsDuration;
   delete cleaned.published;
@@ -138,6 +138,7 @@ export const strip_outright = (data: Record<string, any>) => {
   const cleaned = stripped_unneeded({ ...data });
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
+  delete cleaned.firstPaymentPercentage;
   delete cleaned.minimumShares;
   delete cleaned.exitWindow;
   delete cleaned.investmentModel;
