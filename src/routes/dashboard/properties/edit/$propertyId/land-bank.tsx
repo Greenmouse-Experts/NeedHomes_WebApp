@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useImages, useSelectImage } from "@/helpers/images";
@@ -23,7 +23,6 @@ import {
 } from "@/routes/dashboard/-components/upload_helpers";
 import { strip_land_banking } from "@/routes/dashboard/-components/form_cleaners";
 import calculate_fees from "../../-components/calculate_fees";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import edit_cleaner from "@/routes/dashboard/-components/edit_cleaner";
 
 export const Route = createFileRoute(
@@ -73,7 +72,6 @@ interface LandBankingProperty extends DocProps {
   pricePerPlot: number;
   holdingPeriod: number;
   buyBackOption: boolean;
-  installmentDuration?: number;
   firstPaymentPercentage?: number;
 }
 
@@ -99,11 +97,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
     },
   });
 
-  const paymentOption = useWatch({
-    control: methods.control,
-    name: "paymentOption",
-  });
-
   const mutation = useMutation({
     mutationFn: async (data: LandBankingProperty) => {
       let coverImageUrl = await get_cover_image(selectImageProps);
@@ -114,10 +107,7 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
       // Handle Video Upload
       let videoUrl = await video_helper(videoUpload);
       data["basePrice"] = data.pricePerPlot * data["availablePlots"];
-      const edited_payload = calculate_fees(data, [
-        "pricePerPlot",
-        "minimumInstallmentAmount",
-      ]);
+      const edited_payload = calculate_fees(data, ["pricePerPlot"]);
       // let basePrice = (edited_payload["pricePerPlot"] *
       //   data["availableUnits"]) as number;
 
@@ -135,9 +125,6 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
         projectEndDate: data.projectEndDate
           ? new Date(data.projectEndDate).toISOString()
           : null,
-        minimumInstallmentAmount: parseInt(
-          edited_payload["totalPrice"] / data.installmentDuration,
-        ),
       };
 
       const new_payload = strip_land_banking(payload);
@@ -263,57 +250,30 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                 </div>
               </div>
               <Controller
-                name="paymentOption"
+                name="firstPaymentPercentage"
                 control={methods.control}
                 render={({ field }) => (
-                  <LocalSelect {...field} label="Payment Option">
-                    <option value="FULL_PAYMENT">Full Payment</option>
-                    <option value="INSTALLMENT">Installment</option>
-                    <option value="BOTH">Both</option>
-                  </LocalSelect>
+                  <div className="space-y-1">
+                    <SimpleInput
+                      {...field}
+                      value={field.value ?? ""}
+                      label="First Payment Percentage (%)"
+                      type="number"
+                      placeholder="e.g. 30"
+                      min={1}
+                      max={100}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? e.target.valueAsNumber : undefined,
+                        )
+                      }
+                    />
+                    <p className="text-xs opacity-60">
+                      Minimum % of total plot cost required upfront. Leave blank for default (total ÷ duration).
+                    </p>
+                  </div>
                 )}
               />
-              {(paymentOption === "INSTALLMENT" || paymentOption === "BOTH") && (
-                <>
-                  <Controller
-                    name="installmentDuration"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <SimpleInput
-                        {...field}
-                        label="Installment Duration (Months)"
-                        type="number"
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="firstPaymentPercentage"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <div className="space-y-1">
-                        <SimpleInput
-                          {...field}
-                          value={field.value ?? ""}
-                          label="First Payment Percentage (%)"
-                          type="number"
-                          placeholder="e.g. 30"
-                          min={1}
-                          max={100}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? e.target.valueAsNumber : undefined,
-                            )
-                          }
-                        />
-                        <p className="text-xs opacity-60">
-                          Minimum % of total plot cost required upfront. Leave blank for default (total ÷ duration).
-                        </p>
-                      </div>
-                    )}
-                  />
-                </>
-              )}
             </div>
           </section>
         </DefaultForm>

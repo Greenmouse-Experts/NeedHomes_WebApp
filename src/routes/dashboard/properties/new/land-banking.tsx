@@ -5,7 +5,6 @@ import {
   useFormContext,
   useFieldArray,
   Controller,
-  useWatch,
 } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
@@ -22,7 +21,6 @@ import { useDocumentUpload } from "@/routes/dashboard/-components/DocumentUpload
 import { useVideoUpload } from "@/routes/dashboard/-components/VideoUpload";
 import DefaultForm from "../-components/DefaultForm";
 import { uploadFile } from "@/api/fileApi";
-import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import calculate_fees from "../-components/calculate_fees";
 import { doc_helper } from "../../-components/upload_helpers";
 
@@ -40,7 +38,6 @@ interface LandBankingProperty extends DocProps {
   pricePerPlot: number;
   holdingPeriod: number;
   buyBackOption: boolean;
-  installmentDuration?: number;
   firstPaymentPercentage?: number;
 }
 
@@ -58,8 +55,6 @@ function RouteComponent() {
       pricePerPlot: 0,
       holdingPeriod: 12,
       buyBackOption: false,
-      paymentOption: "FULL_PAYMENT",
-      installmentDuration: 12,
       additionalFees: [{ label: "Survey Fee", amount: 0 }],
       coverImage: "",
       galleryImages: [],
@@ -73,10 +68,6 @@ function RouteComponent() {
   //@ts-ignore
   const selectImageProps = useSelectImage(null);
   const nav = useNavigate();
-  const paymentOption = useWatch({
-    control: methods.control,
-    name: "paymentOption",
-  });
 
   const mutation = useMutation({
     mutationFn: async (data: LandBankingProperty) => {
@@ -271,57 +262,30 @@ function RouteComponent() {
                 </div>
               </div>
               <Controller
-                name="paymentOption"
+                name="firstPaymentPercentage"
                 control={methods.control}
                 render={({ field }) => (
-                  <LocalSelect {...field} label="Payment Option">
-                    <option value="FULL_PAYMENT">Full Payment</option>
-                    <option value="INSTALLMENT">Installment</option>
-                    <option value="BOTH">Both</option>
-                  </LocalSelect>
+                  <div className="space-y-1">
+                    <SimpleInput
+                      {...field}
+                      value={field.value ?? ""}
+                      label="First Payment Percentage (%)"
+                      type="number"
+                      placeholder="e.g. 30"
+                      min={1}
+                      max={100}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? e.target.valueAsNumber : undefined,
+                        )
+                      }
+                    />
+                    <p className="text-xs opacity-60">
+                      Minimum % of total plot cost required upfront. Leave blank for default (total ÷ duration).
+                    </p>
+                  </div>
                 )}
               />
-              {(paymentOption === "INSTALLMENT" || paymentOption === "BOTH") && (
-                <>
-                  <Controller
-                    name="installmentDuration"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <SimpleInput
-                        {...field}
-                        label="Installment Duration (Months)"
-                        type="number"
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="firstPaymentPercentage"
-                    control={methods.control}
-                    render={({ field }) => (
-                      <div className="space-y-1">
-                        <SimpleInput
-                          {...field}
-                          value={field.value ?? ""}
-                          label="First Payment Percentage (%)"
-                          type="number"
-                          placeholder="e.g. 30"
-                          min={1}
-                          max={100}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? e.target.valueAsNumber : undefined,
-                            )
-                          }
-                        />
-                        <p className="text-xs opacity-60">
-                          Minimum % of total plot cost required upfront. Leave blank for default (total ÷ duration).
-                        </p>
-                      </div>
-                    )}
-                  />
-                </>
-              )}
             </div>
           </section>
         </DefaultForm>
