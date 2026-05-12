@@ -36,6 +36,7 @@ export const strip_co_dev = (data: Record<string, any>) => {
   delete cleaned.return120Days;
   delete cleaned.customId;
   delete cleaned.investmentModel;
+  delete cleaned.firstPaymentPercentage;
   // delete cleaned.paymentOption;
   delete cleaned.installmentDuration;
   delete cleaned.completionDate;
