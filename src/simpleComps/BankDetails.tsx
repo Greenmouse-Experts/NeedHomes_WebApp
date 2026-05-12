@@ -9,6 +9,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { extract_message } from "@/helpers/apihelpers";
 
 interface Bank {
   id: number;
@@ -113,8 +114,7 @@ export default function BankDetails() {
     },
     onError: (error) => {
       toast.error("Failed to resolve account", {
-        description:
-          error.message || "Please check the account number and bank.",
+        description: extract_message(error as any),
       });
     },
   });
@@ -123,7 +123,7 @@ export default function BankDetails() {
     toast.promise(resolveBankMutation.mutateAsync(data), {
       loading: "Resolving bank details...",
       success: "Bank details resolved!",
-      error: (err) => `Failed to resolve: ${err.message}`,
+      error: extract_message,
     });
   };
 
@@ -152,8 +152,8 @@ export default function BankDetails() {
         <div className="flex items-start gap-3 p-4 mb-6 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-sm max-w-2xl">
           <Info className="w-4 h-4 mt-0.5 shrink-0 text-blue-500" />
           <p>
-            Your bank details are already on file. To update them, please contact{" "}
-            <strong>customer support</strong>.
+            Your bank details are already on file. To update them, please
+            contact <strong>customer support</strong>.
           </p>
         </div>
       )}
@@ -242,7 +242,8 @@ export default function BankDetails() {
             <div className="flex items-start gap-2 mt-5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs max-w-2xl">
               <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-500" />
               <p>
-                Once saved, bank details <strong>cannot be changed</strong> without contacting customer support.
+                Once saved, bank details <strong>cannot be changed</strong>{" "}
+                without contacting customer support.
               </p>
             </div>
           )}
