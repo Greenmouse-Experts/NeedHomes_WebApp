@@ -1,14 +1,13 @@
 import { Label } from "@/components/ui/Label";
 import { useForm } from "react-hook-form";
 import SimpleInput from "./inputs/SimpleInput";
-import LocalSelect from "./inputs/LocalSelect";
 import { Button } from "@/components/ui/Button";
 import { Info } from "lucide-react";
 import ThemeProvider from "./ThemeProvider";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { extract_message } from "@/helpers/apihelpers";
 
 interface Bank {
@@ -56,13 +55,79 @@ interface CurrentBankInfo {
   deletedAt: string | null;
 }
 
+function BankSearch({
+  banks,
+  value,
+  onChange,
+  disabled,
+  isLoading,
+}: {
+  banks: Bank[];
+  value: string;
+  onChange: (code: string) => void;
+  disabled?: boolean;
+  isLoading?: boolean;
+}) {
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const selectedBank = banks.find((b) => b.code === value);
+  const filtered = banks
+    .filter((b) => b.name.toLowerCase().includes(search.toLowerCase()))
+    .slice(0, 30);
+
+  return (
+    <div className="relative">
+      <div className="input input-md input-bordered flex items-center gap-2 w-full text-sm">
+        <input
+          type="text"
+          className="grow"
+          placeholder="Search bank..."
+          disabled={disabled}
+          value={selectedBank ? selectedBank.name : search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            if (value) onChange("");
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 150)}
+        />
+        {isLoading && (
+          <span className="loading loading-spinner loading-xs text-gray-400" />
+        )}
+      </div>
+      {open && !disabled && filtered.length > 0 && (
+        <ul className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto">
+          {filtered.map((bank) => (
+            <li
+              key={bank.id}
+              className="px-3 py-2 text-sm hover:bg-orange-50 cursor-pointer"
+              onMouseDown={() => {
+                onChange(bank.code);
+                setSearch("");
+                setOpen(false);
+              }}
+            >
+              {bank.name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function BankDetails() {
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<BankDetailsForm>();
+
+  const selectedBankCode = watch("bankCode");
 
   const {
     data: bankList,
@@ -182,31 +247,22 @@ export default function BankDetails() {
               )}
             </div>
 
-            {/* Bank Name */}
+            {/* Bank Name — searchable */}
             <div className="space-y-2">
               <Label htmlFor="bankCode" className="text-sm">
                 Bank Name
               </Label>
-              <div className="relative">
-                <LocalSelect
-                  id="bankCode"
-                  disabled={bankExists}
-                  {...register("bankCode", {
-                    required: "Bank name is required",
-                  })}
-                >
-                  <option value="">Select</option>
-                  {bankList?.data &&
-                    bankList.data.map((bank) => (
-                      <option key={bank.id} value={bank.code}>
-                        {bank.name}
-                      </option>
-                    ))}
-                </LocalSelect>
-                {isLoading && (
-                  <span className="absolute right-8 top-1/2 -translate-y-1/2 loading loading-spinner loading-xs text-gray-400"></span>
-                )}
-              </div>
+              <input
+                type="hidden"
+                {...register("bankCode", { required: "Bank name is required" })}
+              />
+              <BankSearch
+                banks={bankList?.data ?? []}
+                value={selectedBankCode ?? ""}
+                onChange={(code) => setValue("bankCode", code, { shouldValidate: true })}
+                disabled={bankExists}
+                isLoading={isLoading}
+              />
               {isError && (
                 <p className="text-red-500 text-xs">Error loading banks</p>
               )}

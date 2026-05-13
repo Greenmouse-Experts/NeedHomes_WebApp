@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
@@ -38,6 +39,7 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
+  const [quantity, setQuantity] = useState(1);
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -52,10 +54,11 @@ function PropertyDetailPage() {
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number }) => {
+    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
         amountPaid: parseFloat(data.amountPaid.toFixed()),
+        quantity: data.quantity,
       });
       return resp.data;
     },
@@ -85,7 +88,9 @@ function PropertyDetailPage() {
           additionalFees: property.additionalFees || [],
           additionalFeesTotal,
         };
-        const fullAmountKobo = Math.round(totalPrice * 100);
+        const pricePerUnitKobo = property.totalPrice || property.basePrice;
+        const fullAmountKobo = Math.round(quantity * pricePerUnitKobo);
+        const selectedTotal = quantity * totalPrice;
         return (
           <>
             <Modal
@@ -100,7 +105,7 @@ function PropertyDetailPage() {
                     variant="primary"
                     onClick={() => {
                       toast.promise(
-                        mutate.mutateAsync({ amountPaid: fullAmountKobo }),
+                        mutate.mutateAsync({ amountPaid: fullAmountKobo, quantity }),
                         {
                           loading: "Processing payment...",
                           success: "Payment successful!",
@@ -110,7 +115,7 @@ function PropertyDetailPage() {
                     }}
                     disabled={mutate.isPending || property.availableUnits === 0}
                   >
-                    Confirm & Pay {formatCurrency(breakdown.totalPrice)}
+                    Confirm & Pay {formatCurrency(selectedTotal)}
                   </Button>
                 </div>
               }
@@ -125,10 +130,55 @@ function PropertyDetailPage() {
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Base Price</span>
+                      <span className="text-sm text-gray-600">Price per unit</span>
                       <span className="text-sm font-medium">
                         {formatCurrency(property.basePrice / 100)}
                       </span>
+                    </div>
+
+                    {/* Quantity selector */}
+                    <div className="ring rounded-box overflow-hidden fade">
+                      <h2 className="p-3 border-b text-sm font-bold text-gray-900">
+                        Select Units
+                      </h2>
+                      <div className="p-3 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Quantity</span>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                              disabled={quantity <= 1}
+                              className="px-2 py-1"
+                            >
+                              -
+                            </Button>
+                            <span className="text-sm font-bold w-8 text-center">
+                              {quantity}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setQuantity((q) =>
+                                  Math.min(property.availableUnits, q + 1),
+                                )
+                              }
+                              disabled={quantity >= property.availableUnits}
+                              className="px-2 py-1"
+                            >
+                              +
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center border-t pt-2 text-sm text-gray-500">
+                          <span>Available</span>
+                          <span>{property.availableUnits} units</span>
+                        </div>
+                      </div>
                     </div>
 
                     {breakdown.additionalFees.length > 0 && (
@@ -156,10 +206,10 @@ function PropertyDetailPage() {
 
                     <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
-                        Total
+                        Total ({quantity} unit{quantity > 1 ? "s" : ""})
                       </span>
                       <span className="text-lg font-bold text-(--color-orange)">
-                        {formatCurrency(breakdown.totalPrice)}
+                        {formatCurrency(selectedTotal)}
                       </span>
                     </div>
                   </div>

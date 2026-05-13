@@ -22,7 +22,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
 import InvestorOnly from "../../-components/only_investors";
@@ -38,6 +38,7 @@ function PropertyDetailPage() {
   const [auth] = useAuth();
   const isAdmin = !!auth && auth.user?.roles?.includes("ADMIN");
   const { ref, showModal, closeModal } = useModal();
+  const [quantity, setQuantity] = useState(1);
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -138,7 +139,9 @@ function PropertyDetailPage() {
           additionalFees: property.additionalFees || [],
           additionalFeesTotal,
         };
-        const fullAmountKobo = Math.round(totalPrice * 100);
+        const pricePerUnitKobo = property.totalPrice || property.basePrice;
+        const fullAmountKobo = Math.round(quantity * pricePerUnitKobo);
+        const selectedTotal = quantity * totalPrice;
 
         if (property.paymentOption === "INSTALLMENT") {
           breakdown.installmentAmount = property.minimumInstallmentAmount;
@@ -204,7 +207,7 @@ function PropertyDetailPage() {
                           return toast.promise(
                             mutate.mutateAsync({
                               amountPaid: amount * 100,
-                              quantity: 1,
+                              quantity,
                             }),
                             {
                               loading: "Processing payment...",
@@ -216,7 +219,7 @@ function PropertyDetailPage() {
                         toast.promise(
                           mutate.mutateAsync({
                             amountPaid: fullAmountKobo,
-                            quantity: 1,
+                            quantity,
                           }),
                           {
                             loading: "Processing payment...",
@@ -252,10 +255,55 @@ function PropertyDetailPage() {
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Base Price</span>
+                      <span className="text-sm text-gray-600">Price per unit</span>
                       <span className="text-sm font-medium">
                         {formatCurrency(property.basePrice / 100)}
                       </span>
+                    </div>
+
+                    {/* Quantity selector */}
+                    <div className="ring rounded-box overflow-hidden fade">
+                      <h2 className="p-3 border-b text-sm font-bold text-gray-900">
+                        Select Units
+                      </h2>
+                      <div className="p-3 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Quantity</span>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                              disabled={quantity <= 1}
+                              className="px-2 py-1"
+                            >
+                              -
+                            </Button>
+                            <span className="text-sm font-bold w-8 text-center">
+                              {quantity}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setQuantity((q) =>
+                                  Math.min(property.availableUnits, q + 1),
+                                )
+                              }
+                              disabled={quantity >= property.availableUnits}
+                              className="px-2 py-1"
+                            >
+                              +
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center border-t pt-2 text-sm text-gray-500">
+                          <span>Available</span>
+                          <span>{property.availableUnits} units</span>
+                        </div>
+                      </div>
                     </div>
 
                     {breakdown.additionalFees.length > 0 && (
@@ -283,10 +331,10 @@ function PropertyDetailPage() {
 
                     <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-sm font-bold text-gray-900">
-                        Total
+                        Total ({quantity} unit{quantity > 1 ? "s" : ""})
                       </span>
                       <span className="text-lg font-bold text-(--color-orange)">
-                        {formatCurrency(breakdown.totalPrice)}
+                        {formatCurrency(selectedTotal)}
                       </span>
                     </div>
                   </div>
