@@ -100,7 +100,10 @@ export default function UserWallet() {
     }
     const tick = () => {
       const diff = new Date(pinStatus.lockedUntil!).getTime() - Date.now();
-      if (diff <= 0) { setLockedCountdown(""); return; }
+      if (diff <= 0) {
+        setLockedCountdown("");
+        return;
+      }
       const m = Math.floor(diff / 60000);
       const s = Math.floor((diff % 60000) / 1000);
       setLockedCountdown(`${m}m ${s}s`);
@@ -199,8 +202,7 @@ export default function UserWallet() {
       setPinError("");
     },
     onError: (err: any) => {
-      const message =
-        err?.response?.data?.message || "Withdrawal failed";
+      const message = err?.response?.data?.message || "Withdrawal failed";
       setPinError(message);
       // Re-fetch pin status in case it just got locked
       pinStatusQuery.refetch();
@@ -261,7 +263,7 @@ export default function UserWallet() {
               .reduce((acc, curr) => acc + curr.amount, 0) / 100;
           return (
             <>
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden ">
                 <div className="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between">
                   <h3 className="text-base md:text-lg font-semibold text-gray-900">
                     Wallet
@@ -274,7 +276,7 @@ export default function UserWallet() {
                           : "/investors/transactions",
                       })
                     }
-                    className="text-xs md:text-sm text-orange-600 hover:text-orange-700 font-semibold transition-colors"
+                    className="btn btn-ghost btn-primary"
                   >
                     View All
                   </button>
