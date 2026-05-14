@@ -1,5 +1,8 @@
 import { TrendingUp } from "lucide-react";
-import { formatCurrency } from "../../../../helpers/currency";
+import {
+  converty_format_currency,
+  formatCurrency,
+} from "../../../../helpers/currency";
 
 interface Investment {
   id: string;
@@ -79,7 +82,7 @@ export default function TotalReturnCard(props: { investment: Investment }) {
       </p>
 
       <p className="text-xl font-bold text-green-600">
-        {formatCurrency(displayReturn)}
+        {converty_format_currency(displayReturn)}
       </p>
 
       {tierPct != null && (
