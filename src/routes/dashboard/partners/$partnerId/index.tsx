@@ -68,6 +68,16 @@ function PartnerDetailsPage() {
     },
   });
 
+  const { isPending: isSendingRecovery, mutateAsync: sendRecoveryLink } =
+    useMutation({
+      mutationFn: async () => {
+        const resp = await apiClient.post(
+          `/admin/users/${partnerId}/withdrawal-pin/recovery-link`,
+        );
+        return resp.data;
+      },
+    });
+
   return (
     <DashboardLayout title="Super Admin Dashboard" subtitle="Partner Details">
       <PageLoader query={query}>
@@ -372,6 +382,23 @@ function PartnerDetailsPage() {
                             onClick={() => modalRef.current?.open()}
                           >
                             Send Message
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="w-full"
+                            disabled={isSendingRecovery}
+                            onClick={() =>
+                              toast.promise(sendRecoveryLink(), {
+                                loading: "Sending recovery link...",
+                                success:
+                                  "PIN recovery link sent to partner's email",
+                                error: extract_message,
+                              })
+                            }
+                          >
+                            {isSendingRecovery
+                              ? "Sending..."
+                              : "Send PIN Recovery Link"}
                           </Button>
                         </div>
                       </div>
