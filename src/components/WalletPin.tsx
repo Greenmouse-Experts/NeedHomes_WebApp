@@ -348,7 +348,7 @@ export default function WalletPin() {
                   label="Security Question"
                 >
                   <option value="">Select a question</option>
-                  {data.map((q) => (
+                  {data.data.map((q) => (
                     <option key={q.id} value={q.question}>
                       {q.question}
                     </option>
