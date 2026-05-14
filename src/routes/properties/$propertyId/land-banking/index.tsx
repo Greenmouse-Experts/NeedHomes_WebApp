@@ -148,8 +148,9 @@ function PropertyDetailPage() {
           property.paymentOption === "INSTALLMENT" ||
           property.paymentOption === "BOTH";
 
+        const totalForQuantityKobo = install_amount + additionalFeesTotal * 100;
         const minFirstPaymentKobo = property.firstPaymentPercentage
-          ? Math.ceil(install_amount * (property.firstPaymentPercentage / 100))
+          ? Math.ceil(totalForQuantityKobo * (property.firstPaymentPercentage / 100))
           : null;
 
         useEffect(() => {
@@ -427,7 +428,7 @@ function PropertyDetailPage() {
                             . Remaining{" "}
                             <span className="font-bold">
                               {formatCurrency(
-                                (install_amount - minFirstPaymentKobo) / 100,
+                                (totalForQuantityKobo - minFirstPaymentKobo) / 100,
                               )}
                             </span>{" "}
                             spread over {property.installmentDuration} months.

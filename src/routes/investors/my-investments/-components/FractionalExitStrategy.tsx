@@ -28,6 +28,7 @@ interface Investment {
   amountPaid: number;
   returnPercentage: number;
   selectedReturnDays?: number | null;
+  createdAt: string;
   property?: FractionalProperty;
 }
 
@@ -147,6 +148,12 @@ export default function FractionalExitStrategy({
   const holdingDays = prop?.fractionalHoldingPeriodDays;
   const exitWindow = prop?.exitWindow?.replace(/_/g, " ") ?? "N/A";
 
+  const daysHeld = Math.floor(
+    (Date.now() - new Date(investment.createdAt).getTime()) / (1000 * 60 * 60 * 24),
+  );
+  const holdingReached = !holdingDays || daysHeld >= holdingDays;
+  const daysRemaining = holdingDays ? Math.max(0, holdingDays - daysHeld) : 0;
+
   return (
     <>
       <Modal
@@ -246,12 +253,13 @@ export default function FractionalExitStrategy({
             <Button
               variant="outline"
               leftIcon={<LogOut className="w-4 h-4" />}
+              disabled={!holdingReached}
               onClick={() => {
                 setExitError(null);
                 modalRef.current?.open();
               }}
             >
-              Request Exit
+              {holdingReached ? "Request Exit" : `${daysRemaining}d remaining`}
             </Button>
           )}
         </div>
@@ -288,12 +296,27 @@ export default function FractionalExitStrategy({
           </div>
 
           {holdingDays && (
-            <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700">
+            <div
+              className={`flex items-start gap-2 p-3 rounded-lg text-sm border ${
+                holdingReached
+                  ? "bg-blue-50 border-blue-100 text-blue-700"
+                  : "bg-amber-50 border-amber-200 text-amber-800"
+              }`}
+            >
               <Info className="w-4 h-4 mt-0.5 shrink-0" />
-              <span>
-                Minimum holding period: <strong>{holdingDays} days</strong>. You
-                cannot request an exit before this duration.
-              </span>
+              {holdingReached ? (
+                <span>
+                  Minimum holding period of <strong>{holdingDays} days</strong>{" "}
+                  reached ({daysHeld} days held).
+                </span>
+              ) : (
+                <span>
+                  Minimum holding period: <strong>{holdingDays} days</strong>.
+                  You have held for <strong>{daysHeld} days</strong> —{" "}
+                  <strong>{daysRemaining} days</strong> remaining before you can
+                  request an exit.
+                </span>
+              )}
             </div>
           )}
 
@@ -301,15 +324,22 @@ export default function FractionalExitStrategy({
           {investment.selectedReturnDays != null && (
             <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-0.5">Locked-in Return</p>
-                <p className="text-sm text-gray-700">Selected duration: <strong>{investment.selectedReturnDays} days</strong></p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-0.5">
+                  Locked-in Return
+                </p>
+                <p className="text-sm text-gray-700">
+                  Selected duration:{" "}
+                  <strong>{investment.selectedReturnDays} days</strong>
+                </p>
               </div>
-              <span className="text-lg font-bold text-green-700">{investment.returnPercentage}%</span>
+              <span className="text-lg font-bold text-green-700">
+                {investment.returnPercentage}%
+              </span>
             </div>
           )}
 
           {/* Return tiers table */}
-          {prop?.returnTiers && Object.keys(prop.returnTiers).length > 0 && (
+          {/*{prop?.returnTiers && Object.keys(prop.returnTiers).length > 0 && (
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">
                 Available Return Tiers
@@ -342,7 +372,7 @@ export default function FractionalExitStrategy({
                 </table>
               </div>
             </div>
-          )}
+          )}*/}
 
           {/* Latest exit request */}
           {latestRequest && (

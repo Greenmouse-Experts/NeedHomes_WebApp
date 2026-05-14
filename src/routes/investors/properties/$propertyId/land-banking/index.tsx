@@ -161,8 +161,9 @@ function PropertyDetailPage() {
         const install_amount = currentQuantity * property.pricePerPlot;
         const full_charge = (0 / 100) * install_amount;
 
+        const totalForQuantityKobo = install_amount + additionalFeesTotal * 100;
         const minFirstPaymentKobo = property.firstPaymentPercentage
-          ? Math.ceil(install_amount * (property.firstPaymentPercentage / 100))
+          ? Math.ceil(totalForQuantityKobo * (property.firstPaymentPercentage / 100))
           : null;
 
         useEffect(() => {
@@ -423,7 +424,7 @@ function PropertyDetailPage() {
                             . Remaining{" "}
                             <span className="font-bold">
                               {formatCurrency(
-                                (install_amount - minFirstPaymentKobo) / 100,
+                                (totalForQuantityKobo - minFirstPaymentKobo) / 100,
                               )}
                             </span>{" "}
                             spread over {property.installmentDuration} months.
@@ -744,7 +745,7 @@ function PropertyDetailPage() {
                                 </span>
                                 <span className="font-medium">
                                   {formatCurrency(
-                                    (install_amount - minFirstPaymentKobo) /
+                                    (totalForQuantityKobo - minFirstPaymentKobo) /
                                       100,
                                   )}
                                 </span>
@@ -758,7 +759,7 @@ function PropertyDetailPage() {
                                     {property.installmentDuration}x{" "}
                                     {formatCurrency(
                                       Math.ceil(
-                                        (install_amount - minFirstPaymentKobo) /
+                                        (totalForQuantityKobo - minFirstPaymentKobo) /
                                           property.installmentDuration,
                                       ) / 100,
                                     )}

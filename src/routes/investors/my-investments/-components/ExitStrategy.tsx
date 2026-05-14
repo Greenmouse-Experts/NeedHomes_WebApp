@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
+  Info,
 } from "lucide-react";
 import { toast } from "sonner";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
@@ -186,6 +187,25 @@ export default function ExitStrategy({
       {(propData) => {
         const property = propData.data;
         if (!property) return null;
+
+        const holdingPeriodMonths =
+          property.investmentModel === "LAND_BANKING" && property.buyBackOption
+            ? Number(property.holdingPeriod)
+            : null;
+        const monthsHeld = holdingPeriodMonths
+          ? Math.floor(
+              (Date.now() - new Date(investment.createdAt).getTime()) /
+                (1000 * 60 * 60 * 24 * 30.44),
+            )
+          : null;
+        const holdingReached =
+          !holdingPeriodMonths ||
+          (monthsHeld !== null && monthsHeld >= holdingPeriodMonths);
+        const monthsRemaining =
+          holdingPeriodMonths && monthsHeld !== null
+            ? Math.max(0, holdingPeriodMonths - monthsHeld)
+            : 0;
+
         return (
           <>
             <Modal
@@ -269,9 +289,12 @@ export default function ExitStrategy({
                   <Button
                     variant="outline"
                     leftIcon={<LogOut className="w-4 h-4" />}
+                    disabled={!holdingReached}
                     onClick={() => modalRef.current?.open()}
                   >
-                    Request Exit
+                    {holdingReached
+                      ? "Request Exit"
+                      : `${monthsRemaining}mo remaining`}
                   </Button>
                 )}
               </div>
@@ -295,6 +318,32 @@ export default function ExitStrategy({
                     </p>
                   </div>
                 </div>
+
+                {holdingPeriodMonths !== null && (
+                  <div
+                    className={`flex items-start gap-2 p-3 rounded-lg text-sm border ${
+                      holdingReached
+                        ? "bg-blue-50 border-blue-100 text-blue-700"
+                        : "bg-amber-50 border-amber-200 text-amber-800"
+                    }`}
+                  >
+                    <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                    {holdingReached ? (
+                      <span>
+                        Minimum holding period of{" "}
+                        <strong>{holdingPeriodMonths} months</strong> reached (
+                        {monthsHeld} months held).
+                      </span>
+                    ) : (
+                      <span>
+                        Minimum holding period: <strong>{holdingPeriodMonths} months</strong>.
+                        You have held for <strong>{monthsHeld} months</strong> —{" "}
+                        <strong>{monthsRemaining} months</strong> remaining
+                        before you can request an exit.
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 {latestRequest && (
                   <div className="rounded-lg border border-gray-200 p-4 space-y-3">
