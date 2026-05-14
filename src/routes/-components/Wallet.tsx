@@ -17,6 +17,10 @@ import { usePaystackPayment } from "react-paystack";
 import { useNavigate } from "@tanstack/react-router";
 import { NairaIcon } from "@/components/NairaIcon";
 import PriceInput, { parsePriceInput } from "@/components/inputs/PriceInput";
+import {
+  InvestorInflowOutflow,
+  PartnerInflowOutflow,
+} from "@/routes/-components/UserInflowOutflow";
 interface PinStatus {
   isSetUp: boolean;
   securityQuestion?: string;
@@ -262,8 +266,17 @@ export default function UserWallet() {
                   <h3 className="text-base md:text-lg font-semibold text-gray-900">
                     Wallet
                   </h3>
-                  <button className="text-xs md:text-sm text-gray-500 hover:text-gray-700 font-medium">
-                    Monthly ▼
+                  <button
+                    onClick={() =>
+                      nav({
+                        to: isPartner
+                          ? "/partners/transactions"
+                          : "/investors/transactions",
+                      })
+                    }
+                    className="text-xs md:text-sm text-orange-600 hover:text-orange-700 font-semibold transition-colors"
+                  >
+                    View All
                   </button>
                 </div>
 
@@ -300,26 +313,11 @@ export default function UserWallet() {
 
                 {/* Income/Withdraw */}
                 <div className="p-4 md:p-6">
-                  <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4">
-                    <div className="bg-green-50 rounded-lg p-2 md:p-3 border border-green-200">
-                      <p className="text-xs text-gray-600 font-semibold mb-1">
-                        INCOME
-                      </p>
-                      <p className="text-base md:text-lg font-bold text-gray-900 flex items-center">
-                        <NairaIcon className="w-5" />{" "}
-                        {error_status ? 0 : income.toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="bg-red-50 rounded-lg p-2 md:p-3 border border-red-200">
-                      <p className="text-xs text-gray-600 font-semibold mb-1">
-                        WITHDRAW
-                      </p>
-                      <p className="text-base md:text-lg font-bold text-gray-900 flex items-center">
-                        <NairaIcon className="w-5" />{" "}
-                        {withdrawals.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
+                  {isPartner ? (
+                    <PartnerInflowOutflow />
+                  ) : (
+                    <InvestorInflowOutflow />
+                  )}
 
                   <div className="space-y-2 md:space-y-3">
                     {auth?.user.accountType != "PARTNER" && (
