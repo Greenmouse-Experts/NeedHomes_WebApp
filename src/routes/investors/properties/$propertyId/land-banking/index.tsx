@@ -153,9 +153,9 @@ function PropertyDetailPage() {
         const canPayInstallment =
           property.paymentOption === "INSTALLMENT" ||
           property.paymentOption === "BOTH";
-        const installOptions = property.paymentOption == "INSTALLMENT";
         const payAmount = form.watch("amount");
         const selectedDuration = form.watch("installmentDuration");
+        const installmentFrequency = form.watch("installmentFrequency");
         const currentQuantity = form.watch("quantity");
 
         const install_amount = currentQuantity * property.pricePerPlot;
@@ -446,17 +446,110 @@ function PropertyDetailPage() {
                   />
                   <h2 className="text-sm">Pay Installmentally</h2>
                 </div>
-                {canPayInstallment && payInstall && (
+                {payInstall && (
                   <div className="mt-4">
-                    <InstallMentForm
-                      form={form}
-                      minimumInvestmentAmount={
-                        minFirstPaymentKobo !== null
-                          ? minFirstPaymentKobo / 100
-                          : breakdown.installmentAmount || 0
-                      }
-                      firstPaymentPercentage={property.firstPaymentPercentage}
-                    />
+                    <div className="space-y-3 p-4 ring rounded-box fade">
+                      {property.firstPaymentPercentage &&
+                        minFirstPaymentKobo !== null && (
+                          <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                            <p className="text-xs text-amber-800 font-medium">
+                              Minimum First Deposit Required
+                            </p>
+                            <p className="text-xs text-amber-700 mt-1">
+                              Pay at least{" "}
+                              <span className="font-bold">
+                                {property.firstPaymentPercentage}%
+                              </span>{" "}
+                              of the total (
+                              {formatCurrency(minFirstPaymentKobo / 100)})
+                              upfront. You may pay more.
+                            </p>
+                          </div>
+                        )}
+                      <SimpleInput
+                        {...form.register("amount", {
+                          valueAsNumber: true,
+                          min: {
+                            value:
+                              minFirstPaymentKobo !== null
+                                ? minFirstPaymentKobo / 100
+                                : 0,
+                            message: `Minimum deposit is ${formatCurrency(minFirstPaymentKobo !== null ? minFirstPaymentKobo / 100 : 0)}`,
+                          },
+                        })}
+                        label={
+                          property.firstPaymentPercentage
+                            ? `First Payment (min. ${property.firstPaymentPercentage}%)`
+                            : "Deposit Amount"
+                        }
+                        type="number"
+                        className="w-full"
+                      />
+                      {form.formState.errors.amount && (
+                        <p className="text-red-500 text-sm">
+                          {form.formState.errors.amount.message as string}
+                        </p>
+                      )}
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-2">
+                          Payment Frequency
+                        </p>
+                        <div className="flex gap-3">
+                          {(["WEEKLY", "MONTHLY"] as const).map((freq) => (
+                            <label
+                              key={freq}
+                              className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                                installmentFrequency === freq
+                                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                                  : "border-gray-200 text-gray-600 hover:border-gray-300"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                className="hidden"
+                                value={freq}
+                                {...form.register("installmentFrequency")}
+                              />
+                              {freq.charAt(0) + freq.slice(1).toLowerCase()}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-2">
+                          Installment Duration
+                        </p>
+                        <div className="flex gap-3">
+                          {([3, 6, 12] as const).map((dur) => (
+                            <label
+                              key={dur}
+                              className={`flex-1 flex items-center justify-center p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
+                                Number(selectedDuration) === dur
+                                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                                  : "border-gray-200 text-gray-600 hover:border-gray-300"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                className="hidden"
+                                value={dur}
+                                {...form.register("installmentDuration", {
+                                  valueAsNumber: true,
+                                })}
+                              />
+                              {dur}
+                              {installmentFrequency === "WEEKLY" ? "w" : "m"}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-gray-600/60 text-sm">
+                        <span className="font-semibold text-gray-900/60">
+                          The remaining balance will be spread over the selected
+                          schedule
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 )}
               </section>
@@ -686,111 +779,3 @@ function PropertyDetailPage() {
     </PageLoader>
   );
 }
-const InstallMentForm = ({
-  form,
-  minimumInvestmentAmount,
-  firstPaymentPercentage,
-}: {
-  form: any;
-  minimumInvestmentAmount: number;
-  firstPaymentPercentage?: number;
-}) => {
-  const formatCurrency = (amount: number | null | undefined) => {
-    if (amount === null || amount === undefined) return "N/A";
-    const fixed = parseFloat(amount.toFixed(2));
-    return `₦ ${fixed.toLocaleString()}`;
-  };
-  const selectedDuration = form.watch("installmentDuration");
-  const selectedFrequency = form.watch("installmentFrequency");
-
-  return (
-    <div className="space-y-4 p-4 ring rounded-box fade">
-      <div>
-        <p className="text-sm font-medium text-gray-700 mb-2">
-          Payment Frequency
-        </p>
-        <div className="flex gap-3">
-          {(["WEEKLY", "MONTHLY"] as const).map((freq) => (
-            <label
-              key={freq}
-              className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
-                selectedFrequency === freq
-                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
-                  : "border-gray-200 text-gray-600 hover:border-gray-300"
-              }`}
-            >
-              <input
-                type="radio"
-                className="hidden"
-                value={freq}
-                {...form.register("installmentFrequency")}
-              />
-              {freq.charAt(0) + freq.slice(1).toLowerCase()}
-            </label>
-          ))}
-        </div>
-      </div>
-      <div>
-        <p className="text-sm font-medium text-gray-700 mb-2">
-          Installment Duration
-        </p>
-        <div className="flex gap-3">
-          {([3, 6, 12] as const).map((dur) => (
-            <label
-              key={dur}
-              className={`flex-1 flex items-center justify-center p-3 rounded-lg border cursor-pointer text-sm font-medium transition-colors ${
-                Number(selectedDuration) === dur
-                  ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
-                  : "border-gray-200 text-gray-600 hover:border-gray-300"
-              }`}
-            >
-              <input
-                type="radio"
-                className="hidden"
-                value={dur}
-                {...form.register("installmentDuration", {
-                  valueAsNumber: true,
-                })}
-              />
-              {dur}
-              {selectedFrequency === "WEEKLY" ? "w" : "m"}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex-1 space-y-4">
-        <SimpleInput
-          {...form.register("amount", {
-            valueAsNumber: true,
-            min: {
-              value: minimumInvestmentAmount,
-              message: `Minimum first payment is ${formatCurrency(minimumInvestmentAmount)}`,
-            },
-          })}
-          label={
-            firstPaymentPercentage
-              ? `First Payment (min. ${firstPaymentPercentage}%)`
-              : "Installment Amount"
-          }
-          type="number"
-          placeholder={formatCurrency(minimumInvestmentAmount)}
-          className="w-full"
-        />
-
-        {form.formState.errors.amount && (
-          <p className="text-red-500 text-sm mt-1">
-            {form.formState.errors.amount.message as string}
-          </p>
-        )}
-      </div>
-
-      <p className="text-gray-600/60 text-sm">
-        <span className="font-semibold text-gray-900/60">
-          The balance payment can be made anytime without waiting for
-          installment date
-        </span>
-      </p>
-    </div>
-  );
-};
