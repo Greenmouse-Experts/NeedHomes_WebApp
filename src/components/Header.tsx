@@ -183,7 +183,7 @@ export default function Header() {
   };
 
   return (
-    <ThemeProvider className="bg-black h-24 flex items-center">
+    <ThemeProvider className="bg-black h-24 flex items-center sticky top-0 z-50">
       <nav className="flex items-center container mx-auto justify-between px-4 bg-black">
         <Link
           to="/"
@@ -234,7 +234,7 @@ export default function Header() {
                 {activeDropdown === link.name && (
                   <div
                     ref={dropdownRef}
-                    className="absolute top-full left-0 mt-1 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300"
+                    className="absolute top-full left-0 mt-1 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300 z-[100]"
                     style={{
                       boxShadow:
                         "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",

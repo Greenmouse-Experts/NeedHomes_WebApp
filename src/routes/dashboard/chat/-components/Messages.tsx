@@ -55,6 +55,15 @@ interface Message {
   sender: Sender;
 }
 
+interface ConversationUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  companyName: string | null;
+  email: string;
+  profilePicture: string | null;
+}
+
 interface Conversation {
   id: string;
   userId: string;
@@ -64,6 +73,7 @@ interface Conversation {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  user: ConversationUser;
   messages: Message[];
 }
 
@@ -118,6 +128,14 @@ export default function Messages({
     <QueryCompLayout query={query}>
       {(data) => {
         const messages = data.data.messages;
+        const convoUser = data.data.user;
+        const displayName = convoUser?.companyName
+          ? convoUser.companyName
+          : `${convoUser?.firstName ?? ""} ${convoUser?.lastName ?? ""}`.trim();
+        const initials = convoUser?.companyName
+          ? convoUser.companyName[0]
+          : `${convoUser?.firstName?.[0] ?? ""}${convoUser?.lastName?.[0] ?? ""}`;
+
         return (
           <>
             {groupByDate(messages).map((group) => (
@@ -131,7 +149,9 @@ export default function Messages({
 
                 {group.messages.map((message) => {
                   const isAdmin =
-                    message.isSystem || message.sender.firstName === "Admin";
+                    message.isSystem ||
+                    (message.sender && message.sender.firstName === "Admin") ||
+                    (message.senderId === data.data.adminId);
                   return (
                     <div
                       key={message.id}
@@ -141,21 +161,11 @@ export default function Messages({
                         {isAdmin ? (
                           <span className="text-sm">AD</span>
                         ) : (
-                          <span className="text-sm">
-                            {message.sender?.firstName?.[0] || "?"}
-                            {message.sender?.lastName?.[0] || ""}
-                          </span>
+                          <span className="text-sm">{initials || "?"}</span>
                         )}
                       </div>
                       <div className="chat-header">
-                        {isAdmin ? (
-                          <>Admin</>
-                        ) : (
-                          <>
-                            {message.sender?.firstName}{" "}
-                            {message.sender?.lastName}
-                          </>
-                        )}
+                        {isAdmin ? <>Admin</> : <>{displayName}</>}
                         <time className="text-xs opacity-50 ml-2">
                           {new Date(message.createdAt).toLocaleTimeString()}
                         </time>
