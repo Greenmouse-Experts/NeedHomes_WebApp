@@ -14,6 +14,7 @@ import {
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { Controller, useForm } from "react-hook-form";
+import QueryCompLayout from "@/components/layout/QueryCompLayout";
 
 type View = "status" | "setup" | "reset-verify" | "reset-pin";
 
@@ -70,7 +71,7 @@ export default function WalletPin() {
     },
   });
 
-  const questionsQuery = useQuery<ApiResponse<SecurityQuestion[]>>({
+  const questionsQuery = useQuery<SecurityQuestion[]>({
     queryKey: ["withdrawal-pin-questions"],
     queryFn: async () => {
       const res = await apiClient.get("/withdrawal-pin/questions");
@@ -81,7 +82,7 @@ export default function WalletPin() {
 
   const status = statusQuery.data?.data;
   const countdown = useCountdown(status?.lockedUntil);
-  const questions = questionsQuery.data?.data ?? [];
+  const questions = questionsQuery.data ?? [];
 
   const pinForm = useForm({ defaultValues: { pin: "" } });
   const setupForm = useForm({
@@ -320,28 +321,50 @@ export default function WalletPin() {
           })}
           className="space-y-4"
         >
-          <Controller
-            name="securityQuestion"
-            control={setupForm.control}
-            rules={{ required: "Please select a question" }}
-            render={({ field, fieldState }) => (
+          <QueryCompLayout
+            query={questionsQuery}
+            loadingText="Loading questions..."
+            customLoading={
+              <div className="flex items-center gap-2 text-sm text-gray-400 py-2">
+                <span className="loading loading-spinner loading-xs" />
+                Loading questions...
+              </div>
+            }
+          >
+            {(data) => (
               <div className="space-y-1">
-                <LocalSelect {...field} label="Security Question">
+                {/*<select>
                   <option value="">Select a question</option>
-                  {questions.map((q) => (
+                  {data.map((q) => (
+                    <option key={q.id} value={q.question}>
+                      {q.question}
+                    </option>
+                  ))}
+                </select>*/}
+                <LocalSelect
+                  {...setupForm.register("securityQuestion", {
+                    required: "Please select a question",
+                  })}
+                  label="Security Question"
+                >
+                  <option value="">Select a question</option>
+                  {data.map((q) => (
                     <option key={q.id} value={q.question}>
                       {q.question}
                     </option>
                   ))}
                 </LocalSelect>
-                {fieldState.error && (
+                {setupForm.formState.errors.securityQuestion && (
                   <p className="text-error text-xs">
-                    {fieldState.error.message}
+                    {
+                      setupForm.formState.errors.securityQuestion
+                        .message as string
+                    }
                   </p>
                 )}
               </div>
             )}
-          />
+          </QueryCompLayout>
           <Controller
             name="securityAnswer"
             control={setupForm.control}

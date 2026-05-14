@@ -45,7 +45,9 @@ export default function InvNotifications() {
   });
 
   const unread = countQuery.data?.data?.unreadCount ?? 0;
-  const latest = (listQuery.data?.data?.data ?? []).slice(0, 2);
+  const latest = (listQuery.data?.data?.data ?? [])
+    .filter((n) => !n.isRead)
+    .slice(0, 5);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -84,7 +86,7 @@ export default function InvNotifications() {
 
           <div className="divide-y divide-gray-50">
             {latest.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-6">No notifications</p>
+              <p className="text-sm text-gray-400 text-center py-6">No new notifications</p>
             ) : (
               latest.map((n) => (
                 <div
