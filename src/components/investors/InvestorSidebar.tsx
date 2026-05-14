@@ -15,8 +15,14 @@ import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { NairaIcon } from "../NairaIcon";
 import { useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
-import { useEffect, useRef, useState } from "react";
-import { io, type Socket } from "socket.io-client";
+import { useEffect } from "react";
+import { useAtom } from "jotai/react";
+import {
+  connectUserChatSocket,
+  disconnectUserChatSocket,
+  clearUserNewChatCount,
+  userNewChatCountAtom,
+} from "@/store/userChatSocket";
 
 const RenderChat = (props: {
   link: any;
@@ -24,32 +30,10 @@ const RenderChat = (props: {
   activePage?: string;
   handleLinkClick: () => void;
 }) => {
-  const [auth] = useAuth();
-  const [hasUnread, setHasUnread] = useState(false);
-  const socketRef = useRef<Socket | null>(null);
+  const [newChatCount] = useAtom(userNewChatCountAtom);
 
   useEffect(() => {
-    if (!auth?.accessToken) return;
-    const socket = io(
-      import.meta.env.VITE_BACKEND_URL ||
-        "https://needhomes-backend-staging.onrender.com",
-      {
-        auth: { token: auth.accessToken },
-        extraHeaders: { Authorization: `Bearer ${auth.accessToken}` },
-        transports: ["websocket", "polling"],
-        reconnection: true,
-      },
-    );
-    socketRef.current = socket;
-    socket.on("chat:newMessage", () => setHasUnread(true));
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
-  }, [auth?.accessToken]);
-
-  useEffect(() => {
-    if (props.activePage === "chat") setHasUnread(false);
+    if (props.activePage === "chat") clearUserNewChatCount();
   }, [props.activePage]);
 
   const { link, isDisabled, activePage, handleLinkClick } = props;
@@ -61,7 +45,7 @@ const RenderChat = (props: {
         isDisabled
           ? (e) => e.preventDefault()
           : () => {
-              setHasUnread(false);
+              clearUserNewChatCount();
               handleLinkClick();
             }
       }
@@ -78,7 +62,7 @@ const RenderChat = (props: {
     >
       {link.icon}
       <span>{link.label}</span>
-      {hasUnread && (
+      {newChatCount > 0 && (
         <span className="ml-auto w-2 h-2 rounded-full bg-red-500 shrink-0" />
       )}
     </Link>
@@ -175,6 +159,14 @@ interface InvestorSidebarProps {
 
 export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
   const [authRecord] = useAuth();
+
+  useEffect(() => {
+    const token = authRecord?.accessToken;
+    const userId = authRecord?.user?.id;
+    if (!token || !userId) return;
+    connectUserChatSocket(token, userId);
+    return () => disconnectUserChatSocket();
+  }, [authRecord?.accessToken]);
 
   const handleLinkClick = () => {
     const close_div = document.getElementById(
