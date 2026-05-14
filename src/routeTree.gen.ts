@@ -41,6 +41,7 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as BlogsRouteRouteImport } from './routes/blogs/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TermsIndexRouteImport } from './routes/terms/index'
+import { Route as ResetWithdrawalPinIndexRouteImport } from './routes/reset-withdrawal-pin/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
 import { Route as PropertyIndexRouteImport } from './routes/property/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties/index'
@@ -50,6 +51,7 @@ import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-passwor
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as CoporateIndexRouteImport } from './routes/coporate/index'
 import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
+import { Route as WithdrawalPinVerifyAnswerRouteImport } from './routes/withdrawal-pin/verify-answer'
 import { Route as TermsTermsIdRouteImport } from './routes/terms/$termsId'
 import { Route as PropertiesPromotionClickRouteImport } from './routes/properties/promotion-click'
 import { Route as PropertiesPropertyIdRouteImport } from './routes/properties/$propertyId'
@@ -346,6 +348,11 @@ const TermsIndexRoute = TermsIndexRouteImport.update({
   path: '/terms/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetWithdrawalPinIndexRoute = ResetWithdrawalPinIndexRouteImport.update({
+  id: '/reset-withdrawal-pin/',
+  path: '/reset-withdrawal-pin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
   id: '/recover-password/',
   path: '/recover-password/',
@@ -391,6 +398,12 @@ const BlogsIndexRoute = BlogsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BlogsRouteRoute,
 } as any)
+const WithdrawalPinVerifyAnswerRoute =
+  WithdrawalPinVerifyAnswerRouteImport.update({
+    id: '/withdrawal-pin/verify-answer',
+    path: '/withdrawal-pin/verify-answer',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const TermsTermsIdRoute = TermsTermsIdRouteImport.update({
   id: '/terms/$termsId',
   path: '/terms/$termsId',
@@ -1218,6 +1231,7 @@ export interface FileRoutesByFullPath {
   '/properties/$propertyId': typeof PropertiesPropertyIdRouteWithChildren
   '/properties/promotion-click': typeof PropertiesPromotionClickRoute
   '/terms/$termsId': typeof TermsTermsIdRoute
+  '/withdrawal-pin/verify-answer': typeof WithdrawalPinVerifyAnswerRoute
   '/blogs/': typeof BlogsIndexRoute
   '/coporate/': typeof CoporateIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -1227,6 +1241,7 @@ export interface FileRoutesByFullPath {
   '/properties/': typeof PropertiesIndexRoute
   '/property/': typeof PropertyIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
+  '/reset-withdrawal-pin/': typeof ResetWithdrawalPinIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
@@ -1374,6 +1389,7 @@ export interface FileRoutesByTo {
   '/partners/transactions': typeof PartnersTransactionsRoute
   '/properties/promotion-click': typeof PropertiesPromotionClickRoute
   '/terms/$termsId': typeof TermsTermsIdRoute
+  '/withdrawal-pin/verify-answer': typeof WithdrawalPinVerifyAnswerRoute
   '/blogs': typeof BlogsIndexRoute
   '/coporate': typeof CoporateIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -1383,6 +1399,7 @@ export interface FileRoutesByTo {
   '/properties': typeof PropertiesIndexRoute
   '/property': typeof PropertyIndexRoute
   '/recover-password': typeof RecoverPasswordIndexRoute
+  '/reset-withdrawal-pin': typeof ResetWithdrawalPinIndexRoute
   '/terms': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/faq/$faqId': typeof DashboardFaqFaqIdRoute
@@ -1548,6 +1565,7 @@ export interface FileRoutesById {
   '/properties/$propertyId': typeof PropertiesPropertyIdRouteWithChildren
   '/properties/promotion-click': typeof PropertiesPromotionClickRoute
   '/terms/$termsId': typeof TermsTermsIdRoute
+  '/withdrawal-pin/verify-answer': typeof WithdrawalPinVerifyAnswerRoute
   '/blogs/': typeof BlogsIndexRoute
   '/coporate/': typeof CoporateIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -1557,6 +1575,7 @@ export interface FileRoutesById {
   '/properties/': typeof PropertiesIndexRoute
   '/property/': typeof PropertyIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
+  '/reset-withdrawal-pin/': typeof ResetWithdrawalPinIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
@@ -1728,6 +1747,7 @@ export interface FileRouteTypes {
     | '/properties/$propertyId'
     | '/properties/promotion-click'
     | '/terms/$termsId'
+    | '/withdrawal-pin/verify-answer'
     | '/blogs/'
     | '/coporate/'
     | '/dashboard/'
@@ -1737,6 +1757,7 @@ export interface FileRouteTypes {
     | '/properties/'
     | '/property/'
     | '/recover-password/'
+    | '/reset-withdrawal-pin/'
     | '/terms/'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
@@ -1884,6 +1905,7 @@ export interface FileRouteTypes {
     | '/partners/transactions'
     | '/properties/promotion-click'
     | '/terms/$termsId'
+    | '/withdrawal-pin/verify-answer'
     | '/blogs'
     | '/coporate'
     | '/dashboard'
@@ -1893,6 +1915,7 @@ export interface FileRouteTypes {
     | '/properties'
     | '/property'
     | '/recover-password'
+    | '/reset-withdrawal-pin'
     | '/terms'
     | '/dashboard/properties/edit'
     | '/dashboard/faq/$faqId'
@@ -2057,6 +2080,7 @@ export interface FileRouteTypes {
     | '/properties/$propertyId'
     | '/properties/promotion-click'
     | '/terms/$termsId'
+    | '/withdrawal-pin/verify-answer'
     | '/blogs/'
     | '/coporate/'
     | '/dashboard/'
@@ -2066,6 +2090,7 @@ export interface FileRouteTypes {
     | '/properties/'
     | '/property/'
     | '/recover-password/'
+    | '/reset-withdrawal-pin/'
     | '/terms/'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
@@ -2207,11 +2232,13 @@ export interface RootRouteChildren {
   PropertiesPropertyIdRoute: typeof PropertiesPropertyIdRouteWithChildren
   PropertiesPromotionClickRoute: typeof PropertiesPromotionClickRoute
   TermsTermsIdRoute: typeof TermsTermsIdRoute
+  WithdrawalPinVerifyAnswerRoute: typeof WithdrawalPinVerifyAnswerRoute
   CoporateIndexRoute: typeof CoporateIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
   PropertyIndexRoute: typeof PropertyIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
+  ResetWithdrawalPinIndexRoute: typeof ResetWithdrawalPinIndexRoute
   TermsIndexRoute: typeof TermsIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
   PartnerRecoverForgotPasswordIndexRoute: typeof PartnerRecoverForgotPasswordIndexRoute
@@ -2444,6 +2471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-withdrawal-pin/': {
+      id: '/reset-withdrawal-pin/'
+      path: '/reset-withdrawal-pin'
+      fullPath: '/reset-withdrawal-pin/'
+      preLoaderRoute: typeof ResetWithdrawalPinIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recover-password/': {
       id: '/recover-password/'
       path: '/recover-password'
@@ -2506,6 +2540,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/blogs/'
       preLoaderRoute: typeof BlogsIndexRouteImport
       parentRoute: typeof BlogsRouteRoute
+    }
+    '/withdrawal-pin/verify-answer': {
+      id: '/withdrawal-pin/verify-answer'
+      path: '/withdrawal-pin/verify-answer'
+      fullPath: '/withdrawal-pin/verify-answer'
+      preLoaderRoute: typeof WithdrawalPinVerifyAnswerRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/terms/$termsId': {
       id: '/terms/$termsId'
@@ -4136,11 +4177,13 @@ const rootRouteChildren: RootRouteChildren = {
   PropertiesPropertyIdRoute: PropertiesPropertyIdRouteWithChildren,
   PropertiesPromotionClickRoute: PropertiesPromotionClickRoute,
   TermsTermsIdRoute: TermsTermsIdRoute,
+  WithdrawalPinVerifyAnswerRoute: WithdrawalPinVerifyAnswerRoute,
   CoporateIndexRoute: CoporateIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
   PropertyIndexRoute: PropertyIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
+  ResetWithdrawalPinIndexRoute: ResetWithdrawalPinIndexRoute,
   TermsIndexRoute: TermsIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,
   PartnerRecoverForgotPasswordIndexRoute:
