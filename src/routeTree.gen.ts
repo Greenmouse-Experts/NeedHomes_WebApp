@@ -41,7 +41,6 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as BlogsRouteRouteImport } from './routes/blogs/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TermsIndexRouteImport } from './routes/terms/index'
-import { Route as ResetWithdrawalPinIndexRouteImport } from './routes/reset-withdrawal-pin/index'
 import { Route as RecoverPasswordIndexRouteImport } from './routes/recover-password/index'
 import { Route as PropertyIndexRouteImport } from './routes/property/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties/index'
@@ -346,11 +345,6 @@ const IndexRoute = IndexRouteImport.update({
 const TermsIndexRoute = TermsIndexRouteImport.update({
   id: '/terms/',
   path: '/terms/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetWithdrawalPinIndexRoute = ResetWithdrawalPinIndexRouteImport.update({
-  id: '/reset-withdrawal-pin/',
-  path: '/reset-withdrawal-pin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
@@ -1241,7 +1235,6 @@ export interface FileRoutesByFullPath {
   '/properties/': typeof PropertiesIndexRoute
   '/property/': typeof PropertyIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
-  '/reset-withdrawal-pin/': typeof ResetWithdrawalPinIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
@@ -1399,7 +1392,6 @@ export interface FileRoutesByTo {
   '/properties': typeof PropertiesIndexRoute
   '/property': typeof PropertyIndexRoute
   '/recover-password': typeof RecoverPasswordIndexRoute
-  '/reset-withdrawal-pin': typeof ResetWithdrawalPinIndexRoute
   '/terms': typeof TermsIndexRoute
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
   '/dashboard/faq/$faqId': typeof DashboardFaqFaqIdRoute
@@ -1575,7 +1567,6 @@ export interface FileRoutesById {
   '/properties/': typeof PropertiesIndexRoute
   '/property/': typeof PropertyIndexRoute
   '/recover-password/': typeof RecoverPasswordIndexRoute
-  '/reset-withdrawal-pin/': typeof ResetWithdrawalPinIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/dashboard/partners/$partnerId': typeof DashboardPartnersPartnerIdRouteRouteWithChildren
   '/dashboard/properties/edit': typeof DashboardPropertiesEditRouteRouteWithChildren
@@ -1757,7 +1748,6 @@ export interface FileRouteTypes {
     | '/properties/'
     | '/property/'
     | '/recover-password/'
-    | '/reset-withdrawal-pin/'
     | '/terms/'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
@@ -1915,7 +1905,6 @@ export interface FileRouteTypes {
     | '/properties'
     | '/property'
     | '/recover-password'
-    | '/reset-withdrawal-pin'
     | '/terms'
     | '/dashboard/properties/edit'
     | '/dashboard/faq/$faqId'
@@ -2090,7 +2079,6 @@ export interface FileRouteTypes {
     | '/properties/'
     | '/property/'
     | '/recover-password/'
-    | '/reset-withdrawal-pin/'
     | '/terms/'
     | '/dashboard/partners/$partnerId'
     | '/dashboard/properties/edit'
@@ -2238,7 +2226,6 @@ export interface RootRouteChildren {
   PropertiesIndexRoute: typeof PropertiesIndexRoute
   PropertyIndexRoute: typeof PropertyIndexRoute
   RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
-  ResetWithdrawalPinIndexRoute: typeof ResetWithdrawalPinIndexRoute
   TermsIndexRoute: typeof TermsIndexRoute
   ForgotPasswordResetIndexRoute: typeof ForgotPasswordResetIndexRoute
   PartnerRecoverForgotPasswordIndexRoute: typeof PartnerRecoverForgotPasswordIndexRoute
@@ -2469,13 +2456,6 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms/'
       preLoaderRoute: typeof TermsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-withdrawal-pin/': {
-      id: '/reset-withdrawal-pin/'
-      path: '/reset-withdrawal-pin'
-      fullPath: '/reset-withdrawal-pin/'
-      preLoaderRoute: typeof ResetWithdrawalPinIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recover-password/': {
@@ -4183,7 +4163,6 @@ const rootRouteChildren: RootRouteChildren = {
   PropertiesIndexRoute: PropertiesIndexRoute,
   PropertyIndexRoute: PropertyIndexRoute,
   RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
-  ResetWithdrawalPinIndexRoute: ResetWithdrawalPinIndexRoute,
   TermsIndexRoute: TermsIndexRoute,
   ForgotPasswordResetIndexRoute: ForgotPasswordResetIndexRoute,
   PartnerRecoverForgotPasswordIndexRoute:
