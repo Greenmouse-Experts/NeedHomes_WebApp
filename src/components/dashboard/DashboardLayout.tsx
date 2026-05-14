@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useAtom } from "jotai/react";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import {
   LayoutDashboard,
@@ -32,6 +33,12 @@ import { show_logout } from "@/store/authStore";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import AdminNotifications from "@/routes/dashboard/-components/AdminNotifications";
+import {
+  connectChatSocket,
+  disconnectChatSocket,
+  newChatCountAtom,
+} from "@/store/chatSocket";
+import { useAuth } from "@/store/authStore";
 
 function AdminUnreadBadge() {
   const { data } = useQuery<ApiResponse<{ unreadCount: number }>>({
@@ -188,6 +195,16 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [auth] = useAuth();
+  const [newChatCount, setNewChatCount] = useAtom(newChatCountAtom);
+
+  useEffect(() => {
+    const token = auth?.accessToken;
+    const userId = (auth as any)?.user?.id;
+    if (!token || !userId) return;
+    connectChatSocket(token, userId);
+    return () => disconnectChatSocket();
+  }, [auth?.accessToken]);
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
   >({
@@ -235,6 +252,11 @@ export function DashboardLayout({
         {Icon && <Icon className="w-4 h-4" />}
         <span>{children}</span>
         {to === "/dashboard/notifications" && <AdminUnreadBadge />}
+        {to === "/dashboard/chat" && newChatCount > 0 && (
+          <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+            {newChatCount > 99 ? "99+" : newChatCount}
+          </span>
+        )}
       </Link>
     );
   };

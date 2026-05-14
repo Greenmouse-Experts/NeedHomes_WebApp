@@ -5,8 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { io, type Socket } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { useAuth } from "@/store/authStore";
+import { clearNewChatCount, getChatSocket, isConnectedAtom } from "@/store/chatSocket";
+import { useAtom } from "jotai/react";
 import { SearchIcon, X } from "lucide-react";
 import AdminConvos from "./-components/AdminConversations";
 import PendingConversations from "./-components/PendingConversations";
@@ -58,7 +60,7 @@ function RouteComponent() {
   const { convoId } = Route.useSearch();
   const [auth] = useAuth();
   const socketRef = useRef<Socket | null>(null);
-  const [isSocketConnected, setIsSocketConnected] = useState(false);
+  const [isSocketConnected] = useAtom(isConnectedAtom);
 
   // Search with debounce
   const [convoSearch, setConvoSearch] = useState("");
@@ -74,35 +76,15 @@ function RouteComponent() {
   // Conversations closed via socket — filter these out of the list
   const [closedConvoIds, setClosedConvoIds] = useState<Set<string>>(new Set());
 
-  // Socket creation — join admin rooms immediately on connect
+  // Point socketRef at the shared socket from the store
   useEffect(() => {
-    if (!auth?.accessToken) return;
-    const socket = io(
-      import.meta.env.VITE_BACKEND_URL ||
-        "https://needhomes-backend-staging.onrender.com",
-      {
-        auth: { token: auth.accessToken },
-        extraHeaders: { Authorization: `Bearer ${auth.accessToken}` },
-        transports: ["websocket", "polling"],
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: 5,
-      },
-    );
-    socketRef.current = socket;
-    socket.on("connect", () => {
-      setIsSocketConnected(true);
-      const userId = (auth as any).user?.id;
-      if (userId) socket.emit("join", { userId });
-      socket.emit("joinRoom", "admin-notifications");
-    });
-    socket.on("disconnect", () => setIsSocketConnected(false));
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-      setIsSocketConnected(false);
-    };
-  }, [auth?.accessToken]);
+    socketRef.current = getChatSocket();
+  }, [isSocketConnected]);
+
+  // Clear the sidebar badge when the admin opens the chat page
+  useEffect(() => {
+    clearNewChatCount();
+  }, []);
 
   // Debounce search
   useEffect(() => {
@@ -256,10 +238,12 @@ function RouteComponent() {
                             key={chat.id}
                             to="/dashboard/chat"
                             search={{ convoId: chat.id }}
-                            className={`flex items-center gap-3 p-4 text-left transition-colors active:bg-gray-100 ${
-                              unreadCount > 0
-                                ? "bg-blue-50 hover:bg-blue-100 border-l-2 border-blue-500"
-                                : "hover:bg-gray-50"
+                            className={`flex items-center gap-3 p-4 text-left transition-colors ${
+                              chat.id === convoId
+                                ? "bg-orange-50 border-l-2 border-orange-500 hover:bg-orange-100"
+                                : unreadCount > 0
+                                  ? "bg-blue-50 hover:bg-blue-100 border-l-2 border-blue-500"
+                                  : "hover:bg-gray-50"
                             }`}
                           >
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
