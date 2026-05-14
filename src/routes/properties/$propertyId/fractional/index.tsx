@@ -107,6 +107,22 @@ function PropertyDetailPage() {
         const availableShares = property.availableShares ?? 0;
         const minimumShares = property.minimumShares || 1;
 
+        const today = new Date();
+        const fmtDate = (d: Date) =>
+          d.toLocaleDateString("en-NG", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+        const startDate = fmtDate(today);
+        const endDate = selectedReturnDays
+          ? fmtDate(
+              new Date(
+                today.getTime() + selectedReturnDays * 24 * 60 * 60 * 1000,
+              ),
+            )
+          : null;
+
         return (
           <>
             <Modal
@@ -209,7 +225,13 @@ function PropertyDetailPage() {
                               onChange={() => form.setValue("selectedReturnDays", tier.days)} />
                             <div>
                               <p className="text-sm font-semibold text-gray-900">{tier.days} days</p>
-                              <p className="text-xs text-gray-500">Holding period: {property.fractionalHoldingPeriodDays ?? "—"} days</p>
+                              {selectedReturnDays === tier.days ? (
+                                <p className="text-xs text-orange-600 font-medium">
+                                  {startDate} → {fmtDate(new Date(today.getTime() + tier.days * 24 * 60 * 60 * 1000))}
+                                </p>
+                              ) : (
+                                <p className="text-xs text-gray-500">Holding period: {property.fractionalHoldingPeriodDays ?? "—"} days</p>
+                              )}
                             </div>
                           </div>
                           <span className="text-sm font-bold text-green-600">{tier.rate}% return</span>
@@ -219,10 +241,15 @@ function PropertyDetailPage() {
                   </div>
                 </div>
 
-                {selectedTier && expectedPayout && (
-                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <span className="text-sm text-green-800 font-medium">Expected payout after {selectedTier.days} days</span>
-                    <span className="text-sm font-bold text-green-700">{formatCurrency(expectedPayout / 100)}</span>
+                {selectedTier && expectedPayout && endDate && (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-green-800 font-medium">Expected payout after {selectedTier.days} days</span>
+                      <span className="text-sm font-bold text-green-700">{formatCurrency(expectedPayout / 100)}</span>
+                    </div>
+                    <p className="text-xs text-green-700">
+                      Start: {startDate} &nbsp;·&nbsp; End: {endDate}
+                    </p>
                   </div>
                 )}
 

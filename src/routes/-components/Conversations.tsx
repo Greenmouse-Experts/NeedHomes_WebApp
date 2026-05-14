@@ -42,6 +42,34 @@ function isImageUrl(content: string): boolean {
   return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(content);
 }
 
+function groupByDate(messages: Message[]) {
+  const groups: { dateKey: string; label: string; messages: Message[] }[] = [];
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  for (const msg of messages) {
+    const d = new Date(msg.createdAt);
+    const dateKey = d.toDateString();
+    const last = groups[groups.length - 1];
+    if (last && last.dateKey === dateKey) {
+      last.messages.push(msg);
+    } else {
+      let label: string;
+      if (dateKey === today.toDateString()) label = "Today";
+      else if (dateKey === yesterday.toDateString()) label = "Yesterday";
+      else
+        label = d.toLocaleDateString("en-NG", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      groups.push({ dateKey, label, messages: [msg] });
+    }
+  }
+  return groups;
+}
+
 function Avatar({
   isSystem,
   sender,
@@ -213,54 +241,65 @@ export default function Conversations({
         </p>
       )}
 
-      {messages.map((message) => {
-        const isOwn = !message.isSystem && message.senderId === userId;
-        const isImg = isImageUrl(message.content);
-
-        return (
-          <div
-            key={message.id}
-            className={`chat ${isOwn ? "chat-end" : "chat-start"}`}
-          >
-            <Avatar
-              isSystem={message.isSystem}
-              sender={message.sender}
-              isOwn={isOwn}
-              currentUserPicture={auth?.user?.profilePicture}
-            />
-            <div className="chat-header">
-              {message.isSystem ? (
-                <>NeedHomes</>
-              ) : (
-                <>
-                  {message.sender?.firstName} {message.sender?.lastName}
-                </>
-              )}
-              <time className="text-xs opacity-50 ml-2">
-                {new Date(message.createdAt).toLocaleTimeString()}
-              </time>
-            </div>
-            <div
-              className={`chat-bubble ${message.isSystem ? "chat-bubble-primary" : isOwn ? "shadow" : "chat-bubble-primary"} ${isImg ? "!p-1 !bg-transparent !shadow-none" : ""}`}
-            >
-              {isImg ? (
-                <a href={message.content} target="_blank" rel="noreferrer">
-                  <img
-                    src={message.content}
-                    alt="shared image"
-                    className="max-w-[240px] max-h-[240px] rounded-lg object-cover cursor-zoom-in"
-                  />
-                </a>
-              ) : (
-                message.content
-              )}
-            </div>
-            <div className="chat-footer opacity-50">
-              {message.isRead ? "Read" : "Sent"}
-            </div>
+      {groupByDate(messages).map((group) => (
+        <div key={group.dateKey} className="flex flex-col gap-2">
+          {/* Sticky floating date label */}
+          <div className="sticky top-0 z-10 flex justify-center py-1 pointer-events-none">
+            <span className="bg-gray-100/90 backdrop-blur-sm text-gray-600 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
+              {group.label}
+            </span>
           </div>
-        );
-      })}
+
+          {group.messages.map((message) => {
+            const isOwn = !message.isSystem && message.senderId === userId;
+            const isImg = isImageUrl(message.content);
+
+            return (
+              <div
+                key={message.id}
+                className={`chat ${isOwn ? "chat-end" : "chat-start"}`}
+              >
+                <Avatar
+                  isSystem={message.isSystem}
+                  sender={message.sender}
+                  isOwn={isOwn}
+                  currentUserPicture={auth?.user?.profilePicture}
+                />
+                <div className="chat-header">
+                  {message.isSystem ? (
+                    <>NeedHomes</>
+                  ) : (
+                    <>
+                      {message.sender?.firstName} {message.sender?.lastName}
+                    </>
+                  )}
+                  <time className="text-xs opacity-50 ml-2">
+                    {new Date(message.createdAt).toLocaleTimeString()}
+                  </time>
+                </div>
+                <div
+                  className={`chat-bubble ${message.isSystem ? "chat-bubble-primary" : isOwn ? "shadow" : "chat-bubble-primary"} ${isImg ? "!p-1 !bg-transparent !shadow-none" : ""}`}
+                >
+                  {isImg ? (
+                    <a href={message.content} target="_blank" rel="noreferrer">
+                      <img
+                        src={message.content}
+                        alt="shared image"
+                        className="max-w-[240px] max-h-[240px] rounded-lg object-cover cursor-zoom-in"
+                      />
+                    </a>
+                  ) : (
+                    message.content
+                  )}
+                </div>
+                <div className="chat-footer opacity-50">
+                  {message.isRead ? "Read" : "Sent"}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
 
       {typingUser && (
         <div className="chat chat-start">

@@ -14,6 +14,34 @@ function isImageUrl(content: string): boolean {
   return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(content);
 }
 
+function groupByDate(messages: Message[]) {
+  const groups: { dateKey: string; label: string; messages: Message[] }[] = [];
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  for (const msg of messages) {
+    const d = new Date(msg.createdAt);
+    const dateKey = d.toDateString();
+    const last = groups[groups.length - 1];
+    if (last && last.dateKey === dateKey) {
+      last.messages.push(msg);
+    } else {
+      let label: string;
+      if (dateKey === today.toDateString()) label = "Today";
+      else if (dateKey === yesterday.toDateString()) label = "Yesterday";
+      else
+        label = d.toLocaleDateString("en-NG", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      groups.push({ dateKey, label, messages: [msg] });
+    }
+  }
+  return groups;
+}
+
 interface Message {
   id: string;
   conversationId: string;
@@ -92,60 +120,71 @@ export default function Messages({
         const messages = data.data.messages;
         return (
           <>
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`chat ${message.isSystem || message.sender.firstName == "Admin" ? "chat-end" : "chat-start"}`}
-              >
-                <div className="chat-image avatar placeholder ring fade rounded-full grid place-items-center p-3 bg-primary text-primary-content">
-                  {/*<div className="bg-neutral-focus text-neutral-content  rounded-full w-10">*/}
-                  {message.isSystem || message.sender.firstName == "Admin" ? (
-                    <>
-                      <span className="text-sm">AD</span>
-                    </>
-                  ) : (
-                    <span className="text-sm">
-                      {message.sender?.firstName?.[0] || "?"}
-                      {message.sender?.lastName?.[0] || ""}
-                    </span>
-                  )}
-                  {/*</div>*/}
+            {groupByDate(messages).map((group) => (
+              <div key={group.dateKey} className="flex flex-col gap-2">
+                {/* Sticky floating date label */}
+                <div className="sticky top-0 z-10 flex justify-center py-1 pointer-events-none">
+                  <span className="bg-gray-100/90 backdrop-blur-sm text-gray-600 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
+                    {group.label}
+                  </span>
                 </div>
-                <div className="chat-header">
-                  {message.isSystem || message.sender.firstName == "Admin" ? (
-                    <>Admin</>
-                  ) : (
-                    <>
-                      {message.sender?.firstName} {message.sender?.lastName}
-                    </>
-                  )}
 
-                  <time className="text-xs opacity-50 ml-2">
-                    {new Date(message.createdAt).toLocaleTimeString()}
-                  </time>
-                </div>
-                <div
-                  className={`chat-bubble ${
-                    message.isSystem || message.sender.firstName == "Admin"
-                      ? "chat-bubble-info"
-                      : ""
-                  } ${isImageUrl(message.content) ? "!p-1 !bg-transparent !shadow-none" : ""}`}
-                >
-                  {isImageUrl(message.content) ? (
-                    <a href={message.content} target="_blank" rel="noreferrer">
-                      <img
-                        src={message.content}
-                        alt="shared image"
-                        className="max-w-[240px] max-h-[240px] rounded-lg object-cover cursor-zoom-in"
-                      />
-                    </a>
-                  ) : (
-                    message.content
-                  )}
-                </div>
-                <div className="chat-footer opacity-50">
-                  {message.isRead ? "Read" : "Unread"}
-                </div>
+                {group.messages.map((message) => {
+                  const isAdmin =
+                    message.isSystem || message.sender.firstName === "Admin";
+                  return (
+                    <div
+                      key={message.id}
+                      className={`chat ${isAdmin ? "chat-end" : "chat-start"}`}
+                    >
+                      <div className="chat-image avatar placeholder ring fade rounded-full grid place-items-center p-3 bg-primary text-primary-content">
+                        {isAdmin ? (
+                          <span className="text-sm">AD</span>
+                        ) : (
+                          <span className="text-sm">
+                            {message.sender?.firstName?.[0] || "?"}
+                            {message.sender?.lastName?.[0] || ""}
+                          </span>
+                        )}
+                      </div>
+                      <div className="chat-header">
+                        {isAdmin ? (
+                          <>Admin</>
+                        ) : (
+                          <>
+                            {message.sender?.firstName}{" "}
+                            {message.sender?.lastName}
+                          </>
+                        )}
+                        <time className="text-xs opacity-50 ml-2">
+                          {new Date(message.createdAt).toLocaleTimeString()}
+                        </time>
+                      </div>
+                      <div
+                        className={`chat-bubble ${isAdmin ? "chat-bubble-info" : ""} ${isImageUrl(message.content) ? "!p-1 !bg-transparent !shadow-none" : ""}`}
+                      >
+                        {isImageUrl(message.content) ? (
+                          <a
+                            href={message.content}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <img
+                              src={message.content}
+                              alt="shared image"
+                              className="max-w-[240px] max-h-[240px] rounded-lg object-cover cursor-zoom-in"
+                            />
+                          </a>
+                        ) : (
+                          message.content
+                        )}
+                      </div>
+                      <div className="chat-footer opacity-50">
+                        {message.isRead ? "Read" : "Unread"}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             ))}
             <div ref={messagesEndRef} />
