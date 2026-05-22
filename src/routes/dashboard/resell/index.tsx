@@ -29,33 +29,30 @@ export const Route = createFileRoute("/dashboard/resell/")({
 
 type ResellStatus = "PENDING" | "APPROVED" | "REJECTED" | "SOLD";
 
-interface ResellListing {
+interface ResellSlot {
   id: string;
-  propertyTitle: string;
-  location: string;
-  basePrice: number;
-  totalPrice: number;
-  isResell: boolean;
-  resellStatus: ResellStatus;
-  published: boolean;
-  resellerId: string;
-  originalInvestmentId: string;
-  additionalFees: { id: string; label: string; amount: number }[];
+  units: number;
+  soldUnits: number;
+  status: ResellStatus;
+  rejectionReason: string | null;
+  createdAt: string;
+  property: {
+    id: string;
+    propertyTitle: string;
+    investmentModel: string;
+    availableUnits?: number;
+  };
   reseller: {
     id: string;
     firstName: string;
     lastName: string;
     email: string;
   };
-  createdAt: string;
-}
-
-function formatNaira(kobo: number) {
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0,
-  }).format(kobo / 100);
+  investment: {
+    id: string;
+    unitsBought: number | null;
+    sharesBought: number | null;
+  };
 }
 
 const statusBadge = (status: ResellStatus) => {
@@ -87,7 +84,7 @@ const statusBadge = (status: ResellStatus) => {
   }
 };
 
-const columns: columnType<ResellListing>[] = [
+const columns: columnType<ResellSlot>[] = [
   {
     key: "reseller",
     label: "Reseller",
@@ -101,29 +98,26 @@ const columns: columnType<ResellListing>[] = [
     ),
   },
   {
-    key: "propertyTitle",
+    key: "property",
     label: "Property",
-    render: (value, item) => (
+    render: (_, item) => (
       <div className="flex flex-col">
-        <span className="font-medium">{value}</span>
-        <span className="text-xs opacity-60">{item.location}</span>
+        <span className="font-medium">{item.property?.propertyTitle}</span>
+        <span className="text-xs opacity-60">{item.property?.investmentModel}</span>
       </div>
     ),
   },
   {
-    key: "basePrice",
-    label: "Asking Price",
-    render: (value) => (
-      <span className="font-semibold">{formatNaira(value)}</span>
+    key: "units",
+    label: "Units",
+    render: (_, item) => (
+      <span className="font-semibold">
+        {item.soldUnits} / {item.units} sold
+      </span>
     ),
   },
   {
-    key: "totalPrice",
-    label: "Total Price",
-    render: (value) => formatNaira(value),
-  },
-  {
-    key: "resellStatus",
+    key: "status",
     label: "Status",
     render: (value) => statusBadge(value),
   },
@@ -146,10 +140,10 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const approveRef = useRef<ModalHandle>(null);
   const rejectRef = useRef<ModalHandle>(null);
-  const [selectedItem, setSelectedItem] = useState<ResellListing | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ResellSlot | null>(null);
   const [rejectReason, setRejectReason] = useState("");
 
-  const query = useQuery<ApiResponseV2<ResellListing[]>>({
+  const query = useQuery<ApiResponseV2<ResellSlot[]>>({
     queryKey: ["resell-admin-requests", props.page, search, status],
     queryFn: async () => {
       const resp = await apiClient.get("/resell/admin/requests", {
@@ -165,11 +159,11 @@ function RouteComponent() {
   });
 
   const approveMutation = useMutation({
-    mutationFn: async (propertyId: string) => {
-      await apiClient.patch(`/resell/admin/${propertyId}/approve`);
+    mutationFn: async (slotId: string) => {
+      await apiClient.patch(`/resell/admin/${slotId}/approve`);
     },
     onSuccess: () => {
-      toast.success("Resell listing approved and published");
+      toast.success("Resell request approved — units added back to the property");
       queryClient.invalidateQueries({ queryKey: ["resell-admin-requests"] });
       approveRef.current?.close();
       setSelectedItem(null);
@@ -178,18 +172,12 @@ function RouteComponent() {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: async ({
-      propertyId,
-      reason,
-    }: {
-      propertyId: string;
-      reason: string;
-    }) => {
+    mutationFn: async ({ slotId, reason }: { slotId: string; reason: string }) => {
       if (!reason.trim()) throw new Error("Rejection reason is required");
-      await apiClient.patch(`/resell/admin/${propertyId}/reject`, { reason });
+      await apiClient.patch(`/resell/admin/${slotId}/reject`, { reason });
     },
     onSuccess: () => {
-      toast.success("Resell listing rejected");
+      toast.success("Resell request rejected");
       queryClient.invalidateQueries({ queryKey: ["resell-admin-requests"] });
       rejectRef.current?.close();
       setSelectedItem(null);
@@ -198,47 +186,47 @@ function RouteComponent() {
     onError: (error) => toast.error(extract_message(error)),
   });
 
-  const openApprove = (item: ResellListing) => {
+  const openApprove = (item: ResellSlot) => {
     setSelectedItem(item);
     approveRef.current?.open();
   };
 
-  const openReject = (item: ResellListing) => {
+  const openReject = (item: ResellSlot) => {
     setSelectedItem(item);
     rejectRef.current?.open();
   };
 
-  const actions: Actions<ResellListing>[] = [
+  const actions: Actions<ResellSlot>[] = [
     {
-      key: "view",
+      key: "view-investment",
       label: "View Investment",
       action: (item, nav) =>
         nav({
           to: "/dashboard/properties/investments/$id",
-          params: { id: item.originalInvestmentId },
+          params: { id: item.investment.id },
         }),
     },
     {
-      key: "view",
+      key: "view-property",
       label: "View Property",
       action: (item, nav) =>
         nav({
           //@ts-ignore
           to: "/dashboard/properties/$id",
           //@ts-ignore
-          params: { id: item.id },
+          params: { id: item.property.id },
         }),
     },
     {
       key: "approve",
       label: "Approve",
-      disabled: (item) => item.resellStatus !== "PENDING",
+      disabled: (item) => item.status !== "PENDING",
       action: (item) => openApprove(item),
     },
     {
       key: "reject",
       label: "Reject",
-      disabled: (item) => item.resellStatus !== "PENDING",
+      disabled: (item) => item.status !== "PENDING",
       action: (item) => openReject(item),
     },
   ];
@@ -248,7 +236,7 @@ function RouteComponent() {
       {/* Approve Modal */}
       <Modal
         ref={approveRef}
-        title="Approve Resell Listing"
+        title="Approve Resell Request"
         actions={
           <div className="flex gap-2">
             <Button
@@ -269,19 +257,49 @@ function RouteComponent() {
           </div>
         }
       >
-        <div role="alert" className="alert alert-info text-sm">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <p>
-            <strong>{selectedItem?.propertyTitle}</strong> will be published and
-            visible to investors. The reseller will be notified.
-          </p>
+        <div className="space-y-3">
+          <div role="alert" className="alert alert-info text-sm">
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <p>
+              Approving will add{" "}
+              <strong>{selectedItem?.units} unit(s)</strong> back to{" "}
+              <strong>{selectedItem?.property?.propertyTitle}</strong>. The
+              reseller will be notified.
+            </p>
+          </div>
+          {selectedItem && (
+            <div className="grid grid-cols-2 gap-2 text-sm bg-base-200 rounded-box p-3">
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Reseller</p>
+                <p className="font-medium">
+                  {selectedItem.reseller.firstName} {selectedItem.reseller.lastName}
+                </p>
+              </div>
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Units</p>
+                <p className="font-medium">{selectedItem.units}</p>
+              </div>
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Model</p>
+                <p className="font-medium">{selectedItem.property.investmentModel}</p>
+              </div>
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  Units Bought
+                </p>
+                <p className="font-medium">
+                  {selectedItem.investment.sharesBought ?? selectedItem.investment.unitsBought ?? "—"}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
 
       {/* Reject Modal */}
       <Modal
         ref={rejectRef}
-        title="Reject Resell Listing"
+        title="Reject Resell Request"
         actions={
           <div className="flex gap-2">
             <Button
@@ -296,7 +314,7 @@ function RouteComponent() {
               onClick={() =>
                 selectedItem &&
                 rejectMutation.mutate({
-                  propertyId: selectedItem.id,
+                  slotId: selectedItem.id,
                   reason: rejectReason,
                 })
               }
@@ -310,8 +328,8 @@ function RouteComponent() {
           <div role="alert" className="alert alert-warning text-sm">
             <XCircle className="w-4 h-4 shrink-0" />
             <p>
-              The reseller will be notified with the reason below. The listing
-              will remain unpublished.
+              The reseller will be notified with the reason below. Property
+              availability will not be changed.
             </p>
           </div>
           <fieldset className="fieldset">
@@ -338,7 +356,7 @@ function RouteComponent() {
             <div>
               <h1 className="text-xl font-bold">Resell Requests</h1>
               <p className="text-base-content/60 text-sm mt-0.5">
-                Review and approve investor property resell listings.
+                Review and approve investor property resell requests.
               </p>
             </div>
           </div>
