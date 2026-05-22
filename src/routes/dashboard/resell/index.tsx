@@ -165,35 +165,23 @@ function RouteComponent() {
       await apiClient.patch(`/resell/admin/${slotId}/approve`);
     },
     onSuccess: () => {
-      toast.success(
-        "Resell request approved — units added back to the property",
-      );
       queryClient.invalidateQueries({ queryKey: ["resell-admin-requests"] });
       approveRef.current?.close();
       setSelectedItem(null);
     },
-    onError: (error) => toast.error(extract_message(error)),
   });
 
   const rejectMutation = useMutation({
-    mutationFn: async ({
-      slotId,
-      reason,
-    }: {
-      slotId: string;
-      reason: string;
-    }) => {
+    mutationFn: async ({ slotId, reason }: { slotId: string; reason: string }) => {
       if (!reason.trim()) throw new Error("Rejection reason is required");
       await apiClient.patch(`/resell/admin/${slotId}/reject`, { reason });
     },
     onSuccess: () => {
-      toast.success("Resell request rejected");
       queryClient.invalidateQueries({ queryKey: ["resell-admin-requests"] });
       rejectRef.current?.close();
       setSelectedItem(null);
       setRejectReason("");
     },
-    onError: (error) => toast.error(extract_message(error)),
   });
 
   const openApprove = (item: ResellSlot) => {
@@ -258,9 +246,14 @@ function RouteComponent() {
             <Button
               variant="primary"
               isLoading={approveMutation.isPending}
-              onClick={() =>
-                selectedItem && approveMutation.mutate(selectedItem.id)
-              }
+              onClick={() => {
+                if (!selectedItem) return;
+                toast.promise(approveMutation.mutateAsync(selectedItem.id), {
+                  loading: "Approving resell request…",
+                  success: "Resell request approved — units added back to the property",
+                  error: (err) => extract_message(err),
+                });
+              }}
             >
               Confirm Approval
             </Button>
@@ -331,13 +324,17 @@ function RouteComponent() {
             <Button
               variant="danger"
               isLoading={rejectMutation.isPending}
-              onClick={() =>
-                selectedItem &&
-                rejectMutation.mutate({
-                  slotId: selectedItem.id,
-                  reason: rejectReason,
-                })
-              }
+              onClick={() => {
+                if (!selectedItem) return;
+                toast.promise(
+                  rejectMutation.mutateAsync({ slotId: selectedItem.id, reason: rejectReason }),
+                  {
+                    loading: "Rejecting resell request…",
+                    success: "Resell request rejected",
+                    error: (err) => extract_message(err),
+                  },
+                );
+              }}
             >
               Confirm Rejection
             </Button>
