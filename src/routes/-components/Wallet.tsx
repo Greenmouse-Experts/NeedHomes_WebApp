@@ -10,10 +10,7 @@ import WalletSkeleton from "./WalletSkeleton";
 import { useModal } from "@/store/modals";
 import PageLoader from "@/components/layout/PageLoader";
 import { extract_message } from "@/helpers/apihelpers";
-import { PaystackButton } from "react-paystack";
 import PaystackPop from "@paystack/inline-js";
-
-import { usePaystackPayment } from "react-paystack";
 import { useNavigate } from "@tanstack/react-router";
 import { NairaIcon } from "@/components/NairaIcon";
 import PriceInput, { parsePriceInput } from "@/components/inputs/PriceInput";
@@ -54,24 +51,6 @@ const paystackInstance = new PaystackPop();
 
 export default function UserWallet() {
   const nav = useNavigate();
-  const onSuccess = (reference) => {
-    toast.success("Payment successful");
-    // Implementation for whatever you want to do with reference and after success call.
-    console.log(reference);
-  };
-
-  // you can call this function anything
-  const onClose = () => {
-    console.log("closed");
-  };
-  const config = {
-    reference: new Date().getTime().toString(),
-    email: "user@example.com",
-    amount: 20000, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
-    publicKey: "pk_test_77297b93cbc01f078d572fed5e2d58f4f7b518d7",
-  };
-  const payStack_key = import.meta.env.VITE_PAYSTACK_KEY;
-  const initializePayment = usePaystackPayment(config as any);
   const [auth] = useAuth();
   const queryClient = useQueryClient();
   const userID = auth?.user?.id;
@@ -122,38 +101,6 @@ export default function UserWallet() {
     retry: 1,
   });
 
-  // const depositMutation = useMutation({
-  //   mutationFn: async (amount: number) => {
-  //     const resp = await apiClient.post("/wallet/deposit/initialize", {
-  //       amount: amount * 100,
-  //     });
-  //     return resp.data;
-  //   },
-  //   onSuccess: async (
-  //     data: ApiResponse<{
-  //       authorization_url?: string;
-  //       access_code: string;
-  //       reference: string;
-  //     }>,
-  //   ) => {
-  //     if (data.data.authorization_url) {
-  //       //@paystack checkout
-  //       //
-  //       closeModal();
-  //       const ref = data.data.reference;
-
-  //       const new_config = { ...config, reference: ref };
-  //       queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
-  //       toast.success("Deposit initialized");
-  //       setAmount("");
-  //       window.open(data.data.authorization_url, "_blank", "noreferrer");
-  //     }
-  //   },
-  //   onError: (err: any) => {
-  //     toast.error(err?.response?.data?.message || "Deposit failed");
-  //   },
-  // });
-
   const depositMutation = useMutation({
     mutationFn: async (amount: number) => {
       const resp = await apiClient.post("/wallet/deposit/initialize", {
@@ -163,18 +110,11 @@ export default function UserWallet() {
     },
 
     onSuccess: async (data) => {
-      const { access_code, reference } = data.data;
-      console.log("passing");
-      const config = {
-        reference,
-        email: auth?.user?.email,
-        publicKey: payStack_key,
-        access_code,
-      };
+      const { access_code } = data.data;
       closeModal();
       paystackInstance.resumeTransaction(access_code, {
-        onSuccess(tranx) {
-          query.refetch();
+        onSuccess() {
+          queryClient.invalidateQueries({ queryKey: ["wallet", userID] });
         },
       });
     },

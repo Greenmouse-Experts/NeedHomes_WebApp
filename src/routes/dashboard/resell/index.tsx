@@ -103,7 +103,9 @@ const columns: columnType<ResellSlot>[] = [
     render: (_, item) => (
       <div className="flex flex-col">
         <span className="font-medium">{item.property?.propertyTitle}</span>
-        <span className="text-xs opacity-60">{item.property?.investmentModel}</span>
+        <span className="text-xs opacity-60">
+          {item.property?.investmentModel}
+        </span>
       </div>
     ),
   },
@@ -163,7 +165,9 @@ function RouteComponent() {
       await apiClient.patch(`/resell/admin/${slotId}/approve`);
     },
     onSuccess: () => {
-      toast.success("Resell request approved — units added back to the property");
+      toast.success(
+        "Resell request approved — units added back to the property",
+      );
       queryClient.invalidateQueries({ queryKey: ["resell-admin-requests"] });
       approveRef.current?.close();
       setSelectedItem(null);
@@ -172,7 +176,13 @@ function RouteComponent() {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: async ({ slotId, reason }: { slotId: string; reason: string }) => {
+    mutationFn: async ({
+      slotId,
+      reason,
+    }: {
+      slotId: string;
+      reason: string;
+    }) => {
       if (!reason.trim()) throw new Error("Rejection reason is required");
       await apiClient.patch(`/resell/admin/${slotId}/reject`, { reason });
     },
@@ -261,34 +271,44 @@ function RouteComponent() {
           <div role="alert" className="alert alert-info text-sm">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <p>
-              Approving will add{" "}
-              <strong>{selectedItem?.units} unit(s)</strong> back to{" "}
-              <strong>{selectedItem?.property?.propertyTitle}</strong>. The
-              reseller will be notified.
+              Approving will add <strong>{selectedItem?.units} unit(s)</strong>{" "}
+              back to <strong>{selectedItem?.property?.propertyTitle}</strong>.
+              The reseller will be notified.
             </p>
           </div>
           {selectedItem && (
             <div className="grid grid-cols-2 gap-2 text-sm bg-base-200 rounded-box p-3">
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">Reseller</p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  Reseller
+                </p>
                 <p className="font-medium">
-                  {selectedItem.reseller.firstName} {selectedItem.reseller.lastName}
+                  {selectedItem.reseller.firstName}{" "}
+                  {selectedItem.reseller.lastName}
                 </p>
               </div>
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">Units</p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  Units
+                </p>
                 <p className="font-medium">{selectedItem.units}</p>
               </div>
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">Model</p>
-                <p className="font-medium">{selectedItem.property.investmentModel}</p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">
+                  Model
+                </p>
+                <p className="font-medium">
+                  {selectedItem.property.investmentModel}
+                </p>
               </div>
               <div>
                 <p className="text-base-content/50 text-xs uppercase tracking-wide">
                   Units Bought
                 </p>
                 <p className="font-medium">
-                  {selectedItem.investment.sharesBought ?? selectedItem.investment.unitsBought ?? "—"}
+                  {selectedItem.investment.sharesBought ??
+                    selectedItem.investment.unitsBought ??
+                    "—"}
                 </p>
               </div>
             </div>
