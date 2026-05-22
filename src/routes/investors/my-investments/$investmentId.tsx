@@ -38,7 +38,7 @@ interface Investment {
   amountPaid: number;
   unitsBought: number;
   sharesBought: number | null;
-  paymentOption: "OUTRIGHT" | "INSTALLMENT";
+  paymentOption: "OUTRIGHT" | "INSTALLMENT" | "FULL_PAYMENT";
   status: "ACTIVE" | "PENDING" | "COMPLETED";
   createdAt: string;
   updatedAt: string;

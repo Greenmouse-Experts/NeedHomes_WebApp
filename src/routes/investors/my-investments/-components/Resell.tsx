@@ -36,6 +36,12 @@ interface Investment {
   amountPaid: number;
   propertyId: string;
   currentValue: number;
+  sharesBought?: number | null;
+  unitsBought?: number | null;
+  property?: {
+    pricePerShare?: number | null;
+    pricePerPlot?: number | null;
+  } | null;
 }
 
 type ResellStatus = "PENDING" | "APPROVED" | "REJECTED" | "SOLD";
@@ -111,9 +117,16 @@ export default function Resell({ investment }: { investment: Investment }) {
 
   const priceHistory = priceHistoryQuery.data?.data;
   const hasHistory = priceHistory && priceHistory.history?.length > 0;
-  const fallbackNaira = investment.currentValue
-    ? investment.currentValue / 100
-    : investment.amountPaid / 100;
+
+  const amountBought = (() => {
+    if (investment.sharesBought != null && investment.property?.pricePerShare != null)
+      return investment.sharesBought * investment.property.pricePerShare;
+    if (investment.unitsBought != null && investment.property?.pricePerPlot != null)
+      return investment.unitsBought * investment.property.pricePerPlot;
+    return investment.amountPaid;
+  })();
+
+  const fallbackNaira = amountBought / 100;
   const minNaira = hasHistory ? priceHistory.formerPrice / 100 : fallbackNaira;
   const maxNaira = hasHistory ? priceHistory.currentPrice / 100 : fallbackNaira;
   const roi = hasHistory ? priceHistory.overallRoi?.toFixed(2) : null;
@@ -248,7 +261,7 @@ export default function Resell({ investment }: { investment: Investment }) {
             <p className="fieldset-label">
               {hasHistory
                 ? `Must be between ${formatNaira(priceHistory!.formerPrice)} and ${formatNaira(priceHistory!.currentPrice)}.`
-                : `Based on your investment value: ${formatNaira(investment.amountPaid)}.`}
+                : `Based on your purchase amount: ${formatNaira(amountBought)}.`}
             </p>
           </fieldset>
         </div>
