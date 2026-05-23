@@ -6,7 +6,7 @@ import {
   TrendingUp,
   Calendar,
   ArrowRight,
-  RefreshCw,
+  Ban,
 } from "lucide-react";
 
 export default function PropertyCard({
@@ -21,6 +21,22 @@ export default function PropertyCard({
       maximumFractionDigits: 0,
     }).format(amount / 100);
   };
+
+  const availabilityLabel = () => {
+    if (property.investmentModel === "FRACTIONAL_OWNERSHIP") {
+      return { count: property.availableShares ?? 0, unit: "Shares Left" };
+    }
+    if (property.investmentModel === "LAND_BANKING") {
+      const plots =
+        property.availablePlots != null ? Number(property.availablePlots) : 0;
+      return { count: plots, unit: "Plots Left" };
+    }
+    return { count: property.availableUnits, unit: "Slots Left" };
+  };
+
+  const { count: availableCount, unit: availableUnit } = availabilityLabel();
+  const soldOut = availableCount <= 0;
+
   const route = (propType: typeof property.investmentModel) => {
     switch (propType) {
       //@ts-ignore
@@ -43,15 +59,18 @@ export default function PropertyCard({
       //@ts-ignore
       to={route(property.investmentModel)}
       //@ts-ignore
-
       params={{ propertyId: property.id }}
-      className="card card-compact bg-base-100 ring fade shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
+      className={`card card-compact bg-base-100 ring fade shadow-sm border border-base-200 group h-full transition-all duration-300 ${
+        soldOut
+          ? "opacity-60 grayscale pointer-events-none cursor-not-allowed"
+          : "hover:shadow-xl"
+      }`}
     >
       <figure className="relative h-56 overflow-hidden">
         <img
           src={property.coverImage}
           alt={property.propertyTitle}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className={`w-full h-full object-cover transition-transform duration-700 ${!soldOut && "group-hover:scale-110"}`}
         />
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
           <div className="badge ring badge-neutral badge-soft font-semibold fade tracking-wider">
@@ -62,11 +81,11 @@ export default function PropertyCard({
               Premium
             </div>
           )}
-          {/*{property.isResell && (
-            <div className="badge badge-info font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
-              <RefreshCw className="w-2.5 h-2.5" /> For Resale
+          {soldOut && (
+            <div className="badge badge-error font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+              <Ban className="w-2.5 h-2.5" /> Sold Out
             </div>
-          )}*/}
+          )}
         </div>
       </figure>
 
@@ -79,13 +98,6 @@ export default function PropertyCard({
             <MapPin className="w-3.5 h-3.5 mr-1 shrink-0" />
             <span className="line-clamp-1">{property.location}</span>
           </div>
-          {/*{property.isResell && property.reseller && (
-            <div className="flex items-center gap-1 text-xs text-info font-medium mt-0.5">
-              <RefreshCw className="w-3 h-3 shrink-0" />
-              Listed by {property.reseller.firstName}{" "}
-              {property.reseller.lastName}
-            </div>
-          )}*/}
         </div>
 
         <div className="divider my-2 opacity-50"></div>
@@ -122,13 +134,22 @@ export default function PropertyCard({
           </div>
 
           <div className="flex flex-col items-end">
-            <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-base-content/40">
-              <Calendar className="w-3 h-3" />
-              {property.availableUnits} Slots Left
-            </div>
-            <div className="btn btn-ghost btn-xs text-primary group-hover:translate-x-1 transition-transform p-0 mt-1">
-              Details <ArrowRight className="w-3 h-3 ml-1" />
-            </div>
+            {soldOut ? (
+              <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-error">
+                <Ban className="w-3 h-3" />
+                No {availableUnit.replace(" Left", "")} Available
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-base-content/40">
+                <Calendar className="w-3 h-3" />
+                {availableCount} {availableUnit}
+              </div>
+            )}
+            {!soldOut && (
+              <div className="btn btn-ghost btn-xs text-primary group-hover:translate-x-1 transition-transform p-0 mt-1">
+                Details <ArrowRight className="w-3 h-3 ml-1" />
+              </div>
+            )}
           </div>
         </div>
       </div>
