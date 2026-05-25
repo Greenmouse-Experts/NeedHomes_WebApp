@@ -26,8 +26,8 @@ interface Investment {
   amountPaid: number;
   unitsBought: number;
   sharesBought: number | null;
-  paymentOption: "OUTRIGHT" | "INSTALLMENT";
-  status: "ACTIVE" | "PENDING" | "COMPLETED";
+  paymentOption: "OUTRIGHT" | "INSTALLMENT" | "FULL_PAYMENT";
+  status: "ACTIVE" | "PENDING" | "COMPLETED" | "EXITED" | "CANCELLED" | "RESOLD";
   createdAt: string;
   property: {
     basePrice: number;
@@ -50,7 +50,7 @@ function RouteComponent() {
   const { search } = Route.useSearch();
   const [filterOpen, setFilterOpen] = useState(false);
   const [status, setStatus] = useState<
-    null | "ACTIVE" | "CANCELLED" | "COMPLETED" | "EXITED"
+    null | "ACTIVE" | "PENDING" | "CANCELLED" | "COMPLETED" | "EXITED" | "RESOLD"
   >(null);
   const [actionOpen, setActionOpen] = useState(false);
   const paginationProps = usePagination();
@@ -110,9 +110,12 @@ function RouteComponent() {
       label: "Status",
       render: (value: string) => {
         const colors: Record<string, string> = {
-          ACTIVE: "bg-green-100 text-green-700",
+          ACTIVE: "bg-blue-100 text-blue-700",
           PENDING: "bg-yellow-100 text-yellow-700",
-          COMPLETED: "bg-blue-100 text-blue-700",
+          COMPLETED: "bg-green-100 text-green-700",
+          EXITED: "bg-orange-100 text-orange-700",
+          CANCELLED: "bg-red-100 text-red-700",
+          RESOLD: "bg-purple-100 text-purple-700",
         };
         return (
           <span
@@ -189,9 +192,11 @@ function RouteComponent() {
           >
             <option value="">All</option>
             <option value="ACTIVE">Active</option>
-            <option value="CANCELLED">Cancelled</option>
+            <option value="PENDING">Pending</option>
             <option value="COMPLETED">Completed</option>
             <option value="EXITED">Exited</option>
+            <option value="CANCELLED">Cancelled</option>
+            <option value="RESOLD">Resold</option>
           </select>
         </div>
 

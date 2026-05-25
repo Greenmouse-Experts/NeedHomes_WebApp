@@ -39,7 +39,7 @@ interface Investment {
   unitsBought: number;
   sharesBought: number | null;
   paymentOption: "OUTRIGHT" | "INSTALLMENT" | "FULL_PAYMENT";
-  status: "ACTIVE" | "PENDING" | "COMPLETED";
+  status: "ACTIVE" | "PENDING" | "COMPLETED" | "EXITED" | "CANCELLED" | "RESOLD";
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -218,11 +218,14 @@ function InvestmentDetailsPage() {
                           <div className="flex items-center gap-2 mt-1">
                             <span
                               className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                                investment.status === "ACTIVE"
-                                  ? "bg-green-100 text-green-700"
-                                  : investment.status === "COMPLETED"
-                                    ? "bg-blue-100 text-blue-700"
-                                    : "bg-yellow-100 text-yellow-700"
+                                {
+                                  ACTIVE: "bg-blue-100 text-blue-700",
+                                  PENDING: "bg-yellow-100 text-yellow-700",
+                                  COMPLETED: "bg-green-100 text-green-700",
+                                  EXITED: "bg-orange-100 text-orange-700",
+                                  CANCELLED: "bg-red-100 text-red-700",
+                                  RESOLD: "bg-purple-100 text-purple-700",
+                                }[investment.status] ?? "bg-gray-100 text-gray-700"
                               }`}
                             >
                               {investment.status}
