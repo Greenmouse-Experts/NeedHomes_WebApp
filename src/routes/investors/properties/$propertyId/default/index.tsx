@@ -55,38 +55,27 @@ function PropertyDetailPage() {
     return `₦ ${fixed.toLocaleString()}`;
   };
   const mutate = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
+    mutationFn: async (data: {
+      amountPaid: number;
+      quantity: number;
+      paymentOption?: string;
+      installmentFrequency?: string;
+      installmentDuration?: number;
+    }) => {
+      const ref = localStorage.getItem(`ref_${propertyId}`);
       let resp = await apiClient.post("/investments", {
         propertyId: propertyId,
         amountPaid: parseFloat(data.amountPaid.toFixed()),
         quantity: data.quantity,
+        ...(data.paymentOption ? { paymentOption: data.paymentOption } : {}),
+        ...(data.installmentFrequency ? { installmentFrequency: data.installmentFrequency } : {}),
+        ...(data.installmentDuration ? { installmentDuration: data.installmentDuration } : {}),
+        ...(ref ? { referralCode: ref } : {}),
       });
       return resp.data;
     },
     onSuccess: (data: ApiResponse<{ id: string }>) => {
-      closeModal();
-      navigate({
-        to: "/investors/my-investments/$investmentId",
-        params: {
-          investmentId: data.data.id,
-        },
-      });
-    },
-  });
-
-  const mutateIns = useMutation({
-    mutationFn: async (data: { amountPaid: number; quantity: number }) => {
-      let resp = await apiClient.post(
-        "/investments/installments/:paymentId/pay",
-        {
-          propertyId: propertyId,
-          amountPaid: data.amountPaid,
-          quantity: data.quantity,
-        },
-      );
-      return resp.data;
-    },
-    onSuccess: (data: ApiResponse<{ id: string }>) => {
+      localStorage.removeItem(`ref_${propertyId}`);
       closeModal();
       navigate({
         to: "/investors/my-investments/$investmentId",
@@ -196,10 +185,15 @@ function PropertyDetailPage() {
                     onClick={() => {
                       if (payInstall) {
                         const amount = form.getValues("amount");
+                        const installmentFrequency = form.getValues("installmentFrequency");
+                        const installmentDuration = Number(form.getValues("installmentDuration"));
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
                             quantity,
+                            paymentOption: "INSTALLMENT",
+                            installmentFrequency,
+                            installmentDuration,
                           }),
                           {
                             loading: "Processing payment...",
