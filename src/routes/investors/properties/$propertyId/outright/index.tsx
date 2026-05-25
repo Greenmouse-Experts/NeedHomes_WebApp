@@ -88,9 +88,13 @@ function PropertyDetailPage() {
           additionalFees: property.additionalFees || [],
           additionalFeesTotal,
         };
-        const pricePerUnitKobo = property.totalPrice || property.basePrice;
-        const fullAmountKobo = Math.round(quantity * pricePerUnitKobo);
-        const selectedTotal = quantity * totalPrice;
+        const additionalFeesTotalKobo = (property.additionalFees || []).reduce(
+          (sum: number, fee: AdditionalFee) => sum + fee.amount,
+          0,
+        );
+        const pricePerUnitKobo = property.basePrice;
+        const fullAmountKobo = Math.round(quantity * pricePerUnitKobo) + additionalFeesTotalKobo;
+        const selectedTotal = (quantity * property.basePrice) / 100 + additionalFeesTotal;
         return (
           <>
             <Modal
