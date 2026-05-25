@@ -22,25 +22,22 @@ type ResellStatus = "PENDING" | "APPROVED" | "REJECTED" | "SOLD";
 
 interface ResellListing {
   id: string;
-  propertyTitle: string;
-  propertyType: string;
-  investmentModel: string;
-  location: string;
-  basePrice: number;
-  totalPrice: number;
-  coverImage?: string;
-  isResell: boolean;
-  resellStatus: ResellStatus;
-  published: boolean;
+  originalPropertyId: string;
+  resellerId: string;
   originalInvestmentId: string;
-  additionalFees: { id: string; label: string; amount: number }[];
+  units: number;
+  soldUnits: number;
+  status: ResellStatus;
+  rejectionReason: string | null;
   createdAt: string;
   updatedAt: string;
-}
-
-interface MyListingsResponse {
-  data: ResellListing[];
-  meta: { total: number; page: number; limit: number; totalPages: number };
+  deletedAt: string | null;
+  property: {
+    id: string;
+    propertyTitle: string;
+    investmentModel: string;
+    coverImage: string;
+  };
 }
 
 const STATUS_COLORS: Record<ResellStatus, string> = {
@@ -77,25 +74,24 @@ function RouteComponent() {
       render: (value) => new Date(value).toLocaleDateString(),
     },
     {
-      key: "propertyTitle",
+      key: "property",
       label: "Property",
+      render: (_, item) => (
+        <div className="flex flex-col">
+          <span className="font-medium">{item.property?.propertyTitle}</span>
+          <span className="text-xs opacity-60">{item.property?.investmentModel.replace(/_/g, " ")}</span>
+        </div>
+      ),
     },
     {
-      key: "location",
-      label: "Location",
+      key: "units",
+      label: "Units",
+      render: (_, item) => (
+        <span className="font-semibold">{item.soldUnits} / {item.units} sold</span>
+      ),
     },
     {
-      key: "basePrice",
-      label: "Asking Price",
-      render: (value) => `₦${(value / 100).toLocaleString()}`,
-    },
-    {
-      key: "totalPrice",
-      label: "Total Price",
-      render: (value) => `₦${(value / 100).toLocaleString()}`,
-    },
-    {
-      key: "resellStatus",
+      key: "status",
       label: "Status",
       render: (value: ResellStatus) => (
         <span
@@ -104,6 +100,16 @@ function RouteComponent() {
           {value}
         </span>
       ),
+    },
+    {
+      key: "rejectionReason",
+      label: "Reason",
+      render: (value) =>
+        value ? (
+          <span className="text-xs text-red-600">{value}</span>
+        ) : (
+          <span className="text-xs text-base-content/30">—</span>
+        ),
     },
   ];
 
