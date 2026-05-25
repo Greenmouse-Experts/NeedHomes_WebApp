@@ -10,24 +10,18 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { toast } from "sonner";
-import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
+import apiClient from "@/api/simpleApi";
 import { extract_message } from "@/helpers/apihelpers";
 import Modal, { type ModalHandle } from "@/components/modals/DialogModal";
 import { Button } from "@/components/ui/Button";
 import { NairaIcon } from "@/components/NairaIcon";
 import { InputNumberFormat } from "@react-input/number-format";
 
-interface PriceHistoryData {
-  history: {
-    id: string;
-    priceField: string;
-    oldPrice: number;
-    newPrice: number;
-    changedAt: string;
-  }[];
-  formerPrice: number;
-  currentPrice: number;
-  overallRoi: number;
+interface PricingData {
+  minPrice: number;
+  maxPrice: number;
+  roi: number;
+  units: number;
 }
 
 interface Investment {
@@ -46,17 +40,20 @@ interface Investment {
 
 type ResellStatus = "PENDING" | "APPROVED" | "REJECTED" | "SOLD";
 
-interface ResellListing {
+interface ResellSlot {
   id: string;
-  propertyTitle: string;
-  basePrice: number;
-  totalPrice: number;
-  resellStatus: ResellStatus;
-  published: boolean;
   originalInvestmentId: string;
-  additionalFees: { id: string; label: string; amount: number }[];
+  units: number;
+  soldUnits: number;
+  status: ResellStatus;
+  rejectionReason: string | null;
   createdAt: string;
-  updatedAt: string;
+  property: {
+    id: string;
+    propertyTitle: string;
+    investmentModel: string;
+    coverImage: string;
+  };
 }
 
 function formatNaira(kobo: number) {
@@ -104,57 +101,47 @@ export default function Resell({ investment }: { investment: Investment }) {
   const parsePrice = (formatted: string) =>
     parseFloat(formatted.replace(/,/g, "").trim()) || 0;
 
-  const priceHistoryQuery = useQuery<{ data: PriceHistoryData }>({
-    queryKey: ["price-history", investment.propertyId],
-    queryFn: async () => {
-      const resp = await apiClient.get(
-        `properties/${investment.propertyId}/price-history`,
-      );
-      return resp.data;
-    },
-    enabled: investment.status === "COMPLETED",
-  });
+  const isEligible = investment.status === "COMPLETED";
 
-  const priceHistory = priceHistoryQuery.data?.data;
-  const hasHistory = priceHistory && priceHistory.history?.length > 0;
-
-  const amountBought = (() => {
-    if (investment.sharesBought != null && investment.property?.pricePerShare != null)
-      return investment.sharesBought * investment.property.pricePerShare;
-    if (investment.unitsBought != null && investment.property?.pricePerPlot != null)
-      return investment.unitsBought * investment.property.pricePerPlot;
-    return investment.amountPaid;
-  })();
-
-  const fallbackNaira = amountBought / 100;
-  const minNaira = hasHistory ? priceHistory.formerPrice / 100 : fallbackNaira;
-  const maxNaira = hasHistory ? priceHistory.currentPrice / 100 : fallbackNaira;
-  const roi = hasHistory ? priceHistory.overallRoi?.toFixed(2) : null;
-
-  const listingsQuery = useQuery<ApiResponseV2<ResellListing[]>>({
+  const listingsQuery = useQuery<{ data: { data: ResellSlot[] } }>({
     queryKey: ["resell-listings"],
     queryFn: async () => {
       const resp = await apiClient.get("resell/my-listings");
       return resp.data;
     },
-    enabled: investment.status === "COMPLETED",
+    enabled: isEligible,
   });
+
+  const listing = (listingsQuery.data?.data?.data ?? []).find(
+    (l) => l.originalInvestmentId === investment.id,
+  );
+
+  const canRequest = !listing || listing.status === "REJECTED";
+
+  const pricingQuery = useQuery<{ data: PricingData }>({
+    queryKey: ["resell-pricing", investment.id],
+    queryFn: async () => {
+      const resp = await apiClient.get(`resell/pricing/${investment.id}`);
+      return resp.data;
+    },
+    enabled: isEligible && canRequest,
+  });
+
+  const pricing = pricingQuery.data?.data;
 
   const submitMutation = useMutation({
     mutationFn: async () => {
       const body: Record<string, number> = {};
       if (askingPriceDisplay.trim()) {
-        const naira = parsePrice(askingPriceDisplay);
-        if (isNaN(naira) || naira <= 0) throw new Error("Invalid asking price");
-        if (naira < minNaira)
-          throw new Error(
-            `Asking price must be at least ${formatNaira(minNaira * 100)}`,
-          );
-        if (naira > maxNaira)
-          throw new Error(
-            `Asking price cannot exceed ${formatNaira(maxNaira * 100)}`,
-          );
-        body.askingPrice = Math.round(naira * 100);
+        const kobo = Math.round(parsePrice(askingPriceDisplay) * 100);
+        if (kobo <= 0) throw new Error("Invalid asking price");
+        if (pricing) {
+          if (kobo < pricing.minPrice)
+            throw new Error(`Asking price must be at least ${formatNaira(pricing.minPrice)}`);
+          if (kobo > pricing.maxPrice)
+            throw new Error(`Asking price cannot exceed ${formatNaira(pricing.maxPrice)}`);
+        }
+        body.askingPrice = kobo;
       }
       const resp = await apiClient.post(`resell/${investment.id}`, body);
       return resp.data;
@@ -170,13 +157,6 @@ export default function Resell({ investment }: { investment: Investment }) {
     },
   });
 
-  const listing = (listingsQuery.data?.data?.data ?? []).find(
-    (l) => l.originalInvestmentId === investment.id,
-  );
-
-  const canRequest = !listing || listing.resellStatus === "REJECTED";
-  const isEligible = investment.status === "COMPLETED";
-
   return (
     <>
       <Modal
@@ -191,6 +171,7 @@ export default function Resell({ investment }: { investment: Investment }) {
               variant="primary"
               isLoading={submitMutation.isPending}
               onClick={() => submitMutation.mutate()}
+              disabled={pricingQuery.isLoading}
             >
               Submit Request
             </Button>
@@ -207,38 +188,34 @@ export default function Resell({ investment }: { investment: Investment }) {
             </p>
           </div>
 
-          {hasHistory && (
-            <div className="grid grid-cols-3 gap-2 text-sm bg-base-200 rounded-box p-3">
+          {pricingQuery.isLoading ? (
+            <div className="flex items-center gap-2 text-sm text-base-content/50">
+              <span className="loading loading-spinner loading-xs" />
+              Loading pricing…
+            </div>
+          ) : pricing ? (
+            <div className="grid grid-cols-4 gap-2 text-sm bg-base-200 rounded-box p-3">
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">
-                  Min Price
-                </p>
-                <p className="font-semibold">
-                  {formatNaira(priceHistory!.formerPrice)}
-                </p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Min Price</p>
+                <p className="font-semibold">{formatNaira(pricing.minPrice)}</p>
               </div>
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">
-                  Max Price
-                </p>
-                <p className="font-semibold">
-                  {formatNaira(priceHistory!.currentPrice)}
-                </p>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Max Price</p>
+                <p className="font-semibold">{formatNaira(pricing.maxPrice)}</p>
               </div>
               <div>
-                <p className="text-base-content/50 text-xs uppercase tracking-wide">
-                  ROI
-                </p>
-                <p
-                  className={`font-bold flex items-center gap-1 ${parseFloat(roi!) >= 0 ? "text-success" : "text-error"}`}
-                >
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">ROI</p>
+                <p className={`font-bold flex items-center gap-1 ${pricing.roi >= 0 ? "text-success" : "text-error"}`}>
                   <TrendingUp className="w-3 h-3" />
-                  {parseFloat(roi!) >= 0 ? "+" : ""}
-                  {roi}%
+                  {pricing.roi >= 0 ? "+" : ""}{pricing.roi.toFixed(2)}%
                 </p>
+              </div>
+              <div>
+                <p className="text-base-content/50 text-xs uppercase tracking-wide">Units</p>
+                <p className="font-semibold">{pricing.units}</p>
               </div>
             </div>
-          )}
+          ) : null}
 
           <fieldset className="fieldset">
             <legend className="fieldset-legend">
@@ -253,15 +230,19 @@ export default function Resell({ investment }: { investment: Investment }) {
                 format="decimal"
                 maximumFractionDigits={2}
                 groupDisplay
-                placeholder={`${minNaira.toLocaleString()} – ${maxNaira.toLocaleString()}`}
+                placeholder={
+                  pricing
+                    ? `${(pricing.minPrice / 100).toLocaleString()} – ${(pricing.maxPrice / 100).toLocaleString()}`
+                    : "Enter amount"
+                }
                 value={askingPriceDisplay}
                 onChange={(e) => setAskingPriceDisplay(e.target.value)}
               />
             </label>
             <p className="fieldset-label">
-              {hasHistory
-                ? `Must be between ${formatNaira(priceHistory!.formerPrice)} and ${formatNaira(priceHistory!.currentPrice)}.`
-                : `Based on your purchase amount: ${formatNaira(amountBought)}.`}
+              {pricing
+                ? `Must be between ${formatNaira(pricing.minPrice)} and ${formatNaira(pricing.maxPrice)}.`
+                : "Pricing is loading…"}
             </p>
           </fieldset>
         </div>
@@ -279,9 +260,8 @@ export default function Resell({ investment }: { investment: Investment }) {
               <Clock className="w-3 h-3" /> Available when fully paid
             </span>
           ) : listing &&
-            (listing.resellStatus === "PENDING" ||
-              listing.resellStatus === "APPROVED") ? (
-            <ResellStatusBadge status={listing.resellStatus} />
+            (listing.status === "PENDING" || listing.status === "APPROVED") ? (
+            <ResellStatusBadge status={listing.status} />
           ) : canRequest ? (
             <button
               className="btn btn-outline btn-sm gap-2"
@@ -302,19 +282,19 @@ export default function Resell({ investment }: { investment: Investment }) {
           ) : listing ? (
             <div className="border border-base-200 rounded-box p-4 space-y-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <p className="text-sm font-semibold">{listing.propertyTitle}</p>
-                <ResellStatusBadge status={listing.resellStatus} />
+                <p className="text-sm font-semibold">{listing.property.propertyTitle}</p>
+                <ResellStatusBadge status={listing.status} />
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p className="text-base-content/50">Asking Price</p>
-                  <p className="font-bold">{formatNaira(listing.basePrice)}</p>
+                  <p className="text-base-content/50">Units</p>
+                  <p className="font-bold">{listing.soldUnits} / {listing.units} sold</p>
                 </div>
                 <div>
-                  <p className="text-base-content/50">Total (incl. fees)</p>
+                  <p className="text-base-content/50">Model</p>
                   <p className="font-medium">
-                    {formatNaira(listing.totalPrice)}
+                    {listing.property.investmentModel.replace(/_/g, " ")}
                   </p>
                 </div>
                 <div>
@@ -327,25 +307,21 @@ export default function Resell({ investment }: { investment: Investment }) {
                     })}
                   </p>
                 </div>
-                <div>
-                  <p className="text-base-content/50">Published</p>
-                  <p className="font-medium">
-                    {listing.published ? "Yes" : "No"}
-                  </p>
-                </div>
               </div>
 
-              {listing.resellStatus === "REJECTED" && (
+              {listing.status === "REJECTED" && (
                 <div role="alert" className="alert alert-error text-sm">
                   <XCircle className="w-4 h-4 shrink-0" />
-                  <p>
-                    Your listing was rejected. You may submit a new resell
-                    request.
-                  </p>
+                  <div>
+                    <p>Your listing was rejected. You may submit a new resell request.</p>
+                    {listing.rejectionReason && (
+                      <p className="text-xs mt-1 opacity-80">Reason: {listing.rejectionReason}</p>
+                    )}
+                  </div>
                 </div>
               )}
 
-              {listing.resellStatus === "SOLD" && (
+              {listing.status === "SOLD" && (
                 <div role="alert" className="alert alert-success text-sm">
                   <BadgeCheck className="w-4 h-4 shrink-0" />
                   <p>
