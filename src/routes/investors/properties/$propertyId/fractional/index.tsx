@@ -7,6 +7,8 @@ import {
   AlertTriangle,
   Clock,
   CalendarCheck,
+  Wallet,
+  Building2,
 } from "lucide-react";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { MediaSlider } from "@/components/property/MediaSlider";
@@ -21,7 +23,7 @@ import { useNavigate } from "@tanstack/react-router";
 import Modal from "@/components/modals/DialogModal";
 import { useModal } from "@/store/modals";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import Maps from "@/routes/investors/properties/-components/Maps";
@@ -39,6 +41,7 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
+  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -74,6 +77,22 @@ function PropertyDetailPage() {
         to: "/investors/my-investments/$investmentId",
         params: { investmentId: data.data.id },
       });
+    },
+  });
+
+  const bankTransferMutation = useMutation({
+    mutationFn: async (payload: { amount: number; quantity: number; selectedReturnDays: number }) => {
+      const resp = await apiClient.post("/wallet/invest/initialize", {
+        propertyId,
+        amount: payload.amount,
+        quantity: payload.quantity,
+        selectedReturnDays: payload.selectedReturnDays,
+      });
+      return resp.data as { data: { authorization_url: string } };
+    },
+    onSuccess: (data) => {
+      closeModal();
+      window.location.href = data.data.authorization_url;
     },
   });
 
@@ -152,6 +171,20 @@ function PropertyDetailPage() {
                         toast.error("Please select a return duration.");
                         return;
                       }
+                      if (paymentMethod === "BANK_TRANSFER") {
+                        return toast.promise(
+                          bankTransferMutation.mutateAsync({
+                            amount: fullAmountKobo,
+                            quantity: form.getValues("quantity"),
+                            selectedReturnDays,
+                          }),
+                          {
+                            loading: "Initializing bank transfer...",
+                            success: "Redirecting to payment...",
+                            error: extract_message,
+                          },
+                        );
+                      }
                       toast.promise(
                         mutate.mutateAsync({
                           amountPaid: fullAmountKobo,
@@ -165,14 +198,38 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending || !selectedReturnDays}
+                    disabled={mutate.isPending || bankTransferMutation.isPending || !selectedReturnDays}
                   >
-                    Confirm & Pay {formatCurrency(fullAmount)}
+                    {paymentMethod === "BANK_TRANSFER"
+                      ? `Pay via Bank Transfer ${formatCurrency(fullAmount)}`
+                      : `Confirm & Pay ${formatCurrency(fullAmount)}`}
                   </Button>
                 </div>
               }
             >
               <div className="space-y-4">
+                {/* Payment Method Selector */}
+                <div className="grid grid-cols-2 gap-2">
+                  {(["WALLET", "BANK_TRANSFER"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-colors text-sm font-medium ${
+                        paymentMethod === method
+                          ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                          : "border-gray-200 text-gray-500 hover:border-gray-300"
+                      }`}
+                    >
+                      {method === "WALLET" ? (
+                        <Wallet className="w-5 h-5" />
+                      ) : (
+                        <Building2 className="w-5 h-5" />
+                      )}
+                      {method === "WALLET" ? "Wallet Payment" : "Bank Transfer"}
+                    </button>
+                  ))}
+                </div>
                 {/* Shares */}
                 <div className="ring rounded-box fade">
                   <h2 className="p-3 border-b fade text-sm font-bold text-gray-900">

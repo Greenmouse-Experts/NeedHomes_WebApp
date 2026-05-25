@@ -7,6 +7,8 @@ import {
   TrendingUp,
   ChevronLeft,
   RefreshCw,
+  Wallet,
+  Building2,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,7 +24,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider, Controller } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
@@ -41,6 +43,7 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
+  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -83,6 +86,24 @@ function PropertyDetailPage() {
           investmentId: data.data.id,
         },
       });
+    },
+  });
+
+  const bankTransferMutation = useMutation({
+    mutationFn: async (payload: { amount: number; quantity: number }) => {
+      const ref = localStorage.getItem(`ref_${propertyId}`);
+      const resp = await apiClient.post("/wallet/invest/initialize", {
+        propertyId,
+        amount: payload.amount,
+        quantity: payload.quantity,
+        ...(ref ? { referralCode: ref } : {}),
+      });
+      return resp.data as { data: { authorization_url: string } };
+    },
+    onSuccess: (data) => {
+      localStorage.removeItem(`ref_${propertyId}`);
+      closeModal();
+      window.location.href = data.data.authorization_url;
     },
   });
 
@@ -183,6 +204,19 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
+                      if (paymentMethod === "BANK_TRANSFER") {
+                        return toast.promise(
+                          bankTransferMutation.mutateAsync({
+                            amount: Math.round(full_total * 100),
+                            quantity,
+                          }),
+                          {
+                            loading: "Initializing bank transfer...",
+                            success: "Redirecting to payment...",
+                            error: extract_message,
+                          },
+                        );
+                      }
                       if (payInstall) {
                         const amount = form.getValues("amount");
                         const installmentFrequency = form.getValues("installmentFrequency");
@@ -214,17 +248,40 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending}
+                    disabled={mutate.isPending || bankTransferMutation.isPending}
                   >
-                    Confirm & Pay{" "}
-                    {payInstall
-                      ? formatCurrency(payAmount)
-                      : formatCurrency(full_total)}
+                    {paymentMethod === "BANK_TRANSFER"
+                      ? `Pay via Bank Transfer ${formatCurrency(full_total)}`
+                      : payInstall
+                        ? `Confirm & Pay ${formatCurrency(payAmount)}`
+                        : `Confirm & Pay ${formatCurrency(full_total)}`}
                   </Button>
                 </div>
               }
             >
               <section>
+                {/* Payment Method Selector */}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {(["WALLET", "BANK_TRANSFER"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-colors text-sm font-medium ${
+                        paymentMethod === method
+                          ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                          : "border-gray-200 text-gray-500 hover:border-gray-300"
+                      }`}
+                    >
+                      {method === "WALLET" ? (
+                        <Wallet className="w-5 h-5" />
+                      ) : (
+                        <Building2 className="w-5 h-5" />
+                      )}
+                      {method === "WALLET" ? "Wallet Payment" : "Bank Transfer"}
+                    </button>
+                  ))}
+                </div>
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
                     <div className="flex justify-between items-center">
@@ -353,15 +410,17 @@ function PropertyDetailPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex gap-2 items-center mt-4">
-                  <input
-                    {...form.register("installment")}
-                    type="checkbox"
-                    className="checkbox checkbox-sm"
-                  />
-                  <h2 className="text-sm">Pay Installmentally</h2>
-                </div>
-                {payInstall && (
+                {paymentMethod === "WALLET" && (
+                  <div className="flex gap-2 items-center mt-4">
+                    <input
+                      {...form.register("installment")}
+                      type="checkbox"
+                      className="checkbox checkbox-sm"
+                    />
+                    <h2 className="text-sm">Pay Installmentally</h2>
+                  </div>
+                )}
+                {paymentMethod === "WALLET" && payInstall && (
                   <div className="mt-4">
                     {isCoDev ? (
                       <div className="space-y-3 p-4 ring rounded-box fade">
