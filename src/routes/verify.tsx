@@ -3,9 +3,10 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import apiClient from "@/api/simpleApi";
+import { extract_message } from "@/helpers/apihelpers";
 import { toast } from "sonner";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
-import { Mail, Hash, ChevronLeft } from "lucide-react";
+import { Mail, Hash, ChevronLeft, Pencil, X } from "lucide-react";
 
 export const Route = createFileRoute("/verify")({
   component: RouteComponent,
@@ -17,7 +18,6 @@ export const Route = createFileRoute("/verify")({
 });
 
 type VerifyFormData = {
-  email: string;
   otp: string;
 };
 
@@ -26,16 +26,20 @@ function RouteComponent() {
   const { email } = Route.useSearch();
   const decodedEmail = decodeURIComponent(email);
 
-  const methods = useForm<VerifyFormData>({
-    defaultValues: {
-      email: decodedEmail,
-    },
-  });
-  const { register, handleSubmit } = methods;
+  const [pendingEmail, setPendingEmail] = useState(decodedEmail);
+  const [showChangeEmail, setShowChangeEmail] = useState(false);
+  const [newEmailInput, setNewEmailInput] = useState("");
+  const [changeEmailError, setChangeEmailError] = useState("");
 
-  const { mutate, isPending } = useMutation({
+  const methods = useForm<VerifyFormData>({ defaultValues: { otp: "" } });
+  const { register, handleSubmit, setValue } = methods;
+
+  const { mutate: verifyMutate, isPending } = useMutation({
     mutationFn: async (payload: VerifyFormData) => {
-      const response = await apiClient.post("auth/verify-email", payload);
+      const response = await apiClient.post("auth/verify-email", {
+        email: pendingEmail,
+        otp: payload.otp,
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -43,7 +47,7 @@ function RouteComponent() {
       navigate({ to: "/login" });
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Verification failed");
+      toast.error(extract_message(error));
     },
   });
 
@@ -56,25 +60,51 @@ function RouteComponent() {
   }, [resendCooldown]);
 
   const { mutate: resendOtpMutate, isPending: isResendingOtp } = useMutation({
-    mutationFn: async (payload: { email: string }) => {
-      const response = await apiClient.post("auth/resend-otp", payload);
+    mutationFn: async () => {
+      const response = await apiClient.post("auth/resend-otp", {
+        email: pendingEmail,
+        purpose: "email_verification",
+      });
       return response.data;
     },
     onSuccess: () => {
-      toast.success("OTP resent successfully! Check your email.");
-      setResendCooldown(50);
+      toast.success("OTP resent! Check your email.");
+      setResendCooldown(60);
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to resend OTP");
+      toast.error(extract_message(error));
     },
   });
 
-  const onSubmit = (data: VerifyFormData) => {
-    mutate(data);
-  };
+  const { mutate: changeEmailMutate, isPending: isChangingEmail } = useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post("auth/change-pending-email", {
+        currentEmail: pendingEmail,
+        newEmail: newEmailInput.trim(),
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      setPendingEmail(newEmailInput.trim());
+      setValue("otp", "");
+      setResendCooldown(60);
+      setShowChangeEmail(false);
+      setNewEmailInput("");
+      setChangeEmailError("");
+      toast.success(`Verification code sent to ${newEmailInput.trim()}`);
+    },
+    onError: (error: any) => {
+      setChangeEmailError(extract_message(error));
+    },
+  });
 
-  const handleResendOtp = () => {
-    resendOtpMutate({ email: methods.getValues("email") });
+  const handleChangeEmailSubmit = () => {
+    setChangeEmailError("");
+    if (!newEmailInput.trim()) {
+      setChangeEmailError("Please enter a new email address.");
+      return;
+    }
+    changeEmailMutate();
   };
 
   return (
@@ -95,20 +125,82 @@ function RouteComponent() {
           </button>
           <h2 className="card-title text-2xl font-bold">Verify Email</h2>
           <p className="text-sm text-gray-500">
-            Please enter the OTP sent to you.
+            Enter the code sent to{" "}
+            <span className="font-medium text-gray-700">{pendingEmail}</span>
           </p>
 
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
-              <SimpleInput
-                label="Email Address"
+          {/* Change email toggle */}
+          {!showChangeEmail ? (
+            <button
+              type="button"
+              className="flex items-center gap-1 text-xs text-primary hover:underline w-fit"
+              onClick={() => {
+                setShowChangeEmail(true);
+                setChangeEmailError("");
+                setNewEmailInput("");
+              }}
+            >
+              <Pencil size={12} /> Change Email
+            </button>
+          ) : (
+            <div className="bg-base-200 rounded-xl p-4 space-y-3 mt-1">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Update your email address</p>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-xs btn-circle"
+                  onClick={() => {
+                    setShowChangeEmail(false);
+                    setChangeEmailError("");
+                  }}
+                  disabled={isChangingEmail}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              <input
                 type="email"
-                disabled
-                placeholder="example@gmail.com"
-                icon={<Mail size={18} className="opacity-70" />}
-                {...register("email", { required: "Email is required" })}
+                className="input input-bordered w-full input-sm"
+                placeholder="New email address"
+                value={newEmailInput}
+                onChange={(e) => {
+                  setNewEmailInput(e.target.value);
+                  setChangeEmailError("");
+                }}
+                disabled={isChangingEmail}
               />
+              {changeEmailError && (
+                <p className="text-xs text-error">{changeEmailError}</p>
+              )}
+              <div className="flex gap-2 justify-end">
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => {
+                    setShowChangeEmail(false);
+                    setChangeEmailError("");
+                  }}
+                  disabled={isChangingEmail}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className={`btn btn-primary btn-sm ${isChangingEmail ? "loading" : ""}`}
+                  onClick={handleChangeEmailSubmit}
+                  disabled={isChangingEmail}
+                >
+                  {isChangingEmail ? "Updating…" : "Update & Resend"}
+                </button>
+              </div>
+            </div>
+          )}
 
+          <FormProvider {...methods}>
+            <form
+              onSubmit={handleSubmit((data) => verifyMutate(data))}
+              className="space-y-4 mt-2"
+            >
               <SimpleInput
                 label="OTP Code"
                 type="text"
@@ -130,7 +222,7 @@ function RouteComponent() {
                 </button>
                 <button
                   type="button"
-                  onClick={handleResendOtp}
+                  onClick={() => resendOtpMutate()}
                   className={`btn btn-ghost w-full ${isResendingOtp ? "loading" : ""}`}
                   disabled={isResendingOtp || resendCooldown > 0}
                 >
