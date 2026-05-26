@@ -8,6 +8,7 @@ import {
   Wallet,
   Megaphone,
   Settings,
+  Heart,
 } from "lucide-react";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "../investors/ProfileCard";
@@ -200,6 +201,12 @@ const NAV_LINKS = [
     render: RenderAnnouncements,
   },
 
+  {
+    to: "/partners/favourites",
+    label: "Favourites",
+    id: "favourites",
+    icon: Heart,
+  },
   {
     to: "/partners/settings",
     label: "Setting",

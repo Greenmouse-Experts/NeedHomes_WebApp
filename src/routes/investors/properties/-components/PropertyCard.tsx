@@ -8,12 +8,24 @@ import {
   ArrowRight,
   Ban,
 } from "lucide-react";
+import FavoriteButton from "@/components/favorites/FavoriteButton";
 
 export default function PropertyCard({
   item: property,
 }: {
   item: PROPERTY_DATA;
 }) {
+  return (
+    <div className="relative group/card">
+      <PropertyCardInner property={property} />
+      <div className="absolute top-4 right-4 z-10">
+        <FavoriteButton propertyId={property.id} />
+      </div>
+    </div>
+  );
+}
+
+function PropertyCardInner({ property }: { property: PROPERTY_DATA }) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",

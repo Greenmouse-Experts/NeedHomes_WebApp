@@ -87,12 +87,14 @@ import { Route as PropertiesPropertyIdIndexRouteImport } from './routes/properti
 import { Route as PartnersSubscriptionsIndexRouteImport } from './routes/partners/subscriptions/index'
 import { Route as PartnersPropertiesIndexRouteImport } from './routes/partners/properties/index'
 import { Route as PartnersPromotionsIndexRouteImport } from './routes/partners/promotions/index'
+import { Route as PartnersFavouritesIndexRouteImport } from './routes/partners/favourites/index'
 import { Route as PartnersChatIndexRouteImport } from './routes/partners/chat/index'
 import { Route as InvestorsTransactionsIndexRouteImport } from './routes/investors/transactions/index'
 import { Route as InvestorsSubscriptionsIndexRouteImport } from './routes/investors/subscriptions/index'
 import { Route as InvestorsResellIndexRouteImport } from './routes/investors/resell/index'
 import { Route as InvestorsPropertiesIndexRouteImport } from './routes/investors/properties/index'
 import { Route as InvestorsMyInvestmentsIndexRouteImport } from './routes/investors/my-investments/index'
+import { Route as InvestorsFavouritesIndexRouteImport } from './routes/investors/favourites/index'
 import { Route as InvestorsChatIndexRouteImport } from './routes/investors/chat/index'
 import { Route as ForgotPasswordResetIndexRouteImport } from './routes/forgot-password/reset/index'
 import { Route as DashboardWithdrawalsIndexRouteImport } from './routes/dashboard/withdrawals/index'
@@ -588,6 +590,11 @@ const PartnersPromotionsIndexRoute = PartnersPromotionsIndexRouteImport.update({
   path: '/promotions/',
   getParentRoute: () => PartnersRouteRoute,
 } as any)
+const PartnersFavouritesIndexRoute = PartnersFavouritesIndexRouteImport.update({
+  id: '/favourites/',
+  path: '/favourites/',
+  getParentRoute: () => PartnersRouteRoute,
+} as any)
 const PartnersChatIndexRoute = PartnersChatIndexRouteImport.update({
   id: '/chat/',
   path: '/chat/',
@@ -621,6 +628,12 @@ const InvestorsMyInvestmentsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => InvestorsMyInvestmentsRoute,
+  } as any)
+const InvestorsFavouritesIndexRoute =
+  InvestorsFavouritesIndexRouteImport.update({
+    id: '/favourites/',
+    path: '/favourites/',
+    getParentRoute: () => InvestorsRouteRoute,
   } as any)
 const InvestorsChatIndexRoute = InvestorsChatIndexRouteImport.update({
   id: '/chat/',
@@ -1271,12 +1284,14 @@ export interface FileRoutesByFullPath {
   '/dashboard/withdrawals/': typeof DashboardWithdrawalsIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
   '/investors/chat/': typeof InvestorsChatIndexRoute
+  '/investors/favourites/': typeof InvestorsFavouritesIndexRoute
   '/investors/my-investments/': typeof InvestorsMyInvestmentsIndexRoute
   '/investors/properties/': typeof InvestorsPropertiesIndexRoute
   '/investors/resell/': typeof InvestorsResellIndexRoute
   '/investors/subscriptions/': typeof InvestorsSubscriptionsIndexRoute
   '/investors/transactions/': typeof InvestorsTransactionsIndexRoute
   '/partners/chat/': typeof PartnersChatIndexRoute
+  '/partners/favourites/': typeof PartnersFavouritesIndexRoute
   '/partners/promotions/': typeof PartnersPromotionsIndexRoute
   '/partners/properties/': typeof PartnersPropertiesIndexRoute
   '/partners/subscriptions/': typeof PartnersSubscriptionsIndexRoute
@@ -1423,12 +1438,14 @@ export interface FileRoutesByTo {
   '/dashboard/withdrawals': typeof DashboardWithdrawalsIndexRoute
   '/forgot-password/reset': typeof ForgotPasswordResetIndexRoute
   '/investors/chat': typeof InvestorsChatIndexRoute
+  '/investors/favourites': typeof InvestorsFavouritesIndexRoute
   '/investors/my-investments': typeof InvestorsMyInvestmentsIndexRoute
   '/investors/properties': typeof InvestorsPropertiesIndexRoute
   '/investors/resell': typeof InvestorsResellIndexRoute
   '/investors/subscriptions': typeof InvestorsSubscriptionsIndexRoute
   '/investors/transactions': typeof InvestorsTransactionsIndexRoute
   '/partners/chat': typeof PartnersChatIndexRoute
+  '/partners/favourites': typeof PartnersFavouritesIndexRoute
   '/partners/promotions': typeof PartnersPromotionsIndexRoute
   '/partners/properties': typeof PartnersPropertiesIndexRoute
   '/partners/subscriptions': typeof PartnersSubscriptionsIndexRoute
@@ -1603,12 +1620,14 @@ export interface FileRoutesById {
   '/dashboard/withdrawals/': typeof DashboardWithdrawalsIndexRoute
   '/forgot-password/reset/': typeof ForgotPasswordResetIndexRoute
   '/investors/chat/': typeof InvestorsChatIndexRoute
+  '/investors/favourites/': typeof InvestorsFavouritesIndexRoute
   '/investors/my-investments/': typeof InvestorsMyInvestmentsIndexRoute
   '/investors/properties/': typeof InvestorsPropertiesIndexRoute
   '/investors/resell/': typeof InvestorsResellIndexRoute
   '/investors/subscriptions/': typeof InvestorsSubscriptionsIndexRoute
   '/investors/transactions/': typeof InvestorsTransactionsIndexRoute
   '/partners/chat/': typeof PartnersChatIndexRoute
+  '/partners/favourites/': typeof PartnersFavouritesIndexRoute
   '/partners/promotions/': typeof PartnersPromotionsIndexRoute
   '/partners/properties/': typeof PartnersPropertiesIndexRoute
   '/partners/subscriptions/': typeof PartnersSubscriptionsIndexRoute
@@ -1784,12 +1803,14 @@ export interface FileRouteTypes {
     | '/dashboard/withdrawals/'
     | '/forgot-password/reset/'
     | '/investors/chat/'
+    | '/investors/favourites/'
     | '/investors/my-investments/'
     | '/investors/properties/'
     | '/investors/resell/'
     | '/investors/subscriptions/'
     | '/investors/transactions/'
     | '/partners/chat/'
+    | '/partners/favourites/'
     | '/partners/promotions/'
     | '/partners/properties/'
     | '/partners/subscriptions/'
@@ -1936,12 +1957,14 @@ export interface FileRouteTypes {
     | '/dashboard/withdrawals'
     | '/forgot-password/reset'
     | '/investors/chat'
+    | '/investors/favourites'
     | '/investors/my-investments'
     | '/investors/properties'
     | '/investors/resell'
     | '/investors/subscriptions'
     | '/investors/transactions'
     | '/partners/chat'
+    | '/partners/favourites'
     | '/partners/promotions'
     | '/partners/properties'
     | '/partners/subscriptions'
@@ -2115,12 +2138,14 @@ export interface FileRouteTypes {
     | '/dashboard/withdrawals/'
     | '/forgot-password/reset/'
     | '/investors/chat/'
+    | '/investors/favourites/'
     | '/investors/my-investments/'
     | '/investors/properties/'
     | '/investors/resell/'
     | '/investors/subscriptions/'
     | '/investors/transactions/'
     | '/partners/chat/'
+    | '/partners/favourites/'
     | '/partners/promotions/'
     | '/partners/properties/'
     | '/partners/subscriptions/'
@@ -2780,6 +2805,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnersPromotionsIndexRouteImport
       parentRoute: typeof PartnersRouteRoute
     }
+    '/partners/favourites/': {
+      id: '/partners/favourites/'
+      path: '/favourites'
+      fullPath: '/partners/favourites/'
+      preLoaderRoute: typeof PartnersFavouritesIndexRouteImport
+      parentRoute: typeof PartnersRouteRoute
+    }
     '/partners/chat/': {
       id: '/partners/chat/'
       path: '/chat'
@@ -2821,6 +2853,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/investors/my-investments/'
       preLoaderRoute: typeof InvestorsMyInvestmentsIndexRouteImport
       parentRoute: typeof InvestorsMyInvestmentsRoute
+    }
+    '/investors/favourites/': {
+      id: '/investors/favourites/'
+      path: '/favourites'
+      fullPath: '/investors/favourites/'
+      preLoaderRoute: typeof InvestorsFavouritesIndexRouteImport
+      parentRoute: typeof InvestorsRouteRoute
     }
     '/investors/chat/': {
       id: '/investors/chat/'
@@ -3992,6 +4031,7 @@ interface InvestorsRouteRouteChildren {
   InvestorsSettingsRoute: typeof InvestorsSettingsRoute
   InvestorsIndexRoute: typeof InvestorsIndexRoute
   InvestorsChatIndexRoute: typeof InvestorsChatIndexRoute
+  InvestorsFavouritesIndexRoute: typeof InvestorsFavouritesIndexRoute
   InvestorsResellIndexRoute: typeof InvestorsResellIndexRoute
   InvestorsSubscriptionsIndexRoute: typeof InvestorsSubscriptionsIndexRoute
   InvestorsTransactionsIndexRoute: typeof InvestorsTransactionsIndexRoute
@@ -4007,6 +4047,7 @@ const InvestorsRouteRouteChildren: InvestorsRouteRouteChildren = {
   InvestorsSettingsRoute: InvestorsSettingsRoute,
   InvestorsIndexRoute: InvestorsIndexRoute,
   InvestorsChatIndexRoute: InvestorsChatIndexRoute,
+  InvestorsFavouritesIndexRoute: InvestorsFavouritesIndexRoute,
   InvestorsResellIndexRoute: InvestorsResellIndexRoute,
   InvestorsSubscriptionsIndexRoute: InvestorsSubscriptionsIndexRoute,
   InvestorsTransactionsIndexRoute: InvestorsTransactionsIndexRoute,
@@ -4066,6 +4107,7 @@ interface PartnersRouteRouteChildren {
   PartnersTransactionsRoute: typeof PartnersTransactionsRoute
   PartnersIndexRoute: typeof PartnersIndexRoute
   PartnersChatIndexRoute: typeof PartnersChatIndexRoute
+  PartnersFavouritesIndexRoute: typeof PartnersFavouritesIndexRoute
   PartnersPromotionsIndexRoute: typeof PartnersPromotionsIndexRoute
   PartnersSubscriptionsIndexRoute: typeof PartnersSubscriptionsIndexRoute
 }
@@ -4078,6 +4120,7 @@ const PartnersRouteRouteChildren: PartnersRouteRouteChildren = {
   PartnersTransactionsRoute: PartnersTransactionsRoute,
   PartnersIndexRoute: PartnersIndexRoute,
   PartnersChatIndexRoute: PartnersChatIndexRoute,
+  PartnersFavouritesIndexRoute: PartnersFavouritesIndexRoute,
   PartnersPromotionsIndexRoute: PartnersPromotionsIndexRoute,
   PartnersSubscriptionsIndexRoute: PartnersSubscriptionsIndexRoute,
 }

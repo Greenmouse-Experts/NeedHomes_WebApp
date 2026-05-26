@@ -8,6 +8,7 @@ import {
   Settings,
   LogOut,
   ArrowLeftRight,
+  Heart,
 } from "lucide-react";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
 import ProfileCard from "./ProfileCard";
@@ -205,6 +206,13 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "resell",
       label: "Resell",
       icon: <ArrowLeftRight className="size-4" />,
+      alwaysEnabled: false,
+    },
+    {
+      to: "/investors/favourites",
+      activePage: "favourites",
+      label: "Favourites",
+      icon: <Heart className="size-4" />,
       alwaysEnabled: false,
     },
     {
