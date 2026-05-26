@@ -8,6 +8,8 @@ import {
   ChevronLeft,
   RefreshCw,
   Home,
+  Wallet,
+  Building2,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -28,6 +30,9 @@ import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 import RenderDescription from "@/components/RenderDescription";
+import PaystackPop from "@paystack/inline-js";
+
+const paystackInstance = new PaystackPop();
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/outright/",
@@ -40,6 +45,7 @@ function PropertyDetailPage() {
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
   const [quantity, setQuantity] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -68,6 +74,25 @@ function PropertyDetailPage() {
         to: "/investors/my-investments/$investmentId",
         params: {
           investmentId: data.data.id,
+        },
+      });
+    },
+  });
+
+  const bankTransferMutation = useMutation({
+    mutationFn: async (payload: { amount: number; quantity: number }) => {
+      const resp = await apiClient.post("/wallet/invest/initialize", {
+        propertyId,
+        amount: payload.amount,
+        quantity: payload.quantity,
+      });
+      return resp.data as { data: { access_code: string } };
+    },
+    onSuccess: (data) => {
+      closeModal();
+      paystackInstance.resumeTransaction(data.data.access_code, {
+        onSuccess() {
+          navigate({ to: "/investors/my-investments" });
         },
       });
     },
@@ -108,6 +133,16 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
+                      if (paymentMethod === "BANK_TRANSFER") {
+                        return toast.promise(
+                          bankTransferMutation.mutateAsync({ amount: fullAmountKobo, quantity }),
+                          {
+                            loading: "Initializing bank transfer...",
+                            success: "Redirecting to payment...",
+                            error: extract_message,
+                          },
+                        );
+                      }
                       toast.promise(
                         mutate.mutateAsync({ amountPaid: fullAmountKobo, quantity }),
                         {
@@ -117,14 +152,38 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending || property.availableUnits === 0}
+                    disabled={mutate.isPending || bankTransferMutation.isPending || property.availableUnits === 0}
                   >
-                    Confirm & Pay {formatCurrency(selectedTotal)}
+                    {paymentMethod === "BANK_TRANSFER"
+                      ? `Pay via Bank Transfer ${formatCurrency(selectedTotal)}`
+                      : `Confirm & Pay ${formatCurrency(selectedTotal)}`}
                   </Button>
                 </div>
               }
             >
               <section>
+                {/* Payment Method Selector */}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {(["WALLET", "BANK_TRANSFER"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-colors text-sm font-medium ${
+                        paymentMethod === method
+                          ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                          : "border-gray-200 text-gray-500 hover:border-gray-300"
+                      }`}
+                    >
+                      {method === "WALLET" ? (
+                        <Wallet className="w-5 h-5" />
+                      ) : (
+                        <Building2 className="w-5 h-5" />
+                      )}
+                      {method === "WALLET" ? "Wallet Payment" : "Bank Transfer"}
+                    </button>
+                  ))}
+                </div>
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
                     <div className="flex justify-between items-center">
@@ -218,6 +277,7 @@ function PropertyDetailPage() {
                     </div>
                   </div>
                 </div>
+                </div>
               </section>
             </Modal>
             <div className="flex mb-4 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -234,7 +294,7 @@ function PropertyDetailPage() {
                 variant="primary"
                 rightIcon={<TrendingUp className="w-5 h-5" />}
                 onClick={showModal}
-                disabled={mutate.isPending || property.availableUnits === 0}
+                disabled={mutate.isPending || bankTransferMutation.isPending || property.availableUnits === 0}
                 className="w-full sm:w-auto"
               >
                 {property.availableUnits === 0 ? "Sold Out" : "Invest Now"}

@@ -7,6 +7,8 @@ import {
   TrendingUp,
   ChevronLeft,
   RefreshCw,
+  Wallet,
+  Building2,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,7 +24,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
@@ -30,6 +32,9 @@ import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 import RenderDescription from "@/components/RenderDescription";
+import PaystackPop from "@paystack/inline-js";
+
+const paystackInstance = new PaystackPop();
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/save-to-own/",
@@ -41,6 +46,7 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
+  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -75,6 +81,24 @@ function PropertyDetailPage() {
         to: "/investors/my-investments/$investmentId",
         params: {
           investmentId: data.data.id,
+        },
+      });
+    },
+  });
+
+  const bankTransferMutation = useMutation({
+    mutationFn: async (payload: { amount: number }) => {
+      const resp = await apiClient.post("/wallet/invest/initialize", {
+        propertyId,
+        amount: payload.amount,
+      });
+      return resp.data as { data: { access_code: string } };
+    },
+    onSuccess: (data) => {
+      closeModal();
+      paystackInstance.resumeTransaction(data.data.access_code, {
+        onSuccess() {
+          navigate({ to: "/investors/my-investments" });
         },
       });
     },
@@ -192,6 +216,18 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
+                      if (paymentMethod === "BANK_TRANSFER") {
+                        return toast.promise(
+                          bankTransferMutation.mutateAsync({
+                            amount: minimumInstallment * 100,
+                          }),
+                          {
+                            loading: "Initializing bank transfer...",
+                            success: "Redirecting to payment...",
+                            error: extract_message,
+                          },
+                        );
+                      }
                       toast.promise(
                         mutate.mutateAsync({
                           amountPaid: minimumInstallment * 100,
@@ -206,14 +242,38 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending}
+                    disabled={mutate.isPending || bankTransferMutation.isPending}
                   >
-                    Confirm & Pay {formatCurrency(minimumInstallment)}
+                    {paymentMethod === "BANK_TRANSFER"
+                      ? `Pay via Bank Transfer ${formatCurrency(minimumInstallment)}`
+                      : `Confirm & Pay ${formatCurrency(minimumInstallment)}`}
                   </Button>
                 </div>
               }
             >
               <section>
+                {/* Payment Method Selector */}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {(["WALLET", "BANK_TRANSFER"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-colors text-sm font-medium ${
+                        paymentMethod === method
+                          ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                          : "border-gray-200 text-gray-500 hover:border-gray-300"
+                      }`}
+                    >
+                      {method === "WALLET" ? (
+                        <Wallet className="w-5 h-5" />
+                      ) : (
+                        <Building2 className="w-5 h-5" />
+                      )}
+                      {method === "WALLET" ? "Wallet Payment" : "Bank Transfer"}
+                    </button>
+                  ))}
+                </div>
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
                     <div className="flex justify-between items-center">
@@ -344,6 +404,7 @@ function PropertyDetailPage() {
                       {savingsFrequency.toLowerCase()})
                     </p>
                   </div>
+                </div>
                 </div>
               </section>
             </Modal>

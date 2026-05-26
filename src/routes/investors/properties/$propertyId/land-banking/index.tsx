@@ -5,6 +5,8 @@ import {
   TrendingUp,
   ChevronLeft,
   RefreshCw,
+  Wallet,
+  Building2,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -20,7 +22,7 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { Controller, useForm } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import AdminROI from "@/routes/-components/ROI";
 import Maps from "@/routes/investors/properties/-components/Maps";
@@ -28,6 +30,9 @@ import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import ShareLink from "@/routes/investors/properties/-components/ShareLink";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 import RenderDescription from "@/components/RenderDescription";
+import PaystackPop from "@paystack/inline-js";
+
+const paystackInstance = new PaystackPop();
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/land-banking/",
@@ -39,6 +44,7 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
+  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -84,6 +90,28 @@ function PropertyDetailPage() {
         to: "/investors/my-investments/$investmentId",
         params: {
           investmentId: data.data.id,
+        },
+      });
+    },
+  });
+
+  const bankTransferMutation = useMutation({
+    mutationFn: async (payload: { amount: number; quantity: number }) => {
+      const ref = localStorage.getItem(`ref_${propertyId}`);
+      const resp = await apiClient.post("/wallet/invest/initialize", {
+        propertyId,
+        amount: payload.amount,
+        quantity: payload.quantity,
+        ...(ref ? { referralCode: ref } : {}),
+      });
+      return resp.data as { data: { access_code: string } };
+    },
+    onSuccess: (data) => {
+      localStorage.removeItem(`ref_${propertyId}`);
+      closeModal();
+      paystackInstance.resumeTransaction(data.data.access_code, {
+        onSuccess() {
+          navigate({ to: "/investors/my-investments" });
         },
       });
     },
@@ -197,15 +225,27 @@ function PropertyDetailPage() {
                   <Button
                     variant="primary"
                     onClick={() => {
+                      const fullAmountKobo = Math.round(
+                        ((install_amount + full_charge) / 100 + breakdown.additionalFeesTotal) * 100,
+                      );
+                      if (paymentMethod === "BANK_TRANSFER") {
+                        return toast.promise(
+                          bankTransferMutation.mutateAsync({
+                            amount: fullAmountKobo,
+                            quantity: form.getValues("quantity"),
+                          }),
+                          {
+                            loading: "Initializing bank transfer...",
+                            success: "Redirecting to payment...",
+                            error: extract_message,
+                          },
+                        );
+                      }
                       if (payInstall) {
                         const amount = form.getValues("amount");
                         const quantity = form.getValues("quantity");
-                        const installmentFrequency = form.getValues(
-                          "installmentFrequency",
-                        );
-                        const installmentDuration = Number(
-                          form.getValues("installmentDuration"),
-                        );
+                        const installmentFrequency = form.getValues("installmentFrequency");
+                        const installmentDuration = Number(form.getValues("installmentDuration"));
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
@@ -223,10 +263,7 @@ function PropertyDetailPage() {
                       }
                       toast.promise(
                         mutate.mutateAsync({
-                          amountPaid:
-                            ((install_amount + full_charge) / 100 +
-                              breakdown.additionalFeesTotal) *
-                            100,
+                          amountPaid: fullAmountKobo,
                           quantity: form.getValues("quantity"),
                         }),
                         {
@@ -236,24 +273,40 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending}
+                    disabled={mutate.isPending || bankTransferMutation.isPending}
                   >
-                    Confirm & Pay{" "}
-                    {payInstall
-                      ? payAmount
-                        ? formatCurrency(payAmount)
-                        : formatCurrency(
-                            (property.minimumInstallmentAmount || 0) / 100,
-                          )
-                      : formatCurrency(
-                          (install_amount + full_charge) / 100 +
-                            breakdown.additionalFeesTotal,
-                        )}
+                    {paymentMethod === "BANK_TRANSFER"
+                      ? `Pay via Bank Transfer ${formatCurrency((install_amount + full_charge) / 100 + breakdown.additionalFeesTotal)}`
+                      : payInstall
+                        ? `Confirm & Pay ${payAmount ? formatCurrency(payAmount) : formatCurrency((property.minimumInstallmentAmount || 0) / 100)}`
+                        : `Confirm & Pay ${formatCurrency((install_amount + full_charge) / 100 + breakdown.additionalFeesTotal)}`}
                   </Button>
                 </div>
               }
             >
               <section>
+                {/* Payment Method Selector */}
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {(["WALLET", "BANK_TRANSFER"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-colors text-sm font-medium ${
+                        paymentMethod === method
+                          ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                          : "border-gray-200 text-gray-500 hover:border-gray-300"
+                      }`}
+                    >
+                      {method === "WALLET" ? (
+                        <Wallet className="w-5 h-5" />
+                      ) : (
+                        <Building2 className="w-5 h-5" />
+                      )}
+                      {method === "WALLET" ? "Wallet Payment" : "Bank Transfer"}
+                    </button>
+                  ))}
+                </div>
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
                     <div className="flex justify-between items-center">
@@ -407,7 +460,7 @@ function PropertyDetailPage() {
                     </div>*/}
                   </div>
 
-                  {canPayInstallment && (
+                  {paymentMethod === "WALLET" && canPayInstallment && (
                     <div className="p-3 bg-blue-50 rounded border border-blue-100 space-y-1">
                       {property.firstPaymentPercentage &&
                       minFirstPaymentKobo !== null ? (
@@ -439,15 +492,17 @@ function PropertyDetailPage() {
                     </div>
                   )}
                 </div>
-                <div className="flex gap-2 items-center mt-4">
-                  <input
-                    {...form.register("installment")}
-                    type="checkbox"
-                    className="checkbox checkbox-sm"
-                  />
-                  <h2 className="text-sm">Pay Installmentally</h2>
-                </div>
-                {payInstall && (
+                {paymentMethod === "WALLET" && (
+                  <div className="flex gap-2 items-center mt-4">
+                    <input
+                      {...form.register("installment")}
+                      type="checkbox"
+                      className="checkbox checkbox-sm"
+                    />
+                    <h2 className="text-sm">Pay Installmentally</h2>
+                  </div>
+                )}
+                {paymentMethod === "WALLET" && payInstall && (
                   <div className="mt-4">
                     <div className="space-y-3 p-4 ring rounded-box fade">
                       {property.firstPaymentPercentage &&
