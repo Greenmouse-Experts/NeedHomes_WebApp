@@ -272,7 +272,7 @@ function RouteComponent() {
       </div>
 
       {/* Search + Filter bar */}
-      <div className="p-4 border-b border-base-200 space-y-3">
+      <div className="p-4 border-b border-gray-100 space-y-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex-1 min-w-48">
             <SearchBar
@@ -284,16 +284,16 @@ function RouteComponent() {
           </div>
           <button
             onClick={() => setShowFilters((p) => !p)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
               showFilters || Object.values(filters).some(Boolean)
-                ? "border-primary text-primary bg-primary/5"
-                : "border-base-300 text-base-content/70 hover:border-base-400"
+                ? "border-orange-400 text-orange-600 bg-orange-50"
+                : "border-gray-200 text-gray-600 bg-white hover:border-gray-300 hover:bg-gray-50"
             }`}
           >
             <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
             Filters
             {Object.values(filters).some(Boolean) && (
-              <span className="bg-primary text-primary-content text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
                 {Object.values(filters).filter(Boolean).length}
               </span>
             )}
@@ -304,7 +304,7 @@ function RouteComponent() {
                 setFilters(DEFAULT_FILTERS);
                 navigate({ search: { q: "" }, replace: true });
               }}
-              className="flex items-center gap-1 text-sm text-error hover:underline"
+              className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-600 font-medium transition-colors"
             >
               <X className="w-3.5 h-3.5" /> Clear all
             </button>
@@ -312,53 +312,71 @@ function RouteComponent() {
         </div>
 
         {showFilters && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
-            <select
-              className="select select-sm select-bordered w-full"
-              value={filters.status}
-              onChange={(e) => setFilter("status", e.target.value)}
-            >
-              {STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-gray-400 pl-1">Status</label>
+              <div className="relative">
+                <select
+                  className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-3 py-2.5 pr-9 text-sm font-medium text-gray-700 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 cursor-pointer shadow-sm"
+                  value={filters.status}
+                  onChange={(e) => setFilter("status", e.target.value)}
+                >
+                  {STATUS_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
 
-            <select
-              className="select select-sm select-bordered w-full"
-              value={filters.accountType}
-              onChange={(e) => setFilter("accountType", e.target.value)}
-            >
-              {ACCOUNT_TYPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-gray-400 pl-1">Account Type</label>
+              <div className="relative">
+                <select
+                  className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-3 py-2.5 pr-9 text-sm font-medium text-gray-700 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 cursor-pointer shadow-sm"
+                  value={filters.accountType}
+                  onChange={(e) => setFilter("accountType", e.target.value)}
+                >
+                  {ACCOUNT_TYPE_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
 
-            <select
-              className="select select-sm select-bordered w-full"
-              value={filters.investmentModel}
-              onChange={(e) => setFilter("investmentModel", e.target.value)}
-            >
-              {INVESTMENT_MODEL_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-gray-400 pl-1">Investment Model</label>
+              <div className="relative">
+                <select
+                  className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-3 py-2.5 pr-9 text-sm font-medium text-gray-700 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 cursor-pointer shadow-sm"
+                  value={filters.investmentModel}
+                  onChange={(e) => setFilter("investmentModel", e.target.value)}
+                >
+                  {INVESTMENT_MODEL_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
 
-            <div className="flex flex-col gap-0.5">
-              <label className="text-xs text-base-content/50 pl-0.5">From</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-gray-400 pl-1">From</label>
               <input
                 type="date"
-                className="input input-sm input-bordered w-full"
+                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 shadow-sm"
                 value={filters.startDate}
                 max={filters.endDate || undefined}
                 onChange={(e) => setFilter("startDate", e.target.value)}
               />
             </div>
 
-            <div className="flex flex-col gap-0.5">
-              <label className="text-xs text-base-content/50 pl-0.5">To</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-gray-400 pl-1">To</label>
               <input
                 type="date"
-                className="input input-sm input-bordered w-full"
+                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 shadow-sm"
                 value={filters.endDate}
                 min={filters.startDate || undefined}
                 onChange={(e) => setFilter("endDate", e.target.value)}
