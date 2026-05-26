@@ -1,6 +1,7 @@
 import apiClient from "@/api/simpleApi";
 import { useQuery } from "@tanstack/react-query";
-import { Home, Layers, PiggyBank, Building2, Hammer } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Home, Layers, PiggyBank, Building2, Hammer, ChevronRight, TrendingUp } from "lucide-react";
 
 type ModelBreakdown =
   | { model: "FRACTIONAL_OWNERSHIP"; activeSlots: number; currentValue: number; roi: number }
@@ -21,127 +22,172 @@ function fmt(kobo: number) {
   return `₦${n.toLocaleString()}`;
 }
 
-function ModelCard({ item }: { item: ModelBreakdown }) {
+function ModelCard({ item, onClick }: { item: ModelBreakdown; onClick: () => void }) {
   switch (item.model) {
     case "FRACTIONAL_OWNERSHIP":
       return (
-        <div className="card bg-base-100 shadow-sm border border-base-200">
-          <div className="card-body p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-indigo-100 rounded-lg">
-                <Layers className="w-4 h-4 text-indigo-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider">Fractional</p>
-                <span className="badge badge-sm badge-soft badge-info">{item.activeSlots} Active Slots</span>
-              </div>
+        <button
+          onClick={onClick}
+          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <div className="p-2.5 bg-indigo-100 rounded-xl shrink-0">
+              <Layers className="w-5 h-5 text-indigo-600" />
             </div>
-            <p className="text-lg font-black">{fmt(item.currentValue)}</p>
-            <p className="text-xs text-base-content/50">Current Value</p>
-            <p className={`text-sm font-semibold mt-1 ${item.roi >= 0 ? "text-success" : "text-error"}`}>
-              {item.roi >= 0 ? "+" : ""}{item.roi.toFixed(1)}% ROI
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">Fractional Investment</p>
+              <span className="inline-block mt-1 text-xs font-medium bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+                {item.activeSlots} Active Slots
+              </span>
+            </div>
+          </div>
+          <div className="space-y-1 mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Current Value</p>
+            <p className="text-xl font-black text-gray-900">{fmt(item.currentValue)}</p>
+            <p className="text-xs text-gray-400 uppercase tracking-wide mt-2">ROI</p>
+            <p className={`text-sm font-bold ${item.roi >= 0 ? "text-green-600" : "text-red-500"}`}>
+              {item.roi >= 0 ? "+" : ""}{item.roi.toFixed(1)}%
             </p>
           </div>
-        </div>
+          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-indigo-600 transition-colors border-t border-gray-100 pt-3">
+            View Investments <ChevronRight className="w-4 h-4" />
+          </div>
+        </button>
       );
 
     case "LAND_BANKING":
       return (
-        <div className="card bg-base-100 shadow-sm border border-base-200">
-          <div className="card-body p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <Home className="w-4 h-4 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider">Land Banking</p>
-                <span className="badge badge-sm badge-soft badge-warning">{item.reservedLands} Lands Reserved</span>
-              </div>
+        <button
+          onClick={onClick}
+          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-amber-200 transition-all group"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <div className="p-2.5 bg-amber-100 rounded-xl shrink-0">
+              <Home className="w-5 h-5 text-amber-600" />
             </div>
-            <p className={`text-lg font-bold mt-1 ${item.estimatedAppreciation >= 0 ? "text-success" : "text-error"}`}>
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">Land Banking</p>
+              <span className="inline-block mt-1 text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                {item.reservedLands} Lands Reserved
+              </span>
+            </div>
+          </div>
+          <div className="space-y-1 mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Estimated Appreciation</p>
+            <p className={`text-xl font-black ${item.estimatedAppreciation >= 0 ? "text-green-600" : "text-red-500"}`}>
               {item.estimatedAppreciation >= 0 ? "+" : ""}{item.estimatedAppreciation.toFixed(1)}%
             </p>
-            <p className="text-xs text-base-content/50">Estimated Appreciation</p>
+            <div className="mt-2 flex gap-0.5 items-end h-8">
+              {[3, 5, 4, 7, 6, 8, 7].map((h, i) => (
+                <div key={i} className="flex-1 bg-green-200 rounded-sm" style={{ height: `${h * 10}%` }} />
+              ))}
+            </div>
           </div>
-        </div>
+          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-amber-600 transition-colors border-t border-gray-100 pt-3">
+            View Investments <ChevronRight className="w-4 h-4" />
+          </div>
+        </button>
       );
 
     case "SAVE_TO_OWN":
       return (
-        <div className="card bg-base-100 shadow-sm border border-base-200">
-          <div className="card-body p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-pink-100 rounded-lg">
-                <PiggyBank className="w-4 h-4 text-pink-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider">Save to Own</p>
-                <p className="text-sm font-semibold line-clamp-1">{item.targetPropertyTitle}</p>
-              </div>
+        <button
+          onClick={onClick}
+          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-pink-200 transition-all group"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <div className="p-2.5 bg-pink-100 rounded-xl shrink-0">
+              <PiggyBank className="w-5 h-5 text-pink-600" />
             </div>
-            <div className="w-full bg-base-200 rounded-full h-2 mb-1">
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">Save to Own</p>
+              <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{item.targetPropertyTitle}</p>
+            </div>
+          </div>
+          <div className="mb-4">
+            <div className="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Progress</span>
+              <span>{item.progress.toFixed(0)}%</span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2">
               <div
                 className="bg-pink-500 h-2 rounded-full transition-all"
                 style={{ width: `${Math.min(item.progress, 100)}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-base-content/50">
-              <span>{item.progress.toFixed(0)}% saved</span>
-              <span>{fmt(item.amountSaved)} / {fmt(item.targetAmount)}</span>
+            <div className="flex justify-between text-xs text-gray-400 mt-1.5">
+              <span>{fmt(item.amountSaved)} saved</span>
+              <span>of {fmt(item.targetAmount)}</span>
             </div>
           </div>
-        </div>
+          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-pink-600 transition-colors border-t border-gray-100 pt-3">
+            View Investments <ChevronRight className="w-4 h-4" />
+          </div>
+        </button>
       );
 
     case "OUTRIGHT_PURCHASE":
       return (
-        <div className="card bg-base-100 shadow-sm border border-base-200">
-          <div className="card-body p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-teal-100 rounded-lg">
-                <Building2 className="w-4 h-4 text-teal-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider">Outright Purchase</p>
-                <span className="badge badge-sm badge-soft badge-success">
-                  {item.propertiesOwned} {item.propertiesOwned === 1 ? "Property" : "Properties"} Owned
-                </span>
-              </div>
+        <button
+          onClick={onClick}
+          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-teal-200 transition-all group"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <div className="p-2.5 bg-teal-100 rounded-xl shrink-0">
+              <Building2 className="w-5 h-5 text-teal-600" />
             </div>
-            <p className="text-sm font-semibold capitalize mt-1">
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">Outright Purchase</p>
+              <span className="inline-block mt-1 text-xs font-medium bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
+                {item.propertiesOwned} {item.propertiesOwned === 1 ? "Property" : "Properties"} Owned
+              </span>
+            </div>
+          </div>
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Development Stage</p>
+            <p className="text-sm font-semibold text-gray-800 capitalize mt-0.5">
               {item.developmentStage.replace(/_/g, " ")}
             </p>
-            <p className="text-xs text-base-content/50">Development Stage</p>
           </div>
-        </div>
+          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-teal-600 transition-colors border-t border-gray-100 pt-3">
+            View Investments <ChevronRight className="w-4 h-4" />
+          </div>
+        </button>
       );
 
     case "CO_DEVELOPMENT":
       return (
-        <div className="card bg-base-100 shadow-sm border border-base-200">
-          <div className="card-body p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Hammer className="w-4 h-4 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider">Co-Development</p>
-                <span className="badge badge-sm badge-soft badge-warning">
-                  {item.activeProjects} Active {item.activeProjects === 1 ? "Project" : "Projects"}
-                </span>
-              </div>
+        <button
+          onClick={onClick}
+          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-orange-200 transition-all group"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <div className="p-2.5 bg-orange-100 rounded-xl shrink-0">
+              <Hammer className="w-5 h-5 text-orange-600" />
             </div>
-            <p className="text-sm font-semibold capitalize mt-1">
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">Co-Development</p>
+              <span className="inline-block mt-1 text-xs font-medium bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+                {item.activeProjects} Active {item.activeProjects === 1 ? "Project" : "Projects"}
+              </span>
+            </div>
+          </div>
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Development Stage</p>
+            <p className="text-sm font-semibold text-gray-800 capitalize mt-0.5">
               {item.developmentStage.replace(/_/g, " ")}
             </p>
-            <p className="text-xs text-base-content/50">Development Stage</p>
           </div>
-        </div>
+          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-orange-600 transition-colors border-t border-gray-100 pt-3">
+            View Investments <ChevronRight className="w-4 h-4" />
+          </div>
+        </button>
       );
   }
 }
 
 export default function InvBreakdown() {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery<{ data: BreakdownData }>({
     queryKey: ["investor-portfolio-breakdown"],
     queryFn: async () => {
@@ -155,8 +201,20 @@ export default function InvBreakdown() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-base-content/40">
-        <span className="loading loading-spinner loading-sm" /> Loading breakdown…
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 animate-pulse">
+            <div className="flex gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-200 rounded-xl" />
+              <div className="space-y-2 flex-1">
+                <div className="h-4 bg-gray-200 rounded w-3/4" />
+                <div className="h-3 bg-gray-100 rounded w-1/2" />
+              </div>
+            </div>
+            <div className="h-6 bg-gray-200 rounded w-1/2 mb-2" />
+            <div className="h-3 bg-gray-100 rounded w-1/3" />
+          </div>
+        ))}
       </div>
     );
   }
@@ -165,10 +223,22 @@ export default function InvBreakdown() {
 
   return (
     <div>
-      <h3 className="font-bold text-base-content mb-3">Your Investments</h3>
+      <div className="mb-4">
+        <h3 className="text-lg font-bold text-gray-900">Your Investments</h3>
+        <p className="text-sm text-gray-500">Manage and track your investments across all categories</p>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {models.map((item) => (
-          <ModelCard key={item.model} item={item} />
+          <ModelCard
+            key={item.model}
+            item={item}
+            onClick={() =>
+              navigate({
+                to: "/investors/my-investments/list/",
+                search: { investmentModel: item.model },
+              })
+            }
+          />
         ))}
       </div>
     </div>
