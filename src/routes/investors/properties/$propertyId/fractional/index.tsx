@@ -30,6 +30,9 @@ import Maps from "@/routes/investors/properties/-components/Maps";
 import { LoadDocuments } from "@/routes/investors/-components/LoadDocuments";
 import { RenderCustomId } from "@/routes/-components/RenderCustomId";
 import RenderDescription from "@/components/RenderDescription";
+import PaystackPop from "@paystack/inline-js";
+
+const paystackInstance = new PaystackPop();
 
 export const Route = createFileRoute(
   "/investors/properties/$propertyId/fractional/",
@@ -88,11 +91,17 @@ function PropertyDetailPage() {
         quantity: payload.quantity,
         selectedReturnDays: payload.selectedReturnDays,
       });
-      return resp.data as { data: { authorization_url: string } };
+      return resp.data as { data: { access_code: string } };
     },
     onSuccess: (data) => {
       closeModal();
-      window.location.href = data.data.authorization_url;
+      paystackInstance.resumeTransaction(data.data.access_code, {
+        onSuccess() {
+          navigate({
+            to: "/investors/my-investments",
+          });
+        },
+      });
     },
   });
 
