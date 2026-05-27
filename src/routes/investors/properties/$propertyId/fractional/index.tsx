@@ -90,17 +90,39 @@ function PropertyDetailPage() {
         propertyId,
         amount: payload.amount,
         quantity: payload.quantity,
+        paymentOption: "FULL_PAYMENT",
         selectedReturnDays: payload.selectedReturnDays,
       });
-      return resp.data as { data: { access_code: string } };
+      return resp.data as { data: { access_code: string; reference: string } };
     },
     onSuccess: (data) => {
       closeModal();
       paystackInstance.resumeTransaction(data.data.access_code, {
-        onSuccess() {
-          navigate({
-            to: "/investors/my-investments",
-          });
+        async onSuccess(tx: any) {
+          const reference = tx?.reference ?? data.data.reference;
+          const toastId = toast.loading("Awaiting bank transfer confirmation…");
+          for (let i = 0; i < 10; i++) {
+            await new Promise((r) => setTimeout(r, 3000));
+            try {
+              const resp = await apiClient.get("/wallet-trx/transactions", { params: { search: reference } });
+              const list: any[] = resp.data?.data?.data ?? resp.data?.data ?? [];
+              const found = list.find((t: any) => t.reference === reference);
+              if (found?.status === "SUCCESS") {
+                toast.success("Investment confirmed!", { id: toastId });
+                navigate({ to: "/investors/my-investments" });
+                return;
+              }
+              if (found?.status === "FAILED") {
+                toast.error("Payment failed. Please try again.", { id: toastId });
+                return;
+              }
+            } catch {}
+          }
+          toast.info("Payment is pending. You'll be notified when confirmed.", { id: toastId });
+          navigate({ to: "/investors/my-investments" });
+        },
+        onCancel() {
+          toast.info("Transfer window closed. Your reference is saved — check back later.");
         },
       });
     },

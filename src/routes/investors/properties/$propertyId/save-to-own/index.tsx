@@ -88,18 +88,49 @@ function PropertyDetailPage() {
   });
 
   const bankTransferMutation = useMutation({
-    mutationFn: async (payload: { amount: number }) => {
+    mutationFn: async (payload: {
+      amount: number;
+      installmentFrequency: string;
+      installmentDuration: number;
+    }) => {
       const resp = await apiClient.post("/wallet/invest/initialize", {
         propertyId,
         amount: payload.amount,
+        quantity: 1,
+        paymentOption: "INSTALLMENT",
+        installmentFrequency: payload.installmentFrequency,
+        installmentDuration: payload.installmentDuration,
       });
-      return resp.data as { data: { access_code: string } };
+      return resp.data as { data: { access_code: string; reference: string } };
     },
     onSuccess: (data) => {
       closeModal();
       paystackInstance.resumeTransaction(data.data.access_code, {
-        onSuccess() {
+        async onSuccess(tx: any) {
+          const reference = tx?.reference ?? data.data.reference;
+          const toastId = toast.loading("Awaiting bank transfer confirmation…");
+          for (let i = 0; i < 10; i++) {
+            await new Promise((r) => setTimeout(r, 3000));
+            try {
+              const resp = await apiClient.get("/wallet-trx/transactions", { params: { search: reference } });
+              const list: any[] = resp.data?.data?.data ?? resp.data?.data ?? [];
+              const found = list.find((t: any) => t.reference === reference);
+              if (found?.status === "SUCCESS") {
+                toast.success("Investment confirmed!", { id: toastId });
+                navigate({ to: "/investors/my-investments" });
+                return;
+              }
+              if (found?.status === "FAILED") {
+                toast.error("Payment failed. Please try again.", { id: toastId });
+                return;
+              }
+            } catch {}
+          }
+          toast.info("Payment is pending. You'll be notified when confirmed.", { id: toastId });
           navigate({ to: "/investors/my-investments" });
+        },
+        onCancel() {
+          toast.info("Transfer window closed. Your reference is saved — check back later.");
         },
       });
     },
@@ -221,10 +252,12 @@ function PropertyDetailPage() {
                         return toast.promise(
                           bankTransferMutation.mutateAsync({
                             amount: minimumInstallment * 100,
+                            installmentFrequency: savingsFrequency,
+                            installmentDuration: Number(savingsDuration),
                           }),
                           {
                             loading: "Initializing bank transfer...",
-                            success: "Redirecting to payment...",
+                            success: "Bank transfer initialized — follow the prompts.",
                             error: extract_message,
                           },
                         );
