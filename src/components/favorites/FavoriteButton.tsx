@@ -39,9 +39,11 @@ export default function FavoriteButton({
   const mutation = useMutation({
     mutationFn: async () => {
       if (isFavorited) {
-        await apiClient.delete(`/favorites/${propertyId}`);
+        const resp = await apiClient.delete(`/favorites/${propertyId}`);
+        return resp.data;
       } else {
-        await apiClient.post(`/favorites/${propertyId}`);
+        const resp = await apiClient.post(`/favorites/${propertyId}`);
+        return resp.data;
       }
     },
     onMutate: async () => {
@@ -73,9 +75,7 @@ export default function FavoriteButton({
         e.stopPropagation();
         const removing = isFavorited;
         toast.promise(mutation.mutateAsync(), {
-          loading: removing
-            ? "Removing from favorites…"
-            : "Adding to favorites…",
+          loading: removing ? "Removing from favorites…" : "Adding to favorites…",
           success: extract_message,
           error: extract_message,
         });
