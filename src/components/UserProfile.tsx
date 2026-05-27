@@ -136,8 +136,6 @@ export default function UserProfile() {
                 return (
                   <>
                     <PhoneInput
-                      // id="phoneNumber"
-                      {...register("phone")}
                       defaultCountry="NG"
                       value={states.field.value}
                       className="text-sm md:text-base"
