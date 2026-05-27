@@ -1,6 +1,7 @@
 import type { PROPERTY_DATA } from "@/types";
 import { Link } from "@tanstack/react-router";
 import { MapPin, Home, TrendingUp, Calendar, ArrowRight } from "lucide-react";
+import FavoriteButton from "@/components/favorites/FavoriteButton";
 
 export default function PropertyCard({
   item: property,
@@ -42,6 +43,9 @@ export default function PropertyCard({
           alt={property.propertyTitle}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
+        <div className="absolute top-4 right-4 z-10">
+          <FavoriteButton propertyId={property.id} />
+        </div>
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
           <div className="badge badge-neutral border-none bg-base-100/90 backdrop-blur text-neutral font-bold text-[10px] uppercase tracking-wider">
             {property.investmentModel.replace(/_/g, " ")}
