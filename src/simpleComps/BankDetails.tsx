@@ -37,8 +37,10 @@ interface BankDetailsForm {
 
 interface AccountResolveResponse {
   account_name: string;
-  account_number: string;
-  bank_id: number;
+  masked_account: string;
+  bank_name: string;
+  bank_code: string;
+  country: string;
 }
 
 interface CurrentBankInfo {
@@ -172,22 +174,14 @@ export default function BankDetails() {
       return resp.data;
     },
     onSuccess: (data) => {
-      toast.success("Account resolved successfully!", {
-        description: `Account Name: ${data.data.account_name}`,
-      });
       setValue("accountName", data.data.account_name);
-    },
-    onError: (error) => {
-      toast.error("Failed to resolve account", {
-        description: extract_message(error as any),
-      });
     },
   });
 
   const handleBankSubmit = async (data: BankDetailsForm) => {
     toast.promise(resolveBankMutation.mutateAsync(data), {
       loading: "Resolving bank details...",
-      success: "Bank details resolved!",
+      success: (res) => `Account ${res.data.masked_account} saved — ${res.data.account_name}`,
       error: extract_message,
     });
   };

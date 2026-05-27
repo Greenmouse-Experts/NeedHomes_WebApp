@@ -2,7 +2,6 @@ import type { ApiResponse } from "@/api/simpleApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient from "@/api/simpleApi";
 import QueryCompLayout from "./layout/QueryCompLayout";
-import type { ADMIN_KYC_RESPONSE } from "@/types";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { useModal } from "@/store/modals";
 import Modal from "@/components/modals/DialogModal";
@@ -14,17 +13,11 @@ import LocalSelect from "@/simpleComps/inputs/LocalSelect";
 import { extract_message } from "@/helpers/apihelpers";
 
 interface BankDetails {
-  id: string;
-  user_id: string;
-  bank_code: string;
   bank_name: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
+  bank_code: string;
   account_name: string;
   account_number: string;
-  country: string;
-  currency: string;
+  masked_account: string;
 }
 
 interface BankListItem {
@@ -36,17 +29,18 @@ export default function AdminBankDetails({ id }: { id: string }) {
   const queryClient = useQueryClient();
   const { ref, showModal, closeModal } = useModal();
 
-  const query = useQuery<
-    ApiResponse<{
-      verification: ADMIN_KYC_RESPONSE;
-      kycStatus: string;
-      bank: BankDetails | null;
-    }>
-  >({
-    queryKey: ["kyc-verification", id],
+  const query = useQuery<ApiResponse<BankDetails | null>>({
+    queryKey: ["admin-bank-account", id],
     queryFn: async () => {
-      const response = await apiClient.get(`/admin/verifications/${id}`);
-      return response.data;
+      try {
+        const response = await apiClient.get(`/admin/users/${id}/bank-account`);
+        return response.data;
+      } catch (e: any) {
+        if (e?.response?.status === 404) {
+          return { statusCode: 404, message: "No bank account", data: null } as any;
+        }
+        throw e;
+      }
     },
   });
 
@@ -78,7 +72,7 @@ export default function AdminBankDetails({ id }: { id: string }) {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["kyc-verification", id] });
+      queryClient.invalidateQueries({ queryKey: ["admin-bank-account", id] });
       closeModal();
     },
   });
@@ -201,7 +195,7 @@ export default function AdminBankDetails({ id }: { id: string }) {
 
       <QueryCompLayout query={query}>
         {(data) => {
-          const bankDetails = data.data.bank;
+          const bankDetails = data.data;
 
           if (!bankDetails) {
             return (
@@ -267,16 +261,11 @@ export default function AdminBankDetails({ id }: { id: string }) {
                   </div>
                   <div className="space-y-1">
                     <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                      Currency & Region
+                      Masked Account
                     </p>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                        {bankDetails.currency}
-                      </span>
-                      <span className="text-sm text-gray-600 font-medium">
-                        {bankDetails.country}
-                      </span>
-                    </div>
+                    <p className="text-sm font-mono font-semibold text-gray-600 tracking-tight">
+                      {bankDetails.masked_account}
+                    </p>
                   </div>
                 </div>
               </div>
