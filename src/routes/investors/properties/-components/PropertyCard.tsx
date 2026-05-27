@@ -15,12 +15,22 @@ export default function PropertyCard({
 }: {
   item: PROPERTY_DATA;
 }) {
+  const availableCount =
+    property.investmentModel === "FRACTIONAL_OWNERSHIP"
+      ? (property.availableShares ?? 0)
+      : property.investmentModel === "LAND_BANKING"
+      ? (property.availablePlots != null ? Number(property.availablePlots) : 0)
+      : property.availableUnits;
+  const soldOut = availableCount <= 0;
+
   return (
     <div className="relative group/card">
       <PropertyCardInner property={property} />
-      <div className="absolute top-4 right-4 z-10">
-        <FavoriteButton propertyId={property.id} />
-      </div>
+      {!soldOut && (
+        <div className="absolute top-4 right-4 z-10">
+          <FavoriteButton propertyId={property.id} />
+        </div>
+      )}
     </div>
   );
 }
