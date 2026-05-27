@@ -264,7 +264,7 @@ function PropertyDetailPage() {
                       if (paymentMethod === "BANK_TRANSFER") {
                         return toast.promise(
                           bankTransferMutation.mutateAsync({
-                            amount: fullAmountKobo,
+                            amount: payInstall ? form.getValues("amount") * 100 : fullAmountKobo,
                             quantity: form.getValues("quantity"),
                             paymentOption: payInstall ? "INSTALLMENT" : "FULL_PAYMENT",
                             ...(payInstall ? {
