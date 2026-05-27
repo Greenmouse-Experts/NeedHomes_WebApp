@@ -6,6 +6,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import type { PROPERTY_TYPE, AdditionalFee } from "@/types/property";
 import { Button } from "@/components/ui/Button";
+import PageFavoriteButton from "@/components/favorites/PageFaouritebutton";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { useNavigate } from "@tanstack/react-router";
@@ -274,6 +275,9 @@ function PropertyDetailPage() {
                 onClick={() => navigate({ to: "/properties" })} className="w-full sm:w-auto">
                 Back to Properties
               </Button>
+
+              <PageFavoriteButton propertyId={propertyId} />
+
               {isAdmin && (
                 <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 w-full sm:w-auto">
                   <span>Logged in as admin — investing disabled.</span>

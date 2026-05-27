@@ -16,6 +16,7 @@ import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import PageLoader from "@/components/layout/PageLoader";
 import type { PROPERTY_TYPE, AdditionalFee } from "@/types/property";
 import { Button } from "@/components/ui/Button";
+import PageFavoriteButton from "@/components/favorites/PageFaouritebutton";
 import { toast } from "sonner";
 import { extract_message } from "@/helpers/apihelpers";
 import { useNavigate } from "@tanstack/react-router";
@@ -537,6 +538,8 @@ function PropertyDetailPage() {
               >
                 Back to Properties
               </Button>
+
+              <PageFavoriteButton propertyId={propertyId} />
 
               <Button
                 variant="primary"

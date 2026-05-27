@@ -1,5 +1,4 @@
 import apiClient from "@/api/simpleApi";
-import { extract_message } from "@/helpers/apihelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
@@ -19,12 +18,10 @@ async function fetchAllFavoriteIds(): Promise<Set<string>> {
   return ids;
 }
 
-export default function FavoriteButton({
+export default function PageFavoriteButton({
   propertyId,
-  size = "sm",
 }: {
   propertyId: string;
-  size?: "sm" | "md";
 }) {
   const queryClient = useQueryClient();
 
@@ -64,35 +61,29 @@ export default function FavoriteButton({
     },
   });
 
-  const btnSize = size === "md" ? "btn-md" : "btn-sm";
-
   return (
     <button
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      onClick={() => {
         const removing = isFavorited;
         toast.promise(mutation.mutateAsync(), {
-          loading: removing
-            ? "Removing from favorites…"
-            : "Adding to favorites…",
-          success: extract_message,
-          error: extract_message,
+          loading: removing ? "Removing from favorites…" : "Saving to favorites…",
+          success: removing ? "Removed from favorites" : "Saved to favorites",
+          error: "Failed to update favorites",
         });
       }}
       disabled={mutation.isPending || isLoading}
-      className={`btn btn-circle ${btnSize} ${
+      className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors w-full sm:w-auto ${
         isFavorited
-          ? "bg-red-500 hover:bg-red-600 border-red-500 text-white"
-          : "btn-ghost bg-base-100/80 backdrop-blur hover:bg-base-100"
+          ? "border-red-300 text-red-600 bg-red-50 hover:bg-red-100"
+          : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
       }`}
-      title={isFavorited ? "Remove from favorites" : "Add to favorites"}
     >
       <Heart
-        className={`${size === "md" ? "w-5 h-5" : "w-4 h-4"} ${
-          isFavorited ? "fill-current" : "text-base-content/70"
+        className={`w-4 h-4 transition-colors ${
+          isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
         }`}
       />
+      {isFavorited ? "Saved" : "Save"}
     </button>
   );
 }
