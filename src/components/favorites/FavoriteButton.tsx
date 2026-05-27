@@ -4,21 +4,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
 
-async function fetchAllFavoriteIds(): Promise<Set<string>> {
-  const ids = new Set<string>();
-  let page = 1;
-  while (true) {
-    const resp = await apiClient.get("/favorites", {
-      params: { page, limit: 100 },
-    });
-    const { data, meta } = resp.data.data;
-    data.forEach((fav: any) => ids.add(fav.property.id));
-    if (page >= meta.totalPages) break;
-    page++;
-  }
-  return ids;
-}
-
 export default function FavoriteButton({
   propertyId,
   size = "sm",
@@ -28,13 +13,16 @@ export default function FavoriteButton({
 }) {
   const queryClient = useQueryClient();
 
-  const { data: favoriteIds, isLoading } = useQuery({
-    queryKey: ["favorites-ids"],
-    queryFn: fetchAllFavoriteIds,
+  const { data, isLoading } = useQuery({
+    queryKey: ["favorite-check", propertyId],
+    queryFn: async () => {
+      const resp = await apiClient.get(`/favorites/${propertyId}/check`);
+      return resp.data as { data: { isFavorited: boolean } };
+    },
     staleTime: 5 * 60 * 1000,
   });
 
-  const isFavorited = favoriteIds?.has(propertyId) ?? false;
+  const isFavorited = data?.data?.isFavorited ?? false;
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -47,19 +35,15 @@ export default function FavoriteButton({
       }
     },
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["favorites-ids"] });
-      const prev = queryClient.getQueryData<Set<string>>(["favorites-ids"]);
-      const next = new Set(prev);
-      if (isFavorited) {
-        next.delete(propertyId);
-      } else {
-        next.add(propertyId);
-      }
-      queryClient.setQueryData(["favorites-ids"], next);
+      await queryClient.cancelQueries({ queryKey: ["favorite-check", propertyId] });
+      const prev = queryClient.getQueryData(["favorite-check", propertyId]);
+      queryClient.setQueryData(["favorite-check", propertyId], {
+        data: { isFavorited: !isFavorited },
+      });
       return { prev };
     },
     onError: (_err, _vars, context) => {
-      queryClient.setQueryData(["favorites-ids"], context?.prev);
+      queryClient.setQueryData(["favorite-check", propertyId], context?.prev);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
