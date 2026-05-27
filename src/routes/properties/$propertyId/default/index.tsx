@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   TrendingUp,
   ChevronLeft,
+  Wallet,
+  Building2,
 } from "lucide-react";
 import { MediaSlider } from "@/components/property/MediaSlider";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,10 +24,13 @@ import { useModal } from "@/store/modals";
 import SimpleInput from "@/simpleComps/inputs/SimpleInput";
 import { useForm, FormProvider, Controller } from "react-hook-form";
 import AdditionalFees from "@/routes/partners/-components/Additionalfees";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import InvestmentDetails from "@/routes/dashboard/properties/$propertyId/-components/InvSpecific";
 import { useAuth, logout } from "@/store/authStore";
 import InvestorOnly, { allow_invest } from "../../-components/only_investors";
+import PaystackPop from "@paystack/inline-js";
+
+const paystackInstance = new PaystackPop();
 
 export const Route = createFileRoute("/properties/$propertyId/default/")({
   component: PropertyDetailPage,
@@ -37,6 +42,7 @@ function PropertyDetailPage() {
   const [auth] = useAuth();
   const isAdmin = !!auth && auth.user?.roles?.includes("ADMIN");
   const { ref, showModal, closeModal } = useModal();
+  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -96,6 +102,57 @@ function PropertyDetailPage() {
         to: "/investors/my-investments/$investmentId",
         params: {
           investmentId: data.data.id,
+        },
+      });
+    },
+  });
+
+  const bankTransferMutation = useMutation({
+    mutationFn: async (payload: {
+      amount: number;
+      quantity: number;
+      paymentOption: string;
+      installmentFrequency?: string;
+      installmentDuration?: number;
+    }) => {
+      const resp = await apiClient.post("/wallet/invest/initialize", {
+        propertyId,
+        amount: payload.amount,
+        quantity: payload.quantity,
+        paymentOption: payload.paymentOption,
+        ...(payload.installmentFrequency ? { installmentFrequency: payload.installmentFrequency } : {}),
+        ...(payload.installmentDuration ? { installmentDuration: payload.installmentDuration } : {}),
+      });
+      return resp.data as { data: { access_code: string; reference: string } };
+    },
+    onSuccess: (data) => {
+      closeModal();
+      paystackInstance.resumeTransaction(data.data.access_code, {
+        async onSuccess(tx: any) {
+          const reference = tx?.reference ?? data.data.reference;
+          const toastId = toast.loading("Awaiting bank transfer confirmation…");
+          for (let i = 0; i < 10; i++) {
+            await new Promise((r) => setTimeout(r, 3000));
+            try {
+              const resp = await apiClient.get("/wallet-trx/transactions", { params: { search: reference } });
+              const list: any[] = resp.data?.data?.data ?? resp.data?.data ?? [];
+              const found = list.find((t: any) => t.reference === reference);
+              if (found?.status === "SUCCESS") {
+                toast.success("Investment confirmed!", { id: toastId });
+                navigate({ to: "/investors/my-investments" });
+                return;
+              }
+              if (found?.status === "FAILED") {
+                toast.error("Payment failed. Please try again.", { id: toastId });
+                return;
+              }
+            } catch {}
+          }
+          toast.info("Payment is pending. You'll be notified when confirmed.", { id: toastId });
+          navigate({ to: "/investors/my-investments" });
+        },
+        onCancel() {
+          toast.info("Transfer window closed. Your reference is saved — check back later.");
         },
       });
     },
@@ -203,6 +260,22 @@ function PropertyDetailPage() {
                             params: { propertyId },
                           });
                         }
+                        if (paymentMethod === "BANK_TRANSFER") {
+                          const { amount, installmentFrequency, installmentDuration } = form.getValues();
+                          return toast.promise(
+                            bankTransferMutation.mutateAsync({
+                              amount: payInstall ? amount * 100 : full_total * 100,
+                              quantity,
+                              paymentOption: payInstall ? "INSTALLMENT" : "FULL_PAYMENT",
+                              ...(payInstall ? { installmentFrequency, installmentDuration } : {}),
+                            }),
+                            {
+                              loading: "Initializing bank transfer...",
+                              success: "Redirecting to payment...",
+                              error: extract_message,
+                            },
+                          );
+                        }
                         if (payInstall) {
                           const {
                             amount,
@@ -234,18 +307,38 @@ function PropertyDetailPage() {
                           },
                         );
                       }}
-                      disabled={mutate.isPending || mutateIns.isPending}
+                      disabled={mutate.isPending || mutateIns.isPending || bankTransferMutation.isPending}
                     >
-                      Confirm & Pay{" "}
-                      {payInstall
-                        ? formatCurrency(payAmount)
-                        : formatCurrency(full_total)}
+                      {paymentMethod === "BANK_TRANSFER"
+                        ? payInstall
+                          ? `Pay via Bank Transfer ${formatCurrency(payAmount)}`
+                          : `Pay via Bank Transfer ${formatCurrency(full_total)}`
+                        : payInstall
+                        ? `Confirm & Pay ${formatCurrency(payAmount)}`
+                        : `Confirm & Pay ${formatCurrency(full_total)}`}
                     </Button>
                   )}
                 </div>
               }
             >
               <section>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {(["WALLET", "BANK_TRANSFER"] as const).map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-colors text-sm font-medium ${
+                        paymentMethod === method
+                          ? "border-(--color-orange) bg-orange-50 text-(--color-orange)"
+                          : "border-gray-200 text-gray-600 hover:border-gray-300"
+                      }`}
+                    >
+                      {method === "WALLET" ? <Wallet className="w-4 h-4" /> : <Building2 className="w-4 h-4" />}
+                      {method === "WALLET" ? "Wallet" : "Bank Transfer"}
+                    </button>
+                  ))}
+                </div>
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
                     <div className="flex justify-between items-center">
