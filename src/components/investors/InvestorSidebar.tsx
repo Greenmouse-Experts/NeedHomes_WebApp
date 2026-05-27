@@ -111,6 +111,48 @@ const RenderAnnouncements = (props: {
   );
 };
 
+const RenderFavourites = (props: {
+  link: any;
+  isDisabled: boolean;
+  activePage?: string;
+  handleLinkClick: () => void;
+}) => {
+  const countQuery = useQuery<ApiResponse<{ count: number }>>({
+    queryKey: ["inv-favourites-count"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/favorites/count");
+      return resp.data;
+    },
+  });
+  const { link, isDisabled, activePage, handleLinkClick } = props;
+  const count = countQuery.data?.data?.count ?? 0;
+  return (
+    <Link
+      key={link.to}
+      to={isDisabled ? "#" : link.to}
+      onClick={isDisabled ? (e) => e.preventDefault() : handleLinkClick}
+      disabled={isDisabled}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.activePage
+          ? "bg-[var(--color-orange)] text-white"
+          : isDisabled
+            ? "text-gray-600 cursor-not-allowed opacity-50"
+            : "hover:bg-gray-800 text-gray-400"
+      }`}
+      activeProps={{ className: "bg-[var(--color-orange)] text-white" }}
+      activeOptions={link.activeOptions}
+    >
+      {link.icon}
+      <span>{link.label}</span>
+      {count > 0 && (
+        <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+          {count}
+        </span>
+      )}
+    </Link>
+  );
+};
+
 const RenderNotifications = (props: {
   link: any;
   isDisabled: boolean;
@@ -214,6 +256,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       label: "Favourites",
       icon: <Heart className="size-4" />,
       alwaysEnabled: false,
+      render: RenderFavourites,
     },
     {
       to: "/investors/notifications",

@@ -153,6 +153,46 @@ const RenderNotifications = (props: {
   );
 };
 
+const RenderFavourites = (props: {
+  link: any;
+  isRestricted: boolean;
+  activePage?: string;
+  handleLinkClick: () => void;
+}) => {
+  const countQuery = useQuery<ApiResponse<{ count: number }>>({
+    queryKey: ["pat-favourites-count"],
+    queryFn: async () => {
+      const resp = await apiClient.get("/favorites/count");
+      return resp.data;
+    },
+  });
+  const { link, isRestricted, activePage, handleLinkClick } = props;
+  const count = countQuery.data?.data?.count ?? 0;
+  return (
+    <Link
+      key={link.to}
+      to={isRestricted ? "#" : link.to}
+      onClick={isRestricted ? (e) => e.preventDefault() : handleLinkClick}
+      disabled={isRestricted}
+      className={`flex items-center gap-2.5 p-2 rounded-lg text-sm transition-colors ${
+        activePage === link.id
+          ? "bg-(--color-orange) text-white"
+          : "hover:bg-gray-800 text-gray-400"
+      } ${isRestricted ? "opacity-50 cursor-not-allowed" : ""}`}
+      activeProps={{ className: "bg-(--color-orange) text-white" }}
+      activeOptions={{ exact: link.exact }}
+    >
+      <link.icon className="size-4" />
+      <span>{link.label}</span>
+      {count > 0 && (
+        <span className="ml-auto text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full leading-none">
+          {count}
+        </span>
+      )}
+    </Link>
+  );
+};
+
 const NAV_LINKS = [
   {
     to: "/partners",
@@ -206,6 +246,7 @@ const NAV_LINKS = [
     label: "Favourites",
     id: "favourites",
     icon: Heart,
+    render: RenderFavourites,
   },
   {
     to: "/partners/settings",
