@@ -1,6 +1,6 @@
 import type { PROPERTY_DATA } from "@/types";
 import { Link } from "@tanstack/react-router";
-import { MapPin, Home, TrendingUp, Calendar, ArrowRight } from "lucide-react";
+import { MapPin, Home, TrendingUp, Calendar, ArrowRight, Ban } from "lucide-react";
 import FavoriteButton from "@/components/favorites/FavoriteButton";
 
 export default function PropertyCard({
@@ -30,20 +30,25 @@ export default function PropertyCard({
     //     return "/partners/properties/$propertyId/default";
     // }
   };
+  const soldOut = property.availableUnits <= 0;
   const link = route(property.investmentModel);
   return (
     <Link
       to={link}
       params={{ propertyId: property.id }}
-      className="card card-compact bg-base-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
+      className={`card card-compact bg-base-100 shadow-sm border border-base-200 group h-full transition-all duration-300 ${
+        soldOut
+          ? "opacity-60 grayscale pointer-events-none cursor-not-allowed"
+          : "hover:shadow-xl"
+      }`}
     >
       <figure className="relative h-56 overflow-hidden">
         <img
           src={property.coverImage}
           alt={property.propertyTitle}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className={`w-full h-full object-cover transition-transform duration-700 ${!soldOut && "group-hover:scale-110"}`}
         />
-        {property.availableUnits > 0 && (
+        {!soldOut && (
           <div className="absolute top-4 right-4 z-10">
             <FavoriteButton propertyId={property.id} />
           </div>
@@ -55,6 +60,11 @@ export default function PropertyCard({
           {property.premiumProperty && (
             <div className="badge badge-warning font-bold text-[10px] uppercase tracking-wider">
               Premium
+            </div>
+          )}
+          {soldOut && (
+            <div className="badge badge-error font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+              <Ban className="w-2.5 h-2.5" /> Sold Out
             </div>
           )}
         </div>
@@ -107,13 +117,22 @@ export default function PropertyCard({
           </div>
 
           <div className="flex flex-col items-end">
-            <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-base-content/40">
-              <Calendar className="w-3 h-3" />
-              {property.availableUnits} Slots Left
-            </div>
-            <div className="btn btn-ghost btn-xs text-primary group-hover:translate-x-1 transition-transform p-0 mt-1">
-              Details <ArrowRight className="w-3 h-3 ml-1" />
-            </div>
+            {soldOut ? (
+              <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-error">
+                <Ban className="w-3 h-3" />
+                No Slots Available
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-base-content/40">
+                <Calendar className="w-3 h-3" />
+                {property.availableUnits} Slots Left
+              </div>
+            )}
+            {!soldOut && (
+              <div className="btn btn-ghost btn-xs text-primary group-hover:translate-x-1 transition-transform p-0 mt-1">
+                Details <ArrowRight className="w-3 h-3 ml-1" />
+              </div>
+            )}
           </div>
         </div>
       </div>
