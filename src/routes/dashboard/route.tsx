@@ -16,6 +16,9 @@ export const Route = createFileRoute("/dashboard")({
     if (!user) {
       throw redirect({ to: "/login" });
     }
+
+    // console.log(user);
+    // return;
     const isAdmin = !!user.user.roles.find((item) => item == "SUPER_ADMIN");
     const accountType = user.user.accountType == "ADMIN";
     console.log("accountType", accountType);

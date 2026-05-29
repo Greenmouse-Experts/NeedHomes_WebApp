@@ -183,6 +183,7 @@ export const strip_save_to_own = (data: Record<string, any>) => {
   delete cleaned.totalShares;
   delete cleaned.pricePerShare;
   delete cleaned.minimumShares;
+  delete cleaned.firstPaymentPercentage;
   delete cleaned.exitWindow;
   delete cleaned.investmentModel;
   delete cleaned.return30Days;
