@@ -45,7 +45,9 @@ function PropertyDetailPage() {
   const { propertyId } = Route.useParams();
   const navigate = useNavigate();
   const { ref, showModal, closeModal } = useModal();
-  const [paymentMethod, setPaymentMethod] = useState<"WALLET" | "BANK_TRANSFER">("WALLET");
+  const [paymentMethod, setPaymentMethod] = useState<
+    "WALLET" | "BANK_TRANSFER"
+  >("WALLET");
 
   const query = useQuery<ApiResponse<PROPERTY_TYPE>>({
     queryKey: ["property", propertyId],
@@ -110,8 +112,12 @@ function PropertyDetailPage() {
         amount: payload.amount,
         quantity: payload.quantity,
         paymentOption: payload.paymentOption,
-        ...(payload.installmentFrequency ? { installmentFrequency: payload.installmentFrequency } : {}),
-        ...(payload.installmentDuration ? { installmentDuration: payload.installmentDuration } : {}),
+        ...(payload.installmentFrequency
+          ? { installmentFrequency: payload.installmentFrequency }
+          : {}),
+        ...(payload.installmentDuration
+          ? { installmentDuration: payload.installmentDuration }
+          : {}),
         ...(ref ? { referralCode: ref } : {}),
       });
       return resp.data as { data: { access_code: string; reference: string } };
@@ -126,8 +132,11 @@ function PropertyDetailPage() {
           for (let i = 0; i < 10; i++) {
             await new Promise((r) => setTimeout(r, 3000));
             try {
-              const resp = await apiClient.get("/wallet-trx/transactions", { params: { search: reference } });
-              const list: any[] = resp.data?.data?.data ?? resp.data?.data ?? [];
+              const resp = await apiClient.get("/wallet-trx/transactions", {
+                params: { search: reference },
+              });
+              const list: any[] =
+                resp.data?.data?.data ?? resp.data?.data ?? [];
               const found = list.find((t: any) => t.reference === reference);
               if (found?.status === "SUCCESS") {
                 toast.success("Investment confirmed!", { id: toastId });
@@ -135,22 +144,28 @@ function PropertyDetailPage() {
                 return;
               }
               if (found?.status === "FAILED") {
-                toast.error("Payment failed. Please try again.", { id: toastId });
+                toast.error("Payment failed. Please try again.", {
+                  id: toastId,
+                });
                 return;
               }
             } catch {}
           }
-          toast.info("Payment is pending. You'll be notified when confirmed.", { id: toastId });
+          toast.info("Payment is pending. You'll be notified when confirmed.", {
+            id: toastId,
+          });
           navigate({ to: "/investors/my-investments" });
         },
         onCancel() {
-          toast.info("Transfer window closed. Your reference is saved — check back later.");
+          toast.info(
+            "Transfer window closed. Your reference is saved — check back later.",
+          );
         },
       });
     },
   });
 
-  interface OUTRIGHTDATA {
+  interface LANDBANKDATA {
     paymentOption: "FULL_PAYMENT" | "INSTALLMENT" | "BOTH";
     minimumInstallmentAmount?: number;
     installmentDuraion?: number;
@@ -171,7 +186,7 @@ function PropertyDetailPage() {
   return (
     <PageLoader query={query}>
       {(data) => {
-        const property = data.data as PROPERTY_TYPE & OUTRIGHTDATA;
+        const property = data.data as PROPERTY_TYPE & LANDBANKDATA;
         // Calculate total price including Management Fees if they exist
         const basePrice = property.basePrice / 100;
         const additionalFeesTotal = (property.additionalFees || []).reduce(
@@ -224,7 +239,9 @@ function PropertyDetailPage() {
 
         const totalForQuantityKobo = install_amount + additionalFeesTotal * 100;
         const minFirstPaymentKobo = property.firstPaymentPercentage
-          ? Math.ceil(totalForQuantityKobo * (property.firstPaymentPercentage / 100))
+          ? Math.ceil(
+              totalForQuantityKobo * (property.firstPaymentPercentage / 100),
+            )
           : null;
 
         useEffect(() => {
@@ -259,22 +276,35 @@ function PropertyDetailPage() {
                     variant="primary"
                     onClick={() => {
                       const fullAmountKobo = Math.round(
-                        ((install_amount + full_charge) / 100 + breakdown.additionalFeesTotal) * 100,
+                        ((install_amount + full_charge) / 100 +
+                          breakdown.additionalFeesTotal) *
+                          100,
                       );
                       if (paymentMethod === "BANK_TRANSFER") {
                         return toast.promise(
                           bankTransferMutation.mutateAsync({
-                            amount: payInstall ? form.getValues("amount") * 100 : fullAmountKobo,
+                            amount: payInstall
+                              ? form.getValues("amount") * 100
+                              : fullAmountKobo,
                             quantity: form.getValues("quantity"),
-                            paymentOption: payInstall ? "INSTALLMENT" : "FULL_PAYMENT",
-                            ...(payInstall ? {
-                              installmentFrequency: form.getValues("installmentFrequency"),
-                              installmentDuration: Number(form.getValues("installmentDuration")),
-                            } : {}),
+                            paymentOption: payInstall
+                              ? "INSTALLMENT"
+                              : "FULL_PAYMENT",
+                            ...(payInstall
+                              ? {
+                                  installmentFrequency: form.getValues(
+                                    "installmentFrequency",
+                                  ),
+                                  installmentDuration: Number(
+                                    form.getValues("installmentDuration"),
+                                  ),
+                                }
+                              : {}),
                           }),
                           {
                             loading: "Initializing bank transfer...",
-                            success: "Bank transfer initialized — follow the prompts.",
+                            success:
+                              "Bank transfer initialized — follow the prompts.",
                             error: extract_message,
                           },
                         );
@@ -282,8 +312,12 @@ function PropertyDetailPage() {
                       if (payInstall) {
                         const amount = form.getValues("amount");
                         const quantity = form.getValues("quantity");
-                        const installmentFrequency = form.getValues("installmentFrequency");
-                        const installmentDuration = Number(form.getValues("installmentDuration"));
+                        const installmentFrequency = form.getValues(
+                          "installmentFrequency",
+                        );
+                        const installmentDuration = Number(
+                          form.getValues("installmentDuration"),
+                        );
                         return toast.promise(
                           mutate.mutateAsync({
                             amountPaid: amount * 100,
@@ -311,7 +345,9 @@ function PropertyDetailPage() {
                         },
                       );
                     }}
-                    disabled={mutate.isPending || bankTransferMutation.isPending}
+                    disabled={
+                      mutate.isPending || bankTransferMutation.isPending
+                    }
                   >
                     {paymentMethod === "BANK_TRANSFER"
                       ? payInstall
@@ -517,7 +553,8 @@ function PropertyDetailPage() {
                             . Remaining{" "}
                             <span className="font-bold">
                               {formatCurrency(
-                                (totalForQuantityKobo - minFirstPaymentKobo) / 100,
+                                (totalForQuantityKobo - minFirstPaymentKobo) /
+                                  100,
                               )}
                             </span>{" "}
                             spread over {property.installmentDuration} months.
@@ -840,7 +877,8 @@ function PropertyDetailPage() {
                                 </span>
                                 <span className="font-medium">
                                   {formatCurrency(
-                                    (totalForQuantityKobo - minFirstPaymentKobo) /
+                                    (totalForQuantityKobo -
+                                      minFirstPaymentKobo) /
                                       100,
                                   )}
                                 </span>
@@ -854,7 +892,8 @@ function PropertyDetailPage() {
                                     {property.installmentDuration}x{" "}
                                     {formatCurrency(
                                       Math.ceil(
-                                        (totalForQuantityKobo - minFirstPaymentKobo) /
+                                        (totalForQuantityKobo -
+                                          minFirstPaymentKobo) /
                                           property.installmentDuration,
                                       ) / 100,
                                     )}

@@ -182,7 +182,13 @@ function RouteComponent() {
       label: "User",
       render: (_, item) => (
         <div className="flex flex-col">
-          <span className="font-medium">{`${item.user.firstName} ${item.user.lastName}`}</span>
+          {
+            <span className="font-medium">
+              {item.user.companyName ?? (
+                <>{`${item.user.firstName} ${item.user.lastName}`}</>
+              )}
+            </span>
+          }
           <span className="text-xs opacity-60">{item.user.email}</span>
         </div>
       ),
