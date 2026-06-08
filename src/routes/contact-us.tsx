@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
 import Footer from "@/components/home/Footer";
 
 export const Route = createFileRoute("/contact-us")({
@@ -48,20 +48,35 @@ function RouteComponent() {
               <div className="bg-[#333D42] p-6 rounded-sm text-white">
                 <h3 className="font-bold mb-4">Phone & WhatsApp</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
+                  <a
+                    href="tel:+2347025005857"
+                    className="flex items-center gap-3 hover:text-orange-500 transition-colors"
+                  >
                     <Phone className="h-4 w-4 text-orange-500" />
                     <span className="text-sm">+234 702 500 5857</span>
-                  </div>
+                  </a>
+                  <a
+                    href="https://wa.me/2347025005857"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 hover:text-orange-500 transition-colors"
+                  >
+                    <MessageCircle className="h-4 w-4 text-orange-500" />
+                    <span className="text-sm">WhatsApp</span>
+                  </a>
                 </div>
               </div>
 
               <div className="bg-[#333D42] p-6 rounded-sm text-white">
                 <h3 className="font-bold mb-4">Email</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
+                  <a
+                    href="mailto:surport@needhomespdc.com"
+                    className="flex items-center gap-3 hover:text-orange-500 transition-colors"
+                  >
                     <Mail className="h-4 w-4 text-orange-500" />
-                    <span className="text-sm"> surport@needhomespdc.com</span>
-                  </div>
+                    <span className="text-sm">surport@needhomespdc.com</span>
+                  </a>
                 </div>
               </div>
             </div>
