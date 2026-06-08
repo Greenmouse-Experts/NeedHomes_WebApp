@@ -89,26 +89,26 @@ export default function InvestmentDetails({
     case "SAVE_TO_OWN":
       return (
         <DetailsCard>
-          <DetailRow
+          {/*<DetailRow
             label="Savings Frequency"
             value={property.savingsFrequency || "N/A"}
-          />
+          />*/}
           <DetailRow
             label="Target Property Price"
-            value={`₦${(property.targetPropertyPrice / 100)?.toLocaleString() || "0"}`}
+            value={`₦${(property.totalPrice / 100)?.toLocaleString() || "0"}`}
           />
           <DetailRow
             label="Payment Option"
             value={property.paymentOption || "N/A"}
           />
-          <DetailRow
-            label="Installment Duration"
-            value={`${property.installmentDuration || "N/A"} ${property.savingsFrequency || ""}`}
-          />
-          <DetailRow
+          {/*<DetailRow
+            label="Savings Duration"
+            value={`${property.paymentDuration || "N/A"} `}
+          />*/}
+          {/*<DetailRow
             label="minimum installment deposit"
             value={`₦${(property.minimumInstallmentAmount / 100)?.toLocaleString() || "0"}`}
-          />
+          />*/}
         </DetailsCard>
       );
 
@@ -133,7 +133,9 @@ export default function InvestmentDetails({
 
     case "FRACTIONAL_OWNERSHIP": {
       const tiers = property?.returnTiers
-        ? Object.entries(property.returnTiers).sort((a, b) => Number(a[0]) - Number(b[0]))
+        ? Object.entries(property.returnTiers).sort(
+            (a, b) => Number(a[0]) - Number(b[0]),
+          )
         : [];
       return (
         <DetailsCard>
@@ -159,10 +161,15 @@ export default function InvestmentDetails({
           />
           {tiers.length > 0 ? (
             <div className="pt-2">
-              <span className="text-sm text-gray-600 block mb-2">Return Tiers</span>
+              <span className="text-sm text-gray-600 block mb-2">
+                Return Tiers
+              </span>
               <div className="grid grid-cols-2 gap-2">
                 {tiers.map(([days, rate]) => (
-                  <div key={days} className="bg-white border border-gray-200 rounded-lg p-2 text-center">
+                  <div
+                    key={days}
+                    className="bg-white border border-gray-200 rounded-lg p-2 text-center"
+                  >
                     <p className="text-xs text-gray-500">{days} days</p>
                     <p className="text-sm font-bold text-green-600">{rate}%</p>
                   </div>

@@ -19,8 +19,10 @@ export default function PropertyCard({
     property.investmentModel === "FRACTIONAL_OWNERSHIP"
       ? (property.availableShares ?? 0)
       : property.investmentModel === "LAND_BANKING"
-      ? (property.availablePlots != null ? Number(property.availablePlots) : 0)
-      : property.availableUnits;
+        ? property.availablePlots != null
+          ? Number(property.availablePlots)
+          : 0
+        : property.availableUnits;
   const soldOut = availableCount <= 0;
 
   return (
@@ -82,7 +84,7 @@ function PropertyCardInner({ property }: { property: PROPERTY_DATA }) {
       to={route(property.investmentModel)}
       //@ts-ignore
       params={{ propertyId: property.id }}
-      className={`card card-compact bg-base-100 ring fade shadow-sm border border-base-200 group h-full transition-all duration-300 ${
+      className={`card card-compact bg-base-100 isolate ring fade shadow-sm border border-base-200 group h-full transition-all duration-300 ${
         soldOut
           ? "opacity-60 grayscale pointer-events-none cursor-not-allowed"
           : "hover:shadow-xl"

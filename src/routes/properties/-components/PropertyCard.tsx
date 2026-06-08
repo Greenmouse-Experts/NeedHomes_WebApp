@@ -37,7 +37,7 @@ export default function PropertyCard({
       to={route(property.investmentModel)}
       //@ts-ignore
       params={{ propertyId: property.id }}
-      className="card card-compact bg-base-100 ring fade shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
+      className="card card-compact bg-base-100 isolate ring fade shadow-sm hover:shadow-xl transition-all duration-300 border border-base-200 group h-full"
     >
       <figure className="relative h-56 overflow-hidden">
         <img

@@ -1,6 +1,13 @@
 import type { PROPERTY_DATA } from "@/types";
 import { Link } from "@tanstack/react-router";
-import { MapPin, Home, TrendingUp, Calendar, ArrowRight, Ban } from "lucide-react";
+import {
+  MapPin,
+  Home,
+  TrendingUp,
+  Calendar,
+  ArrowRight,
+  Ban,
+} from "lucide-react";
 import FavoriteButton from "@/components/favorites/FavoriteButton";
 
 export default function PropertyCard({
@@ -36,7 +43,7 @@ export default function PropertyCard({
     <Link
       to={link}
       params={{ propertyId: property.id }}
-      className={`card card-compact bg-base-100 shadow-sm border border-base-200 group h-full transition-all duration-300 ${
+      className={`card card-compact bg-base-100 isolate shadow-sm border border-base-200 group h-full transition-all duration-300 ${
         soldOut
           ? "opacity-60 grayscale pointer-events-none cursor-not-allowed"
           : "hover:shadow-xl"

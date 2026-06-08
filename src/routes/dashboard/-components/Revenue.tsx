@@ -49,7 +49,6 @@ export default function AdminRevenue() {
   });
 
   const trend = query.data?.data;
-
   return (
     <Card className="lg:col-span-2">
       <CardHeader className="p-4 md:p-6">

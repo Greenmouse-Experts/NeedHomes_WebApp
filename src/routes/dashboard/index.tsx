@@ -126,94 +126,10 @@ function DashboardIndexPage() {
       </Card>
       <AdminDashStats />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid ">
         {/* Revenue Chart */}
         <AdminRevenue />
         {/* Wallet */}
-        <Card>
-          <CardHeader className="p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base md:text-lg">Wallet</CardTitle>
-              <select className="text-xs md:text-sm border border-gray-300 rounded px-2 py-1">
-                <option>Monthly</option>
-              </select>
-            </div>
-          </CardHeader>
-          <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
-            {/* Total Balance */}
-            <Card className="bg-[var(--color-orange)] text-white">
-              <CardContent className="p-3 md:p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] md:text-xs opacity-90">
-                      TOTAL BALANCE
-                    </p>
-                    <div className="text-xl md:text-2xl font-bold flex gap-2">
-                      <NairaIcon className="w-8" /> 120,000
-                    </div>
-                  </div>
-                  <EyeIcon className="w-4 h-4 md:w-5 md:h-5" />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Income/Expense */}
-            <div className="space-y-2 md:space-y-3">
-              <div className="flex items-center justify-between p-2.5 md:p-3 bg-green-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
-                  <span className="text-xs md:text-sm font-medium">INCOME</span>
-                </div>
-                <span className="text-sm md:text-base font-bold text-green-600 flex items-center">
-                  <NairaIcon className="w-5" /> 100,000
-                </span>
-              </div>
-              <div className="flex items-center justify-between p-2.5 md:p-3 bg-red-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
-                  <span className="text-xs md:text-sm font-medium">
-                    EXPENSE
-                  </span>
-                </div>
-                <span className="text-sm flex items-center md:text-base font-bold text-red-600">
-                  <NairaIcon className="w-5" /> 20,000
-                </span>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Recent Transactions */}
-            <div>
-              <h3 className="text-xs md:text-sm font-semibold mb-2 md:mb-3">
-                RECENT
-              </h3>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-600 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="flex items-center text-xs md:text-sm font-medium text-green-600 truncate">
-                        + <NairaIcon className="w-5" /> 200,000
-                      </p>
-                      <p className="text-[10px] md:text-xs text-gray-500 truncate">
-                        Incoming payment
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right flex-shrink-0 ml-2">
-                    <p className="text-[10px] md:text-xs text-gray-500">
-                      12-02-25
-                    </p>
-                    <Badge className="bg-green-100 text-green-700 text-[10px] md:text-xs">
-                      Successful
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
       <DashIncomeStats />
     </DashboardLayout>

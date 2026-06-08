@@ -25,7 +25,13 @@ interface Investment {
   unitsBought: number;
   sharesBought: number | null;
   paymentOption: "OUTRIGHT" | "INSTALLMENT" | "FULL_PAYMENT";
-  status: "ACTIVE" | "PENDING" | "COMPLETED" | "EXITED" | "CANCELLED" | "RESOLD";
+  status:
+    | "ACTIVE"
+    | "PENDING"
+    | "COMPLETED"
+    | "EXITED"
+    | "CANCELLED"
+    | "RESOLD";
   createdAt: string;
   property: {
     basePrice: number;
@@ -54,7 +60,13 @@ function RouteComponent() {
   const paginationProps = usePagination();
 
   const query = useQuery<ApiResponse<Investment[]>>({
-    queryKey: ["investments", paginationProps.page, status, search, investmentModel],
+    queryKey: [
+      "investments",
+      paginationProps.page,
+      status,
+      search,
+      investmentModel,
+    ],
     queryFn: async () => {
       const resp = await apiClient.get("investments/my-investments", {
         params: {
@@ -117,7 +129,9 @@ function RouteComponent() {
           RESOLD: "bg-purple-100 text-purple-700",
         };
         return (
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[value] || "bg-gray-100 text-gray-700"}`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${colors[value] || "bg-gray-100 text-gray-700"}`}
+          >
             {value}
           </span>
         );
@@ -143,7 +157,9 @@ function RouteComponent() {
     },
   ];
 
-  const title = investmentModel ? MODEL_LABELS[investmentModel] ?? investmentModel : "All Investments";
+  const title = investmentModel
+    ? (MODEL_LABELS[investmentModel] ?? investmentModel)
+    : "All Investments";
 
   return (
     <div className="space-y-6">
@@ -163,10 +179,7 @@ function RouteComponent() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <SearchBar
-          value={search}
-          onChange={(val: string) => setSearch(val)}
-        />
+        <SearchBar value={search} onChange={(val: string) => setSearch(val)} />
         <select
           className="select select-primary"
           value={status}
