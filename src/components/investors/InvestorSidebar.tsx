@@ -263,7 +263,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "notifications",
       label: "Notifications",
       icon: <Bell className="size-4" />,
-      alwaysEnabled: false,
+      alwaysEnabled: true,
       render: RenderNotifications,
     },
     {
@@ -278,7 +278,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "chat",
       label: "chat",
       icon: <ChatBubbleLeftIcon className="size-4" />,
-      alwaysEnabled: false,
+      alwaysEnabled: true,
       render: RenderChat,
     },
 
@@ -287,7 +287,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "announcements",
       label: "Announcement",
       icon: <Megaphone className="size-4" />,
-      alwaysEnabled: false,
+      alwaysEnabled: true,
       render: RenderAnnouncements,
     },
     // {
