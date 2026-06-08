@@ -10,6 +10,7 @@ import { TawkToWidget } from "@/components/TawkToWidget";
 const client = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchIntervalInBackground: true,
       retry: (failureCount, error: any) => {
         // PocketBase returns 404 when record not found
         if (error?.status === 404) return false;
