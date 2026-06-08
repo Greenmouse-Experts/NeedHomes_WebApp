@@ -106,66 +106,46 @@ export default function KYCForm() {
     }
   }, [kycData, reset, isError, error]);
 
+  // Resolve a document URL: upload a newly selected file, otherwise keep the
+  // existing URL stored in `prev` (so text-only edits don't wipe images).
+  const resolveDoc = async (
+    hook: ReturnType<typeof useSelectImage>,
+  ): Promise<string | null> => {
+    if (hook.image) {
+      const uploaded = await uploadImage(hook.image);
+      return uploaded.data.url;
+    }
+    return hook.prev || null;
+  };
+
   const kycMutation = useMutation<ApiResponse<any>, AxiosError, KycFormData>({
-    mutationFn: (data) =>
-      apiClient
-        .post(`kyc/submit?accountType=${accountType}`, data)
-        .then((res) => res.data),
+    // Uploads + submit run as a single transaction.
+    mutationFn: async (data) => {
+      const submitData: KycFormData = {
+        idType: data.idType,
+        address: data.address,
+        frontPage: await resolveDoc(frontImage),
+        backPage: await resolveDoc(backImage),
+        utilityBill: await resolveDoc(utilityImage),
+      };
+      const res = await apiClient.post(
+        `kyc/submit?accountType=${accountType}`,
+        submitData,
+      );
+      return res.data;
+    },
     onSuccess: (data: ApiResponse) => {
       setKyc(data.data.verification);
       refetch();
-      // toast.success(data.message || "KYC submitted successfully!");
-    },
-    onError: (error) => {
-      toast.error(
-        extract_message(error as any) ||
-          "Failed to submit KYC. Please try again.",
-      );
     },
   });
 
-  const onSubmit = async (data: KycFormData) => {
-    const submitData: KycFormData = {
-      idType: data.idType,
-      address: data.address,
-      frontPage: null,
-      backPage: null,
-      utilityBill: null,
-    };
-    toast.info("submitting", { duration: 1500 });
-    try {
-      // Upload images first
-      if (frontImage.image && typeof frontImage.image !== "string") {
-        const uploaded = await uploadImage(frontImage.image);
-        submitData.frontPage = uploaded.data.url;
-      } else if (typeof frontImage.image === "string") {
-        submitData.frontPage = frontImage.image;
-      }
-
-      if (backImage.image && typeof backImage.image !== "string") {
-        const uploaded = await uploadImage(backImage.image);
-        submitData.backPage = uploaded.data.url;
-      } else if (typeof backImage.image === "string") {
-        submitData.backPage = backImage.image;
-      }
-
-      if (utilityImage.image && typeof utilityImage.image !== "string") {
-        const uploaded = await uploadImage(utilityImage.image);
-        submitData.utilityBill = uploaded.data.url;
-      } else if (typeof utilityImage.image === "string") {
-        submitData.utilityBill = utilityImage.image;
-      }
-
-      // Submit KYC data
-      toast.promise(kycMutation.mutateAsync(submitData), {
-        loading: "Submitting KYC...",
-        success: (res) => res.message || "KYC submitted successfully!",
-        error: (err: any) => extract_message(err) || "Failed to submit KYC.",
-      });
-    } catch (err) {
-      console.error("Error during KYC submission:", err);
-      toast.error("An error occurred while processing your request.");
-    }
+  const onSubmit = (data: KycFormData) => {
+    toast.promise(kycMutation.mutateAsync(data), {
+      loading: "Uploading documents and submitting KYC...",
+      success: (res) => res.message || "KYC submitted successfully!",
+      error: (err: any) => extract_message(err) || "Failed to submit KYC.",
+    });
   };
 
   if (isLoadingKyc) {

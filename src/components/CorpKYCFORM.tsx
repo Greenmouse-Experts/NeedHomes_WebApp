@@ -98,33 +98,41 @@ export default function CorpKYCFORM() {
     }
   }, [kycData, reset, isError, error]);
 
+  // Resolve a document URL: upload a newly selected file, otherwise keep the
+  // existing URL stored in `prev` (so text-only edits don't wipe images).
+  const resolveDoc = async (
+    hook: ReturnType<typeof useSelectImage>,
+  ): Promise<string> => {
+    if (hook.image) {
+      const uploaded = await uploadImage(hook.image);
+      return uploaded.data.url;
+    }
+    return hook.prev || "";
+  };
+
   const kycMutation = useMutation<ApiResponse<any>, AxiosError, KycFormData>({
-    mutationFn: (data) =>
-      apiClient
-        .post(`kyc/submit?accountType=${accountType}`, data)
-        .then((res) => res.data),
+    // Uploads + submit run as a single transaction.
+    mutationFn: async (data) => {
+      const submitData: KycFormData = {
+        companyName: data.companyName,
+        companyAddress: data.companyAddress,
+        cacDocument: await resolveDoc(cacImage),
+        tinDocument: await resolveDoc(tinImage),
+        authorizedId: await resolveDoc(authorizedIdImage),
+      };
+      const res = await apiClient.post(
+        `kyc/submit?accountType=${accountType}`,
+        submitData,
+      );
+      return res.data;
+    },
     onSuccess: (data: ApiResponse) => {
       setKyc(data.data.verification);
       refetch();
     },
-    onError: (error) => {
-      toast.error(
-        extract_message(error as any) ||
-          "Failed to submit KYC. Please try again.",
-      );
-    },
   });
 
-  const resolveDoc = async (hook: typeof cacImage): Promise<string> => {
-    if (hook.image && typeof hook.image !== "string") {
-      const uploaded = await uploadImage(hook.image as File);
-      return uploaded.data.url;
-    }
-    // Fall back to existing URL stored in prev
-    return (hook.image as string) || hook.prev || "";
-  };
-
-  const onSubmit = async (data: KycFormData) => {
+  const onSubmit = (data: KycFormData) => {
     // Validate — need either a newly selected image OR an existing prev URL
     if (!cacImage.image && !cacImage.prev) {
       toast.error("CAC Document is required.");
@@ -139,22 +147,7 @@ export default function CorpKYCFORM() {
       return;
     }
 
-    const submitData: KycFormData = {
-      companyName: data.companyName,
-      companyAddress: data.companyAddress,
-      cacDocument: "",
-      tinDocument: "",
-      authorizedId: "",
-    };
-
-    const upload_docs = async () => {
-      submitData.cacDocument = await resolveDoc(cacImage);
-      submitData.tinDocument = await resolveDoc(tinImage);
-      submitData.authorizedId = await resolveDoc(authorizedIdImage);
-      await kycMutation.mutateAsync(submitData);
-    };
-
-    toast.promise(upload_docs(), {
+    toast.promise(kycMutation.mutateAsync(data), {
       loading: "Uploading documents and submitting KYC...",
       success: "KYC submitted successfully!",
       error: (err: any) =>
