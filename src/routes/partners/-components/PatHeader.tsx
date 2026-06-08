@@ -15,7 +15,12 @@ export default function PatHeader({
   subtitle?: string;
 }) {
   const [user, setUser] = useAuth();
-  const img_url = user?.user.profilePicture || "/https://github.com/shadcn.png";
+  const img_url = user?.user.profilePicture;
+  const avatarInitial =
+    (user?.user.companyName || user?.user.firstName || "")
+      .trim()
+      .charAt(0)
+      .toUpperCase() || "U";
 
   return (
     <>
@@ -49,7 +54,13 @@ export default function PatHeader({
               <button className="btn btn-circle  p-0 overflow-visible">
                 <div className="relative flex justify-center">
                   <Avatar className="w-8 h-8 md:w-10 md:h-10">
-                    <AvatarImage src={img_url} />
+                    {img_url ? (
+                      <AvatarImage src={img_url} />
+                    ) : (
+                      <AvatarFallback className="bg-orange-100 text-orange-700 font-semibold">
+                        {avatarInitial}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   <VerifiedPill />
                 </div>

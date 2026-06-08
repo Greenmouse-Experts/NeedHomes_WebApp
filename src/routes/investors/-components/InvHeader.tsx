@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage } from "@/components/ui/Avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import ThemeProvider from "@/simpleComps/ThemeProvider";
 import { show_logout, useAuth, useKyc } from "@/store/authStore";
@@ -14,7 +14,12 @@ export default function InvHeader({
   subtitle?: string;
 }) {
   const [user] = useAuth();
-  const img_url = user?.user.profilePicture || "/https://github.com/shadcn.png";
+  const img_url = user?.user.profilePicture;
+  const avatarInitial =
+    (user?.user.firstName || user?.user.companyName || "")
+      .trim()
+      .charAt(0)
+      .toUpperCase() || "U";
   const verificationStatus = user?.user.account_verification_status;
 
   const getStatusIcon = () => {
@@ -68,7 +73,13 @@ export default function InvHeader({
               <button className="btn btn-circle  p-0 overflow-visible">
                 <div className="relative flex justify-center">
                   <Avatar className="w-8 h-8 md:w-10 md:h-10">
-                    <AvatarImage src={img_url} />
+                    {img_url ? (
+                      <AvatarImage src={img_url} />
+                    ) : (
+                      <AvatarFallback className="bg-orange-100 text-orange-700 font-semibold">
+                        {avatarInitial}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   <VerifiedPill />
                 </div>
