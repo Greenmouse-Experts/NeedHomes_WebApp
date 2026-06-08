@@ -192,7 +192,9 @@ function InvestmentDetailsPage() {
     <div className="space-y-6">
       {/* Back Button */}
       <Button
-        onClick={() => navigate({ to: "/investors/my-investments" })}
+        onClick={() =>
+          navigate({ to: "/investors/my-investments", reloadDocument: true })
+        }
         variant="outline"
         leftIcon={<ChevronLeft className="w-5 h-5" />}
       >

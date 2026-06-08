@@ -20,7 +20,7 @@ interface Transaction {
   id: string;
   walletId: string;
   amount: number;
-  type: "INVESTMENT" | "DEPOSIT" | "WITHDRAWAL";
+  type: "INVESTMENT" | "DEPOSIT" | "WITHDRAWAL" | "CREDIT";
   status: "SUCCESS" | "PENDING" | "FAILED";
   reference: string;
   createdAt: string;
@@ -38,6 +38,7 @@ const typeBadge: Record<Transaction["type"], string> = {
   INVESTMENT: "badge-info",
   DEPOSIT: "badge-success",
   WITHDRAWAL: "badge-error",
+  CREDIT: "badge-success",
 };
 
 const columns: columnType<Transaction>[] = [
