@@ -39,7 +39,13 @@ interface Investment {
   unitsBought: number;
   sharesBought: number | null;
   paymentOption: "OUTRIGHT" | "INSTALLMENT" | "FULL_PAYMENT";
-  status: "ACTIVE" | "PENDING" | "COMPLETED" | "EXITED" | "CANCELLED" | "RESOLD";
+  status:
+    | "ACTIVE"
+    | "PENDING"
+    | "COMPLETED"
+    | "EXITED"
+    | "CANCELLED"
+    | "RESOLD";
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -225,7 +231,8 @@ function InvestmentDetailsPage() {
                                   EXITED: "bg-orange-100 text-orange-700",
                                   CANCELLED: "bg-red-100 text-red-700",
                                   RESOLD: "bg-purple-100 text-purple-700",
-                                }[investment.status] ?? "bg-gray-100 text-gray-700"
+                                }[investment.status] ??
+                                "bg-gray-100 text-gray-700"
                               }`}
                             >
                               {investment.status}
@@ -414,8 +421,6 @@ function InvestmentDetailsPage() {
                   )}
                 </div>
               </section>
-
-              <InvPropDetails propId={investment.propertyId} />
             </>
           );
         }}
