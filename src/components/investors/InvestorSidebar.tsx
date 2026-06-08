@@ -234,7 +234,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
       activePage: "properties",
       label: "Properties",
       icon: <Building2 className="size-4" />,
-      alwaysEnabled: false,
+      alwaysEnabled: true,
     },
     {
       to: "/investors/my-investments",
