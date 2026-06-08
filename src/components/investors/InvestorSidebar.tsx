@@ -239,7 +239,7 @@ export function InvestorSidebar({ activePage }: InvestorSidebarProps) {
     {
       to: "/investors/my-investments",
       activePage: "my-investments",
-      label: "My Investment",
+      label: "My Portfolio",
       icon: <User className="size-4" />,
       alwaysEnabled: false,
     },
