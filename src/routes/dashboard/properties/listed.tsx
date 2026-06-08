@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Plus, Filter, Printer } from "lucide-react";
+import { Plus, Printer } from "lucide-react";
+import { printTable } from "@/helpers/printTable";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import apiClient, { type ApiResponseV2 } from "@/api/simpleApi";
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
@@ -295,24 +296,42 @@ function ListedPropertiesPage() {
           <div className="flex-1 max-w-md">
             <SearchBar value={searchQuery} onChange={handleSearch} />
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Filter className="w-4 h-4" />
-              Filter
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Printer className="w-4 h-4" />
-              Print
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={() =>
+              printTable(
+                query.data?.data?.data ?? [],
+                [
+                  { key: "propertyTitle", label: "Property Title" },
+                  { key: "propertyType", label: "Type" },
+                  { key: "investmentModel", label: "Model" },
+                  { key: "location", label: "Location" },
+                  {
+                    key: "basePrice",
+                    label: "Base Price",
+                    print: (v) => `₦${Number(v).toLocaleString()}`,
+                  },
+                  { key: "availableUnits", label: "Slots" },
+                  {
+                    key: "published",
+                    label: "Status",
+                    print: (v) => (v ? "Published" : "Unpublished"),
+                  },
+                  {
+                    key: "createdAt",
+                    label: "Date Created",
+                    print: (v) => new Date(v).toLocaleString(),
+                  },
+                ],
+                "Listed Properties",
+              )
+            }
+          >
+            <Printer className="w-4 h-4" />
+            Print
+          </Button>
         </div>
       </section>
       <PageLoader query={query}>
