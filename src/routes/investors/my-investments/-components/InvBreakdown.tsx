@@ -1,7 +1,15 @@
 import apiClient from "@/api/simpleApi";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Home, Layers, PiggyBank, Building2, Hammer, ChevronRight, TrendingUp } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+const MODEL_IMAGE: Record<string, string> = {
+  FRACTIONAL_OWNERSHIP: "/investments/fractional.png",
+  LAND_BANKING: "/investments/land_banking.png",
+  SAVE_TO_OWN: "/investments/save_to_own.png",
+  OUTRIGHT_PURCHASE: "/investments/outright_purchase.png",
+  CO_DEVELOPMENT: "/investments/co_dev.png",
+};
 
 type ModelBreakdown =
   | { model: "FRACTIONAL_OWNERSHIP"; activeSlots: number; currentValue: number; roi: number }
@@ -22,168 +30,56 @@ function fmt(kobo: number) {
   return `₦${n.toLocaleString()}`;
 }
 
-function ModelCard({ item, onClick }: { item: ModelBreakdown; onClick: () => void }) {
+const MODEL_META: Record<string, { label: string; accent: string }> = {
+  FRACTIONAL_OWNERSHIP: { label: "Fractional Investment", accent: "text-indigo-600" },
+  LAND_BANKING:         { label: "Land Banking",          accent: "text-amber-600"  },
+  SAVE_TO_OWN:          { label: "Save to Own",           accent: "text-pink-600"   },
+  OUTRIGHT_PURCHASE:    { label: "Outright Purchase",     accent: "text-teal-600"   },
+  CO_DEVELOPMENT:       { label: "Co-Development",        accent: "text-orange-600" },
+};
+
+function ModelSubtitle({ item }: { item: ModelBreakdown }) {
   switch (item.model) {
     case "FRACTIONAL_OWNERSHIP":
-      return (
-        <button
-          onClick={onClick}
-          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group"
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2.5 bg-indigo-100 rounded-xl shrink-0">
-              <Layers className="w-5 h-5 text-indigo-600" />
-            </div>
-            <div>
-              <p className="font-bold text-gray-900 leading-tight">Fractional Investment</p>
-              <span className="inline-block mt-1 text-xs font-medium bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
-                {item.activeSlots} Active Slots
-              </span>
-            </div>
-          </div>
-          <div className="space-y-1 mb-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide">Current Value</p>
-            <p className="text-xl font-black text-gray-900">{fmt(item.currentValue)}</p>
-            <p className="text-xs text-gray-400 uppercase tracking-wide mt-2">ROI</p>
-            <p className={`text-sm font-bold ${item.roi >= 0 ? "text-green-600" : "text-red-500"}`}>
-              {item.roi >= 0 ? "+" : ""}{item.roi.toFixed(1)}%
-            </p>
-          </div>
-          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-indigo-600 transition-colors border-t border-gray-100 pt-3">
-            View Investments <ChevronRight className="w-4 h-4" />
-          </div>
-        </button>
-      );
-
+      return <>{item.activeSlots} Active Slots · {fmt(item.currentValue)} · ROI {item.roi >= 0 ? "+" : ""}{item.roi.toFixed(1)}%</>;
     case "LAND_BANKING":
-      return (
-        <button
-          onClick={onClick}
-          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-amber-200 transition-all group"
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2.5 bg-amber-100 rounded-xl shrink-0">
-              <Home className="w-5 h-5 text-amber-600" />
-            </div>
-            <div>
-              <p className="font-bold text-gray-900 leading-tight">Land Banking</p>
-              <span className="inline-block mt-1 text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                {item.reservedLands} Lands Reserved
-              </span>
-            </div>
-          </div>
-          <div className="space-y-1 mb-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide">Estimated Appreciation</p>
-            <p className={`text-xl font-black ${item.estimatedAppreciation >= 0 ? "text-green-600" : "text-red-500"}`}>
-              {item.estimatedAppreciation >= 0 ? "+" : ""}{item.estimatedAppreciation.toFixed(1)}%
-            </p>
-            <div className="mt-2 flex gap-0.5 items-end h-8">
-              {[3, 5, 4, 7, 6, 8, 7].map((h, i) => (
-                <div key={i} className="flex-1 bg-green-200 rounded-sm" style={{ height: `${h * 10}%` }} />
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-amber-600 transition-colors border-t border-gray-100 pt-3">
-            View Investments <ChevronRight className="w-4 h-4" />
-          </div>
-        </button>
-      );
-
+      return <>{item.reservedLands} Lands Reserved · +{item.estimatedAppreciation.toFixed(1)}% appreciation</>;
     case "SAVE_TO_OWN":
-      return (
-        <button
-          onClick={onClick}
-          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-pink-200 transition-all group"
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2.5 bg-pink-100 rounded-xl shrink-0">
-              <PiggyBank className="w-5 h-5 text-pink-600" />
-            </div>
-            <div>
-              <p className="font-bold text-gray-900 leading-tight">Save to Own</p>
-              <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{item.targetPropertyTitle}</p>
-            </div>
-          </div>
-          <div className="mb-4">
-            <div className="flex justify-between text-xs text-gray-400 mb-1">
-              <span>Progress</span>
-              <span>{item.progress.toFixed(0)}%</span>
-            </div>
-            <div className="w-full bg-gray-100 rounded-full h-2">
-              <div
-                className="bg-pink-500 h-2 rounded-full transition-all"
-                style={{ width: `${Math.min(item.progress, 100)}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-xs text-gray-400 mt-1.5">
-              <span>{fmt(item.amountSaved)} saved</span>
-              <span>of {fmt(item.targetAmount)}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-pink-600 transition-colors border-t border-gray-100 pt-3">
-            View Investments <ChevronRight className="w-4 h-4" />
-          </div>
-        </button>
-      );
-
+      return <>{item.progress.toFixed(0)}% saved · {fmt(item.amountSaved)} of {fmt(item.targetAmount)}</>;
     case "OUTRIGHT_PURCHASE":
-      return (
-        <button
-          onClick={onClick}
-          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-teal-200 transition-all group"
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2.5 bg-teal-100 rounded-xl shrink-0">
-              <Building2 className="w-5 h-5 text-teal-600" />
-            </div>
-            <div>
-              <p className="font-bold text-gray-900 leading-tight">Outright Purchase</p>
-              <span className="inline-block mt-1 text-xs font-medium bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
-                {item.propertiesOwned} {item.propertiesOwned === 1 ? "Property" : "Properties"} Owned
-              </span>
-            </div>
-          </div>
-          <div className="mb-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide">Development Stage</p>
-            <p className="text-sm font-semibold text-gray-800 capitalize mt-0.5">
-              {item.developmentStage.replace(/_/g, " ")}
-            </p>
-          </div>
-          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-teal-600 transition-colors border-t border-gray-100 pt-3">
-            View Investments <ChevronRight className="w-4 h-4" />
-          </div>
-        </button>
-      );
-
+      return <>{item.propertiesOwned} {item.propertiesOwned === 1 ? "Property" : "Properties"} · {item.developmentStage.replace(/_/g, " ")}</>;
     case "CO_DEVELOPMENT":
-      return (
-        <button
-          onClick={onClick}
-          className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-orange-200 transition-all group"
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2.5 bg-orange-100 rounded-xl shrink-0">
-              <Hammer className="w-5 h-5 text-orange-600" />
-            </div>
-            <div>
-              <p className="font-bold text-gray-900 leading-tight">Co-Development</p>
-              <span className="inline-block mt-1 text-xs font-medium bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
-                {item.activeProjects} Active {item.activeProjects === 1 ? "Project" : "Projects"}
-              </span>
-            </div>
-          </div>
-          <div className="mb-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide">Development Stage</p>
-            <p className="text-sm font-semibold text-gray-800 capitalize mt-0.5">
-              {item.developmentStage.replace(/_/g, " ")}
-            </p>
-          </div>
-          <div className="flex items-center gap-1 text-sm font-medium text-gray-500 group-hover:text-orange-600 transition-colors border-t border-gray-100 pt-3">
-            View Investments <ChevronRight className="w-4 h-4" />
-          </div>
-        </button>
-      );
+      return <>{item.activeProjects} Active {item.activeProjects === 1 ? "Project" : "Projects"} · {item.developmentStage.replace(/_/g, " ")}</>;
   }
+}
+
+function ModelCard({ item, onClick }: { item: ModelBreakdown; onClick: () => void }) {
+  const meta = MODEL_META[item.model];
+  const img = MODEL_IMAGE[item.model];
+
+  return (
+    <button
+      onClick={onClick}
+      className="text-left w-full bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md hover:border-gray-300 transition-all group"
+    >
+      <div className="h-36 bg-gray-50 overflow-hidden flex items-center justify-center">
+        <img
+          src={img}
+          alt={meta.label}
+          className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+      <div className="p-4">
+        <p className={`font-bold text-sm ${meta.accent}`}>{meta.label}</p>
+        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+          <ModelSubtitle item={item} />
+        </p>
+        <div className="flex items-center gap-1 text-xs font-medium text-gray-400 group-hover:text-gray-700 transition-colors mt-3 pt-3 border-t border-gray-100">
+          View Investments <ChevronRight className="w-3.5 h-3.5" />
+        </div>
+      </div>
+    </button>
+  );
 }
 
 export default function InvBreakdown() {
