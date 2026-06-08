@@ -806,7 +806,7 @@ function PropertyDetailPage() {
                             </div>
                             <div>
                               <p className="text-sm text-gray-600">
-                                Price Per Slot
+                                Price Per Plot
                               </p>
                               <p className="text-lg font-semibold text-(--color-orange)">
                                 {formatCurrency(property.pricePerPlot / 100)}

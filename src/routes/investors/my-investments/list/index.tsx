@@ -52,6 +52,14 @@ const MODEL_LABELS: Record<string, string> = {
   CO_DEVELOPMENT: "Co-Development",
 };
 
+type INVESTMENT_MODEL =
+  | ""
+  | "FRACTIONAL_OWNERSHIP"
+  | "LAND_BANKING"
+  | "SAVE_TO_OWN"
+  | "OUTRIGHT_PURCHASE"
+  | "CO_DEVELOPMENT";
+
 function RouteComponent() {
   const navigate = useNavigate();
   const { investmentModel } = Route.useSearch();
@@ -80,6 +88,22 @@ function RouteComponent() {
       return resp.data;
     },
   });
+  const render_units = () => {
+    switch (investmentModel as INVESTMENT_MODEL) {
+      case "FRACTIONAL_OWNERSHIP":
+        return "Shares";
+      case "LAND_BANKING":
+        return "Plots";
+      case "SAVE_TO_OWN":
+        return "SLots";
+      case "OUTRIGHT_PURCHASE":
+        return "Units";
+      case "CO_DEVELOPMENT":
+        return "Units";
+      default:
+        return "Units";
+    }
+  };
 
   const columns: columnType<Investment>[] = [
     {
@@ -99,7 +123,7 @@ function RouteComponent() {
     },
     {
       key: "unitsBought",
-      label: "Slots / Shares",
+      label: `${render_units()}`,
       render: (_, item) =>
         item.sharesBought != null ? (
           <span className="font-medium">

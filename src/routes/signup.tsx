@@ -43,17 +43,6 @@ function SignUpPage() {
     hearAboutUs: "",
   });
 
-  const [nextOfKin, setNextOfKin] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    relationship: "",
-  });
-
-  const handleNextOfKinChange = (field: string, value: string) => {
-    setNextOfKin((prev) => ({ ...prev, [field]: value }));
-  };
-
   // Corporate form state
   const [corporateData, setCorporateData] = useState({
     companyName: "",
@@ -134,12 +123,6 @@ function SignUpPage() {
         phone: formData.phoneNumber,
         password: formData.password,
         referral_source: formData.hearAboutUs,
-        nextOfKin: {
-          fullName: nextOfKin.fullName,
-          email: nextOfKin.email,
-          phone: nextOfKin.phone,
-          relationship: nextOfKin.relationship,
-        },
       };
 
       toast.promise(
@@ -439,95 +422,6 @@ function SignUpPage() {
                         Other
                       </option>
                     </select>
-                  </div>
-
-                  {/* Next of Kin */}
-                  <div className="space-y-3 pt-2">
-                    <h3 className="text-white font-semibold text-sm uppercase tracking-wide">
-                      Next of Kin
-                    </h3>
-                    <div className="space-y-2">
-                      <Label htmlFor="nokFullName" className="text-white">
-                        Full Name
-                      </Label>
-                      <Input
-                        id="nokFullName"
-                        type="text"
-                        placeholder="Jane Doe"
-                        value={nextOfKin.fullName}
-                        onChange={(e) =>
-                          handleNextOfKinChange("fullName", e.target.value)
-                        }
-                        required
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="nokEmail" className="text-white">
-                        Email
-                      </Label>
-                      <Input
-                        id="nokEmail"
-                        type="email"
-                        placeholder="jane@example.com"
-                        value={nextOfKin.email}
-                        onChange={(e) =>
-                          handleNextOfKinChange("email", e.target.value)
-                        }
-                        required
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="nokPhone" className="text-white">
-                        Phone Number
-                      </Label>
-                      <PhoneInput
-                        id="nokPhone"
-                        placeholder="Enter Phone Number"
-                        value={nextOfKin.phone}
-                        onPhoneChange={(value) =>
-                          handleNextOfKinChange("phone", value)
-                        }
-                        defaultCountry="US"
-                        required
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:bg-white/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="nokRelationship" className="text-white">
-                        Relationship
-                      </Label>
-                      <select
-                        id="nokRelationship"
-                        value={nextOfKin.relationship}
-                        onChange={(e) =>
-                          handleNextOfKinChange("relationship", e.target.value)
-                        }
-                        required
-                        className="flex w-full rounded-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange focus:bg-white/20 transition-all duration-300"
-                      >
-                        <option value="" className="bg-gray-800"></option>
-                        <option value="Spouse" className="bg-gray-800">
-                          Spouse
-                        </option>
-                        <option value="Sibling" className="bg-gray-800">
-                          Sibling
-                        </option>
-                        <option value="Parent" className="bg-gray-800">
-                          Parent
-                        </option>
-                        <option value="Guardian" className="bg-gray-800">
-                          Guardian
-                        </option>
-                        <option value="Child" className="bg-gray-800">
-                          Child
-                        </option>
-                        <option value="Other" className="bg-gray-800">
-                          Other
-                        </option>
-                      </select>
-                    </div>
                   </div>
 
                   {/* Terms checkbox */}
