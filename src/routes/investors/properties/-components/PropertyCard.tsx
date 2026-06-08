@@ -26,7 +26,7 @@ export default function PropertyCard({
   const soldOut = availableCount <= 0;
 
   return (
-    <div className="relative group/card">
+    <div className="relative isolate group/card">
       <PropertyCardInner property={property} />
       {!soldOut && (
         <div className="absolute top-4 right-4 z-10">
@@ -84,7 +84,7 @@ function PropertyCardInner({ property }: { property: PROPERTY_DATA }) {
       to={route(property.investmentModel)}
       //@ts-ignore
       params={{ propertyId: property.id }}
-      className={`card card-compact bg-base-100 isolate ring fade shadow-sm border border-base-200 group h-full transition-all duration-300 ${
+      className={`card card-compact bg-base-100 ring fade shadow-sm border border-base-200 group h-full transition-all duration-300 ${
         soldOut
           ? "opacity-60 grayscale pointer-events-none cursor-not-allowed"
           : "hover:shadow-xl"
