@@ -161,15 +161,19 @@ function RouteComponent() {
         );
       },
     },
-    {
-      key: "totalReturns",
-      label: "Returns",
-      render: (value) => (
-        <span className="text-green-600 font-medium">
-          ₦{value.toLocaleString()}
-        </span>
-      ),
-    },
+    ...(investmentModel === "FRACTIONAL_OWNERSHIP"
+      ? [
+          {
+            key: "totalReturns" as keyof Investment,
+            label: "Returns",
+            render: (value: number) => (
+              <span className="text-green-600 font-medium">
+                ₦{value?.toLocaleString() ?? "N/A"}
+              </span>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const actions: Actions[] = [
