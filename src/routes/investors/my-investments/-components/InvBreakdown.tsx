@@ -60,7 +60,7 @@ function CardShell({
         src={s.image}
         alt=""
         aria-hidden
-        className="pointer-events-none select-none absolute -top-3 -right-3 w-32 h-32 object-contain opacity-10 group-hover:opacity-20 group-hover:scale-105 transition-all duration-300"
+        className="pointer-events-none select-none absolute -top-2 -right-2 w-44 h-44 object-contain opacity-90 group-hover:scale-105 transition-transform duration-300"
       />
       <div className="relative">
         {children}
