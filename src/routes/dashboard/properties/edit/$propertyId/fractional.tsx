@@ -72,8 +72,17 @@ interface FractionalPropertyFormValues extends DocProps {
   returnTiersArray: { days: string; rate: number }[];
 }
 
-function ReturnTiersManager({ control, register }: { control: any; register: any }) {
-  const { fields, append, remove } = useFieldArray({ control, name: "returnTiersArray" });
+function ReturnTiersManager({
+  control,
+  register,
+}: {
+  control: any;
+  register: any;
+}) {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "returnTiersArray",
+  });
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between border-b border-base-200 pb-2">
@@ -98,7 +107,9 @@ function ReturnTiersManager({ control, register }: { control: any; register: any
             label={index === 0 ? "Return %" : ""}
             type="number"
             icon={<span>%</span>}
-            {...register(`returnTiersArray.${index}.rate`, { valueAsNumber: true })}
+            {...register(`returnTiersArray.${index}.rate`, {
+              valueAsNumber: true,
+            })}
           />
           <button
             type="button"
@@ -110,7 +121,9 @@ function ReturnTiersManager({ control, register }: { control: any; register: any
         </div>
       ))}
       {fields.length === 0 && (
-        <p className="text-xs italic opacity-50">No tiers added. Click Add Tier.</p>
+        <p className="text-xs italic opacity-50">
+          No tiers added. Click Add Tier.
+        </p>
       )}
     </div>
   );
@@ -131,14 +144,18 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
   //@ts-ignore
 
   const selectImageProps = useSelectImage(defaultValue.coverImage);
-  const returnTiersArray = Object.entries((defaultValue as any).returnTiers ?? {})
+  const returnTiersArray = Object.entries(
+    (defaultValue as any).returnTiers ?? {},
+  )
     .sort((a, b) => Number(a[0]) - Number(b[0]))
     .map(([days, rate]) => ({ days, rate }));
 
   const methods = useForm<any>({
     defaultValues: {
       ...defaultValue,
-      returnTiersArray: returnTiersArray.length ? returnTiersArray : [{ days: "30", rate: 0 }],
+      returnTiersArray: returnTiersArray.length
+        ? returnTiersArray
+        : [{ days: "30", rate: 0 }],
     },
   });
   const mutation = useMutation({
@@ -174,7 +191,12 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
           : null,
         maxInvestors: data.maxInvestors ?? null,
       };
+
       const new_payload = strip_fractional(payload);
+      // strip_fractional (via stripped_unneeded) removes maxInvestors for all
+      // models; re-apply it here since fractional supports an investor cap.
+      (new_payload as any).maxInvestors = data.maxInvestors ?? null;
+      console.log("new_payload", new_payload);
       const response = await apiClient.patch(
         `/admin/properties/${data.id}/fractional`,
         new_payload,
@@ -329,7 +351,10 @@ function FormField({ defaultValue }: { defaultValue: PROPERTY_TYPE }) {
                   />
                 </div>
 
-                <ReturnTiersManager control={methods.control} register={methods.register} />
+                <ReturnTiersManager
+                  control={methods.control}
+                  register={methods.register}
+                />
               </section>
               {/* 5. Investment-Specific Details */}
             </>
