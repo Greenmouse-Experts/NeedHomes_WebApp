@@ -34,11 +34,13 @@ interface Investment {
     | "RESOLD";
   createdAt: string;
   property: {
-    basePrice: number;
     id: string;
-    investmentModel: string;
-    propertyType: string;
     propertyTitle: string;
+    propertyType: string;
+    investmentModel: string;
+    location: string;
+    basePrice: number;
+    coverImage: string | null;
   };
   currentValue: number;
   totalReturns: number;
@@ -114,7 +116,27 @@ function RouteComponent() {
     {
       key: "property.propertyTitle",
       label: "Property",
-      render: (_, item) => item.property.propertyTitle,
+      render: (_, item) => (
+        <div className="flex items-center gap-3">
+          {item.property?.coverImage ? (
+            <img
+              src={item.property.coverImage}
+              alt={item.property.propertyTitle}
+              className="w-10 h-10 rounded-lg object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-lg bg-gray-100 shrink-0" />
+          )}
+          <div className="flex flex-col min-w-0">
+            <span className="font-medium text-sm truncate">
+              {item.property.propertyTitle}
+            </span>
+            <span className="text-xs text-gray-400 truncate">
+              {item.property.investmentModel?.replace(/_/g, " ")}
+            </span>
+          </div>
+        </div>
+      ),
     },
     {
       key: "amountPaid",

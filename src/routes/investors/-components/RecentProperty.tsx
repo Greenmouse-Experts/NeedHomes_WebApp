@@ -7,15 +7,25 @@ import { ArrowRight } from "lucide-react";
 
 interface Investment {
   id: string;
+  customId: string;
   amountPaid: number;
-  paymentOption: "OUTRIGHT" | "INSTALLMENT";
-  status: "ACTIVE" | "PENDING" | "COMPLETED";
+  unitsBought: number | null;
+  sharesBought: number | null;
+  paymentOption: "OUTRIGHT" | "INSTALLMENT" | "FULL_PAYMENT";
+  status: "ACTIVE" | "PENDING" | "COMPLETED" | "EXITED" | "CANCELLED" | "RESOLD";
   createdAt: string;
+  currentValue: number;
+  totalReturns: number;
+  installmentFrequency: string | null;
+  installmentDuration: number | null;
   property: {
     id: string;
     propertyTitle: string;
     investmentModel: string;
     propertyType: string;
+    location: string;
+    basePrice: number;
+    coverImage: string | null;
   };
 }
 
@@ -40,13 +50,24 @@ const columns: columnType<Investment>[] = [
     key: "property",
     label: "Property",
     render: (_, item) => (
-      <div className="flex flex-col">
-        <span className="font-medium text-sm">
-          {item.property?.propertyTitle}
-        </span>
-        <span className="text-xs opacity-50">
-          {item.property?.investmentModel?.replace(/_/g, " ")}
-        </span>
+      <div className="flex items-center gap-3">
+        {item.property?.coverImage ? (
+          <img
+            src={item.property.coverImage}
+            alt={item.property.propertyTitle}
+            className="w-10 h-10 rounded-lg object-cover shrink-0"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-lg bg-gray-100 shrink-0" />
+        )}
+        <div className="flex flex-col min-w-0">
+          <span className="font-medium text-sm truncate">
+            {item.property?.propertyTitle}
+          </span>
+          <span className="text-xs text-gray-400 truncate">
+            {item.property?.investmentModel?.replace(/_/g, " ")}
+          </span>
+        </div>
       </div>
     ),
   },
