@@ -254,14 +254,6 @@ function ModelCard({
               </span>
             </div>
           </div>
-          <div className="mb-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide">
-              Development Stage
-            </p>
-            <p className="text-sm font-semibold text-gray-800 capitalize mt-0.5">
-              {item.developmentStage.replace(/_/g, " ")}
-            </p>
-          </div>
         </CardShell>
       );
 
@@ -281,14 +273,6 @@ function ModelCard({
                 {item.activeProjects === 1 ? "Project" : "Projects"}
               </span>
             </div>
-          </div>
-          <div className="mb-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide">
-              Development Stage
-            </p>
-            <p className="text-sm font-semibold text-gray-800 capitalize mt-0.5">
-              {item.developmentStage.replace(/_/g, " ")}
-            </p>
           </div>
         </CardShell>
       );

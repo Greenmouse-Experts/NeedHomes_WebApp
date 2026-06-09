@@ -8,7 +8,11 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import apiClient, { type ApiResponse } from "@/api/simpleApi";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { extract_message } from "@/helpers/apihelpers";
+
+// Nigerian NUBAN account numbers are exactly 10 digits.
+const isValidAccountNumber = (acc?: string) => /^\d{10}$/.test(acc ?? "");
 
 interface Bank {
   id: number;
@@ -166,12 +170,6 @@ export default function BankDetails() {
     }
   }, [currentBankInfo, setValue]);
 
-  // Reset resolved state when the user changes account number or bank
-  useEffect(() => {
-    setResolved(false);
-    setValue("accountName", "");
-  }, [accountNumber, selectedBankCode]);
-
   const previewMutation = useMutation<
     ApiResponse<AccountResolveResponse>,
     Error,
@@ -188,7 +186,35 @@ export default function BankDetails() {
       setValue("accountName", data.data.accountName);
       setResolved(true);
     },
+    onError: (err) => {
+      toast.error(extract_message(err) || "Could not resolve account.");
+    },
   });
+
+  // Auto-resolve once the account number is valid and a bank is selected.
+  const debouncedResolve = useDebouncedCallback(
+    (accountNumber: string, bankCode: string) => {
+      previewMutation.mutate({ accountNumber, bankCode });
+    },
+    600,
+  );
+
+  // Reset resolved state when the user changes account number or bank, then
+  // auto-trigger the (debounced) lookup once both fields are valid.
+  useEffect(() => {
+    setResolved(false);
+    setValue("accountName", "");
+
+    if (
+      !currentBankInfo?.data &&
+      isValidAccountNumber(accountNumber) &&
+      selectedBankCode
+    ) {
+      debouncedResolve(accountNumber, selectedBankCode);
+    } else {
+      debouncedResolve.cancel();
+    }
+  }, [accountNumber, selectedBankCode]);
 
   const saveMutation = useMutation<
     ApiResponse<AccountResolveResponse>,
@@ -205,11 +231,8 @@ export default function BankDetails() {
   });
 
   const handleResolve = (data: BankDetailsForm) => {
-    toast.promise(previewMutation.mutateAsync(data), {
-      loading: "Looking up account...",
-      success: (res) => `Found: ${res.data.accountName}`,
-      error: extract_message,
-    });
+    debouncedResolve.cancel();
+    previewMutation.mutate(data);
   };
 
   const handleBankSubmit = (data: BankDetailsForm) => {

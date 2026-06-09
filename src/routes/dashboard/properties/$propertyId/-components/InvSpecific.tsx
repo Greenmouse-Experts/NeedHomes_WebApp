@@ -1,5 +1,14 @@
 import type { ADMIN_PROPERTY_LISTING } from "@/types";
 
+const fmtDate = (value?: string | null) =>
+  value
+    ? new Date(value).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "N/A";
+
 const keys = [
   "FRACTIONAL_OWNERSHIP",
   "OUTRIGHT_PURCHASE",
@@ -127,6 +136,14 @@ export default function InvestmentDetails({
           <DetailRow
             label="minimum installment deposit"
             value={`${property.minimumFirstPaymentPercentage || "0"}%`}
+          />
+          <DetailRow
+            label="Project Start Date"
+            value={fmtDate((property as any).projectStartDate)}
+          />
+          <DetailRow
+            label="Project End Date"
+            value={fmtDate((property as any).projectEndDate)}
           />
         </DetailsCard>
       );

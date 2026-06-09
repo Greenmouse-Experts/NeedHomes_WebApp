@@ -94,6 +94,8 @@ interface Investment {
     exitWindow?: string | null;
     fractionalHoldingPeriodDays?: number | null;
     returnTiers?: Record<string, number> | null;
+    projectStartDate?: string | null;
+    projectEndDate?: string | null;
   };
   exitRequest?: any | null;
 }
@@ -421,6 +423,25 @@ function InvestmentDetailsPage() {
                           ? formatDate(investment.lastValuationDate)
                           : "N/A",
                       },
+                      ...(investment.property?.investmentModel ===
+                      "CO_DEVELOPMENT"
+                        ? [
+                            {
+                              label: "Project Start Date",
+                              value: investment.property?.projectStartDate
+                                ? formatDate(
+                                    investment.property.projectStartDate,
+                                  )
+                                : "N/A",
+                            },
+                            {
+                              label: "Project End Date",
+                              value: investment.property?.projectEndDate
+                                ? formatDate(investment.property.projectEndDate)
+                                : "N/A",
+                            },
+                          ]
+                        : []),
                     ].map(({ label, value, bold }) => (
                       <div
                         key={label}
