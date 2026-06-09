@@ -8,7 +8,7 @@ import { useAuth } from "@/store/authStore";
 
 import type { USER } from "@/types";
 import BankDetails from "@/simpleComps/BankDetails";
-import KYCForm from "@/components/KYCForm";
+import KYCForm from "@/components/InvKyc";
 import { PhoneInput } from "@/components/CountryPhoneInput";
 import UserProfile from "@/components/UserProfile";
 import ChangePassword from "@/components/ChangePassword";

@@ -52,12 +52,25 @@ export interface PARTNER {
   roles: roles[];
 }
 
+export interface NextOfKin {
+  id?: string;
+  userId?: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  relationship: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
+}
+
 export interface VERIFICATION_REQUEST {
   id: string;
   user_id: string;
   idType: string;
   status: "PENDING" | "VERIFIED" | "REJECTED";
   frontPage: string | null;
+  nextOfKin?: NextOfKin | null;
   companyName: string | null;
   rcNumber: string | null;
   cacDocument: string | null;

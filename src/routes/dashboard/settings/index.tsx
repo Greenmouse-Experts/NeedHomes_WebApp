@@ -22,7 +22,12 @@ export const Route = createFileRoute("/dashboard/settings/")({
   component: SettingsPage,
 });
 
-type SettingsTab = "profile" | "bankDetails" | "Charges" | "security" | "walletPin";
+type SettingsTab =
+  | "profile"
+  | "bankDetails"
+  | "Charges"
+  | "security"
+  | "walletPin";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
@@ -35,21 +40,6 @@ function SettingsPage() {
     email: "",
     phoneNumber: "",
     dateOfBirth: "",
-  });
-
-  const [bankData, setBankData] = useState({
-    accountNumber: "",
-    bankName: "",
-    accountName: "",
-    accountType: "",
-  });
-
-  const [kycData, setKycData] = useState({
-    idType: "",
-    frontUpload: null as File | null,
-    backUpload: null as File | null,
-    utilityBill: null as File | null,
-    address: "",
   });
 
   const [passwordData, setPasswordData] = useState({
