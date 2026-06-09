@@ -36,12 +36,15 @@ interface BankDetailsForm {
 }
 
 interface AccountResolveResponse {
-  account_name: string;
-  masked_account: string;
-  bank_name: string;
-  bank_code: string;
+  accountNumber: string;
+  accountName: string;
+  bankCode: string;
+  bankName: string;
   country: string;
 }
+
+const maskAccount = (acc: string) =>
+  acc && acc.length > 4 ? `••••${acc.slice(-4)}` : acc;
 
 interface CurrentBankInfo {
   id: string;
@@ -182,7 +185,7 @@ export default function BankDetails() {
       return resp.data;
     },
     onSuccess: (data) => {
-      setValue("accountName", data.data.account_name);
+      setValue("accountName", data.data.accountName);
       setResolved(true);
     },
   });
@@ -204,7 +207,7 @@ export default function BankDetails() {
   const handleResolve = (data: BankDetailsForm) => {
     toast.promise(previewMutation.mutateAsync(data), {
       loading: "Looking up account...",
-      success: (res) => `Found: ${res.data.account_name}`,
+      success: (res) => `Found: ${res.data.accountName}`,
       error: extract_message,
     });
   };
@@ -213,7 +216,7 @@ export default function BankDetails() {
     toast.promise(saveMutation.mutateAsync(data), {
       loading: "Saving bank details...",
       success: (res) =>
-        `Account ${res.data.masked_account} saved — ${res.data.account_name}`,
+        `Account ${maskAccount(res.data.accountNumber)} saved — ${res.data.accountName}`,
       error: extract_message,
     });
   };
