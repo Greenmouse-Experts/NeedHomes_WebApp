@@ -31,6 +31,29 @@ export const Route = createFileRoute("/investors/my-investments/$investmentId")(
   },
 );
 
+type INVESTMENT_MODEL =
+  | ""
+  | "FRACTIONAL_OWNERSHIP"
+  | "LAND_BANKING"
+  | "SAVE_TO_OWN"
+  | "OUTRIGHT_PURCHASE"
+  | "CO_DEVELOPMENT";
+const render_units = (investmentModel: INVESTMENT_MODEL) => {
+  switch (investmentModel as INVESTMENT_MODEL) {
+    case "FRACTIONAL_OWNERSHIP":
+      return "Shares";
+    case "LAND_BANKING":
+      return "Plots";
+    case "SAVE_TO_OWN":
+      return "SLots";
+    case "OUTRIGHT_PURCHASE":
+      return "Units";
+    case "CO_DEVELOPMENT":
+      return "Units";
+    default:
+      return "Units";
+  }
+};
 interface Investment {
   id: string;
   userId: string;
@@ -61,7 +84,7 @@ interface Investment {
   investmentEndDate?: string | null;
   property?: {
     propertyTitle?: string;
-    investmentModel: string;
+    investmentModel: INVESTMENT_MODEL;
     location?: string;
     coverImage?: string;
     basePrice?: number;
@@ -283,7 +306,7 @@ function InvestmentDetailsPage() {
                 </div>
               </div>
               {/* ── Stats Grid ── */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 my-4">
+              <div className={`grid grid-cols-2 gap-4 my-4 ${investment.property?.investmentModel === "FRACTIONAL_OWNERSHIP" ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="p-2 bg-blue-50 rounded-lg w-fit mb-3">
                     <NairaIcon className="w-4 h-4 text-blue-600" />
@@ -295,7 +318,9 @@ function InvestmentDetailsPage() {
                     {formatCurrency(investment.amountPaid / 100)}
                   </p>
                 </div>
-                <TotalReturnCard investment={investment} />
+                {investment.property?.investmentModel === "FRACTIONAL_OWNERSHIP" && (
+                  <TotalReturnCard investment={investment} />
+                )}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                   <div className="p-2 bg-purple-50 rounded-lg w-fit mb-3">
                     <BarChart3 className="w-4 h-4 text-purple-600" />
@@ -325,7 +350,8 @@ function InvestmentDetailsPage() {
                   ) : (
                     <>
                       <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-1">
-                        Slots Bought
+                        {render_units(investment.property?.investmentModel)}{" "}
+                        Bought
                       </p>
                       <p className="text-xl font-bold text-gray-900">
                         {investment.unitsBought}

@@ -129,7 +129,10 @@ export default function BankDetails() {
     formState: { errors },
   } = useForm<BankDetailsForm>();
 
+  const [resolved, setResolved] = useState(false);
+
   const selectedBankCode = watch("bankCode");
+  const accountNumber = watch("accountNumber");
 
   const {
     data: bankList,
@@ -152,7 +155,6 @@ export default function BankDetails() {
       },
     });
 
-  // Populate form when current bank info is loaded
   useEffect(() => {
     if (currentBankInfo?.data) {
       setValue("accountNumber", currentBankInfo.data.account_number);
@@ -161,7 +163,31 @@ export default function BankDetails() {
     }
   }, [currentBankInfo, setValue]);
 
-  const resolveBankMutation = useMutation<
+  // Reset resolved state when the user changes account number or bank
+  useEffect(() => {
+    setResolved(false);
+    setValue("accountName", "");
+  }, [accountNumber, selectedBankCode]);
+
+  const previewMutation = useMutation<
+    ApiResponse<AccountResolveResponse>,
+    Error,
+    BankDetailsForm
+  >({
+    mutationFn: async (data) => {
+      const resp = await apiClient.post("banks/resolve/preview", {
+        accountNumber: data.accountNumber,
+        bankCode: data.bankCode,
+      });
+      return resp.data;
+    },
+    onSuccess: (data) => {
+      setValue("accountName", data.data.account_name);
+      setResolved(true);
+    },
+  });
+
+  const saveMutation = useMutation<
     ApiResponse<AccountResolveResponse>,
     Error,
     BankDetailsForm
@@ -173,15 +199,21 @@ export default function BankDetails() {
       });
       return resp.data;
     },
-    onSuccess: (data) => {
-      setValue("accountName", data.data.account_name);
-    },
   });
 
-  const handleBankSubmit = async (data: BankDetailsForm) => {
-    toast.promise(resolveBankMutation.mutateAsync(data), {
-      loading: "Resolving bank details...",
-      success: (res) => `Account ${res.data.masked_account} saved — ${res.data.account_name}`,
+  const handleResolve = (data: BankDetailsForm) => {
+    toast.promise(previewMutation.mutateAsync(data), {
+      loading: "Looking up account...",
+      success: (res) => `Found: ${res.data.account_name}`,
+      error: extract_message,
+    });
+  };
+
+  const handleBankSubmit = (data: BankDetailsForm) => {
+    toast.promise(saveMutation.mutateAsync(data), {
+      loading: "Saving bank details...",
+      success: (res) =>
+        `Account ${res.data.masked_account} saved — ${res.data.account_name}`,
       error: extract_message,
     });
   };
@@ -218,104 +250,131 @@ export default function BankDetails() {
       )}
 
       <ThemeProvider>
-        <form onSubmit={handleSubmit(handleBankSubmit)} className="max-w-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            {/* Account Number */}
-            <div className="space-y-2">
-              <Label htmlFor="accountNumber" className="text-sm">
-                Account Number
-              </Label>
-              <SimpleInput
-                id="accountNumber"
-                placeholder="Enter Acct Number"
-                className="text-sm md:text-base"
-                disabled={bankExists}
-                {...register("accountNumber", {
-                  required: "Account number is required",
-                })}
-              />
-              {errors.accountNumber && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.accountNumber.message}
-                </p>
-              )}
-            </div>
-
-            {/* Bank Name — searchable */}
-            <div className="space-y-2">
-              <Label htmlFor="bankCode" className="text-sm">
-                Bank Name
-              </Label>
-              <input
-                type="hidden"
-                {...register("bankCode", { required: "Bank name is required" })}
-              />
-              <BankSearch
-                banks={bankList?.data ?? []}
-                value={selectedBankCode ?? ""}
-                onChange={(code) => setValue("bankCode", code, { shouldValidate: true })}
-                disabled={bankExists}
-                isLoading={isLoading}
-              />
-              {isError && (
-                <p className="text-red-500 text-xs">Error loading banks</p>
-              )}
-              {errors.bankCode && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.bankCode.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
-            {/* Account Name */}
-            <div className="space-y-2">
-              <Label htmlFor="accountName" className="text-sm">
-                Account Name
-              </Label>
-              <div className="relative">
+        <div className="max-w-2xl space-y-4 md:space-y-6">
+          {/* Step 1 — Resolve */}
+          <form onSubmit={handleSubmit(handleResolve)}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              {/* Account Number */}
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber" className="text-sm">
+                  Account Number
+                </Label>
                 <SimpleInput
-                  id="accountName"
-                  className="bg-gray-100 text-sm md:text-base"
-                  disabled
-                  {...register("accountName")}
+                  id="accountNumber"
+                  placeholder="Enter Acct Number"
+                  className="text-sm md:text-base"
+                  disabled={bankExists}
+                  {...register("accountNumber", {
+                    required: "Account number is required",
+                  })}
                 />
-                {resolveBankMutation.isPending && (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 loading loading-ring loading-sm text-brand-orange"></span>
+                {errors.accountNumber && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.accountNumber.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Bank Name — searchable */}
+              <div className="space-y-2">
+                <Label htmlFor="bankCode" className="text-sm">
+                  Bank Name
+                </Label>
+                <input
+                  type="hidden"
+                  {...register("bankCode", { required: "Bank name is required" })}
+                />
+                <BankSearch
+                  banks={bankList?.data ?? []}
+                  value={selectedBankCode ?? ""}
+                  onChange={(code) =>
+                    setValue("bankCode", code, { shouldValidate: true })
+                  }
+                  disabled={bankExists}
+                  isLoading={isLoading}
+                />
+                {isError && (
+                  <p className="text-red-500 text-xs">Error loading banks</p>
+                )}
+                {errors.bankCode && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.bankCode.message}
+                  </p>
                 )}
               </div>
             </div>
-          </div>
 
-          {!bankExists && (
-            <div className="flex items-start gap-2 mt-5 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs max-w-2xl">
-              <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-500" />
-              <p>
-                Once saved, bank details <strong>cannot be changed</strong>{" "}
-                without contacting customer support.
-              </p>
+            {/* Account Name (read-only, populated after resolve) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
+              <div className="space-y-2">
+                <Label htmlFor="accountName" className="text-sm">
+                  Account Name
+                </Label>
+                <div className="relative">
+                  <SimpleInput
+                    id="accountName"
+                    className="bg-gray-100 text-sm md:text-base"
+                    disabled
+                    {...register("accountName")}
+                  />
+                  {previewMutation.isPending && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 loading loading-ring loading-sm text-brand-orange" />
+                  )}
+                </div>
+              </div>
             </div>
-          )}
 
-          {/* Submit Button */}
-          <div className="pt-4 md:pt-6">
-            <Button
-              type="submit"
-              className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
-              disabled={resolveBankMutation.isPending || bankExists}
-            >
-              {resolveBankMutation.isPending ? (
-                <>
-                  <span className="loading loading-spinner loading-xs mr-2"></span>
-                  Resolving...
-                </>
-              ) : (
-                "Update Bank Details"
-              )}
-            </Button>
-          </div>
-        </form>
+            {!bankExists && (
+              <div className="mt-5">
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="border-brand-orange text-brand-orange hover:bg-orange-50 px-6 md:px-10 text-sm md:text-base w-full sm:w-auto"
+                  disabled={previewMutation.isPending || bankExists}
+                >
+                  {previewMutation.isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs mr-2" />
+                      Looking up...
+                    </>
+                  ) : (
+                    "Resolve Account"
+                  )}
+                </Button>
+              </div>
+            )}
+          </form>
+
+          {/* Step 2 — Save (only shown after successful resolve) */}
+          {resolved && !bankExists && (
+            <>
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+                <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-500" />
+                <p>
+                  Once saved, bank details <strong>cannot be changed</strong>{" "}
+                  without contacting customer support.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit(handleBankSubmit)}>
+                <Button
+                  type="submit"
+                  className="bg-brand-orange hover:bg-brand-orange-dark text-white px-6 md:px-12 text-sm md:text-base w-full sm:w-auto"
+                  disabled={saveMutation.isPending}
+                >
+                  {saveMutation.isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Bank Details"
+                  )}
+                </Button>
+              </form>
+            </>
+          )}
+        </div>
       </ThemeProvider>
     </div>
   );
