@@ -280,27 +280,6 @@ export default function BankDetails() {
           {/* Step 1 — Resolve */}
           <form onSubmit={handleSubmit(handleResolve)}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              {/* Account Number */}
-              <div className="space-y-2">
-                <Label htmlFor="accountNumber" className="text-sm">
-                  Account Number
-                </Label>
-                <SimpleInput
-                  id="accountNumber"
-                  placeholder="Enter Acct Number"
-                  className="text-sm md:text-base"
-                  disabled={bankExists}
-                  {...register("accountNumber", {
-                    required: "Account number is required",
-                  })}
-                />
-                {errors.accountNumber && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.accountNumber.message}
-                  </p>
-                )}
-              </div>
-
               {/* Bank Name — searchable */}
               <div className="space-y-2">
                 <Label htmlFor="bankCode" className="text-sm">
@@ -325,6 +304,27 @@ export default function BankDetails() {
                 {errors.bankCode && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.bankCode.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Account Number */}
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber" className="text-sm">
+                  Account Number
+                </Label>
+                <SimpleInput
+                  id="accountNumber"
+                  placeholder="Enter Acct Number"
+                  className="text-sm md:text-base"
+                  disabled={bankExists}
+                  {...register("accountNumber", {
+                    required: "Account number is required",
+                  })}
+                />
+                {errors.accountNumber && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.accountNumber.message}
                   </p>
                 )}
               </div>
